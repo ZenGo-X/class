@@ -189,24 +189,11 @@ impl BinaryQF {
 
     pub fn exp(&self, n: &BigInt) -> BinaryQF {
         let pari_qf = self.qf_to_pari_qf();
-
-        let qf2 = BinaryQF::pari_qf_to_qf(pari_qf);
-        assert_eq!(qf2, self.clone());
-
         let pari_n = bn_to_gen(n);
-        let disc = self.discriminant().abs() >> 2;
-        let pari_disc = bn_to_gen(&(disc));
 
-        let L = unsafe { sqrtnint(pari_disc, 4i64) };
-        /*
-        let n_str = n.to_str_radix(16);
-        let n_i64 = i64::from_str_radix(&n_str, 16).unwrap(); //TODO: make safe
-        let pari_qf_exp = unsafe{qfbpowraw(pari_qf, n_i64)};
-        */
         let mut v = unsafe { std::mem::uninitialized() };
         let pari_qf_exp = unsafe { nupow(pari_qf, pari_n, &mut v) };
         let qf_exp = BinaryQF::pari_qf_to_qf(pari_qf_exp);
-        //   let qf_exp_red = qf_exp;
         qf_exp
     }
 

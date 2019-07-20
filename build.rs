@@ -4,7 +4,6 @@ use std::env;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 fn main() {
-    // if Path::new("/test").exists()==false{
     let output = Command::new("./Configure")
         .current_dir("depend/pari-2.11.2")
         .output()
@@ -21,8 +20,6 @@ fn main() {
         .current_dir("depend/pari-2.11.2")
         .output()
         .expect("failed to make");
-
-    // }
 
     let bindings = bindgen::Builder::default()
         // The input header we would like to generate
