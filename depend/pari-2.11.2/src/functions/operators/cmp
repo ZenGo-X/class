@@ -1,0 +1,38 @@
+Function: cmp
+Section: operators
+C-Name: cmp_universal
+Prototype: iGG
+Help: cmp(x,y): compare two arbitrary objects x and y (1 if x>y, 0 if x=y, -1
+ if x<y). The function is used to implement sets, and has no useful
+ mathematical meaning.
+Doc: gives the result of a comparison between arbitrary objects $x$ and $y$
+ (as $-1$, $0$ or $1$). The underlying order relation is transitive,
+ the function returns $0$ if and only if $x~\kbd{===}~y$. It has no
+ mathematical meaning but satisfies the following properties when comparing
+ entries of the same type:
+
+ \item two \typ{INT}s compare as usual (i.e. \kbd{cmp}$(x,y) < 0$ if and only
+ if $x < y$);
+
+ \item two \typ{VECSMALL}s of the same length compare lexicographically;
+
+ \item two \typ{STR}s compare lexicographically.
+
+
+ In case all components are equal up to the smallest length of the operands,
+ the more complex is considered to be larger. More precisely, the longest is
+ the largest; when lengths are equal, we have matrix $>$ vector $>$ scalar.
+ For example:
+ \bprog
+ ? cmp(1, 2)
+ %1 = -1
+ ? cmp(2, 1)
+ %2 = 1
+ ? cmp(1, 1.0)   \\ note that 1 == 1.0, but (1===1.0) is false.
+ %3 = -1
+ ? cmp(x + Pi, [])
+ %4 = -1
+ @eprog\noindent This function is mostly useful to handle sorted lists or
+ vectors of arbitrary objects. For instance, if $v$ is a vector, the
+ construction \kbd{vecsort(v, cmp)} is equivalent to \kbd{Set(v)}.
+

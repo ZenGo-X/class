@@ -1,0 +1,21 @@
+Function: mfheckemat
+Section: modular_forms
+C-Name: mfheckemat
+Prototype: GG
+Help: mfheckemat(mf,vecn): if vecn is an integer, matrix of the Hecke operator
+ T(n) on the basis formed by mfbasis(mf), if it is a vector, vector of such
+ matrices.
+Doc: if \kbd{vecn} is an integer, matrix of the Hecke operator $T(n)$ on the
+ basis formed by \kbd{mfbasis(mf)}. If it is a vector, vector of
+ such matrices, usually faster than calling each one individually.
+ \bprog
+ ? mf=mfinit([32,4],0); mfheckemat(mf,3)
+ %1 =
+ [0 44   0]
+
+ [1  0 -10]
+
+ [0 -2   0]
+ ? mfheckemat(mf,[5,7])
+ %2 = [[0, 0, 220; 0, -10, 0; 1, 0, 12], [0, 88, 0; 2, 0, -20; 0, -4, 0]]
+ @eprog

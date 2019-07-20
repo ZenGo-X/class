@@ -1,0 +1,238 @@
+Function: _header_elliptic_curves
+Class: header
+Section: elliptic_curves
+Doc:
+ \section{Elliptic curves}
+
+ \subsec{Elliptic curve structures} %GPHELPskip
+ An elliptic curve is given by a Weierstrass model\sidx{Weierstrass equation}
+ $$
+   y^2+a_1xy+a_3y=x^3+a_2x^2+a_4x+a_6,
+ $$
+ whose discriminant is non-zero. Affine points on \kbd{E} are represented as
+ two-component vectors \kbd{[x,y]}; the point at infinity, i.e.~the identity
+ element of the group law, is represented by the one-component vector
+ \kbd{[0]}.
+
+ Given a vector of coefficients $[a_1,a_2,a_3,a_4,a_6]$, the function
+ \tet{ellinit} initializes and returns an \tev{ell} structure. An additional
+ optional argument allows to specify the base field in case it cannot be
+ inferred from the curve coefficients. This structure contains data needed by
+ elliptic curve related functions, and is generally passed as a first argument.
+ Expensive data are skipped on initialization: they will be dynamically
+ computed when (and if) needed, and then inserted in the structure. The
+ precise layout of the \tev{ell} structure is left undefined and should never
+ be used directly. The following \idx{member functions} are available,
+ depending on the underlying domain.
+
+ \subsubsec{All domains} %GPHELPskip
+
+ \item \tet{a1}, \tet{a2}, \tet{a3}, \tet{a4}, \tet{a6}: coefficients of the
+ elliptic curve.
+
+ \item \tet{b2}, \tet{b4}, \tet{b6}, \tet{b8}: $b$-invariants of the curve; in
+ characteristic $\neq 2$, for $Y = 2y + a_1x+a3$, the curve equation becomes
+ $$ Y^2 = 4 x^3 + b_2 x^2 + 2b_4 x + b_6 =: g(x). $$
+
+ \item \tet{c4}, \tet{c6}: $c$-invariants of the curve; in characteristic $\neq
+ 2,3$, for $X = x + b_2/12$ and $Y = 2y + a_1x+a3$, the curve equation becomes
+ $$ Y^2 = 4 X^3 - (c_4/12) X - (c_6/216). $$
+
+ \item \tet{disc}: discriminant of the curve. This is only required to be
+ non-zero, not necessarily a unit.
+
+ \item \tet{j}: $j$-invariant of the curve.
+
+ \noindent These are used as follows:
+ \bprog
+ ? E = ellinit([0,0,0, a4,a6]);
+ ? E.b4
+ %2 = 2*a4
+ ? E.disc
+ %3 = -64*a4^3 - 432*a6^2
+ @eprog
+
+ \subsubsec{Curves over $\C$} %GPHELPskip
+
+ This in particular includes curves defined over $\Q$. All member functions in
+ this section return data, as it is currently stored in the structure, if
+ present; and otherwise compute it to the default accuracy, that was fixed
+ \emph{at the time of ellinit} (via a \typ{REAL} $D$ domain argument, or
+ \kbd{realprecision} by default). The function \tet{ellperiods} allows to
+ recompute (and cache) the following data to \emph{current}
+ \kbd{realprecision}.
+
+ \item \tet{area}: volume of the complex lattice defining $E$.
+
+ \item \tet{roots} is a vector whose three components contain the complex
+ roots of the right hand side $g(x)$ of the attached $b$-model $Y^2 = g(x)$.
+ If the roots are all real, they are ordered by decreasing value. If only one
+ is real, it is the first component.
+
+ \item \tet{omega}: $[\omega_1,\omega_2]$, periods forming a basis of the
+ complex lattice defining $E$. The first component $\omega_1$ is the
+ (positive) real period, in other words the integral of the N\'eron
+ differential $dx/(2y+a_1x+a_3)$
+ over the connected component of the identity component of $E(\R)$.
+ The second component $\omega_2$ is a complex period, such that
+ $\tau=\dfrac{\omega_1}{\omega_2}$ belongs to Poincar\'e's
+ half-plane (positive imaginary part); not necessarily to the standard
+ fundamental domain. It is normalized so that $\Im(\omega_2) < 0$
+ and either $\Re(\omega_2) = 0$, when \kbd{E.disc > 0} ($E(\R)$ has two connected
+ components), or $\Re(\omega_2) = \omega_1/2$
+
+ \item \tet{eta} is a row vector containing the quasi-periods $\eta_1$ and
+ $\eta_2$ such that $\eta_i = 2\zeta(\omega_i/2)$, where $\zeta$ is the
+ Weierstrass zeta function attached to the period lattice; see
+ \tet{ellzeta}. In particular, the Legendre relation holds: $\eta_2\omega_1 -
+ \eta_1\omega_2 = 2\pi i$.
+
+ \misctitle{Warning} As for the orientation of the basis of the period lattice,
+ beware that many sources use the inverse convention where $\omega_2/\omega_1$
+ has positive imaginary part and our $\omega_2$ is the negative of theirs. Our
+ convention $\tau = \omega_1/\omega_2$  ensures that the action of $\text{PSL}_2$ is the natural
+ one:
+ $$[a,b;c,d]\cdot\tau = (a\tau+b)/(c\tau+d)
+   = (a \omega_1 + b\omega_2)/(c\omega_1 + d\omega_2),$$
+ instead of a twisted one. (Our $tau$ is $-1/\tau$ in the above inverse
+ convention.)
+
+ \subsubsec{Curves over $\Q_p$} %GPHELPskip
+
+ We advise to input a model defined over $\Q$ for such curves. In any case,
+ if you input an approximate model with \typ{PADIC} coefficients, it will be
+ replaced by a lift to $\Q$ (an exact model ``close'' to the one that was
+ input) and all quantities will then be computed in terms of this lifted
+ model.
+
+ For the time being only curves with multiplicative reduction (split or
+ non-split), i.e. $v_p(j) < 0$, are supported by non-trivial functions. In
+ this case the curve is analytically isomorphic to $\bar{\Q}_p^*/q^\Z :=
+ E_q(\bar{\Q}_p)$, for some $p$-adic integer $q$ (the Tate period). In
+ particular, we have $j(q) = j(E)$.
+
+ \item \tet{p} is the residual characteristic
+
+ \item \tet{roots} is a vector with a single component, equal to the $p$-adic
+ root $e_1$ of the right hand side $g(x)$ of the attached $b$-model $Y^2
+ = g(x)$. The point $(e_1,0)$ corresponds to $-1 \in \bar{\Q}_p^*/q^\Z$
+ under the Tate parametrization.
+
+ \item \tet{tate} returns $[u^2,u,q,[a,b],L, Ei]$ in the notation of Henniart-Mestre
+ (CRAS t. 308, p.~391--395, 1989): $q$ is as above, $u\in \Q_p(\sqrt{-c_6})$
+ is such that $\phi^* dx/(2y + a_1x+a3) = u dt/t$, where $\phi: E_q\to E$
+ is an isomorphism (well defined up to sign) and $dt/t$ is the canonical
+ invariant differential on the Tate curve; $u^2\in\Q_p$ does not depend on
+ $\phi$. (Technicality: if $u\not\in\Q_p$, it is stored as a quadratic
+ \typ{POLMOD}.)
+ The parameters $[a,b]$ satisfy $4u^2 b \cdot \text{agm}(\sqrt{a/b},1)^2 = 1$
+ as in Theorem~2 (\emph{loc.~cit.}).
+ \kbd{Ei} describes the sequence of 2-isogenous curves (with kernel generated
+ by $[0,0]$) $E_i: y^2=x(x+A_i)(x+A_i-B_i)$ converging quadratically towards
+ the singular curve $E_\infty$. Finally, $L$ is Mazur-Tate-Teitelbaum's
+ ${\cal L}$-invariant, equal to $\log_p q / v_p(q)$.
+
+ \subsubsec{Curves over $\F_q$} %GPHELPskip
+
+ \item \tet{p} is the characteristic of $\F_q$.
+
+ \item \tet{no} is $\#E(\F_q)$.
+
+ \item \tet{cyc} gives the cycle structure of $E(\F_q)$.
+
+ \item \tet{gen} returns the generators of $E(\F_q)$.
+
+ \item \tet{group} returns $[\kbd{no},\kbd{cyc},\kbd{gen}]$, i.e. $E(\F_q)$
+ as an abelian group structure.
+
+ \subsubsec{Curves over $\Q$} %GPHELPskip
+
+ All functions should return a correct result, whether the model is minimal or
+ not, but it is a good idea to stick to minimal models whenever
+ $\gcd(c_4,c_6)$ is easy to factor (minor speed-up). The construction
+ \bprog
+   E = ellminimalmodel(E0, &v)
+ @eprog\noindent replaces the original model $E_0$ by a minimal model $E$,
+ and the variable change $v$ allows to go between the two models:
+ \bprog
+   ellchangepoint(P0, v)
+   ellchangepointinv(P, v)
+ @eprog\noindent respectively map the point $P_0$ on $E_0$ to its image on
+ $E$, and the point $P$ on $E$ to its pre-image on $E_0$.
+
+ A few routines --- namely \tet{ellgenerators}, \tet{ellidentify},
+ \tet{ellsearch}, \tet{forell} --- require the optional package \tet{elldata}
+ (John Cremona's database) to be installed. In that case, the function
+ \tet{ellinit} will allow alternative inputs, e.g.~\kbd{ellinit("11a1")}.
+ Functions using this package need to load chunks of a large database in
+ memory and require at least 2MB stack to avoid stack overflows.
+
+ \item \tet{gen} returns the generators of $E(\Q)$, if known (from John
+   Cremona's database)
+
+ \subsubsec{Curves over number fields} %GPHELPskip
+
+ \item \tet{nf} return the \var{nf} structure attached to the number field
+ over which $E$ is defined.
+
+ \item \tet{bnf} return the \var{bnf} structure attached to the number field
+ over which $E$ is defined or raise an error (if only an \var{nf} is available).
+
+ \item \tet{omega}, \tet{eta}, \tet{area}: vectors of complex periods,
+ quasi-periods and lattice areas attached to the complex embeddings of $E$,
+ in the same order as \kbd{E.nf.roots}.
+
+ \subsec{Reduction} %GPHELPskip
+ Let $E$ be a curve defined over $\Q_p$ given by a $p$-integral model;
+ if the curve has good reduction at $p$, we may define its reduction
+ $\tilde{E}$ over the finite field $\F_p$:
+ \bprog
+ ? E = ellinit([-3,1], O(5^10));  \\ @com $E/\Q_5$
+ ? Et = ellinit(E, 5)
+ ? ellcard(Et)  \\ @com $\tilde{E}/\F_5$ has 7 points
+ %3 = 7
+ ? ellinit(E, 7)
+  ***   at top-level: ellinit(E,7)
+  ***                 ^------------
+  *** ellinit: inconsistent moduli in ellinit: 5 != 7
+ @eprog\noindent
+ Likewise, if a curve is defined over a number field $K$ and $\goth{p}$ is a
+ maximal ideal with finite residue field $\F_q$, we define the reduction
+ $\tilde{E}/\F_q$ provided $E$ has good reduction at $\goth{p}$.
+ $E/\Q$ is an important special case:
+ \bprog
+ ? E = ellinit([-3,1]);
+ ? factor(E.disc)
+ %2 =
+ [2 4]
+
+ [3 4]
+ ? Et = ellinit(E, 5);
+ ? ellcard(Et) \\ @com $\tilde{E} / \F_5$ has 7 points
+ %4 = 7
+ ? ellinit(E, 3)  \\ bad reduction at 3
+ %5 = []
+ @eprog\noindent General number fields are similar:
+ \bprog
+ ? K = nfinit(x^2+1); E = ellinit([x,x+1], K);
+ ? idealfactor(K, E.disc)  \\ three primes of bad reduction
+ %2 =
+ [  [2, [1, 1]~, 2, 1, [1, -1; 1, 1]] 10]
+
+ [ [5, [-2, 1]~, 1, 1, [2, -1; 1, 2]]  2]
+
+ [[5, [2, 1]~, 1, 1, [-2, -1; 1, -2]]  2]
+ ? P = idealprimedec(K, 3); \\ a prime of good reduction
+ ? idealnorm(K, P)
+ %4 = 9
+ ? Et = ellinit(E, P);
+ ? ellcard(Et)  \\ @com $\tilde{E} / \F_9$ has 4 points
+ %6 = 4
+ @eprog\noindent
+ If the model is not locally minimal at $\goth{p}$, the above will fail:
+ \kbd{elllocalred} and \kbd{ellchangecurve} allow to reduce to that case.
+
+ Some functions such as \kbd{ellap}, \kbd{ellcard}, \kbd{ellgroup} and
+ \kbd{ellissupersingular} even implicitly replace the given equation by
+ a local minimal model and consider the group of non-singular points
+ $\tilde{E}^{ns}$ so they make sense even when the curve has bad reduction.

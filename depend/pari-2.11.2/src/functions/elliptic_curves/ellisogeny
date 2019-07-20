@@ -1,0 +1,24 @@
+Function: ellisogeny
+Section: elliptic_curves
+C-Name: ellisogeny
+Prototype: GGD0,L,DnDn
+Help: ellisogeny(E, G, {only_image = 0}, {x = 'x}, {y = 'y}): compute the image
+ and isogeny corresponding to the quotient of E by the subgroup G.
+Doc:
+ Given an elliptic curve $E$, a finite subgroup $G$ of $E$ is given either
+ as a generating point $P$ (for a cyclic $G$) or as a polynomial whose roots
+ vanish on the $x$-coordinates of the non-zero elements of $G$ (general case
+ and more efficient if available). This function returns the
+ $[a_1,a_2,a_3,a_4,a_6]$ invariants of the quotient elliptic curve $E/G$ and
+ (if \var{only\_image} is zero (the default)) a vector of rational
+ functions $[f, g, h]$ such that the isogeny $E \to E/G$ is given by $(x,y)
+ \mapsto (f(x)/h(x)^2, g(x,y)/h(x)^3)$.
+ \bprog
+ ? E = ellinit([0,1]);
+ ? elltors(E)
+ %2 = [6, [6], [[2, 3]]]
+ ? ellisogeny(E, [2,3], 1)  \\ Weierstrass model for E/<P>
+ %3 = [0, 0, 0, -135, -594]
+ ? ellisogeny(E,[-1,0])
+ %4 = [[0,0,0,-15,22], [x^3+2*x^2+4*x+3, y*x^3+3*y*x^2-2*y, x+1]]
+ @eprog

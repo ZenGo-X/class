@@ -1,0 +1,45 @@
+Function: polmodular
+Section: polynomials
+C-Name: polmodular
+Prototype: LD0,L,DGDnD0,L,
+Help: polmodular(L, {inv = 0}, {x = 'x}, {y = 'y}, {derivs = 0}):
+ return the modular polynomial of level L and invariant inv.
+Doc: Return the modular polynomial of prime level $L$ in variables $x$ and $y$
+ for the modular function specified by \kbd{inv}.  If \kbd{inv} is 0 (the
+ default), use the modular $j$ function, if \kbd{inv} is 1 use the
+ Weber-$f$ function, and if \kbd{inv} is 5 use $\gamma_2 =
+ \sqrt[3]{j}$.
+ See \kbd{polclass} for the full list of invariants.
+ If $x$ is given as \kbd{Mod(j, p)} or an element $j$ of
+ a finite field (as a \typ{FFELT}), then return the modular polynomial of
+ level $L$ evaluated at $j$.  If $j$ is from a finite field and
+ \kbd{derivs} is non-zero, then return a triple where the
+ last two elements are the first and second derivatives of the modular
+ polynomial evaluated at $j$.
+ \bprog
+ ? polmodular(3)
+ %1 = x^4 + (-y^3 + 2232*y^2 - 1069956*y + 36864000)*x^3 + ...
+ ? polmodular(7, 1, , 'J)
+ %2 = x^8 - J^7*x^7 + 7*J^4*x^4 - 8*J*x + J^8
+ ? polmodular(7, 5, 7*ffgen(19)^0, 'j)
+ %3 = j^8 + 4*j^7 + 4*j^6 + 8*j^5 + j^4 + 12*j^2 + 18*j + 18
+ ? polmodular(7, 5, Mod(7,19), 'j)
+ %4 = Mod(1, 19)*j^8 + Mod(4, 19)*j^7 + Mod(4, 19)*j^6 + ...
+
+ ? u = ffgen(5)^0; T = polmodular(3,0,,'j)*u;
+ ? polmodular(3, 0, u,'j,1)
+ %6 = [j^4 + 3*j^2 + 4*j + 1, 3*j^2 + 2*j + 4, 3*j^3 + 4*j^2 + 4*j + 2]
+ ? subst(T,x,u)
+ %7 = j^4 + 3*j^2 + 4*j + 1
+ ? subst(T',x,u)
+ %8 = 3*j^2 + 2*j + 4
+ ? subst(T'',x,u)
+ %9 = 3*j^3 + 4*j^2 + 4*j + 2
+ @eprog
+
+Function: _polmodular_worker
+Section: programming/internals
+C-Name: polmodular_worker
+Prototype: UUUGGGGLGG
+Help: used by polmodular
+Doc: used by polmodular

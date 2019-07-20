@@ -1,0 +1,29 @@
+Function: lfunabelianrelinit
+Section: l_functions
+C-Name: lfunabelianrelinit
+Prototype: GGGGD0,L,b
+Help: lfunabelianrelinit(bnfL,bnfK,polrel,sdom,{der=0}): returns the
+  Linit structure attached to the Dedekind zeta function of the number field
+  L, given a subfield K such that L/K is abelian, where polrel defines
+  L over K. The priority of the variable
+  of bnfK must be lower than that of polrel; bnfL is the absolute polynomial
+  corresponding to polrel, and sdom and der are as in lfuninit.
+Doc: returns the \kbd{Linit} structure attached to the Dedekind zeta function
+  of the number field $L$ (see \tet{lfuninit}), given a subfield $K$ such that
+  $L/K$ is abelian.
+  Here \kbd{polrel} defines $L$ over $K$, as usual with the priority of the
+  variable of \kbd{bnfK} lower than that of \kbd{polrel}.
+  \kbd{sdom} and \kbd{der} are as in \kbd{lfuninit}.
+  \bprog
+  ? D = -47; K = bnfinit(y^2-D);
+  ? rel = quadhilbert(D); T = rnfequation(K.pol, rel); \\ degree 10
+  ? L = lfunabelianrelinit(T,K,rel, [2,0,0]); \\ at 2
+  time = 84 ms.
+  ? lfun(L, 2)
+  %4 = 1.0154213394402443929880666894468182650
+  ? lfun(T, 2) \\ using parisize > 300MB
+  time = 652 ms.
+  %5 = 1.0154213394402443929880666894468182656
+  @eprog\noindent As the example shows, using the (abelian) relative structure
+  is more efficient than a direct computation. The difference becomes drastic
+  as the absolute degree increases while the subfield degree remains constant.

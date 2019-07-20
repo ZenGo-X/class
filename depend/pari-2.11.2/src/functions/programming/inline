@@ -1,0 +1,8 @@
+Function: inline
+Section: programming/specific
+Help: inline(x,...,z): declares x,...,z as inline variables [EXPERIMENTAL].
+Doc: (Experimental) declare $x,\ldots, z$ as inline variables. Such variables
+ behave like lexically scoped variable (see my()) but with unlimited scope.
+ It is however possible to exit the scope by using \kbd{uninline()}.
+ When used in a GP script, it is recommended to call \kbd{uninline()} before
+ the script's end to avoid inline variables leaking outside the script.

@@ -1,0 +1,7 @@
+Function: _||_
+C-Name: orpari
+Prototype: GE
+Help: a||b: boolean operator "or" (inclusive).
+Section: symbolic_operators
+Description:
+ (bool, bool):bool:parens               $(1) || $(2)

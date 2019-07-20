@@ -1,0 +1,24 @@
+Function: valuation
+Section: conversions
+C-Name: gpvaluation
+Prototype: GG
+Help: valuation(x,p): valuation of x with respect to p.
+Doc:
+ computes the highest
+ exponent of $p$ dividing $x$. If $p$ is of type integer, $x$ must be an
+ integer, an intmod whose modulus is divisible by $p$, a fraction, a
+ $q$-adic number with $q=p$, or a polynomial or power series in which case the
+ valuation is the minimum of the valuation of the coefficients.
+
+ If $p$ is of type polynomial, $x$ must be of type polynomial or rational
+ function, and also a power series if $x$ is a monomial. Finally, the
+ valuation of a vector, complex or quadratic number is the minimum of the
+ component valuations.
+
+ If $x=0$, the result is \kbd{+oo} if $x$ is an exact object. If $x$ is a
+ $p$-adic numbers or power series, the result is the exponent of the zero.
+ Any other type combinations gives an error.
+
+Variant: Also available is
+ \fun{long}{gvaluation}{GEN x, GEN p}, which returns \tet{LONG_MAX} if $x = 0$
+ and the valuation as a \kbd{long} integer.

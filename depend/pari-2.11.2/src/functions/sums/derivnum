@@ -1,0 +1,68 @@
+Function: derivnum
+Section: sums
+C-Name: derivnum0
+Prototype: V=GEDGp
+Help: derivnum(X=a,expr,{ind=1}): numerical derivation of expr with respect to
+ X at X = a. The order of derivation is given by parameter 'ind'.
+Wrapper: (,Gp)
+Description:
+  (gen,gen):gen:prec derivnum(${2 cookie}, ${2 wrapper}, $1, $prec)
+  (gen,gen,gen):gen:prec derivfunk(${2 cookie}, ${2 wrapper}, $1, $3, $prec)
+Doc: numerical derivation of \var{expr} with respect to $X$ at $X=a$. The
+ order of derivation is 1 by default.
+
+ \bprog
+ ? derivnum(x=0, sin(exp(x))) - cos(1)
+ %1 = 0.E-38
+ @eprog
+ A clumsier approach, which would not work in library mode, is
+ \bprog
+ ? f(x) = sin(exp(x))
+ ? f'(0) - cos(1)
+ %2 = 0.E-38
+ @eprog
+
+ \item When $a$ is a numerical type (integer, rational number, real number or
+ \typ{COMPLEX} of such), performs numerical derivation.
+
+ \item When $a$ is a (polynomial, rational function or) power series, compute
+ \kbd{derivnum(t=a,f)} as $f'(a) = (f(a))'/a'$:
+ \bprog
+ ? derivnum(x = 1 + t, sqrt(x))
+ %1 = 1/2 - 1/4*t + 3/16*t^2 - 5/32*t^3 + ... + O(t^16)
+ ? derivnum(x = 1/(1 + t), sqrt(x))
+ %2 = 1/2 + 1/4*t - 1/16*t^2 + 1/32*t^3 + ... + O(t^16)
+ ? derivnum(x = 1 + t + O(t^17), sqrt(x))
+ %3 = 1/2 - 1/4*t + 3/16*t^2 - 5/32*t^3 + ... + O(t^16)
+ @eprog
+
+ If the parameter \var{ind} is present, it can be
+
+ \item a non-negative integer $m$, in which case we return $f^{(m)}(x)$;
+
+ \item or a vector of orders, in which case we return the vector of
+ derivatives.
+
+ \bprog
+ ? derivnum(x = 0, exp(sin(x)), 16) \\ 16-th derivative
+ %1 = -52635599.000000000000000000000000000000
+
+ ? round( derivnum(x = 0, exp(sin(x)), [0..13]) )  \\ 0-13-th derivatives
+ %2 = [1, 1, 1, 0, -3, -8, -3, 56, 217, 64, -2951, -12672, 5973, 309376]
+ @eprog
+
+ \synt{derivfunk}{void *E, GEN (*eval)(void*,GEN), GEN a, GEN ind, long prec}.
+ Also available is
+ \fun{GEN}{derivfun}{void *E, GEN (*eval)(void *, GEN), GEN a, long prec}.
+ If $a$ is a numerical type (\typ{INT}, \typ{FRAC}, \typ{REAL} or
+ \typ{COMPLEX} of such, we have
+ \fun{GEN}{derivnumk}{void *E, GEN (*eval)(void *, GEN, long), GEN a, GEN ind, long prec}
+ and
+ \fun{GEN}{derivnum}{void *E, GEN (*eval)(void *, GEN, long prec), GEN a, long prec}
+
+Function: _derivfun
+Section: programming/internals
+C-Name: derivfun0
+Prototype: GGp
+Help: _derivfun(closure,[args]) numerical derivation of closure with respect to
+ the first variable at (args).

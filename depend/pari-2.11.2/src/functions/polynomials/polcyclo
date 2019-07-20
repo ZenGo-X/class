@@ -1,0 +1,20 @@
+Function: polcyclo
+Section: polynomials
+C-Name: polcyclo_eval
+Prototype: LDG
+Help: polcyclo(n,{a = 'x}): n-th cyclotomic polynomial evaluated at a.
+Description:
+  (small,?var):gen     polcyclo($1,$2)
+  (small,gen):gen      polcyclo_eval($1,$2)
+Doc: $n$-th cyclotomic polynomial, evaluated at $a$ (\kbd{'x} by default). The
+ integer $n$ must be positive.
+
+ Algorithm used: reduce to the case where $n$ is squarefree; to compute the
+ cyclotomic polynomial, use $\Phi_{np}(x)=\Phi_n(x^p)/\Phi(x)$; to compute
+ it evaluated, use $\Phi_n(x) = \prod_{d\mid n} (x^d-1)^{\mu(n/d)}$. In the
+ evaluated case, the algorithm assumes that $a^d - 1$ is either $0$ or
+ invertible, for all $d\mid n$. If this is not the case (the base ring has
+ zero divisors), use \kbd{subst(polcyclo(n),x,a)}.
+
+Variant: The variant \fun{GEN}{polcyclo}{long n, long v} returns the $n$-th
+ cyclotomic polynomial in variable $v$.

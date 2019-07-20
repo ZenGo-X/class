@@ -1,0 +1,209 @@
+? allocatemem(20*10^6);
+  ***   Warning: new stack size = 20000000 (19.073 Mbytes).
+? check(a,b)=my(t=abs((a-b)/b));if(t,ceil(log(t)/log(10)),-oo);
+? \p96
+   realprecision = 96 significant digits
+? check(intcirc(s=1,0.5,zeta(s)),1)
+-84
+? f(s)=gamma(s)^3;
+? c=2;
+? A=[-oo,3*Pi/2];
+? B=[+oo,3*Pi/2];
+? F(z)=my(a=-log(z));intnum(t=A,B,exp(a*I*t),T)*exp(a*c)/(2*Pi);
+? T=intfuncinit(t=A,B,f(c+I*t));
+? ref=F(4);
+? \p38
+   realprecision = 38 significant digits
+? T=intfuncinit(t=A,B,f(c+I*t));
+? check(F(4),ref)
+-37
+? \p96
+   realprecision = 96 significant digits
+? f(x)=1/(exp(x)-1)-exp(-x)/x;
+? F=truncate(f(t+O(t^7)));
+? g(x)=if(x>1e-18,f(x),subst(F,t,x));
+? check(intnum(x=0,[oo,1],f(x)),Euler)
+-oo
+? check(intnum(x=0,[oo,1],g(x)),Euler)
+-oo
+? check(intnum(x=0,1,1/sqrt(x)),2)
+-58
+? check(intnum(x=[0,-1/2],1,1/sqrt(x)),2)
+-oo
+? check(intnum(x=100000,oo,1/(1+x^2)),atan(1/100000))
+-oo
+? check(intnum(x=0,1,x*cos(Pi*x)),-2/Pi^2)
+-oo
+? check(intnum(x=0,1,x*cos(Pi*x),2),-2/Pi^2)
+-oo
+? check(intnum(x=[0,-1/2],[oo,-3/2],1/(sqrt(x)+x^(3/2))),Pi)
+-oo
+? check(intnum(x=[-oo,-3/2],[oo,-3/2],1/(1+abs(x)^(3/2))),8*Pi/sqrt(27))
+-oo
+? check(intnum(x=-oo,oo,1/(1+x^2)),Pi)
+-oo
+? f(x)=if(x<0,1/(1+(-x)^(3/2)),1/(1+x^(5/2)));
+? a=4*Pi/sqrt(27)+2*(Pi/5)/sin(2*Pi/5);
+? check(intnum(x=[-oo,-3/2],[oo,-5/2],f(x)),a)
+-oo
+? f(x)=if(x<0,1/(1+(-x)^(3/2)),exp(-x));
+? check(intnum(x=[-oo,-3/2],[oo,1],f(x)),4*Pi/sqrt(27)+1)
+-oo
+? f(x)=if(x<0,1/(1+(-x)^(3/2)),sinc(x));
+? check(intnum(x=[-oo,-3/2],[oo,-I],f(x)),4*Pi/sqrt(27)+Pi/2)
+-oo
+? f(x)=if(x<0,exp(2*x),1/(1+x^(3/2)));
+? check(intnum(x=[-oo,2],[oo,-3/2],f(x)),1/2+4*Pi/sqrt(27))
+-oo
+? f(x)=if(x<0,exp(2*x),1/(1+x^(5/2)));
+? check(intnum(x=[-oo,2],[oo,-5/2],f(x)),1/2+2*(Pi/5)/sin(2*Pi/5))
+-oo
+? f(x)=if(x<0,exp(2*x),exp(-x));
+? check(intnum(x=[-oo,2],[oo,1],f(x)),3/2)
+-oo
+? f(x)=if(x<0,exp(2*x),sinc(x));
+? check(intnum(x=[-oo,2],[oo,-I],f(x)),1/2+Pi/2)
+-oo
+? f(x)=if(x<0,2*sinc(2*x),1/(1+x^(3/2)));
+? check(intnum(x=[-oo,-2*I],[oo,-3/2],f(x)),Pi/2+4*Pi/sqrt(27))
+-oo
+? f(x)=if(x<0,2*sinc(2*x),1/(1+x^(5/2)));
+? check(intnum(x=[-oo,-2*I],[oo,-5/2],f(x)),Pi/2+2*(Pi/5)/sin(2*Pi/5))
+-96
+? f(x)=if(x<0,2*sinc(2*x),exp(-x));
+? check(intnum(x=[-oo,-2*I],[oo,1],f(x)),Pi/2+1)
+-oo
+? f(x)=if(x<0,2*sinc(2*x),sinc(x));
+? check(intnum(x=[-oo,-2*I],[oo,-I],f(x)),Pi)
+-oo
+? f(x)=cos((3+tanh(x))*x)/sqrt(1+x^2);
+? a=intnum(x=[-oo,2*I],[oo,4*I],f(x),1);
+? check(intnum(x=[-oo,2*I],[oo,4*I],f(x)),a)
+-51
+? check(intnum(x=[0,-1/2],[1,-1/3],x^(-1/2)+(1-x)^(-1/3)),7/2)
+-oo
+? T=intnuminit([0,-1/2],[1,-1/3]);
+? check(intnum(x=[0,-1/2],[1,-1/3],x^(-1/2)+(1-x)^(-1/3),T),7/2)
+-oo
+? check(intnum(x=0,[oo,1],sinc(x)),Pi/2)
+-2
+? check(intnum(x=0,[oo,-I],sinc(x)),Pi/2)
+-oo
+? check(intnum(x=0,[oo,-2*I],2*sinc(2*x)),Pi/2)
+-oo
+? A=intnum(x=0,1,sinc(x/2)^2/2)+intnum(x=1,oo,1/x^2)-intnum(x=1,[oo,I],cos(x)/x^2);
+? check(A,Pi/2)
+-95
+? check(intnum(x=0,[oo,1],sin(x)^3*exp(-x)),3/10)
+-47
+? check(intnum(x=0,[oo,-I],sin(x)^3*exp(-x)),3/10)
+-85
+? tab=intnuminit(0,[oo,-I],1);
+? check(intnum(x=0,oo,sin(x)^3*exp(-x),tab),3/10)
+-96
+? check(intnum(x=0,[oo,-I],x^2*sin(x)),-2)
+-oo
+? tab=intnuminit(-1,1);
+? check(intnum(x=-1,1,intnum(y=-sqrt(1-x^2),sqrt(1-x^2),x^2+y^2,tab),tab),Pi/2)
+-96
+? \p96
+? check(intnumgauss(x=0,1,sin(x)),1-cos(1))
+-96
+? T=intnumgaussinit();
+? check(intnumgauss(x=0,1,1/(x+1),T),log(2))
+-oo
+? check(intnumgauss(x=0,1,1/(x+1)^(4/3),T),3-3/2^(1/3))
+-95
+? check(intnumgauss(x=2,1,x,T),-3/2)
+-oo
+? check(intnumgauss(x=-1,1,1/(1+x^2),20),Pi/2)
+-15
+? T=intnumgaussinit(100);
+? check(intnumgauss(x=-2,2,1/(1+x^2),T),2*atan(2))
+-41
+? check(intnumgauss(t=1,2,t,1),3/2)
+-oo
+? checkps(a,b)=my(t=norml2(Vec(b-a)));if(t,ceil(log(t)/log(10)),-oo);
+? checkps(intnum(t=0,x,exp(t)),exp(x)-1)
+-oo
+? checkps(intnum(t=-x,0,exp(t)),1-exp(-x))
+-oo
+? checkps(intnum(t=-x,x,exp(t)),exp(x)-exp(-x))
+-oo
+? tab=intnuminit(1-x,1+y);
+? norml2(apply(Vec,Vec(intnum(t=-x,y,exp(t),tab)-(exp(y)-exp(-x)))))
+0.E-192
+? checkps(intnum(t=[0,-1/2],x^2,1/sqrt(t)),2*x)
+-115
+? checkps(intnum(t=1-x^2,[1,-1/2],1/sqrt(1-t)),2*x)
+-115
+? checkps(intnum(t=[x^2,-1/2],1,1/sqrt(t)),2-2*x)
+-115
+? checkps(intnum(t=0,[1-x^2,-1/2],1/sqrt(1-t)),2-2*x)
+-115
+? f(t)=(t^2*(1-t))^(1/3);
+? checkps(intnum(t=[x^3,-1/3],[1-x^3,-2/3],(2/3*t-t^2)/(t^2*(1-t))^(2/3)),f(1-x^3)-f(x^3))
+-77
+? \p38
+   realprecision = 38 significant digits
+? intnum(x=-oo,[0,-1/2],1/sqrt(-x*(x^4+1)))
+2.5189270468096534385807611189769924243
+? \pb20
+   realbitprecision = 20 significant bits (6 decimal digits displayed)
+? intnumromb(x=0,1,sin(x))
+0.459698
+? intnumromb(x=0,1,sin(x),1)
+0.459698
+? intnumromb(x=1,100,exp(-x^2),2)
+0.139403
+? intnumromb(x=0,1,sinc(x),3)
+0.946083
+? intnumromb(x=0,110,x,1)
+6048.32
+? intnumromb(x=2,110,x,1)
+6039.11
+? abs(intnumromb(x=-110,90,x,1)+1998.3)<1e-1
+1
+? intnumromb(x=2,1,x,1)
+-1.50000
+? intnuminit(-oo,oo,1);
+? intnuminit([x,-1/2],x)
+  ***   at top-level: intnuminit([x,-1/2],x)
+  ***                 ^----------------------
+  *** intnuminit: sorry, intnuminit with singularity at non constant limit is not yet implemented.
+? intnum(t=[x^2,-1/2],1,1/sqrt(t),intnuminit([0,-1/2],1))
+  ***   at top-level: intnum(t=[x^2,-1/2],1,1/sqrt(t),intnuminit([0,
+  ***                                       ^------------------------
+  ***   sorry, non integer tab argument is not yet implemented.
+? intnumgauss(t=1,2,1,"")
+  ***   at top-level: intnumgauss(t=1,2,1,"")
+  ***                                   ^-----
+  ***   incorrect type in intnumgauss (t_STR).
+? intnuminit([oo,1+I],[oo,""])
+  ***   at top-level: intnuminit([oo,1+I],[oo,""])
+  ***                 ^----------------------------
+  *** intnuminit: incorrect type in intnum [incorrect a] (t_VEC).
+? intnuminit([oo,1+I,2],[oo,1])
+  ***   at top-level: intnuminit([oo,1+I,2],[oo,1])
+  ***                 ^-----------------------------
+  *** intnuminit: incorrect type in intnum [incorrect a] (t_VEC).
+? intnum(x=oo,oo,1)
+  ***   Warning: integral from oo to oo.
+0
+? intnum(x=-oo,-oo,1)
+  ***   Warning: integral from -oo to -oo.
+0
+? intnuminit(x=-oo,oo,-1);
+  ***   at top-level: intnuminit(x=-oo,oo,-1)
+  ***                 ^-----------------------
+  *** intnuminit: domain error in intnuminit: m < 0
+? intfuncinit(t=0,1,s);
+  ***   at top-level: intfuncinit(t=0,1,s)
+  ***                                   ^--
+  ***   sorry, intfuncinit with finite endpoints is not yet implemented.
+? intfuncinit(t=[-oo,I],[oo,I],s);
+  ***   at top-level: ...uncinit(t=[-oo,I],[oo,I],s)
+  ***                                             ^--
+  ***   sorry, intfuncinit with hard endpoint behavior is not yet implemented.
+? print("Total time spent: ",gettime);
+Total time spent: 2055

@@ -1,0 +1,34 @@
+Function: gcdext
+Section: number_theoretical
+C-Name: gcdext0
+Prototype: GG
+Help: gcdext(x,y): returns [u,v,d] such that d=gcd(x,y) and u*x+v*y=d.
+Doc: Returns $[u,v,d]$ such that $d$ is the gcd of $x,y$,
+ $x*u+y*v=\gcd(x,y)$, and $u$ and $v$ minimal in a natural sense.
+ The arguments must be integers or polynomials. \sidx{extended gcd}
+ \sidx{Bezout relation}
+ \bprog
+ ? [u, v, d] = gcdext(32,102)
+ %1 = [16, -5, 2]
+ ? d
+ %2 = 2
+ ? gcdext(x^2-x, x^2+x-2)
+ %3 = [-1/2, 1/2, x - 1]
+ @eprog
+
+ If $x,y$ are polynomials in the same variable and \emph{inexact}
+ coefficients, then compute $u,v,d$ such that $x*u+y*v = d$, where $d$
+ approximately divides both and $x$ and $y$; in particular, we do not obtain
+ \kbd{gcd(x,y)} which is \emph{defined} to be a scalar in this case:
+ \bprog
+ ? a = x + 0.0; gcd(a,a)
+ %1 = 1
+
+ ? gcdext(a,a)
+ %2 = [0, 1, x + 0.E-28]
+
+ ? gcdext(x-Pi, 6*x^2-zeta(2))
+ %3 = [-6*x - 18.8495559, 1, 57.5726923]
+ @eprog\noindent For inexact inputs, the output is thus not well defined
+ mathematically, but you obtain explicit polynomials to check whether the
+ approximation is close enough for your needs.

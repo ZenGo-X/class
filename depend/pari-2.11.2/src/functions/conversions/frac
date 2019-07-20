@@ -1,0 +1,8 @@
+Function: frac
+Section: conversions
+C-Name: gfrac
+Prototype: G
+Help: frac(x): fractional part of x = x-floor(x).
+Doc:
+ fractional part of $x$. Identical to
+ $x-\text{floor}(x)$. If $x$ is real, the result is in $[0,1[$.

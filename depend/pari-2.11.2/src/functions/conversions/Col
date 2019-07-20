@@ -1,0 +1,36 @@
+Function: Col
+Section: conversions
+C-Name: gtocol0
+Prototype: GD0,L,
+Help: Col(x, {n}): transforms the object x into a column vector of dimension n.
+Description:
+ (gen):vec     gtocol($1)
+Doc:
+ transforms the object $x$ into a column vector. The dimension of the
+ resulting vector can be optionally specified via the extra parameter $n$.
+
+ If $n$ is omitted or $0$, the dimension depends on the type of $x$; the
+ vector has a single component, except when $x$ is
+
+ \item a vector or a quadratic form (in which case the resulting vector
+ is simply the initial object considered as a row vector),
+
+ \item a polynomial or a power series. In the case of a polynomial, the
+ coefficients of the vector start with the leading coefficient of the
+ polynomial, while for power series only the significant coefficients are
+ taken into account, but this time by increasing order of degree.
+ In this last case, \kbd{Vec} is the reciprocal function of \kbd{Pol} and
+ \kbd{Ser} respectively,
+
+ \item a matrix (the column of row vector comprising the matrix is returned),
+
+ \item a character string (a vector of individual characters is returned).
+
+ In the last two cases (matrix and character string), $n$ is meaningless and
+ must be omitted or an error is raised. Otherwise, if $n$ is given, $0$
+ entries are appended at the end of the vector if $n > 0$, and prepended at
+ the beginning if $n < 0$. The dimension of the resulting vector is $|n|$.
+
+ See ??Vec for examples.
+
+Variant: \fun{GEN}{gtocol}{GEN x} is also available.

@@ -1,0 +1,7 @@
+Function: bezout
+Section: number_theoretical
+C-Name: gcdext0
+Prototype: GG
+Obsolete: 2013-04-03
+Help: bezout(x,y): deprecated alias for gcdext.
+Doc: deprecated alias for \kbd{gcdext}

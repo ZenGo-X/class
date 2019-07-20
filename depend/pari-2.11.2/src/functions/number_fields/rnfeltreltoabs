@@ -1,0 +1,22 @@
+Function: rnfeltreltoabs
+Section: number_fields
+C-Name: rnfeltreltoabs
+Prototype: GG
+Help: rnfeltreltoabs(rnf,x): transforms the element x from relative to
+ absolute representation.
+Doc: $\var{rnf}$ being a relative
+ number field extension $L/K$ as output by \kbd{rnfinit} and $x$ being an
+ element of $L$ expressed as a polynomial or polmod with polmod
+ coefficients, computes $x$ as an element of the absolute extension $L/\Q$ as
+ a polynomial modulo the absolute equation \kbd{\var{rnf}.pol}.
+ \bprog
+ ? K = nfinit(y^2+1); L = rnfinit(K, x^2-y);
+ ? L.pol
+ %2 = x^4 + 1
+ ? rnfeltreltoabs(L, Mod(x, L.pol))
+ %3 = Mod(x, x^4 + 1)
+ ? rnfeltreltoabs(L, Mod(y, x^2-y))
+ %4 = Mod(x^2, x^4 + 1)
+ ? rnfeltreltoabs(L, Mod(y,K.pol))
+ %5 = Mod(x^2, x^4 + 1)
+ @eprog

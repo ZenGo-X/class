@@ -1,0 +1,155 @@
+Function: _header_number_theoretical
+Class: header
+Section: number_theoretical
+Doc:
+ \section{Arithmetic functions}\label{se:arithmetic}
+
+ These functions are by definition functions whose natural domain of
+ definition is either $\Z$ (or $\Z_{>0}$). The way these functions are used is
+ completely different from transcendental functions in that there are no
+ automatic type conversions: in general only integers are accepted as
+ arguments. An integer argument $N$ can be given in the following alternate
+ formats:
+
+ \item \typ{MAT}: its factorization \kbd{fa = factor($N$)},
+
+ \item \typ{VEC}: a pair \kbd{[$N$, fa]} giving both the integer and
+   its factorization.
+
+ This allows to compute different arithmetic functions at a given $N$
+ while factoring the latter only once.
+
+ \bprog
+   ? N = 10!; faN = factor(N);
+   ? eulerphi(N)
+   %2 = 829440
+   ? eulerphi(faN)
+   %3 = 829440
+   ? eulerphi(S = [N, faN])
+   %4 = 829440
+   ? sigma(S)
+   %5 = 15334088
+ @eprog
+
+ \subsec{Arithmetic functions and the factoring engine}
+ All arithmetic functions in the narrow sense of the word~--- Euler's
+ totient\sidx{Euler totient function} function, the \idx{Moebius} function,
+ the sums over divisors or powers of divisors etc.--- call, after trial
+ division by small primes, the same versatile factoring machinery described
+ under \kbd{factorint}. It includes \idx{Shanks SQUFOF}, \idx{Pollard Rho},
+ \idx{ECM} and \idx{MPQS} stages, and has an early exit option for the
+ functions \teb{moebius} and (the integer function underlying)
+ \teb{issquarefree}. This machinery relies on a fairly strong
+ probabilistic primality test, see \kbd{ispseudoprime}, but you may also set
+ \bprog
+   default(factor_proven, 1)
+ @eprog\noindent to ensure that all tentative factorizations are fully proven.
+ This should not slow down PARI too much, unless prime numbers with
+ hundreds of decimal digits occur frequently in your application.
+
+ \subsec{Orders in finite groups and Discrete Logarithm functions}
+ \label{se:DLfun}
+
+ The following functions compute the order of an element in a finite group:
+ \kbd{ellorder} (the rational points on an elliptic curve defined over a
+ finite field), \kbd{fforder} (the multiplicative group of a finite field),
+ \kbd{znorder} (the invertible elements in $\Z/n\Z$). The following functions
+ compute discrete logarithms in the same groups (whenever this is meaningful)
+ \kbd{elllog}, \kbd{fflog}, \kbd{znlog}.
+
+ All such functions allow an optional argument specifying an integer
+ $N$, representing the order of the group. (The \emph{order} functions also
+ allows any non-zero multiple of the order, with a minor loss of efficiency.)
+ That optional argument follows the same format as given above:
+
+ \item \typ{INT}: the integer $N$,
+
+ \item \typ{MAT}: the factorization \kbd{fa = factor($N$)},
+
+ \item \typ{VEC}: this is the preferred format and provides both the
+ integer $N$ and its factorization in a two-component vector
+ \kbd{[$N$, fa]}.
+
+ When the group is fixed and many orders or discrete logarithms will be
+ computed, it is much more efficient to initialize this data once and for all
+ and pass it to the relevant functions, as in
+ \bprog
+ ? p = nextprime(10^40);
+ ? v = [p-1, factor(p-1)]; \\ data for discrete log & order computations
+ ? znorder(Mod(2,p), v)
+ %3 = 500000000000000000000000000028
+ ? g = znprimroot(p);
+ ? znlog(2, g, v)
+ %5 = 543038070904014908801878611374
+ @eprog
+
+ \subsec{Dirichlet characters}\label{se:dirichletchar}
+
+ The finite abelian group $G = (\Z/N\Z)^*$ can be written $G = \oplus_{i\leq
+ n} (\Z/d_i\Z) g_i$, with $d_n \mid \dots \mid d_2 \mid d_1$ (SNF condition),
+ all $d_i > 0$, and $\prod_i d_i = \phi(N)$.
+
+ The SNF condition makes the $d_i$ unique, but the generators $g_i$, of
+ respective order $d_i$, are definitely not unique. The $\oplus$ notation
+ means that all elements of $G$ can be written uniquely as $\prod_i g_i^{n_i}$
+ where $n_i \in \Z/d_i\Z$. The $g_i$ are the so-called \tev{SNF generators}
+ of $G$.
+
+ \item a \tev{character} on the abelian group
+ $\oplus (\Z/d_j\Z) g_j$
+ is given by a row vector $\chi = [a_1,\ldots,a_n]$ of integers $0\leq a_i  <
+ d_i$ such that $\chi(g_j) = e(a_j / d_j)$ for all $j$, with the standard
+ notation $e(x) := \exp(2i\pi x)$.
+ In other words,
+ $\chi(\prod g_j^{n_j}) = e(\sum a_j n_j / d_j)$.
+
+ This will be generalized to more general abelian groups in later sections
+ (Hecke characters), but in the present case of $(\Z/N\Z)^*$, there is a useful
+ alternate convention : namely, it is not necessary to impose the SNF
+ condition and we can use Chinese reminders instead. If $N = \prod p^{e_p}$ is
+ the factorization of $N$ into primes, the so-called \tev{Conrey generators}
+ of $G$ are the generators of the $(\Z/p^{e_p}\Z)^*$ lifted to $(\Z/N\Z)^*$ by
+ requesting that they be congruent to $1$ modulo $N/p^{e_p}$ (for $p$ odd we
+ take the smallest positive primitive root mod $p^2$, and for $p = 2$
+ we take $-1$ if
+ $e_2 > 1$ and additionally $5$ if $e_2 > 2$). We can again write $G =
+ \oplus_{i\leq n} (\Z/D_i\Z) G_i$, where again $\prod_i D_i = \phi(N)$. These
+ generators don't satisfy the SNF condition in general since their orders are
+ now $(p-1)p^{e_p-1}$ for $p$ odd; for $p = 2$, the generator $-1$ has order
+ $2$ and $5$ has order $2^{e_2-2}$ $(e_2 > 2)$. Nevertheless, any $m\in
+ (\Z/N\Z)^*$ can be uniquely decomposed as $\prod G_i^{m_i}$ for some $m_i$
+ modulo $D_i$ and we can define a character by $\chi(G_j) = e(m_j / D_j)$ for
+ all $j$.
+
+ \item The \emph{column vector} of the $m_j$, $0 \leq m_j < D_j$ is called the
+ \tev{Conrey logarithm} of $m$ (discrete logarithm in terms of the Conrey
+ generators). Note that discrete logarithms in PARI/GP are always expressed as
+ \typ{COL}s.
+
+ \item The attached character is called the \tev{Conrey character}
+ attached to $m$.
+
+ To sum up a Dirichlet character can be defined by a \typ{INT} (the Conrey
+ label $m$), a \typ{COL} (the Conrey logarithm of $m$, in terms of the Conrey
+ generators) or a \typ{VEC} (in  terms of the SNF generators). The \typ{COL}
+ format, i.e. Conrey logarithms, is the preferred (fastest) representation.
+
+ Concretely, this works as follows:
+
+ \kbd{G = znstar(N, 1)} initializes $(\Z/N\Z)^*$, which must be given as
+ first arguments to all functions handling Dirichlet characters.
+
+ \kbd{znconreychar} transforms \typ{INT} and \typ{COL} to a SNF character.
+
+ \kbd{znconreylog} transforms \typ{INT} and \typ{VEC} to a Conrey logarithm.
+
+ \kbd{znconreyexp} transforms \typ{VEC} and \typ{COL} to a Conrey label.
+
+ Also available are \kbd{charconj},  \kbd{chardiv}, \kbd{charmul},
+ \kbd{charker}, \kbd{chareval}, \kbd{charorder}, \kbd{zncharinduce},
+ \kbd{znconreyconductor} (also computes the primitive character attached to
+ the input character). The prefix \kbd{char} indicates that the function
+ applies to all characters, the prefix \kbd{znchar} that it is specific to
+ Dirichlet characters (on $(\Z/N\Z)^*$) and the prefix \kbd{znconrey} that it
+ is specific to Conrey representation.
+

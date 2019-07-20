@@ -1,0 +1,15 @@
+Function: sqrtint
+Section: number_theoretical
+C-Name: sqrtint
+Prototype: G
+Help: sqrtint(x): integer square root of x, where x is a non-negative integer.
+Description:
+ (gen):int sqrtint($1)
+Doc: returns the integer square root of $x$, i.e. the largest integer $y$
+ such that $y^2 \leq x$, where $x$ a non-negative integer.
+ \bprog
+ ? N = 120938191237; sqrtint(N)
+ %1 = 347761
+ ? sqrt(N)
+ %2 = 347761.68741970412747602130964414095216
+ @eprog

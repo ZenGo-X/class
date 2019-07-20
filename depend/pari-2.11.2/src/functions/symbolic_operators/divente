@@ -1,0 +1,10 @@
+Function: _\=_
+Section: symbolic_operators
+C-Name: gdivente
+Prototype: &G
+Help: x\=y: shortcut for x=x\y.
+Description:
+ (*small, small):small:parens                   $1 /= $(2)
+ (*int, int):int:parens                         $1 = gdivent($1, $2)
+ (*pol, gen):gen:parens                         $1 = gdivent($1, $2)
+ (*gen, gen):gen:parens                         $1 = gdivent($1, $2)

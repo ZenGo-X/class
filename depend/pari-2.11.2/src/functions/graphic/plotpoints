@@ -1,0 +1,27 @@
+Function: plotpoints
+Section: graphic
+C-Name: plotpoints
+Prototype: vLGG
+Help: plotpoints(w,X,Y): draws in rectwindow w the points whose x
+ (resp y) coordinates are in X (resp Y). If X and Y are both
+ single values (i.e not vectors), draw the corresponding point (and move
+ cursor).
+Doc: draw on the rectwindow $w$ the
+ points whose $(x,y)$-coordinates are in the vectors of equal length $X$ and
+ $Y$ and which are inside $w$. The virtual cursor does \emph{not} move. This
+ is basically the same function as \kbd{plothraw}, but either with no scaling
+ factor or with a scale chosen using the function \kbd{plotscale}.
+
+ As was the case with the \kbd{plotlines} function, $X$ and $Y$ are allowed to
+ be (simultaneously) scalar. In this case, draw the single point $(X,Y)$ on
+ the rectwindow $w$ (if it is actually inside $w$), and in any case
+ \emph{move} the virtual cursor to position $(x,y)$.
+
+ If you draw few points in the rectwindow, they will be hard to see; in
+ this case, you can use filled boxes instead. Compare:
+ \bprog
+ ? plotinit(0, 100,100); plotpoints(0, 50,50);
+ ? plotdraw(0)
+ ? plotinit(1, 100,100); plotmove(1,48,48); plotrbox(1, 4,4, 1);
+ ? plotdraw(1)
+ @eprog

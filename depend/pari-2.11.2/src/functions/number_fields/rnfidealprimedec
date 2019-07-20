@@ -1,0 +1,30 @@
+Function: rnfidealprimedec
+Section: number_fields
+C-Name: rnfidealprimedec
+Prototype: GG
+Help: rnfidealprimedec(rnf,pr): return prime ideal decomposition of the maximal
+ ideal pr of K in L/K; pr is also allowed to be a prime number p, in which
+ case return a pair of vectors [SK,SL], where SK contains the primes of K
+ above p and SL[i] is the vector of primes of L above SK[i].
+Doc: let \var{rnf} be a relative number
+ field extension $L/K$ as output by \kbd{rnfinit}, and \var{pr} a maximal
+ ideal of $K$ (\var{prid}), this function completes the \var{rnf}
+ with a \var{nf} structure attached to $L$ (see \secref{se:rnfinit})
+ and returns the prime ideal decomposition of \var{pr} in $L/K$.
+ \bprog
+ ? K = nfinit(y^2+1); rnf = rnfinit(K, x^3+y+1);
+ ? P = idealprimedec(K, 2)[1];
+ ? S = rnfidealprimedec(rnf, P);
+ ? #S
+ %4 = 1
+ @eprog
+ The argument \var{pr} is also allowed to be a prime number $p$, in which
+ case the function returns a pair of vectors \kbd{[SK,SL]}, where \kbd{SK} contains
+ the primes of $K$ above $p$ and \kbd{SL}$[i]$ is the vector of primes of $L$
+ above \kbd{SK}$[i]$.
+ \bprog
+ ? [SK,SL] = rnfidealprimedec(rnf, 5);
+ ? [#SK, vector(#SL,i,#SL[i])]
+ %6 = [2, [2, 2]]
+ @eprog
+

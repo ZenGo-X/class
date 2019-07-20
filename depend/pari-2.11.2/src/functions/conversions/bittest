@@ -1,0 +1,27 @@
+Function: bittest
+Section: conversions
+C-Name: gbittest
+Prototype: GL
+Help: bittest(x,n): gives bit number n (coefficient of 2^n) of the integer x.
+ Negative numbers behave as if modulo big power of 2.
+Description:
+ (small, small):bool:parens     ($(1)>>$(2))&1
+ (int, small):bool              bittest($1, $2)
+ (gen, small):gen               gbittest($1, $2)
+Doc:
+ outputs the $n^{\text{th}}$ bit of $x$ starting
+ from the right (i.e.~the coefficient of $2^n$ in the binary expansion of $x$).
+ The result is 0 or 1.
+ \bprog
+ ? bittest(7, 0)
+ %1 = 1 \\ the bit 0 is 1
+ ? bittest(7, 2)
+ %2 = 1 \\ the bit 2 is 1
+ ? bittest(7, 3)
+ %3 = 0 \\ the bit 3 is 0
+ @eprog\noindent
+ See \secref{se:bitand} for the behavior at negative arguments.
+Variant: For a \typ{INT} $x$, the variant \fun{long}{bittest}{GEN x, long n} is
+ generally easier to use, and if furthermore $n\ge 0$ the low-level function
+ \fun{ulong}{int_bit}{GEN x, long n} returns \kbd{bittest(abs(x),n)}.
+

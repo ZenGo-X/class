@@ -1,0 +1,33 @@
+Function: factornf
+Section: number_fields
+C-Name: polfnf
+Prototype: GG
+Obsolete: 2016-08-08
+Help: factornf(x,t): this function is obsolete, use nffactor.
+Doc: This function is obsolete, use \kbd{nffactor}.
+
+ factorization of the univariate polynomial $x$
+ over the number field defined by the (univariate) polynomial $t$. $x$ may
+ have coefficients in $\Q$ or in the number field. The algorithm reduces to
+ factorization over $\Q$ (\idx{Trager}'s trick). The direct approach of
+ \tet{nffactor}, which uses \idx{van Hoeij}'s method in a relative setting, is
+ in general faster.
+
+ The main variable of $t$ must be of \emph{lower} priority than that of $x$
+ (see \secref{se:priority}). However if non-rational number field elements
+ occur (as polmods or polynomials) as coefficients of $x$, the variable of
+ these polmods \emph{must} be the same as the main variable of $t$. For
+ example
+
+ \bprog
+ ? factornf(x^2 + Mod(y, y^2+1), y^2+1);
+ ? factornf(x^2 + y, y^2+1); \\@com these two are OK
+ ? factornf(x^2 + Mod(z,z^2+1), y^2+1)
+   ***   at top-level: factornf(x^2+Mod(z,z
+   ***                 ^--------------------
+   *** factornf: inconsistent data in rnf function.
+ ? factornf(x^2 + z, y^2+1)
+   ***   at top-level: factornf(x^2+z,y^2+1
+   ***                 ^--------------------
+   *** factornf: incorrect variable in rnf function.
+ @eprog

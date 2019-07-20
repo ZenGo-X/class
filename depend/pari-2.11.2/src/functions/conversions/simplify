@@ -1,0 +1,32 @@
+Function: simplify
+Section: conversions
+C-Name: simplify
+Prototype: G
+Help: simplify(x): simplify the object x as much as possible.
+Doc:
+ this function simplifies $x$ as much as it can. Specifically, a complex or
+ quadratic number whose imaginary part is the integer 0 (i.e.~not \kbd{Mod(0,2)}
+ or \kbd{0.E-28}) is converted to its real part, and a polynomial of degree $0$
+ is converted to its constant term. Simplifications occur recursively.
+
+ This function is especially useful before using arithmetic functions,
+ which expect integer arguments:
+ \bprog
+ ? x = 2 + y - y
+ %1 = 2
+ ? isprime(x)
+   ***   at top-level: isprime(x)
+   ***                 ^----------
+   *** isprime: not an integer argument in an arithmetic function
+ ? type(x)
+ %2 = "t_POL"
+ ? type(simplify(x))
+ %3 = "t_INT"
+ @eprog
+ Note that GP results are simplified as above before they are stored in the
+ history. (Unless you disable automatic simplification with \b{y}, that is.)
+ In particular
+ \bprog
+ ? type(%1)
+ %4 = "t_INT"
+ @eprog

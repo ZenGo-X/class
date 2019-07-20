@@ -1,0 +1,18 @@
+Function: mfcosets
+Section: modular_forms
+C-Name: mfcosets
+Prototype: G
+Help: mfcosets(N): list of right cosets of G_0(N)\G, i.e., matrices ga_j in G
+ such that G=U G_0(N)ga_j. The ga_j are chosen in the form [a,b;c,d] with
+ c\mid N. N can be either a positive integer or a modular form space.
+Doc: list of right cosets of $\Gamma_0(N) \bs \Gamma$, i.e., matrices
+ $\gamma_j \in \Gamma$ such that $\Gamma = \bigsqcup_j \Gamma_0(N) \gamma_j$.
+ The $\gamma_j$ are chosen in the form $[a,b;c,d]$ with $c\mid N$.
+ $N$ can be either a positive integer or a modular form space.
+ \bprog
+ ? mfcosets(4)
+ %1 = [[0, -1; 1, 0], [1, 0; 1, 1], [0, -1; 1, 2], [0, -1; 1, 3],\
+       [1, 0; 2, 1], [1, 0; 4, 1]]
+ @eprog
+ \misctitle{Warning} in the present implementation, the trivial coset is
+ represented by $[1,0;N,1]$ and is the last in the list.

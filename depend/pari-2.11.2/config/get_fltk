@@ -1,0 +1,20 @@
+if test -z "$with_fltk"; then
+  with_fltk=yes
+fi
+
+cmd="FLTK_LIBS=\`fltk-config --ldflags\`"
+. log_cmd
+
+exe=$osname-$arch-fltk$$$exe_suff
+cxx=$CXX
+if test -z "$cxx"; then cxx=g++; fi;
+cmd="$cxx $CFLAGS $FLTK_LIBS -o $exe has_fltk.c"
+. log_cmd
+if test -r "$exe"; then
+  echo "Using FLTK library"
+  FLTK_LIBS="$FLTK_LIBS -lstdc++"
+else
+  echo "### FLTK not found. Building without FLTK support"
+  FLTK_LIBS=
+fi
+. cleanup_exe

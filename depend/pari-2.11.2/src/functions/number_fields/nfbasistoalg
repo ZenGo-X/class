@@ -1,0 +1,20 @@
+Function: nfbasistoalg
+Section: number_fields
+C-Name: basistoalg
+Prototype: GG
+Help: nfbasistoalg(nf,x): transforms the column vector x on the integral
+ basis into an algebraic number.
+Doc: Given an algebraic number $x$ in the number field \var{nf}, transforms it
+ into \typ{POLMOD} form.
+ \bprog
+ ? nf = nfinit(y^2 + 4);
+ ? nf.zk
+ %2 = [1, 1/2*y]
+ ? nfbasistoalg(nf, [1,1]~)
+ %3 = Mod(1/2*y + 1, y^2 + 4)
+ ? nfbasistoalg(nf, y)
+ %4 = Mod(y, y^2 + 4)
+ ? nfbasistoalg(nf, Mod(y, y^2+4))
+ %5 = Mod(y, y^2 + 4)
+ @eprog
+ This is the inverse function of \kbd{nfalgtobasis}.

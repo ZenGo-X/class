@@ -1,0 +1,14 @@
+Function: matfrobenius
+Section: linear_algebra
+C-Name: matfrobenius
+Prototype: GD0,L,Dn
+Help: matfrobenius(M,{flag},{v='x}): return the Frobenius form of the square
+ matrix M. If flag is 1, return only the elementary divisors as a vector of
+ polynomials in the variable v. If flag is 2, return a two-components vector
+ [F,B] where F is the Frobenius form and B is the basis change so that
+ M=B^-1*F*B.
+Doc: returns the Frobenius form of
+ the square matrix \kbd{M}. If $\fl=1$, returns only the elementary divisors as
+ a vector of polynomials in the variable \kbd{v}.  If $\fl=2$, returns a
+ two-components vector [F,B] where \kbd{F} is the Frobenius form and \kbd{B} is
+ the basis change so that $M=B^{-1}FB$.

@@ -1,0 +1,61 @@
+tdir=$osname-$arch-X11$$
+mkdir $tdir; cp Imakefile $tdir; cd $tdir
+cmd="xmkmf"; . ../log_cmd
+if test -f Makefile; then
+  eval `make gp-X11 >&5 2>&1 | grep -v make`
+  x11pth="$usrlibdir $libdir";
+fi
+cd ..; rm -rf $tdir
+
+# Check xmkmf answer
+# X11 -- Headers
+if test ! -f $Xincroot/X11/Xos.h; then
+  x11pth="$addlib64\
+    /usr/openwin/share/lib\
+    /usr/openwin/lib\
+    /usr/X11R6/lib       /usr/X11R5/lib       /usr/X11R4/lib\
+    /usr/lib/X11R6       /usr/lib/X11R5       /usr/lib/X11R4\
+    /usr/local/X11R6/lib /usr/local/X11R5/lib /usr/local/X11R4/lib\
+    /usr/local/lib/X11R6 /usr/local/lib/X11R5 /usr/local/lib/X11R4\
+    /usr/X11/lib\
+    /usr/lib/X11\
+    /usr/local/X11/lib\
+    /usr/local/lib/X11\
+    /usr/XFree86/lib/X11\
+    /usr/lib\
+    /usr/local/lib\
+    /usr/athena/lib\
+  ";
+  pth=`echo $x11pth | sed 's,/lib,/include,g'`
+  x=`./locate X11/Xos.h '' $pth`
+  case $x in
+   /*) Xincroot=`echo $x | sed 's,/X11/Xos.h,,'`;;
+   *)  Xincroot=;;
+  esac
+fi
+if test -f $Xincroot/X11/Xos.h; then
+  echo ..."Found X11 header files in $Xincroot/X11"
+  X11_INC="-I$Xincroot"
+fi
+# X11 -- Lib
+
+exe=$osname-$arch-X11$$$exe_suff
+cmd0="$CC $CFLAGS $extraflag $X11_INC -o $exe has_X11.c"
+try() { X11_LIBS=$1; cmd="$cmd0 $1"; . log_cmd; }
+
+try "-lX11 $extralib"
+if test ! -r $exe; then
+  pth=$x11pth
+  lib=X11; . ./locatelib
+  if test -n "$X11"; then
+    try "-L$X11 -lX11 $extralib"
+  fi
+fi
+
+if test ! -r $exe; then
+  echo "### X11 not found"
+  X11_LIBS=
+  X11_INC=
+fi
+. cleanup_exe
+echo ..."X11 libraries: $X11_LIBS"

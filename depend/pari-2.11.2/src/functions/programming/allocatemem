@@ -1,0 +1,91 @@
+Function: allocatemem
+Section: programming/specific
+C-Name: gp_allocatemem
+Prototype: vDG
+Help: allocatemem({s=0}): allocates a new stack of s bytes. doubles the
+ stack if s is omitted.
+Doc: this special operation changes the stack size \emph{after}
+ initialization. The argument $s$ must be a non-negative integer.
+ If $s > 0$, a new stack of at least $s$ bytes is allocated. We may allocate
+ more than $s$ bytes if $s$ is way too small, or for alignment reasons: the
+ current formula is $\max(16*\ceil{s/16}, 500032)$ bytes.
+
+ If $s=0$, the size of the new stack is twice the size of the old one.
+
+ This command is much more useful if \tet{parisizemax} is non-zero, and we
+ describe this case first. With \kbd{parisizemax} enabled, there are three
+ sizes of interest:
+
+ \item a virtual stack size, \tet{parisizemax}, which is an absolute upper
+ limit for the stack size; this is set by \kbd{default(parisizemax, ...)}.
+
+ \item the desired typical stack size, \tet{parisize}, that will grow as
+ needed, up to \tet{parisizemax}; this is set by \kbd{default(parisize, ...)}.
+
+ \item the current stack size, which is less that \kbd{parisizemax},
+ typically equal to \kbd{parisize} but possibly larger and increasing
+ dynamically as needed; \kbd{allocatemem} allows to change that one
+ explicitly.
+
+ The \kbd{allocatemem} command forces stack
+ usage to increase temporarily (up to \kbd{parisizemax} of course); for
+ instance if you notice using \kbd{\bs gm2} that we seem to collect garbage a
+ lot, e.g.
+ \bprog
+ ? \gm2
+   debugmem = 2
+ ? default(parisize,"32M")
+  ***   Warning: new stack size = 32000000 (30.518 Mbytes).
+ ? bnfinit('x^2+10^30-1)
+  *** bnfinit: collecting garbage in hnffinal, i = 1.
+  *** bnfinit: collecting garbage in hnffinal, i = 2.
+  *** bnfinit: collecting garbage in hnffinal, i = 3.
+ @eprog\noindent and so on for hundred of lines. Then, provided the
+ \tet{breakloop} default is set, you can interrupt the computation, type
+ \kbd{allocatemem(100*10\pow6)} at the break loop prompt, then let the
+ computation go on by typing \kbd{<Enter>}. Back at the \kbd{gp} prompt,
+ the desired stack size of \kbd{parisize} is restored. Note that changing either
+ \kbd{parisize} or \kbd{parisizemax} at the break loop prompt would interrupt
+ the computation, contrary to the above.
+
+ In most cases, \kbd{parisize} will increase automatically (up to
+ \kbd{parisizemax}) and there is no need to perform the above maneuvers.
+ But that the garbage collector is sufficiently efficient that
+ a given computation can still run without increasing the stack size,
+ albeit very slowly due to the frequent garbage collections.
+
+ \misctitle{Deprecated: when \kbd{parisizemax} is unset}
+ This is currently still the default behavior in order not to break backward
+ compatibility. The rest of this section documents the
+ behavior of \kbd{allocatemem} in that (deprecated) situation: it becomes a
+ synonym for \kbd{default(parisize,...)}. In that case, there is no
+ notion of a virtual stack, and the stack size is always equal to
+ \kbd{parisize}. If more memory is needed, the PARI stack overflows, aborting
+ the computation.
+
+ Thus, increasing \kbd{parisize} via \kbd{allocatemem} or
+ \kbd{default(parisize,...)} before a big computation is important.
+ Unfortunately, either must be typed at the \kbd{gp} prompt in
+ interactive usage, or left by itself at the start of batch files.
+ They cannot be used meaningfully in loop-like constructs, or as part of a
+ larger expression sequence, e.g
+ \bprog
+    allocatemem(); x = 1;   \\@com This will not set \kbd{x}!
+ @eprog\noindent
+ In fact, all loops are immediately exited, user functions terminated, and
+ the rest of the sequence following \kbd{allocatemem()} is silently
+ discarded, as well as all pending sequences of instructions. We just go on
+ reading the next instruction sequence from the file we are in (or from the
+ user). In particular, we have the following possibly unexpected behavior: in
+ \bprog
+    read("file.gp"); x = 1
+ @eprog\noindent were \kbd{file.gp} contains an \kbd{allocatemem} statement,
+ the \kbd{x = 1} is never executed, since all pending instructions in the
+ current sequence are discarded.
+
+ The reason for these unfortunate side-effects is that, with
+ \kbd{parisizemax} disabled, increasing the stack size physically
+ moves the stack, so temporary objects created during the current expression
+ evaluation are not correct anymore. (In particular byte-compiled expressions,
+ which are allocated on the stack.) To avoid accessing obsolete pointers to
+ the old stack, this routine ends by a \kbd{longjmp}.

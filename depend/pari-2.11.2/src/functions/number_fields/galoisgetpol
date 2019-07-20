@@ -1,0 +1,39 @@
+Function: galoisgetpol
+Section: number_fields
+C-Name: galoisgetpol
+Prototype: LD0,L,D1,L,
+Description:
+ (small):int               galoisnbpol($1)
+ (small,):int              galoisnbpol($1)
+ (small,,):int             galoisnbpol($1)
+ (small,small,small):vec   galoisgetpol($1, $2 ,$3)
+Help: galoisgetpol(a,{b},{s}): query the galpol package for a polynomial with
+ Galois group isomorphic to GAP4(a,b), totally real if s=1 (default) and
+ totally complex if s=2.  The output is a vector [pol, den] where pol is the
+ polynomial and den is the common denominator of the conjugates expressed
+ as a polynomial in a root of pol. If b and s are omitted, return the number of
+ isomorphism classes of groups of order a.
+Doc: Query the \kbd{galpol} package for a polynomial with Galois group
+ isomorphic to
+ GAP4(a,b), totally real if $s=1$ (default) and totally complex if $s=2$.
+ The current version of \kbd{galpol} supports groups of order $a\leq 143$.
+ The output is a vector [\kbd{pol}, \kbd{den}] where
+
+ \item  \kbd{pol} is the polynomial of degree $a$
+
+ \item \kbd{den} is the denominator of \kbd{nfgaloisconj(pol)}.
+ Pass it as an optional argument to \tet{galoisinit} or \tet{nfgaloisconj} to
+ speed them up:
+ \bprog
+ ? [pol,den] = galoisgetpol(64,4,1);
+ ? G = galoisinit(pol);
+ time = 352ms
+ ? galoisinit(pol, den);  \\ passing 'den' speeds up the computation
+ time = 264ms
+ ? % == %`
+ %4 = 1  \\ same answer
+ @eprog
+ If $b$ and $s$ are omitted, return the number of isomorphism classes of
+ groups of order $a$.
+Variant: Also available is \fun{GEN}{galoisnbpol}{long a} when $b$ and $s$
+ are omitted.

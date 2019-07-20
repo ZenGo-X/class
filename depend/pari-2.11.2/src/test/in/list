@@ -1,0 +1,55 @@
+L = List();
+for (i=1,10^5,listput(L,i))
+L = List([1,2,3]);
+for (i=1,5000,listinsert(L,i,3))
+L = List([1,2,3,3]);
+concat(L,5)
+concat(1,L)
+L = concat(L,L)
+listsort(L); L
+listsort(L,1); L
+listpop(L); L
+listpop(L,1); L
+\\
+L = List([[1,2,3], 2])
+L[1][1] = 3
+L
+L = List([Vecsmall([1,2,3]), 2])
+L[1][1] = 3
+
+L = List(); listput(L,1); listpop(L); listpop(L);
+
+matdiagonal(List([0]))
+g(L)=for(i=1,5,listput(L,5-i));L;
+l=List([10,9,8,7,6,5]); g(l)
+l
+listkill(l)
+listcreate()
+
+subst(List([x,x^2+y]),x,1)
+substvec(List([x,y]), [x,y], [y,x])
+substpol(List([x^2,x^3]), x^2, y)
+
+getheap()[1]
+
+chinese(List())
+chinese(List([Mod(1,3)]))
+chinese(List([Mod(0,2),Mod(1,3),Mod(2,5)]))
+liftint(List([0,1]))
+
+L = List([1,2,3]);
+List(L)
+L[1]
+L[1]*=2
+L
+L[1]=3
+L
+
+\\ Errors, keep at end of file
+listpop(1)
+L='L; listpop(L)
+listput(L,1)
+listinsert(L,1,1)
+L=Map(); listpop(L)
+listput(L,1)
+listinsert(L,1,1)

@@ -1,0 +1,13 @@
+default(realprecision,38);
+round((1e-40 + x) / (1e-39 + x))
+
+v=[1,1.6,-4/3,Mod(1,3),quadgen(5),Mod(4/3+x,x^2+1/2),x,4/3+x/3+O(x^2),1/x,[4/3,2],matid(2)/3,""];
+test(f)= for(i=1,#v, print(iferr(f(v[i]),E,E)));
+test(ceil)
+test(floor)
+test(frac)
+test(round)
+round(0,&E);
+test(x->[round(x,&e), if(e==E,-oo,e)])
+test(truncate)
+test(x->[truncate(x,&e), if(e==E,-oo,e)])

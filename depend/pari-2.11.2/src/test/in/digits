@@ -1,0 +1,36 @@
+binary(0)
+digits(0)
+fromdigits([])
+digits(5^100)
+fromdigits(vector(100,i,i%7))
+fromdigits([1,0,-1],2)
+fromdigits([1,1,0,1],-2)
+check(a,b)=my(v=digits(a,b));if(subst(Pol(v),'x,b)!=a || vecmax(v)>=b || fromdigits(v,b)!=a,error([a,b]));
+check(5^100,2)
+check(5^100,3)
+check(3^100,2^64-1)
+check(3^100,2^128+1)
+sumdigits(0)
+sumdigits(129)
+sumdigits(123456789123456789123456789)
+sumdigits(100000!)
+default(realprecision,38);
+binary(0.)
+binary(0.005)
+binary(1.1)
+binary([0,1])
+binary(I)
+vector(10, i, sumdigits(123456789, i+1))
+digits(2^128+3, 2^64)
+digits(999999999999999,4294967295)
+sumdigits(2^128+3, 2^64)
+sumdigits(-3,3)
+sumdigits(-3,10)
+sumdigits(-3,2)
+
+0x12345
+0x1234567890ABCDEF987654321
+0x0000000000000000012345
+0b11011011
+0b1011011101111011111011111101111111011111111011111111101111111111
+0b000000000000000000000000000000000000000000000000000000000000000011011011

@@ -1,0 +1,129 @@
+% Copyright (c) 2000  The PARI Group
+%
+% This file is part of the PARI/GP documentation
+%
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU General Public License
+\chapter{Functions and Operations Available in PARI and GP}
+\label{se:functions}
+
+The functions and operators available in PARI and in the GP/PARI calculator
+are numerous and ever-expanding. Here is a description of the ones available
+in version \vers. It should be noted that many of these functions accept
+quite different types as arguments, but others are more restricted. The list
+of acceptable types will be given for each function or class of functions.
+Except when stated otherwise, it is understood that a function or operation
+which should make natural sense is legal.
+
+On the other hand, many routines list explicit preconditions for some of their
+argument, e.g. $p$ is a prime number, or $q$ is a positive definite quadratic
+form. For reasons of efficiency, all trust the user input and only perform
+minimal sanity checks. When a precondition is not satisfied, any of the
+following may occur: a regular exception is raised, the PARI stack overflows, a
+\kbd{SIGSEGV} or \kbd{SIGBUS} signal is generated, or we enter an infinite
+loop. The function can also quietly return a mathematically meaningless
+result: junk in, junk out.
+
+In this chapter, we will describe the functions according to a rough
+classification. The general entry looks something like:
+
+\key{foo}$(x,\{\fl=0\})$: short description.
+
+The library syntax is \kbd{GEN foo(GEN x, long fl = 0)}.
+
+\noindent
+This means that the GP function \kbd{foo} has one mandatory argument $x$, and
+an optional one, $\fl$, whose default value is 0. (The $\{\}$ should not be
+typed, it is just a convenient notation we will use throughout to denote
+optional arguments.) That is, you can type \kbd{foo(x,2)}, or \kbd{foo(x)},
+which is then understood to mean \kbd{foo(x,0)}. As well, a comma or closing
+parenthesis, where an optional argument should have been, signals to GP it
+should use the default. Thus, the syntax \kbd{foo(x,)} is also accepted as a
+synonym for our last expression. When a function has more than one optional
+argument, the argument list is filled with user supplied values, in order.
+When none are left, the defaults are used instead. Thus, assuming that
+\kbd{foo}'s prototype had been
+$$\hbox{%
+\key{foo}$(\{x=1\},\{y=2\},\{z=3\})$,%
+}$$
+typing in \kbd{foo(6,4)} would give
+you \kbd{foo(6,4,3)}. In the rare case when you want to set some far away
+argument, and leave the defaults in between as they stand, you can use the
+``empty arg'' trick alluded to above: \kbd{foo(6,,1)} would yield
+\kbd{foo(6,2,1)}. By the way, \kbd{foo()} by itself yields
+\kbd{foo(1,2,3)} as was to be expected.
+
+In this rather special case of a function having no mandatory argument, you
+can even omit the $()$: a standalone \kbd{foo} would be enough (though we
+do not recommend it for your scripts, for the sake of clarity). In defining
+GP syntax, we strove to put optional arguments at the end of the argument
+list (of course, since they would not make sense otherwise), and in order of
+decreasing usefulness so that, most of the time, you will be able to ignore
+them.
+
+Finally, an optional argument (between braces) followed by a star, like
+$\{\var{x}\}*$, means that any number of such arguments (possibly none) can
+be given. This is in particular used by the various \kbd{print} routines.
+
+\misctitle{Flags} A \tev{flag} is an argument which, rather than conveying
+actual information to the routine, instructs it to change its default
+behavior, e.g.~return more or less information. All such
+flags are optional, and will be called \fl\ in the function descriptions to
+follow. There are two different kind of flags
+
+\item generic: all valid values for the flag are individually
+described (``If \fl\ is equal to $1$, then\dots'').
+
+\item binary:\sidx{binary flag} use customary binary notation as a
+compact way to represent many toggles with just one integer. Let
+$(p_0,\dots,p_n)$ be a list of switches (i.e.~of properties which take either
+the value $0$ or~$1$), the number $2^3 + 2^5 = 40$ means that $p_3$ and $p_5$
+are set (that is, set to $1$), and none of the others are (that is, they
+are set to $0$). This is announced as ``The binary digits of $\fl$ mean 1:
+$p_0$, 2: $p_1$, 4: $p_2$'', and so on, using the available consecutive
+powers of~$2$.
+
+\misctitle{Mnemonics for binary flags} Numeric flags as mentioned above are
+obscure, error-prone, and quite rigid: should the authors want to adopt a new
+flag numbering scheme, it would break backward compatibility. The only
+advantage of explicit numeric values is that they are fast to type, so their
+use is only advised when using the calculator \kbd{gp}.
+
+As an alternative, one can replace a binary flag by a character string
+containing symbolic identifiers (mnemonics). In the function description,
+mnemonics corresponding to the various toggles are given after each of them.
+They can be negated by prepending \kbd{no\_} to the mnemonic, or by removing
+such a prefix. These toggles are grouped together using any punctuation
+character (such as ',' or ';'). For instance (taken from description of
+$\tet{ploth}(X=a,b,\var{expr},\{\fl=0\},\{n=0\})$)
+
+\centerline{Binary digits of flags mean: $1=\kbd{Parametric}$,
+$2=\kbd{Recursive}$, \dots}
+
+\noindent so that, instead of $1$, one could use the mnemonic
+\kbd{"Parametric; no\_Recursive"}, or simply \kbd{"Parametric"} since
+\kbd{Recursive} is unset by default (default value of $\fl$ is $0$,
+i.e.~everything unset). People used to the bit-or notation in languages like
+C may also use the form \kbd{"Parametric | no\_Recursive"}.
+
+\misctitle{Pointers} \varsidx{pointer} If a parameter in the function
+prototype is prefixed with a \& sign, as in
+
+\key{foo}$(x,\&e)$
+
+\noindent it means that, besides the normal return value, the function may
+assign a value to $e$ as a side effect. When passing the argument, the \&
+sign has to be typed in explicitly. As of version \vers, this \tev{pointer}
+argument is optional for all documented functions, hence the \& will always
+appear between brackets as in \kbd{Z\_issquare}$(x,\{\&e\})$.
+
+\misctitle{About library programming}
+The \var{library} function \kbd{foo}, as defined at the beginning of this
+section, is seen to have two mandatory arguments, $x$ and \fl: no function
+seen in the present chapter has been implemented so as to accept a variable
+number of arguments, so all arguments are mandatory when programming with the
+library (usually, variants are provided corresponding to the various flag values).
+We include an \kbd{= default value} token in the prototype to signal how a missing
+argument should be encoded. Most of the time, it will be a \kbd{NULL} pointer, or
+-1 for a variable number. Refer to the \emph{User's Guide to the PARI library}
+for general background and details.

@@ -1,0 +1,213 @@
+hash_base = 2^64;
+init_h = 5381;
+
+split_Z(n) =
+{
+    my (bits = 8, base = 2^bits, sgn = sign(n) % base, res = []);
+    n = abs(n);
+    while (n != 0,
+           res = concat(res, bitand(n, base - 1));
+           n = shift(n, -bits));
+    res = concat(res, sgn);
+}
+
+glue(h, a) = bitand((((h << 5) + h) + a), hash_base - 1);
+
+hash_Z(n) =
+{
+    my (v = split_Z(n), h = init_h);
+    for (i = 1, #v, h = glue(h, v[i]));
+    h;
+}
+
+hash_ZX(pol) =
+{
+    my (v = Vec(pol), h = init_h);
+    for (i = 1, #v, h = glue(h, hash_Z(v[i])));
+    h;
+}
+
+hash_ZXX(pol) =
+{
+    my (v = [Vec(c) | c <- Vec(pol)], h = init_h);
+    for (i = 1, #v, h = glue(h, hash_ZX(v[i])));
+    h;
+}
+
+{
+lvl_idx = [0, 1, 2, 0, 3, 0, 4, 0, 0, 0, 5, 0, 6, 0, 0, 0, 7, 0, 8, 0, 0, 0, 9];
+modpoly_hashes = [
+953115400354185,
+619732354788530567,
+7671381920119322245,
+1662362517513198972,
+11499552816775494464,
+10945716853871337038,
+1858790070632847848,
+16279119036202003022,
+9091292905489559584
+];
+}
+
+check_modpoly(L, hash, inv = 0) =
+{
+   if (hash_ZXX(polmodular(L, inv)) != hash,
+       error("Bad modpoly"));
+}
+
+default(parisize, "32M");
+{
+MAX_LEVEL = 23;  \\ This already gives 89% coverage in 1.2s
+forprime(L = 2, MAX_LEVEL, check_modpoly(L, modpoly_hashes[lvl_idx[L]]));
+
+modfn_in = [[2, 5, 7818678061185],
+            [5, 1, 14017670839540699521],
+            [5, 5, 10135583858468178383],
+            [7, 1, 6937006200180283618],
+            [7, 5, 9634555674574853739],
+            [19, 1, 11245295902670825360],
+            [29, 1, 16325532180637558646],
+            [47, 1, 5045713438637349850],
+            [61, 5, 5614541323969591564],
+            [71, 0, 8840690212199031415],
+            [101, 1, 18403372459340572304],
+            [139, 1, 4966835288214143418],
+            [359, 1, 15999826932501894898], \\ takes 3s, no smaller example though :(
+
+            [5, 6, 14025475434705720054],
+            [5, 9, 4070138482583618498],
+            [7, 10, 2092081457940371680],
+            [3, 14, 7826463370842897],
+            [2, 15, 7613995049265],
+            [5, 21, 2152391919677952616],
+            [3, 26, 7840368574373379],
+            [2, 35, 8034981587292],
+            [2, 39, 8034981863898],
+            [5, 2, 14025475647798473994],
+            [5, 23, 4078176315075291878],
+            [7, 24, 15539023920884183490],
+            [5, 27, 2153788462654972246],
+            [5, 28, 4579080621787198547],
+
+            [41, 2, 18150754343002627833],
+            [41, 5, 3465379807262449566],
+            [41, 6, 12863521307608118553],
+            [41, 9, 5674021873271863077],
+            [41, 10, 15269149163413540837],
+            [41, 14, 12129179001644404437],
+            [41, 15, 445355180908304715],
+            [41, 21, 9618478875553953373],
+            [41, 23, 7613336307888355697],
+            [41, 24, 7221767736513486251],
+            [41, 26, 2777849492219862654],
+            [41, 27, 1438586205409091583],
+            [41, 28, 8177252307561913215],
+            [41, 35, 8718342713488965926],
+            [41, 39, 1857869646559265631],
+
+            [29, 21, 140598897682543022],
+            [101, 21, 1028254489804326757],
+            [53, 15, 11992315117197580073],
+
+            \\ NB: The hashes for these tests do not come from
+            \\ an independent source
+            [17, 3, 7524902883828545591],
+            [19, 3, 13749860608403259582],
+            [19, 4, 451945996748663121],
+            [19, 8, 13661084005765275348]
+           ];
+for (i = 1, #modfn_in, my (in = modfn_in[i]); check_modpoly(in[1], in[3], in[2]));
+
+
+\\ Check that specifying variables works
+my (phi7 = polmodular(7));
+if (phi7 != polmodular(7, , 'x, 'y) || phi7 != polmodular(7, , 'x)
+    || polmodular(7, , 's, 't) != substvec(phi7, ['x, 'y], ['s, 't]),
+    error("Bad variables"));
+
+\\ Check argument checking
+my (got_err);
+iferr (polmodular(7, , "I am the queen of France", 'x),
+       err, got_err = 1, errname(err) == "e_TYPE");
+if ( ! got_err, error("No type error from bad param"));
+
+got_err = 0;
+iferr (polmodular(7, , ffgen(2^3), 'x),
+       err, got_err = 1, errname(err) == "e_DOMAIN");
+if ( ! got_err, error("No domain error from non-prime field arg"));
+
+got_err = 0;
+iferr (polmodular(1), err, got_err = 1, errname(err) == "e_DOMAIN");
+if ( ! got_err, error("No error from level 1"));
+
+got_err = 0;
+iferr (polmodular(6), err, got_err = 1, errname(err) == "e_IMPL");
+if ( ! got_err, error("No error from composite level"));
+
+got_err = 0;
+iferr (polmodular(7, , 'x, 'y, 1), err, got_err = 1, errname(err) == "e_FLAG");
+if ( ! got_err, error("No error from inappropriate flag"));
+
+got_err = 0;
+iferr (polmodular(7, , 'x, 'x), err, got_err = 1, errname(err) == "e_PRIORITY");
+if ( ! got_err, error("No error from same variables"));
+
+got_err = 0;
+iferr (polmodular(7, , 'y, 'x), err, got_err = 1, errname(err) == "e_PRIORITY");
+if ( ! got_err, error("No error from bad variables"));
+
+got_err = 0;
+iferr (polmodular(3, 5); polmodular(2, 1), err, got_err = 1, errname(err) == "e_DOMAIN");
+if ( ! got_err, error("No error from incompatible level/invariant pair"));
+
+got_err = 0;
+iferr (polmodular(19, 7), err, got_err = 1, errname(err) == "e_DOMAIN");
+if ( ! got_err, error("No error from bad invariant"));
+}
+
+all(v) = { my (r = 1); for (i = 1, #v, r = r && v[i]); r; }
+poloftype(f, tp) =
+{
+    type(f) == "t_POL" && all([type(polcoeff(f, d)) == tp | d <- [0 .. poldegree(f)]]);
+}
+
+lift_ffx(f) =
+{
+    my (v = Vec(f));
+    if ( ! all([poldegree(c.pol) == 0 | c <- v]),
+        error("Polynomial has coeffs in extension"));
+    Pol([polcoeff(c.pol, 0) | c <- Vec(f)], variable(f));
+}
+
+check_eval_modpoly(L, j, p, expected) =
+{
+    my (jm = Mod(j, p),
+        jf = j * ffgen(p)^0,
+        um = polmodular(L, , jm, 'y, 0),
+        uf = polmodular(L, , jf, 'y, 0),
+        vm = polmodular(L, , jm, 'y, 1),
+        vf = polmodular(L, , jf, 'y, 1));
+    if ( ! poloftype(um, "t_INTMOD") || ! poloftype(uf, "t_FFELT")
+        || type(vm) != "t_VEC" || #vm != 3 || type(vf) != "t_VEC" || #vf != 3,
+        error("Invalid return type"));
+    if ( ! all([poloftype(v, "t_INTMOD") | v <- vm])
+        || ! all([poloftype(v, "t_FFELT") | v <- vf]),
+        error("Invalid coefficients"));
+
+    if (um != vm[1] || uf != vf[1] || lift(um) != lift_ffx(uf) || hash_ZX(lift(um)) != expected[1],
+        error("Wrong result for modpoly eval"));
+    if (hash_ZX(lift(vm[2])) != expected[2],
+        error("Wrong derivative"));
+    if (hash_ZX(lift(vm[3])) != expected[3],
+        error("Wrong second derivative"));
+}
+
+{
+my (p = nextprime(2^40));
+check_eval_modpoly( 5, 7, 151, [8033941431460000, 243641761686181, 243612090562303]);
+check_eval_modpoly(19, 7, 151, [11844895572672018496, 369501438945078285, 13082720985735388448]);
+\\check_eval_modpoly( 5, 7, factorial(12), XXXX);
+check_eval_modpoly( 5, 7, p, [3901199766181530739, 4054334766401667256, 16751141247645108349]);
+\\check_eval_modpoly(23, 7, factorial(12), XXXX);
+check_eval_modpoly(23, 7, p, [2360118342899681926, 2787294817779511277, 18359991236545579908]);
+}

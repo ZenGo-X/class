@@ -1,0 +1,7 @@
+Function: _.f
+Help: _.f
+Section: member_functions
+C-Name: member_f
+Prototype: mG
+Description:
+ (prid):small       pr_get_f($1)

@@ -1,0 +1,64 @@
+Function: _forsubset_init
+Class: gp2c_internal
+Help: Initialize forsubset_t
+Description:
+ (forsubset,small):void            forallsubset_init(&$1, $2)
+ (forsubset,gen):void              forsubset_init(&$1, $2)
+
+Function: _forsubset_next
+Class: gp2c_internal
+Help: Compute the next subset
+Description:
+ (forsubset):vecsmall              forsubset_next(&$1)
+
+Function: forsubset
+Section: programming/control
+C-Name: forsubset0
+Prototype: vGVI
+Iterator:
+ (gen,gen)         (forsubset, _forsubset_init, _forsubset_next)
+Wrapper: (,vG,,)
+Help: forsubset(nk, s, seq): if nk is an integer n, the sequence is evaluated,
+  s going through all subsets of {1, 2, ..., n}; if nk is a pair [n,k]
+  of integers s goes through k-subsets of {1, 2, ..., n}.
+  The order is lexicographic among subsets of the same size and smaller
+  subsets come first.
+Doc: if \var{nk} is a non-negative integer $n$, evaluates \kbd{seq}, where
+ the formal variable $s$ goes through all subsets of $\{1, 2, \ldots, n\}$;
+ if \var{nk} is a pair $[n,k]$ of integers, $s$ goes through subsets
+ of size $k$ of $\{1, 2, \ldots, n\}$. In both cases $s$ goes through subsets
+ in lexicographic order among subsets of the same size and smaller subsets
+ come first.
+ \bprog
+ ? forsubset([5,3], s, print(s))
+ Vecsmall([1, 2, 3])
+ Vecsmall([1, 2, 4])
+ Vecsmall([1, 2, 5])
+ Vecsmall([1, 3, 4])
+ Vecsmall([1, 3, 5])
+ Vecsmall([1, 4, 5])
+ Vecsmall([2, 3, 4])
+ Vecsmall([2, 3, 5])
+ Vecsmall([2, 4, 5])
+ Vecsmall([3, 4, 5])
+ @eprog
+
+ \bprog
+ ? forsubset(3, s, print(s))
+ Vecsmall([])
+ Vecsmall([1])
+ Vecsmall([2])
+ Vecsmall([3])
+ Vecsmall([1, 2])
+ Vecsmall([1, 3])
+ Vecsmall([2, 3])
+ Vecsmall([1, 2, 3])
+ @eprog\noindent The running time is proportional to the number
+ of subsets enumerated, respectively $2^n$ and \kbd{binomial}$(n,k)$:
+ \bprog
+ ? c = 0; forsubset([40,35],s,c++); c
+ time = 128 ms.
+ %4 = 658008
+ ? binomial(40,35)
+ %5 = 658008
+ @eprog

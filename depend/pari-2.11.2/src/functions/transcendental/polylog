@@ -1,0 +1,35 @@
+Function: polylog
+Section: transcendental
+C-Name: polylog0
+Prototype: LGD0,L,p
+Help: polylog(m,x,{flag=0}): m-th polylogarithm of x. flag is optional, and
+ can be 0: default, 1: D_m~-modified m-th polylog of x, 2: D_m-modified m-th
+ polylog of x, 3: P_m-modified m-th polylog of x.
+Doc: one of the different polylogarithms, depending on \fl:
+
+ If $\fl=0$ or is omitted: $m^\text{th}$ polylogarithm of $x$, i.e.~analytic
+ continuation of the power series $\text{Li}_m(x)=\sum_{n\ge1}x^n/n^m$
+ ($x < 1$). Uses the functional equation linking the values at $x$ and $1/x$
+ to restrict to the case $|x|\leq 1$, then the power series when
+ $|x|^2\le1/2$, and the power series expansion in $\log(x)$ otherwise.
+
+ Using $\fl$, computes a modified $m^\text{th}$ polylogarithm of $x$.
+ We use Zagier's notations; let $\Re_m$ denote $\Re$ or $\Im$ depending
+ on whether $m$ is odd or even:
+
+ If $\fl=1$: compute $\tilde D_m(x)$, defined for $|x|\le1$ by
+ $$\Re_m\left(\sum_{k=0}^{m-1} \dfrac{(-\log|x|)^k}{k!}\text{Li}_{m-k}(x)
+ +\dfrac{(-\log|x|)^{m-1}}{m!}\log|1-x|\right).$$
+
+ If $\fl=2$: compute $D_m(x)$, defined for $|x|\le1$ by
+ $$\Re_m\left(\sum_{k=0}^{m-1}\dfrac{(-\log|x|)^k}{k!}\text{Li}_{m-k}(x)
+ -\dfrac{1}{2}\dfrac{(-\log|x|)^m}{m!}\right).$$
+
+ If $\fl=3$: compute $P_m(x)$, defined for $|x|\le1$ by
+ $$\Re_m\left(\sum_{k=0}^{m-1}\dfrac{2^kB_k}{k!}(\log|x|)^k\text{Li}_{m-k}(x)
+ -\dfrac{2^{m-1}B_m}{m!}(\log|x|)^m\right).$$
+
+ These three functions satisfy the functional equation
+ $f_m(1/x) = (-1)^{m-1}f_m(x)$.
+Variant: Also available is
+ \fun{GEN}{gpolylog}{long m, GEN x, long prec} (\fl = 0).

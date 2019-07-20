@@ -1,0 +1,57 @@
+Function: rnfequation
+Section: number_fields
+C-Name: rnfequation0
+Prototype: GGD0,L,
+Help: rnfequation(nf,pol,{flag=0}): given a pol with coefficients in nf,
+ gives an absolute equation z of the number field defined by pol. flag is
+ optional, and can be 0: default, or non-zero, gives [z,al,k], where
+ z defines the absolute equation L/Q as in the default behavior,
+ al expresses as an element of L a root of the polynomial
+ defining the base field nf, and k is a small integer such that
+ t = b + k al is a root of z, for b a root of pol.
+Doc: given a number field
+ $\var{nf}$ as output by \kbd{nfinit} (or simply a polynomial) and a
+ polynomial \var{pol} with coefficients in $\var{nf}$ defining a relative
+ extension $L$ of $\var{nf}$, computes an absolute equation of $L$ over
+ $\Q$.
+
+ The main variable of $\var{nf}$ \emph{must} be of lower priority than that
+ of \var{pol} (see \secref{se:priority}). Note that for efficiency, this does
+ not check whether the relative equation is irreducible over $\var{nf}$, but
+ only if it is squarefree. If it is reducible but squarefree, the result will
+ be the absolute equation of the \'etale algebra defined by \var{pol}. If
+ \var{pol} is not squarefree, raise an \kbd{e\_DOMAIN} exception.
+ \bprog
+ ? rnfequation(y^2+1, x^2 - y)
+ %1 = x^4 + 1
+ ? T = y^3-2; rnfequation(nfinit(T), (x^3-2)/(x-Mod(y,T)))
+ %2 = x^6 + 108  \\ Galois closure of Q(2^(1/3))
+ @eprog
+
+ If $\fl$ is non-zero, outputs a 3-component row vector $[z,a,k]$, where
+
+ \item $z$ is the absolute equation of $L$ over $\Q$, as in the default
+ behavior,
+
+ \item $a$ expresses as a \typ{POLMOD} modulo $z$ a root $\alpha$ of the
+ polynomial defining the base field $\var{nf}$,
+
+ \item $k$ is a small integer such that $\theta = \beta+k\alpha$
+ is a root of $z$, where $\beta$ is a root of $\var{pol}$. It is guaranteed
+ that $k=0$ whenever $\Q(\beta) = L$.
+ \bprog
+ ? T = y^3-2; pol = x^2 +x*y + y^2;
+ ? [z,a,k] = rnfequation(T, pol, 1);
+ ? z
+ %3 = x^6 + 108
+ ? subst(T, y, a)
+ %4 = 0
+ ? alpha= Mod(y, T);
+ ? beta = Mod(x*Mod(1,T), pol);
+ ? subst(z, x, beta + k*alpha)
+ %7 = 0
+ @eprog
+
+Variant: Also available are
+ \fun{GEN}{rnfequation}{GEN nf, GEN pol} ($\fl = 0$) and
+ \fun{GEN}{rnfequation2}{GEN nf, GEN pol} ($\fl = 1$).

@@ -1,0 +1,3220 @@
+% Copyright (c) 2000  The PARI Group
+%
+% This file is part of the PARI/GP documentation
+%
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU General Public License
+\chapter{The gp Calculator}
+
+\section{Introduction}
+
+Originally, \tet{gp} was designed as a debugging device for the PARI system
+library. Over the years, it has become a powerful user-friendly stand-alone
+calculator. The mathematical functions available in PARI and \kbd{gp} are
+described in the next chapter. In the present one, we describe the specific
+use of the \kbd{gp} programmable calculator.
+
+\emacs If you have GNU Emacs and use the PariEmacs package, you can work in a
+special Emacs shell, described in \secref{se:emacs}. Specific features of
+this Emacs shell are indicated by an EMACS sign in the left margin.
+
+We briefly mention at this point GNU
+TeXmacs (\url{http://www.texmacs.org/}), a free wysiwyg editing
+platform that allows to embed an entire gp session in a document, and
+provides a nice alternative to PariEmacs.
+
+\subsec{Startup}
+
+To start the calculator, the general command line syntax is:
+
+\kbd{gp [-D \var{key}=\var{val}] [\var{files}]}
+
+\noindent
+where items within brackets are optional. The [\var{files}] argument is a
+list of files written in the GP scripting language, which will be loaded on
+startup. There can be any number of arguments of the form
+\kbd{-D \var{key}=\var{val}}, setting some internal parameters of \kbd{gp},
+or \var{defaults}: each sets the default \var{key} to the value \var{val}. See
+\secref{se:defaults} below for a list and explanation of all defaults. These
+defaults can be changed by adding parameters to the input line as above, or
+interactively during a \kbd{gp} session, or in a preferences file also known
+as \tet{gprc}.
+
+If a \idx{preferences file} (to be discussed in \secref{se:gprc}) is
+found, \kbd{gp} then reads it and executes the commands it contains. This
+provides an easy way to customize \kbd{gp}. The \var{files} argument is
+processed right after the \kbd{gprc}.
+
+A copyright banner then appears which includes the version number, and a lot
+of useful technical information. After the copyright, the computer writes the
+top-level help information, some initial defaults, and then waits after
+printing its prompt, which is '\kbd{?~}' by default . Whether extended
+on-line help and line editing are available or not is indicated in this
+\kbd{gp} banner, between the version number and the copyright message.
+Consider investigating the matter with the person who installed \kbd{gp} if
+they are not. Do this as well if there is no mention of the GMP kernel.
+
+\subsec{Getting help}
+
+To get help, type a \kbd{?} and hit return. A menu appears, describing the
+main categories of available functions and how to get more detailed
+help. If you now type \kbd{?$n$} with $n = 1, 2, \dots$, you get the list of
+commands corresponding to category $n$ and simultaneously to Section $3.n$ of
+this manual. If you type \kbd{?}\var{functionname} where \var{functionname}
+is the name of a PARI function, you will get a short explanation of this
+function.
+
+If extended help (see \secref{se:exthelp}) is available on your system,
+you can double or triple the \kbd{?} sign to get much more: respectively the
+complete description of the function (e.g.~\kbd{??sqrt}), or a list of
+\kbd{gp} functions relevant to your query (e.g.~ \kbd{???"elliptic curve"}
+or \kbd{???"quadratic field"}).
+
+If \kbd{gp} was properly installed (see Appendix~A), a line editor is
+available to correct the command line, get automatic completions, and so on.
+See \secref{se:readline} or \kbd{??readline} for a short summary of the line
+editor's commands.
+
+If you type \kbd{?\bs} you will get a short description of the metacommands
+(keyboard shortcuts).
+
+Finally, typing \kbd{?.} will return the list of available (pre-defined)
+member functions. These are functions attached to specific kind of objects,
+used to retrieve easily some information from complicated structures (you can
+define your own but they won't be shown here). We will soon describe these
+commands in more detail.
+
+More generally, commands starting with the symbols \b\ or \kbd{?}, are not
+computing commands, but are metacommands which allow you to exchange
+information with \kbd{gp}. The available metacommands can be divided into
+default setting commands (explained below) and simple commands (or keyboard
+shortcuts, to be dealt with in \secref{se:meta}).
+
+\subsec{Input}
+
+Just type in an instruction, e.g. \kbd{1 + 1}, or \kbd{Pi}. No action is
+undertaken until you hit the \kbd{<Return>} key. Then computation starts, and
+a result is eventually printed. To suppress printing of the result, end the
+expression with a \kbd{;} sign. Note that many systems use \kbd{;} to
+indicate end of input. Not so in \kbd{gp}: a final semicolon means the
+result should not be printed. (Which is certainly useful if it occupies
+several screens.)
+
+\subsec{Interrupt, Quit}
+
+Typing \kbd{quit} at the prompt ends the session and exits \kbd{gp}. At any
+point you can type \kbd{Ctrl-C} (that is press simultaneously the
+\kbd{Control} and \kbd{C} keys): the current computation is interrupted and
+control given back to you at the \kbd{gp} prompt, together with a message
+like
+\bprog
+  ***   at top-level: gcd(a,b)
+  ***                 ^--------
+  *** gcd: user interrupt after 236 ms.
+@eprog\noindent
+telling you how much time elapsed since the last command was typed in and
+in which GP function the computation was aborted. It does not mean that that
+much time was spent in the function, only that the evaluator was busy
+processing that specific function when you stopped it.
+
+\section{The general gp input line}
+
+The \kbd{gp} calculator uses a purely interpreted language GP. The structure
+of this language is reminiscent of LISP with a functional notation,
+\kbd{f(x,y)} rather than \kbd{(f x y)}: all programming constructs,
+such as \kbd{if}, \kbd{while,} etc\dots are functions\footnote{*}{Not exactly,
+since not all their arguments need be evaluated. For instance it would be
+stupid to evaluate both branches of an \kbd{if} statement: since only one
+will apply, only this one is evaluated.}, and the main loop does not really
+execute, but rather evaluates (sequences of) expressions. Of course, it is by
+no means a true LISP, and has been strongly influenced by C and Perl since
+then.
+
+\subsec{Introduction} User interaction with a \kbd{gp} session proceeds as
+follows. First, one types a sequence of characters at the \kbd{gp} prompt;
+see \secref{se:readline} for a description of the line editor. When you hit
+the \kbd{<Return>} key, \kbd{gp} gets your input, evaluates it, then prints
+the result and assigns it to an ``history'' array.
+
+More precisely, the input is case-sensitive and, outside of character
+strings, blanks are completely ignored. Inputs are either metacommands or
+sequences of expressions. Metacommands are shortcuts designed to alter gp's
+internal state, such as the working precision or general verbosity level; we
+shall describe them in \secref{se:meta}, and ignore them for the time being.
+
+The evaluation of a sequence of instructions proceeds in two phases: your
+input is first digested (byte-compiled) to a bytecode suitable for fast
+evaluation, in particular loop bodies are compiled only once but a priori
+evaluated many times; then the bytecode is evaluated.
+
+An \idx{expression}\sidx{expression sequence} is formed by combining
+constants, variables, operator symbols, functions and control statements.
+It is evaluated using the conventions about operator priorities and left to
+right associativity. An expression always has a value, which can be any PARI
+object:
+\bprog
+? 1 + 1
+%1 = 2          \\@com an ordinary integer
+? x
+%2 = x          \\@com a polynomial of degree 1 in the unknown \kbd{x}
+? print("Hello")
+Hello           \\@com \kbd{void} return value, 'Hello' printed as side effect
+? f(x) = x^2
+%4 = (x)->x^2   \\@com a user function
+@eprog
+\noindent In the third example, \kbd{Hello} is printed as a side effect, but
+is not the return value. The \kbd{print} command is a \emph{procedure},
+which conceptually returns nothing. But in fact procedures return a special
+\kbd{void} object, meant to be ignored (but which evaluates
+to $0$ in a numeric context, and stored as $0$ in the history or results).
+The final example assigns to the variable \kbd{f} the function $x\mapsto
+x^2$, the alternative form \kbd{f = x->x\pow2} achieving the same effect; the
+return value of a function definition is, unsurprisingly, a function object
+(of type \typ{CLOSURE}).
+
+Several expressions are combined on a single line by separating them with
+semicolons ('\kbd{;}'). Such an expression sequence will be called a
+\var{seq}. A \var{seq} also has a value, which is the value of the last
+expression in the sequence. Under \kbd{gp}, the value of the \var{seq}, and
+only this last value, becomes an history entry. The values of the other
+expressions in the \var{seq} are discarded after the execution of the
+\var{seq} is complete, except of course if they were assigned into variables.
+In addition, the value of the \var{seq} is printed if the line does not end
+with a semicolon \kbd{;}.
+
+\subsec{The gp history of results}
+
+This is not to be confused with the history of your \emph{commands},
+maintained by \kbd{readline}. The \kbd{gp} history contains the \emph{results}
+they produced, in sequence.
+
+The successive elements of the history array are called \kbd{\%1}, \kbd{\%2},
+\dots As a shortcut, the latest computed expression can also be
+called \kbd{\%}, the previous one \kbd{\%`},
+the one before that \kbd{\%``} and so on.
+
+When you suppress the printing of the result with a semicolon, it is still
+stored in the history, but its history number will not appear either. It is a
+better idea to assign it to a variable for later use than to mentally
+recompute what its number is. Of course, on the next line, you may just use
+\kbd{\%}.
+
+The time used to compute that history entry is also stored as part of the entry
+and can be recovered using the \kbd{\%\#} operator: \kbd{\%\#1}, \kbd{\%\#2},
+\kbd{\%\#`}; \kbd{\%\#} by itself returns the time needed to compute the last
+result (the one returned by \kbd{\%}).
+
+\misctitle{Remark}
+The history ``array'' is in fact better thought of as a queue: its size is
+limited to 5000 entries by default, after which \kbd{gp} starts forgetting
+the initial entries. So \kbd{\%1} becomes unavailable as \kbd{gp} prints
+\kbd{\%5001}. You can modify the history size using \tet{histsize}.
+
+\subsec{Special editing characters}\sidx{editing characters} A GP program
+can of course have more than one line. Since your commands are executed as
+soon as you have finished typing them, there must be a way to tell \kbd{gp}
+to wait for the next line or lines of input before doing anything. There are
+three ways of doing this.
+
+The first one is to use the \idx{backslash character} \kbd{\bs} at the end of
+the line that you are typing, just before hitting \kbd{<Return>}. This tells
+\kbd{gp} that what you will write on the next line is the physical
+continuation of what you have just written. In other words, it makes \kbd{gp}
+forget your newline character. You can type a \kbd{\bs} anywhere. It is
+interpreted as above only if (apart from ignored whitespace characters) it is
+immediately followed by a newline. For example, you can type
+\bprog
+? 3 + \
+4
+@eprog
+\noindent instead of typing \kbd{3 + 4}.
+
+The second one is a variation on the first, and is mostly useful when
+defining a user function (see \secref{se:user_defined}): since an equal sign
+can never end a valid expression, \kbd{gp} disregards a newline immediately
+following an \kbd{=}.
+\bprog
+? a =
+123
+%1 = 123
+@eprog
+
+The third one is in general much more useful, and uses braces \kbd{\obr} and
+\kbd{\cbr}.\sidx{brace characters} An opening brace \kbd{\obr} signals that
+you are typing a multi-line command, and newlines are ignored until you type
+a closing brace \kbd{\cbr}. There are two important, but easily obeyed,
+restrictions: first, braces do not nest; second, inside an open brace-close
+brace pair, all input lines are concatenated, suppressing any newlines. Thus,
+all newlines should occur after a semicolon (\kbd{;}), a comma (\kbd{,}) or
+an operator (for clarity's sake, never split an identifier over two lines in
+this way). For instance, the following program
+\bprog
+{
+  a = b
+  b = c
+}
+@eprog
+
+\noindent would silently produce garbage, since this is interpreted as
+\kbd{a=bb=c} which assigns the value of \kbd{c} to both \kbd{bb} and
+\kbd{a}. It should have been written
+\bprog
+{
+  a = b;
+  b = c;
+}
+@eprog
+
+\section{The PARI types}
+
+\noindent
+We see here how to input values of the different data types known to PARI.
+Recall that blanks are ignored in any expression which is not a string (see
+below).
+
+\misctitle{A note on efficiency}
+The following types are provided for convenience, not for speed:
+\typ{INTMOD}, \typ{FRAC}, \typ{PADIC}, \typ{QUAD}, \typ{POLMOD},
+\typ{RFRAC}. Indeed, they always perform a reduction of some kind after
+each basic operation, even though it is usually more efficient to perform
+a single reduction at the end of some complex computation. For instance,
+in a convolution product $\sum_{i+j = n} x_i y_j$ in $\Z/N\Z$ --- common
+when multiplying polynomials! ---, it is quite wasteful to perform $n$
+reductions modulo $N$. In short, basic individual operations on these types
+are fast, but recursive objects with such components could be handled more
+efficiently: programming with libpari will save large constant factors here,
+compared to GP.
+
+\subsec{Integers (\typ{INT})}%
+\sidx{integer}\kbdsidx{t_INT}
+After an (optional) leading \kbd{+} or \kbd{-}, type in the
+decimal digits of your integer. No decimal point!
+\bprog
+? 1234567
+%1 = 1234567
+? -3
+%2 = -3
+? 1.         \\@com oops, not an integer
+%3 = 1.000000000000000000000000000
+@eprog
+
+Integers can be input in hexadecimal notation by prefixing them with
+\kbd{0x}; hexadecimal digits ($a, \dots, f$) can be input either in lowercase
+or in uppercase:
+\bprog
+? 0xF
+%4 = 15
+? 0x1abcd
+%5 = 109517
+@eprog
+
+Integers can also be input in binary by prefixing them with
+\kbd{0b}:
+\bprog
+? 0b010101
+%6 = 21
+@eprog
+
+\subsec{Real numbers (\typ{REAL})}%
+\sidx{real number}\kbdsidx{t_REAL}
+
+Real numbers are represented (approximately) in a floating point system,
+internally in base 2, but converted to base 10 for input / output purposes.
+A \typ{REAL} object has a given \emph{accuracy} (or \emph{precision}) $\ell
+\geq 0$; it comprises
+
+\item a sign $s$: $+1$, $-1$ or $0$;
+
+\item a mantissa $m$: a multiprecision integer, $0\leq m < 10^\ell$;
+
+\item an exponent $e$: a small integer in $[-E,E]$, where $E \approx 2^B
+  \log_{10} 2$, and $B = 32$ on a 32-bit machine and 64 otherwise.
+
+This data may represent any real number $x$ such that
+$$|x - s m 10^e| < 10^{e-\ell}.$$
+We consider that a \typ{REAL} with sign $s = 0$ has accuracy $\ell = 0$, so
+that its mantissa is useless, but it still has an exponent $e$ and acts like
+a machine epsilon for all accuracies $< e$.
+
+After an (optional) leading \kbd{+} or \kbd{-}, type a number with a decimal
+point. Leading zeroes may be omitted, up to the decimal point, but trailing
+zeroes are important: your \typ{REAL} is assigned an internal precision,
+which is the supremum of the input precision, one more than the number of
+decimal digits input, and the default \tet{realprecision}. For example, if
+the default precision is 28 digits, typing \kbd{2.} yields a precision of 28
+digits, but \kbd{2.0\dots0} with 45 zeros gives a number with internal
+precision at least 45, although less may be printed.
+
+You can also use scientific notation with the letter \kbd{E} or
+\kbd{e}. As usual, \kbd{e$n$} is interpreted as $\times 10^n$ for all
+integers $n$. Since the result is converted to a \typ{REAL}, you may often
+omit the decimal point in this case: \kbd{6.02 E 23} or \kbd{1e-5} are fine,
+but \kbd{e10} is not.
+
+By definition, \kbd{0.E $n$} returns a real $0$ of exponent $n$, whereas
+\kbd{0.} returns a real 0 ``of default precision'' (of exponent
+$-\tet{realprecision}$), see \secref{se:whatzero}, behaving like the machine
+epsilon for the current default accuracy: any float of smaller absolute value
+is indistinguishable from $0$.
+
+\misctitle{Note on output formats} A zero real number is printed in \kbd{e}
+format as $0.Exx$ where $xx$ is the (usually negative) \emph{decimal}
+exponent of the number (cf.~\secref{se:whatzero}). This allows the user to
+check the accuracy of that particular zero.
+
+When the integer part of a real number $x$ is not known exactly because the
+exponent of $x$ is greater than the internal precision, the real number is
+printed in \kbd{e} format.
+
+\misctitle{Technical note} The internal \emph{precision} is actually
+expressed in bits and can be viewed and manipulated globally in interactive
+use via \kbd{realprecision} (decimal digits, as explained above; shortcut
+\kbd{\bs p}) or \kbd{realbitprecision} (bits; shortcut \kbd{\bs ps}), the
+latter allowing finer granularity. See \secref{se:trans} for details. In
+programs we advise to leave this global variable alone and adapt precision
+locally for a given sequence of computations using \tet{localbitprec}.
+
+\subsec{Intmods (\typ{INTMOD})}%
+\sidx{intmod}\kbdsidx{t_INTMOD}
+To create the image of the integer $a$ in $\Z/b\Z$ (for some non-zero
+integer $b$), type \kbd{Mod(a,b)}; \emph{not} \kbd{a\%b}.
+Internally, all operations are done on integer representatives belonging to
+$[0,b-1]$.
+
+Note that this type is available for convenience, not for speed: each
+elementary operation involves a reduction modulo $b$.
+
+If $x$ is a \typ{INTMOD} \kbd{Mod(a,b)}, the following member function is
+defined:
+
+\kbd{x.mod}: return the modulus \kbd{b}.
+
+\subsec{Rational numbers (\typ{FRAC})}%
+\sidx{rational number}\kbdsidx{t_FRAC}
+All fractions are automatically reduced to lowest
+terms, so it is impossible to work with reducible fractions. To enter $n/m$
+just type it as written. As explained in \secref{se:gdiv}, floating point
+division is \emph{not} performed, only reduction to lowest
+terms.\label{se:FRAC}
+
+Note that rational computation are almost never the fastest method to proceed:
+in the PARI implementation, each elementary operation involves computing a gcd.
+It is generally a little more efficient to cancel denominators and work with
+integers only:
+\bprog
+? P = Pol( vector(10^3,i, 1/i) ); \\@com big polynomial with small rational coeffs
+? P^2
+time = 1,392 ms.
+? c = content(P); c^2 * (P/c)^2;  \\@com same computation in integers
+time = 1,116 ms.
+@eprog\noindent
+And much more efficient (but harder to setup) to use homomorphic imaging
+schemes and modular computations. As the simple example below indicates, if you
+only need modular information, it is very worthwhile to work with
+\typ{INTMOD}s directly, rather than deal with \typ{FRAC}s all the way through:
+\bprog
+? p = nextprime(10^7);
+? sum(i=1, 10^5, 1/i) % p
+time = 13,288 ms.
+%1 = 2759492
+? sum(i=1, 10^5, Mod(1/i, p))
+time = 60 ms.
+%2 = Mod(2759492, 10000019)
+@eprog\noindent
+
+\subsec{Finite field elements (\typ{FFELT})}%
+\sidx{finite field element}\kbdsidx{t_FFELT}
+Let $T\in\F_p[X]$ be a monic irreducible polynomial defining your
+finite field over $\F_p$, for instance obtained using \tet{ffinit}. Then the
+\tet{ffgen} function creates a generator of the finite field as an
+$\F_p$-algebra, namely the class of $X$ in $\F_p[X]/(T)$, from which you can
+build all other elements. For instance, to create the field $\F_{2^8}$, we
+write
+\bprog
+? T = ffinit(2, 8);
+? y = ffgen(T, 'y);
+? y^0    \\ the unit element in the field
+%3 = 1
+? y^8
+%4 = y^6 + y^5 + y^4 + y^3 + y + 1
+@eprog\noindent
+The second (optional) parameter to \tet{ffgen} is only used to display
+the result; it is customary to use the name of the variable we assign the
+generator to. If \kbd{g} is a \typ{FFELT}, the following member functions are
+defined:
+
+\kbd{g.pol}: the polynomial (with reduced integer coefficients)
+expressing \kbd{g} in term of the field generator.
+
+\kbd{g.p}: the characteristic of the finite field.
+
+\kbd{g.f}: the dimension of the definition field over its prime field; the
+cardinality of the definition field is thus $p^f$.
+
+\kbd{g.mod}: the minimal polynomial (with reduced integer
+coefficients) of the field generator.
+
+\subsec{Complex numbers (\typ{COMPLEX})}%
+\sidx{complex number}\kbdsidx{t_COMPLEX}
+To enter $x+iy$, type \kbd{x + I*y}. (That's \kbd{I}, \emph{not} \kbd{i}!)
+The letter \tet{I} stands for $\sqrt{-1}$. The ``real'' and ``imaginary''
+parts $x$ and $y$ can be of type \typ{INT}, \typ{REAL}, \typ{INTMOD},
+\typ{FRAC}, or \typ{PADIC}.
+
+\subsec{$p$-adic numbers (\typ{PADIC}):}%
+\sidx{p-adic number}\label{se:padic}\kbdsidx{t_PADIC}
+Typing \kbd{O($p$\pow $k$)}, where $p$ is a prime and $k$ is an integer,
+yields a $p$-adic $0$ of accuracy~$k$, representing any $p$-adic number whose
+valuation is $\geq k$. To input a general non-0 $p$-adic number, write
+a suitably precise rational or integer approximation and add \kbd{O($p$\pow
+$k$)} to it. For example, you can type in the $7$-adic number
+\bprog
+  2*7^(-1) + 3 + 4*7 + 2*7^2 + O(7^3)
+@eprog\noindent exactly as shown, or equivalently as \kbd{905/7 + O(7\pow3)}.
+
+Note that it is not checked whether $p$ is indeed prime but results are
+undefined if this is not the case: you can try to work on $10$-adics if
+you want, but disasters will happen as soon as you do something non-trivial.
+For instance:
+\bprog
+? t = 2 * (1/10 + O(10^5));
+? lift(t)
+%2 = 2/10  \\ not reduced (invalid t_FRAC)
+? factor(x^2-t)
+  ***   at top-level: factor(x^2-%1)
+  ***                 ^--------------
+  *** factor: impossible inverse in Fl_inv: Mod(2, 10000).
+@eprog\noindent Note that \kbd{O(25)} is not the same as \kbd{O(5\pow 2)};
+you want the latter!
+
+If $a$ is a \typ{PADIC}, the following member functions are defined:
+
+\kbd{a.mod}: returns the modulus $p^k$.
+
+\kbd{a.p}: returns $p$.
+
+Note that this type is available for convenience, not for speed:
+internally, \typ{PADIC}s are stored as $p$-adic units modulo some $p^k$.
+Each elementary operation involves updating $p^k$ (multiplying or
+dividing by powers of $p$) and a reduction mod $p^k$. In particular,
+additions are slow.
+\bprog
+    ? n = 1+O(2^20);   for (i=1,10^6, n++)
+    time = 841 ms.
+    ? n = Mod(1,2^20); for (i=1,10^6, n++)
+    time = 441 ms.
+    ? n = 1;           for (i=1,10^6, n++)
+    time = 328 ms.
+@eprog\noindent The penalty attached to maintaining $p^k$ decreases
+steeply as $p$ increases (and updates become rare). But \typ{INTMOD}s
+remain at least 25\% more efficient. (On the other hand, they do not allow
+denominators!)
+% n = 1+O(1009^2);   for (i=1,10^6, n++)
+% n = Mod(1,1009^2); for (i=1,10^6, n++)
+
+\subsec{Quadratic numbers (\typ{QUAD})}%
+\sidx{quadratic number}\kbdsidx{t_QUAD}
+This type is used to work in the quadratic order of \emph{discriminant}
+\kbd{d}, where \kbd{d} is a non-square integer congruent to $0$ or $1$
+(modulo $4$). The command
+\bprog
+    w = quadgen(d,'w)
+@eprog\noindent
+assigns to \kbd{w} the ``canonical'' generator for the integer basis
+of the order of discriminant $d$, i.e.~$w=\sqrt{d}/2$ if $d\equiv 0 \mod 4$,
+and $w=(1+\sqrt{d})/2$ if $d\equiv 1 \mod 4$ and set its name to \kbd{w}.
+The name \kbd{'w} is used for printing and we advise to store it in a variable
+of the same name.
+Beware, two \typ{QUAD}s with different discriminants can be printed in the same
+way and not be equal; however, \kbd{gp} will refuse to add or multiply them for
+example, so use different names for different discriminants.
+
+Since the order is $\Z + \kbd{w}\Z$, any other element can be input
+as \kbd{z = $x$+$y$*w} for some integers $x$ and $y$. In fact, you may work in
+its fraction field $\Q(\sqrt{d})$ and use \typ{FRAC} values for $x$ and $y$.
+
+The member function \kbd{z.disc} retrieves the discriminant $d$; $x$ and $y$
+are obtained via \kbd{real(z)} and \kbd{imag(z)} respectively.
+
+\subsec{Polmods (\typ{POLMOD})}%
+\sidx{polmod}\kbdsidx{t_POLMOD}
+Exactly as for intmods, to enter $x \mod y$ (where $x$ and $y$ are
+polynomials), type \kbd{Mod(x,y)}, not \kbd{x\%y}. Note that when $y$ is an
+irreducible polynomial in one variable, polmods whose modulus is $y$ are simply
+algebraic numbers in the finite extension defined by the polynomial $y$.
+This allows us to work easily in \idx{number field}s, finite extensions of
+the $p$-adic field $\Q_p$, or \idx{finite field}s.
+
+Note that this type is available for convenience, not for speed: each
+elementary operation involves a reduction modulo $y$.
+If $p$ is a \typ{POLMOD}, the following member functions are defined:
+
+\kbd{p.pol}: return a representative of the polynomial class of minimal degree.
+
+\kbd{p.mod}: return the modulus.
+
+\label{se:rempolmod}
+\misctitle{Important remark}\sidx{variable (priority)}
+Mathematically, the variables\sidx{variable} occurring in a polmod are not
+free variables. But internally, a congruence class in $R[t]/(y)$ is
+represented by its representative  of lowest degree, which is a \typ{POL} in
+$R[t]$, and computations occur with polynomials in the variable $t$. PARI
+will not recognize that \kbd{Mod(y, y\pow2 + 1)} is ``the same'' as
+\kbd{Mod(x, x\pow2 + 1)}, since \kbd{x} and \kbd{y} are different variables.
+
+To avoid inconsistencies, polmods must use the same variable in internal
+operations (i.e.~between polmods) and variables of lower priority for
+external operations, typically between a polynomial and a polmod. See
+\secref{se:priority} for a definition of ``priority'' and a discussion of
+(PARI's idea of) multivariate polynomial arithmetic.
+For instance:
+\bprog
+    ? Mod(x, x^2+ 1) + Mod(x, x^2 + 1)
+    %1 = Mod(2*x, x^2 + 1)    \\@com $2i$ (or $-2i$), with $i^2=-1$
+    ? x + Mod(y, y^2 + 1)
+    %2 = x + Mod(y, y^2 + 1)  \\@com in $\Q(i)[x]$
+    ? y + Mod(x, x^2 + 1)
+    %3 = Mod(x + y, x^2 + 1)  \\@com in $\Q(y)[i]$
+@eprog\noindent
+The first two are straightforward, but the last one may not be what you
+want: \kbd{y} is treated here as a numerical parameter, not as a polynomial
+variable.
+
+If the main variables are the same, it is allowed to mix \typ{POL} and
+\typ{POLMOD}s. The result is the expected \typ{POLMOD}. For instance
+\bprog
+    ? x + Mod(x, x^2 + 1)
+    %1 = Mod(2*x, x^2 + 1)
+@eprog
+
+\subsec{Polynomials (\typ{POL})}%
+\sidx{polynomial}\label{se:pol}\kbdsidx{t_POL}
+Type the polynomial in a natural way, not forgetting to put a ``$*$'' between
+a coefficient and a formal variable;
+\bprog
+? 1 + 2*x + 3*x^2
+%1 = 3*x^2 + 2*x + 1
+@eprog\noindent
+This assumes that \kbd{x} is still a ''free variable''.
+\bprog
+? x = 1; 1 + 2*x + 3*x^2
+%2 = 6
+@eprog\noindent
+generates an integer, not a polynomial! It is good practice to never assign
+values to polynomial variables to avoid the above problem, but a foolproof
+construction is available using \kbd{'x} instead of~\kbd{x}: \kbd{'x}
+is a constant evaluating to the free variable with name \kbd{x},
+independently of the current value of~\kbd{x}.
+\bprog
+? x = 1; 1 + 2*'x + 3*'x^2
+%3 = 1 + 2*x + 3*x^2
+? x = 'x; 1 + 2*x + 3*x^2
+%4 = 1 + 2*x + 3*x^2
+@eprog\noindent
+You may also use the functions \kbd{Pol} or \kbd{Polrev}:
+\bprog
+? Pol([1,2,3])       \\@com \kbd{Pol} creates a polynomial in \kbd{x} by default
+%1 = x^2 + 2*x + 3
+? Polrev([1,2,3])
+%2 = 3*x^2 + 2*x + 1
+? Pol([1,2,3], 'y)   \\@com we use \kbd{'y}, safer than \kbd{y}
+%3 = y^2 + 2*y + 3
+@eprog\noindent The latter two are much more efficient constructors than an
+explicit summation (the latter is quadratic in the degree, the former linear):
+\bprog
+? for (i=1, 10^4, Polrev( vector(100, i,i) ) )
+time = 124ms
+
+? for (i=1, 10^4, sum(i = 1, 100, (i+1) * 'x^i) )
+time = 3,985ms
+@eprog
+
+Polynomials are always printed as \emph{univariate} polynomials, with
+monomials sorted by decreasing degree:
+\bprog
+? (x+y+1)^2
+%1 = x^2 + (2*y + 2)*x + (y^2 + 2*y + 1)
+@eprog\noindent
+(Univariate polynomial in \kbd{x} whose coefficients are polynomials in
+\kbd{y}.) See \secref{se:varsymb} for valid variable names, and a discussion
+of multivariate polynomial rings.
+
+\subsec{Power series (\typ{SER})}%
+\sidx{power series}\kbdsidx{t_SER}\label{se:series}
+Typing \kbd{O(X\pow $k$)}, where $k$ is an integer, yields an $X$-adic $0$ of
+accuracy~$k$, representing any power series in \kbd{X} whose valuation is
+$\geq k$. Of course, \kbd{X} can be replaced by any other variable name! To
+input a general non-0 power series, type in a polynomial or rational
+function (in \kbd{X}, say), and add \kbd{O(X\pow $k$)} to it. The discussion
+in the \typ{POL} section about variables remains valid; a constructor
+\tet{Ser} replaces \tet{Pol} and \tet{Polrev}.
+
+\misctitle{Caveat} Power series with inexact coefficients sometimes have a
+non-intuitive behavior: if $k$ significant terms are requested, an inexact
+zero is counted as significant, even if it is the coefficient of lowest
+degree. This means that useful higher order terms may be disregarded.
+
+If a series with a zero leading coefficient must be inverted, then as a
+desperation measure that coefficient is discarded, and a warning is issued:
+\bprog
+? C = 0. + y + O(y^2);
+? 1/C
+  *** _/_: Warning: normalizing a series with 0 leading term.
+%2 = y^-1 + O(1)
+@eprog\noindent
+The last output could be construed as a bug since it is a priori impossible
+to deduce such a result from the input ($0.$ represents any sufficiently
+small real number). But it was thought more useful to try and go on with an
+approximate computation than to raise an early exception.
+
+If the series precision is insufficient, errors may occur (mostly division
+by $0$), which could have been avoided by a better global understanding of
+the computation:
+\bprog
+? A = 1/(y + 0.); B = 1. + O(y);
+? B * denominator(A)
+%2 = 0.E-28 + O(y)
+? A/B
+  *** _/_: Warning: normalizing a series with 0 leading term.
+%3 = 1.000000000000000000000000000*y^-1 + O(1)
+? A*B
+  *** _*_: Warning: normalizing a series with 0 leading term.
+%4 = 1.000000000000000000000000000*y^-1 + O(1)
+@eprog
+
+\subsec{Rational functions (\typ{RFRAC})}%
+\sidx{rational function}\kbdsidx{t_RFRAC}
+As for fractions, all rational functions are automatically reduced to lowest
+terms. All that was said about fractions in \secref{se:FRAC} remains valid
+here.
+
+\subsec{Binary quadratic forms of positive or negative discriminant
+(\typ{QFR} and \typ{QFI})}%
+\sidx{binary quadratic form}\kbdsidx{t_QFR}\kbdsidx{t_QFI}
+These are input using the function \kbd{Qfb}. For example \kbd{Qfb(1,2,3)}
+creates the binary form $q = x^2+2xy+3y^2$. It is imaginary (of internal type
+\typ{QFI}) since its discriminant $2^2 - 4\times 3 = -8$ is negative.
+Although imaginary forms could be positive or negative definite, only
+positive definite forms are implemented.
+
+The discriminant can be retrieved via \kbd{poldisc}. The individual
+components are obtained via either of
+\bprog
+  [a,b,c] = Vec(q);
+
+  a = component(q,1);
+  b = component(q,2);
+  c = component(q,3);
+@eprog
+
+In the case of forms with positive discriminant (\typ{QFR}), you may add an
+optional fourth component (related to the regulator, more precisely to Shanks
+and Lenstra's distance), which must be a real number. See also the function
+\kbd{qfbprimeform} which creates a prime form of given discriminant.
+
+\subsec{Row and column vectors (\typ{VEC} and \typ{COL})}%
+\sidx{row vector}\sidx{column vector}\kbdsidx{t_VEC}\kbdsidx{t_COL}
+To enter a row vector, type the components separated by commas ``\kbd{,}'',
+and enclosed between brackets ``\kbd{[}$\,$'' and ``$\,$\kbd{]}'',
+e.g.~\kbd{[1,2,3]}. To enter a column vector, type the vector horizontally,
+and add a tilde ``\til'' to transpose. \kbd{[ ]} yields the empty (row)
+vector. The function \tet{Vec} can be used to transform any object into a
+vector (see Chapter~3). The construction $[i..j]$, where $i \leq j$ are two
+integers returns the vector $[i, i+1,\dots, j-1, j]$
+\bprog
+? [1,2,3]
+%1 = [1, 2, 3]
+? [-2..3]
+%2 = [-2, -1, 0, 1, 2, 3]
+@eprog
+
+Let the variable $v$ contain a (row or column) vector:
+
+\item \kbd{v[m]} refers to its $m$-th entry; you can assign any value to
+\kbd{v[m]},  i.e.~write something like $v[m]=\var{expr}$.
+
+\item \kbd{v[i..j]}, where $i \leq j$, returns the vector slice containing
+elements $v[i],\dots, v[j]$; you can \emph{not} assign a result to
+\kbd{v[i..j]}.
+
+\item \kbd{v[\pow i]} returns the vector whose $i$-th entry has been removed;
+you can \emph{not} assign a result to \kbd{v[\pow i]}.
+
+\noindent In the last two constructions \kbd{v[i..j]} and \kbd{v[\pow i]},
+$i$ and $j$ are allowed to be negative integers, in which case, we start
+counting from the end of the vector: e.g., $-1$ is the index of the last
+element.
+\bprog
+? v = [1,2,3,4];
+? v[2..4]
+%2 = [2, 3, 4]
+? v[^3]
+%3 = [1, 2, 4]
+? v[^-1]
+%3 = [1, 2, 3]
+? v[-3..-1]
+%4 = [2, 3, 4]
+@eprog
+
+\misctitle{Remark} \tet{vector} is the standard constructor for row vectors
+ whose $i$-th entry is given by a simple function of $i$; \tet{vectorv}
+ is similar for column vectors:
+ \bprog
+ ? vector(10, i, i^2+1)
+ %1 = [2, 5, 10, 17, 26, 37, 50, 65, 82, 101]
+ @eprog
+ The functions \tet{Vec} and \tet{Col} convert objects to row and column
+vectors respectively (as well as \tet{Vecrev} and \tet{Colrev}, which revert
+the indexing):
+ \bprog
+ ? T = poltchebi(5)   \\ 5-th Chebyshev polynomial
+ %1 = 16*x^5 - 20*x^3 + 5*x
+ ? Vec(T)
+ %2 = [16, 0, -20, 0, 5, 0]  \\ coefficients of T
+ ? Vecrev(T)
+ %3 = [0, 5, 0, -20, 0, 16]  \\ ... in reverse order
+ @eprog
+
+\misctitle{Remark} For $v$ a \typ{VEC}, \typ{COL}, \typ{LIST} or \typ{MAT},
+ the alternative set-notations
+ \bprog
+ [g(x) | x <- v, f(x)]
+ [x | x <- v, f(x)]
+ [g(x) | x <- v]
+ @eprog\noindent
+ are available as shortcuts for
+ \bprog
+ apply(g, select(f, Vec(v)))
+ select(f, Vec(v))
+ apply(g, Vec(v))
+ @eprog\noindent respectively, and may serve as \typ{VEC} constructors:
+ \bprog
+ ? [ p | p <- primes(10), isprime(p+2) ]
+ %2 = [3, 5, 11, 17, 29]
+ @eprog\noindent returns the primes $p$ (among the first 10 primes) such
+ that $(p, p+2)$ is a twin pair;
+ \bprog
+ ? [ p^2 | p <- primes(10), p % 4 == 1 ]
+ %1 = [25, 169, 289, 841]
+ @eprog\noindent returns the squares of the primes congruent to $1$ modulo $4$,
+ where $p$ runs among the first 10 primes.
+
+\subsec{Matrices (\typ{MAT})}%
+\sidx{matrix}\kbdsidx{t_MAT}
+To enter a matrix, type the components row by row, the components being
+separated by commas ``\kbd{,}'', the rows by semicolons ``\kbd{;}'', and
+everything enclosed in brackets ``\kbd{[}$\,$'' and ``$\,$\kbd{]}'', e.g.
+\kbd{[x,y; z,t; u,v]}. \kbd{[;]} yields an empty ($0 \times 0$) matrix. The
+function \tet{Mat} transforms any object into a matrix, and \tet{matrix}
+creates matrices whose $(i,j)$-th entry is described by a function $f(i,j)$:
+\bprog
+? Mat(1)
+%1 =
+[1]
+? matrix(2,2, i,j, 2*i+j)
+%2 =
+[3 4]
+
+[5 6]
+@eprog
+
+\noindent Let the variable $M$ contain a matrix, and let $i,j,k,l$ denote
+four
+integers:
+
+\item \kbd{M[i,j]} refers to its $(i,j)$-th entry; you can assign any result
+to \kbd{M[i,j]}.
+
+\item \kbd{M[i,]} refers to its $i$-th row; you can assign a \typ{VEC}
+of the right dimension to \kbd{M[i,]}.
+
+\item \kbd{M[,j]} refers to its $j$-th column; you can assign a \typ{COL}
+of the right dimension to \kbd{M[,j]}.
+
+\noindent \emph{But} \kbd{M[i]} is meaningless and triggers an error. The
+``range'' $i..j$ and ``caret'' \kbd{\pow}$c$ notations are available as for
+vectors; you can not \emph{assign} to any of these:
+
+\item \kbd{M[i..j, k..l]}, $i\leq j$, $k\leq l$, returns the submatrix built
+from the rows $i$ to $j$ and columns $k$ to $l$ of $M$.
+
+\item \kbd{M[i..j,]} returns the submatrix built from the rows $i$ to
+$j$ of $M$.
+
+\item \kbd{M[,i..j]} returns the submatrix built from the columns $i$ to
+$j$ of $M$.
+
+\item \kbd{M[i..j, \pow k]}, $i\leq j$, returns the submatrix built
+from the rows $i$ to $j$ and column $k$ removed.
+
+\item \kbd{M[\pow k,]} returns the submatrix with row $k$ removed.
+
+\item \kbd{M[,\pow k]} returns the submatrix with column $k$ removed.
+
+\noindent Finally,
+
+\item \kbd{M[i..j, k]} returns the \typ{COL} built from the $k$-th column
+  (entries $i$ to $j$).
+
+\item \kbd{M[\pow i, k]} returns the \typ{COL} built from the $k$-th column
+  (entry $i$ removed).
+
+\item \kbd{M[k, i..j]} returns the \typ{VEC} built from the $k$-th row
+  (entries $i$ to $j$).
+
+\item \kbd{M[k, \pow i]} returns the \typ{VEC} built from the $k$-th row
+  (entry $i$ removed).
+
+\bprog
+? M = [1,2,3;4,5,6;7,8,9];
+? M[1..2, 2..3]
+%2 =
+[2 3]
+
+[5 6]
+? M[1..2,]
+%3 =
+[1 2 3]
+
+[4 5 6]
+? M[,2..3]
+%4 =
+[2 3]
+
+[5 6]
+
+[8 9]
+@eprog
+
+All this is recursive, so if \kbd{M} is a matrix of matrices of \dots, an
+expression such as \kbd{M[1,1][,3][4] = 1} is perfectly valid (and actually
+identical to \kbd{M[1,1][4,3] = 1}), assuming that all matrices along the way
+have compatible dimensions.
+
+\misctitle{Technical note (design flaw)} Matrices are internally represented
+as a vector of columns. All matrices with $0$ columns are thus represented
+by the same object (internally, an empty vector), and there is no way to
+distinguish between them. Thus it is not possible to create or represent
+matrices with zero columns and an actual nonzero number of rows.
+The empty matrix \kbd{[;]} is handled as though it had an arbitrary number of
+rows, exactly as many as needed for the current computation to make sense:
+\bprog
+? [1,2,3; 4,5,6] * [;]
+%1 = [;]
+@eprog\noindent
+The empty matrix on the first line is understood as a $3\times 0$ matrix, and
+the result as a $2\times 0$ matrix. On the other hand, it is possible to
+create matrices with a given positive number of columns, each of which has
+zero rows, e.g.~using \kbd{Mat} as above or using the \kbd{matrix} function.
+
+Note that although the internal representation is essentially the same, a row
+vector of column vectors is \emph{not} a matrix; for example, multiplication
+will not work in the same way. It is easy to go from one representation to
+the other using \tet{Vec} / \tet{Mat}, though:
+\bprog
+? [1,2,3;4,5,6]
+%1 =
+[1 2 3]
+
+[4 5 6]
+
+? Vec(%)
+%2 = [[1, 4]~, [2, 5]~, [3, 6]~]
+? Mat(%)
+%3 =
+[1 2 3]
+
+[4 5 6]
+@eprog
+
+\subsec{Lists (\typ{LIST})}%
+\sidx{list}\kbdsidx{t_LIST}
+Lists can be input directly, as in \kbd{List([1,2,3,4])}; but in most cases,
+one creates an empty list, then appends elements using \kbd{listput}:
+\bprog
+  ? a = List(); listput(a,1); listput(a,2);
+  ? a
+  %2 = List([1, 2])
+@eprog\noindent
+Elements can be accessed directly as with the vector types described above.
+
+\subsec{Strings (\typ{STR})}%
+\sidx{string}\sidx{character string}\kbdsidx{t_STR}
+To enter a string, enclose it between double quotes \kbd{"}, like this:
+\kbd{"this is a string"}. The function \kbd{Str} can be used to transform any
+object into a string.
+
+\subsec{Small vectors (\typ{VECSMALL})}%
+\kbdsidx{t_VECSMALL}
+This is an internal type, used to code in an efficient way vectors containing
+only small integers, such as permutations. Most \kbd{gp} functions will
+refuse to operate on these objects.
+
+\subsec{Functions (\typ{CLOSURE})}%
+\kbdsidx{t_CLOSURE}
+We will explain this at length in \secref{se:user_defined}. For the time
+being, suffice it to say that functions can be assigned to variables, as any
+other object, and the following equivalent basic forms are available to
+create new ones
+\bprog
+  f = (x,y) -> x^2 + y^2
+
+  f(x,y) = x^2 + y^2
+@eprog
+
+\subsec{Error contexts (\typ{ERROR})}%
+\kbdsidx{t_ERROR}
+An object of this type is created whenever an error occurs: it contains some
+information about the error and the error context. Usually, an appropriate
+error is printed immediately, the computation is aborted, and GP enters the
+``break loop'':
+\bprog
+  ? 1/0; 1 + 1
+    ***   at top-level: 1/0;1+1
+    ***                  ^------
+    *** _/_: division by a non-invertible object
+    ***   Break loop: type 'break' to go back to the GP prompt
+
+@eprog\noindent Here the computation is aborted as soon as we try to evaluate
+$1/0$, and $1 + 1$ is never executed. Exceptions can be trapped
+using \tet{iferr}, however: we can evaluate some expression and either recover
+an ordinary result (no error occurred), or an exception (an error did occur).
+\bprog
+  ? i = Mod(6,12); iferr(1/i, E, print(E)); 1 + 1
+  error("impossible inverse modulo: Mod(6, 12).")
+  %1 = 2
+@eprog\noindent One can ignore the exception, print it as above, or extract
+non trivial information from the error context:
+\bprog
+  ? i = Mod(6,12); iferr(1/i, E, print(component(E,1)));
+  Mod(6, 12)
+@eprog\noindent We can also rethrow the exception: \kbd{error(E)}.
+
+\subsec{Infinity (\typ{INFINITY})}%
+\kbdsidx{t_INFINITY}
+
+There are only two objects of this type \kbd{+oo} and \kbd{-oo}, representing
+$\pm\infty$. This type only contain only two elements \kbd{oo} and \kbd{-oo},
+They are used in functions sur as \kbd{intnum} or \kbd{polrootsreal}, to
+encode infinite real intervals. These objects can only be negated and
+compared to real numbers (\typ{INT}, \typ{REAL}, \typ{FRAC}), but not
+included in any computation, i.e.~\kbd{1+oo} is an error, not kbd{oo} again.
+
+\section{GP operators}\label{se:operators}
+
+\noindent Loosely speaking, an \idx{operator} is a function, usually
+attached to basic arithmetic operations, whose name contains only
+non-alphanumeric characters. For instance \kbd{+} or \kbd{-}, but also
+\kbd{=} or \kbd{+=}, or even \kbd{[ ]} (the selection operator). As all
+functions, operators take arguments, and return a value; \emph{assignment}
+operators also have side effects: besides returning a value, they change the
+value of some variable.
+
+Each operator has a fixed and unchangeable priority, which means that, in
+a given expression, the operations with the highest priority is performed
+first. Unless mentioned otherwise, operators at the same priority level are
+left-associative (performed from left to right), unless they are assignments,
+in which case they are right-associative. Anything enclosed between
+parenthesis is considered a complete subexpression, and is resolved
+recursively, independently of the surrounding context. For instance,
+\bprog
+  a + b + c    -->   (a + b) + c     \\@com left-associative
+  a = b = c    -->   a = (b = c)     \\@com right-associative
+@eprog\noindent
+Assuming that \var{op}$_1$, \var{op}$_2$, \var{op}$_3$ are
+binary operators with increasing priorities (think of \kbd{+},
+\kbd{*}, \kbd{\pow}),
+$$ x~\var{op}_1~y~\var{op}_2~z~\var{op}_2~x~\var{op}_3~y $$ is
+equivalent to $$ x~\var{op}_1~((y~\var{op}_2~z)~\var{op}_2~
+(x~\var{op}_3~y)).$$
+
+GP contains many different operators, either unary (having only
+one argument) or binary, plus a few special selection operators. Unary
+operators are defined as either \emph{prefix}  or \emph{postfix}, meaning
+that they respectively precede (\var{op}~$x$) and follow ($x$~\var{op}) their
+single argument. Some symbols are syntactically correct in both positions,
+like \kbd{!}, but then represent different operators: the \kbd{!} symbol
+represents the negation and factorial operators when in prefix and postfix
+position respectively. Binary operators all use the (infix) syntax
+$x$~\var{op}~$y$.
+
+Most operators are standard (\kbd{+}, \kbd{\%}, \kbd{=}), some are
+borrowed from the C language (\kbd{++}, \kbd{<<}), and a few are
+specific to GP (\kbd{\bs}, \kbd{\#}). Beware that some GP operators differ
+slightly from their C counterparts. For instance, GP's postfix \kbd{++}
+returns the \emph{new} value, like the prefix \kbd{++} of~C, and the binary
+shifts \kbd{<<}, \kbd{>>} have a priority which is different from (higher
+than) that of their C counterparts. When in doubt, just surround everything
+by parentheses; besides, your code will be more legible.
+
+\noindent Here is the list of available operators, ordered by decreasing
+\idx{priority}, binary and left-associative unless mentioned otherwise. An
+expression is an \tev{lvalue} if something can be assigned to it. (The name
+comes from left-value, to the left of a \kbd{=} operator; e.g.
+\kbd{x}, or \kbd{v[1]} are lvalues, but \kbd{x + 1} is not.)
+
+\def\point#1{\noindent\item #1\hfill\break\indent\strut}
+\point{Priority 14}
+%
+\kbd{:} as in \kbd{x:small}, is used to indicate to the GP2C compiler that the
+variable on the left-hand side always contains objects of the type specified
+on the right hand-side (here, a small integer) in order to produce more
+efficient or more readable C code. This is ignored by GP.
+
+%
+\point{Priority 13}
+\kbd{( )} is the function call operator. If $f$ is a closure and \var{args}
+is a comma-separated list of arguments (possibly empty),
+$f\kbd{(\var{args})}$ evaluates $f$ on those arguments.
+
+\point{Priority 12}
+%
+\kbd{++} and \kbd{--} (unary, postfix): if $x$ is an \tet{lvalue},
+\kbd{$x$++} assigns the value $x+1$ to $x$, then returns the new value of
+$x$. This corresponds to the C statement \kbd{++$x$}: there is no prefix
+\kbd{++} operator in GP. \kbd{$x$--} does the same with $x-1$. These
+operators are not associative, i.e. \kbd{x++++} is invalid, since
+\kbd{x++} is not an lvalue.
+
+\point{Priority 11}
+%
+\kbd{.}\var{member} (unary, postfix): \kbd{$x$.\var{member}} extracts
+\var{member} from structure $x$ (see~\secref{se:member}).
+
+\kbd{[ ]} is the selection operator. \kbd{$x$[$i$]} returns the $i$-th
+component of vector $x$; \kbd{$x$[$i$,$j$]}, \kbd{$x$[,$j$]} and
+\kbd{$x$[$i$,]} respectively return the entry of coordinates $(i,j)$, the
+$j$-th column, and the $i$-th row of matrix $x$. If the assignment operator
+(\kbd{=}) immediately follows a sequence of selections, it assigns its right
+hand side to the selected component. E.g \kbd{x[1][1] = 0} is valid; but
+beware that \kbd{(x[1])[1] = 0} is not (because the parentheses force the
+complete evaluation of \kbd{x[1]}, and the result is not modifiable).
+
+\point{Priority 10}
+%
+\kbd{'} (unary, postfix): derivative with respect to the main variable.
+If $f$ is a function (\typ{CLOSURE}), $f'$ is allowed and defines a new
+function, which will perform \idx{numerical derivation} when evaluated
+at a scalar $x$; this is defined as $(f(x+\varepsilon) - f(x-\varepsilon)) /
+2\varepsilon$ for a suitably small epsilon depending on current precision.
+\bprog
+? (x^2 + y*x + y^2)'  \\@com derive with respect to main variable \kbd{x}
+%1 = 2*x + y
+? SIN = cos'
+%2 = cos'
+? SIN(Pi/6)         \\@com numerical derivation
+%3 = -0.5000000000000000000000000000
+? cos'(Pi/6)        \\@com works directly: no need for intermediate \kbd{SIN}
+%4 = -0.5000000000000000000000000000
+@eprog
+
+\strut\kbd{\til} (unary, postfix): vector/matrix transpose.
+
+\kbd{!} (unary, postfix): factorial. $x\kbd{!}=x(x-1)\cdots 1$.
+
+\kbd{!} (unary, prefix): logical \var{not}. \kbd{!$x$} returns $1$ if $x$ is
+equal to $0$ (specifically, if \kbd{gequal0($x$)==1}), and $0$ otherwise.
+
+\point{Priority 9}
+%
+\kbd{\#} (unary, prefix): cardinality; \kbd{\#$x$} returns \kbd{length($x$)}.
+
+\point{Priority 8}
+%
+\kbd{\pow}: powering. This operator is right associative:
+\kbd{2 \pow 3\pow 4} is understood as \kbd{2 \pow (3\pow 4)}.
+
+\point{Priority 7}
+%
+\kbd{+}, \kbd{-} (unary, prefix): \kbd{-} toggles the sign of its argument,
+\kbd{+} has no effect whatsoever.
+
+\point{Priority 6}
+%
+\kbd{*}: multiplication.
+
+\kbd{/}: exact division (\kbd{3/2} yields $3/2$, not $1.5$).
+
+\kbd{\bs}, \kbd{\%}: Euclidean quotient and remainder, i.e.~if $x =
+qy + r$, then $\kbd{x \b{ } y} = q$, $\kbd{x\%y} = r$. If $x$ and $y$
+are scalars, then $q$ is an integer and $r$ satisfies $0\le r < |y|$; if $x$
+and $y$ are polynomials, then $q$ and $r$ are polynomials such that $\deg r<
+\deg y$ and the leading terms of $r$ and $x$ have the same sign.
+
+\kbd{\bs/}: rounded Euclidean quotient for integers (rounded towards
+$+\infty$ when the exact quotient would be a half-integer).
+
+\kbd{<<}, \kbd{>>}: left and right binary shift. By definition,
+\kbd{x<<n}$~=~x * 2^n$ if $n>0$, and $\kbd{truncate}(x 2^{-n})$ otherwise.
+Right shift is defined by \kbd{x>>n}$~=~$\kbd{x<<(-n)}.
+
+\point{Priority 5}
+%
+\kbd{+}, \kbd{-}: addition/subtraction.
+
+\point{Priority 4}
+%
+\kbd{<}, \kbd{>}, \kbd{<=}, \kbd{>=}: the usual comparison operators,
+returning 1 for \kbd{true} and 0 for \kbd{false}. For instance,
+\kbd{x<=1} returns $1$ if $x\le 1$ and $0$ otherwise.
+
+\kbd{<>}, \kbd{!=}: test for (exact) inequality.
+
+\kbd{==}: test for (exact) equality. \typ{QFR} having the same coefficients
+but a different distance component are tested as equal.
+
+\kbd{===}: test whether two objects are identical component-wise. This is
+stricter than \kbd{==}: for instance, the integer 0, a 0 polynomial or a
+vector with 0 entries, are all tested equal by \kbd{==}, but they are not
+identical.
+
+\point{Priority 3}
+%
+\kbd{\&\&}: logical \var{and}.
+
+\kbd{||}: logical (inclusive) \var{or}. Any sequence of logical
+\var{or} and \var{and} operations is evaluated from left to right,
+and aborted as soon as the final truth value is known. Thus, for instance,
+\bprog
+  x == 0 || test(1/x)
+@eprog\noindent
+will never produce an error since \kbd{test(1/x)} is not even evaluated
+when the first test is true (hence the final truth value is true). Similarly
+\bprog
+  type(p) == "t_INT" && isprime(p)
+@eprog\noindent
+does not evaluate \kbd{isprime(p)} if \kbd{p} is not an integer.
+
+\point{Priority 2}
+%
+\kbd{=} (assignment, \var{lvalue} \kbd{=} \var{expr}). The result of
+\kbd{x~=~$y$} is the value of the expression~$y$, which is also assigned to
+the variable~\kbd{x}. This assignment operator is right-associative. This is
+\emph{not} the equality test operator; a statement like \kbd{x~=~1} is always
+true (i.e.~non-zero), and sets \kbd{x} to~1; the equality test would be
+\kbd{x == 1}. The right hand side of the assignment operator is evaluated
+before the left hand side.
+
+It is crucial that the left hand-side be an \var{lvalue} there, it avoids
+ambiguities in expressions like \kbd{1 + x = 1}. The latter evaluates as
+\kbd{1 + (x = 1)}, not as \kbd{(1 + x) = 1}, even though the priority of
+\kbd{=} is lower than the priority of \kbd{+}: \kbd{1 + x} is not an lvalue.
+
+If the expression cannot be parsed in a way where the left hand side is an
+lvalue, raise an error.
+\bprog
+? x + 1 = 1
+  ***   syntax error, unexpected '=', expecting $end or ';': x+1=1
+  ***                                                           ^--
+@eprog\noindent
+Assignment to all variables is a deep copy: after $x = y$, modifying a
+component of $y$ will \emph{not} change $x$. To globals it is a full copy to
+the heap. Space used by local objects in local variables is released when
+they go out of scope or when the value changes in local scope. Assigning a
+value to a vector or matrix entry allocates room for that entry only (on the
+heap).
+
+\leavevmode
+\kbd{\var{op}=}, where \var{op} is any binary operator
+among \kbd{+}, \kbd{-}, \kbd{*}, \kbd{\%}, \kbd{/}, \kbd{\bs}, \kbd{\bs/},
+\kbd{<<}, or
+\kbd{>>} (composed assignment \var{lvalue} \var{op}\kbd{=} \var{expr}).
+The expression \kbd{x~\var{op}=~$y$} assigns $(\kbd{x}~\var{op}~y)$
+to~\kbd{x}, and returns the new value of~\kbd{x}. The result is \emph{not}
+an \tev{lvalue}; thus
+\bprog
+  (x += 2) = 3
+@eprog\noindent
+is invalid. These assignment operators are right-associative:
+\bprog
+  ? x = 'x; x += x *= 2
+  %1 = 3*x
+@eprog
+
+\point{Priority 1}
+\kbd{->} (function definition): \kbd{(\var{vars})->\var{expr}} returns a
+function object, of type \typ{CLOSURE}.
+
+\misctitle{Remark} Use the \var{op}\kbd{=} operators as often as possible
+since they make complex assignments more legible. Compare
+\bprog
+v[i+j-1] = v[i+j-1] + 1    -->    v[i+j-1]++
+
+M[i,i+j] = M[i,i+j] * 2    -->    M[i,i+j] *= 2
+@eprog
+
+\misctitle{Remark about efficiency} the operators \kbd{++}
+and \kbd{--} are usually a little more efficient than their expended
+counterpart:
+\bprog
+? N = 10^7;
+? i = 0; for(k = 1, N, i=i+1)
+time = 949 ms.
+? i = 0; for(k = 1, N, i++)
+time = 933 ms.
+@eprog\noindent On the other hand, this is not the case for the
+\var{op}\kbd{=} operators which may even be a little less efficient:
+\bprog
+? i = 0; for(k = 1, N, i=i+10)
+time = 949 ms.
+? i = 0; for(k = 1, N, i+=10)
+time = 1,064 ms.
+@eprog
+
+\section{Variables and symbolic expressions}\sidx{variable}\label{se:varsymb}
+In this section we use \emph{variable} in the standard mathematical
+sense, symbols representing algebraically independent elements used to build
+rings of polynomials and power series, and explain the all-important concept
+of \emph{variable priority}. In the next \secref{se:scope}, we shall no
+longer consider only free variables, but adopt the viewpoint of computer
+programming and assign values to these symbols: (bound) variables are names
+attached to values in a given scope.
+
+\subsec{Variable names}\label{se:varname} A valid name starts with a letter,
+followed by any number of keyword characters: \kbd{\_} or alphanumeric
+characters ([\kbd{A-Za-z0-9}]). The built-in function names are reserved and
+cannot be used; see the list with \b{c}, including the constants \kbd{Pi},
+\kbd{Euler}, \kbd{Catalan}, $\kbd{I}=\sqrt{-1}$ and $\kbd{oo} = \infty$.
+
+GP names are case sensitive. For instance, the symbol \kbd{i} is perfectly
+safe to use, and will not be mistaken for $\kbd{I} = \sqrt{-1}$; analogously,
+\kbd{o} is not synonymous to \kbd{O}.
+
+In GP you can use up to 16383 variable names (up to 65535 on 64-bit
+machines). If you ever need thousands of variables and this becomes a serious
+limitation, you should probably be using vectors instead: e.g. instead of
+variables \kbd{X1}, \kbd{X2}, \kbd{X3}, \dots, you might equally well store
+their values in \kbd{X[1]}, \kbd{X[2]}, \kbd{X[3]}, \dots
+
+\subsec{Variables and polynomials}\sidx{free variable}
+The quote operator \kbd{'t} registers a new \emph{free variable} with the
+interpreter, which will be written as \kbd{t}, and evaluates to a monomial
+of degree $1$ in the said variable.
+
+\misctitle{Caveat}
+For reasons of backward compatibility, there is no such thing as an
+``unbound'' (uninitialized) variable in GP. If you use a valid variable name
+in an expression, \kbd{t} say, for the first time \emph{before} assigning a
+value into it, it is interpreted as \kbd{'t} rather than raising an
+exception. One should not rely on this feature in serious programs, which
+would otherwise break if some unexpected assignment (e.g. \kbd{t = 1})
+occurs: use \kbd{'t} directly or \kbd{t = 't} first, then \kbd{t}.
+A statement like \kbd{t = 't} in effect restores \kbd{t} as a free variable.
+%
+\bprog
+? t = 't; t^2 + 1
+%1 = t^2 + 1
+? t = 2; t^2 + 1
+%2 = 5
+? %1
+%3 = t^2 + 1
+? eval(%1)
+%4 = 5
+@eprog\noindent
+In the above, we initialize \kbd{t} to a monomial, then bind it to $2$.
+Assigning a value to a polynomial variable does not affect previous
+expressions involving it; to take into account the new variable's value, one
+must force a new evaluation, using the function \kbd{eval} (see
+\secref{se:eval}).
+
+\misctitle{Caveat2}
+The use of an explicit quote operator avoids the following kind of problems:
+\bprog
+? t = 't; p = t^2 + 1; subst(p, t, 2)
+%1 = 5
+? t = 2;
+? subst(p, t, 3)    \\@com \kbd{t} is no longer free: it evaluates to 2
+  ***   at top-level: subst(p,t,3)
+  ***                         ^----
+  ***   variable name expected.
+? subst(p, 't, 3)   \\ OK
+%3 = 10
+@eprog
+
+\subsec{Variable priorities, multivariate objects}\sidx{variable (priority)}\label{se:priority}
+A multivariate polynomial in PARI is just a polynomial (in one variable),
+whose coefficients are themselves polynomials, arbitrary but for the fact
+that they do not involve the main variable. (PARI currently has no sparse
+representation for polynomials, listing only non-zero monomials.) All
+computations are then done formally on the coefficients as if the
+polynomial was univariate.
+
+This is not symmetrical. So if I enter \kbd{'x + 'y} in a clean session,
+what happens? This is understood as
+$$ x^1 + (y^1 + 0*y^0)*x^0 \in (\Z[y])[x] $$
+but how do we know that $x$ is ``more important'' than $y$ ? Why not $y^1 +
+x*y^0$, which is the same mathematical entity after all?
+
+The answer is that variables are ordered implicitly by the interpreter:
+when a new identifier (e.g~$x$, or $y$ as above) is input, the corresponding
+variable is registered as having a strictly lower priority than any variable in
+use at this point\footnote{*}{This is not strictly true:
+the variables $x$ and $y$ are predefined, and satisfy $x > y$.
+Variables of higher priority than $x$ can be created
+using \tet{varhigher}.}%
+. To see the ordering used by \kbd{gp} at any given time, type
+\kbd{variable()}.\kbdsidx{variable}
+
+Given such an ordering, multivariate polynomials are stored so that the
+variable with the highest priority is the main variable. And so on,
+recursively, until all variables are exhausted. A different storage pattern
+(which could only be obtained via \kbd{libpari} programming and low-level
+constructors) would produce an invalid object, and eventually a disaster.
+
+In any case, if you are working with expressions involving several variables
+and want to have them ordered in a specific manner in the internal
+representation just described, the simplest is just to write down the
+variables one after the other under \kbd{gp} before starting any real
+computations. You may also define variables from your \tet{gprc} to have a
+consistent ordering of common variable names in all your \kbd{gp} sessions,
+e.g read in a file \kbd{variables.gp} containing
+\bprog
+'x; 'y; 'z; 't; 'a;
+@eprog\noindent There is no way to change the priority of existing variables,
+but you may always create new ones with well-defined priorities using
+\kbd{varhigher} or \kbd{varlower}.
+
+\misctitle{Important note} PARI allows Euclidean division of multivariate
+polynomials, but assumes that the computation takes place in the fraction
+field of the coefficient ring (if it is not an integral domain, the result
+will a priori not make sense). This can become tricky. For instance
+assume $x$ has highest priority, then $y$:
+\bprog
+? x % y
+%1 = 0
+? y % x
+%2 = y             \\@com these two take place in $\Q(y)[x]$
+? x * Mod(1,y)
+%3 = Mod(1, y)*x   \\@com in $(\Q(y)/y\Q(y))[x] \sim \Q[x]$
+? Mod(x,y)
+%4 = 0
+@eprog
+\noindent In the last example, the division by $y$ takes place in
+$\Q(y)[x]$,
+hence the \kbd{Mod} object is a coset in $(\Q(y)[x]) / (y\Q(y)[x])$, which
+is the null ring since $y$ is invertible! So be very wary of variable
+ordering when your computations involve implicit divisions and many
+variables. This also affects functions like \tet{numerator}/\tet{denominator}
+or \tet{content}:
+\bprog
+? denominator(x / y)
+%1 = 1
+? denominator(y / x)
+%2 = x
+? content(x / y)
+%3 = 1/y
+? content(y / x)
+%4 = y
+? content(2 / x)
+%5 = 2
+@eprog
+\noindent Can you see why? Hint: $x/y = (1/y) * x$ is in $\Q(y)[x]$ and
+denominator is taken with respect to $\Q(y)(x)$; $y/x = (y*x^0) / x$ is in
+$\Q(y)(x)$ so $y$ is invertible in the coefficient ring. On the other hand,
+$2/x$ involves a single variable and the coefficient ring is simply $\Z$.
+
+These problems arise because the variable ordering defines an \emph{implicit}
+variable with respect to which division takes place. This is
+the price to pay to allow \kbd{\%} and \kbd{/} operators on polynomials
+instead of requiring a more cumbersome \kbd{divrem($x$, $y$, \var{var})}
+(which also exists). Unfortunately, in some functions like \tet{content} and
+\tet{denominator}, there is no way to set explicitly a main variable like in
+\tet{divrem} and remove the dependence on implicit orderings. This will
+hopefully be corrected in future versions.
+
+\subsec{Multivariate power series}
+Just like multivariate polynomials, power series are fundamentally
+single-variable objects. It is awkward to handle many variables at once,
+since PARI's implementation cannot handle multivariate error terms like
+$O(x^i y^j)$. (It can handle the polynomial $O(y^j) \times x^i$ which is
+a very different thing, see below.)
+
+The basic assumption in our model is that if variable $x$ has higher
+priority than $y$, then $y$ does not depend on $x$: setting $y$ to a
+function of $x$ after some computations with bivariate power series does
+not make sense a priori. This is because implicit constants in
+expressions like $O(x^i)$ depend on $y$ (whereas in $O(y^j)$ they can not
+depend on $x$). For instance
+\bprog
+  ? O(x) * y
+  %1 = O(x)
+  ? O(y) * x
+  %2 = O(y)*x
+@eprog\noindent
+Here is a more involved example:
+\bprog
+  ? A = 1/x^2 + 1 + O(x); B = 1/x + 1 + O(x^3);
+  ? subst(z*A, z, B)
+  %2 = x^-3 + x^-2 + x^-1 + 1 + O(x)
+  ? B * A
+  %3 = x^-3 + x^-2 + x^-1 + O(1)
+  ? z * A
+  %4 = z*x^-2 + z + O(x)
+@eprog\noindent
+The discrepancy between \kbd{\%2} and \kbd{\%3} is surprising. Why does
+\kbd{\%2} contain a spurious constant term, which cannot be
+deduced from the input? Well, we ignored the rule that forbids to
+substitute an expression involving high-priority variables
+to a low-priority variable. The result \kbd{\%4} is correct according to
+our rules since the implicit constant in $O(x)$ may depend on $z$. It is
+obviously wrong if $z$ is allowed to have negative valuation in $x$. Of
+course, the correct error term should be $O(xz)$, but this is not
+possible in PARI.
+
+\section{Variables and Scope}\sidx{variable scope}\label{se:scope}
+This section is rather technical, and strives to explain potentially
+confusing concepts. Skip to the last subsection for practical advice, if the
+next discussion does not make sense to you. After learning about user
+functions, study the example in \secref{se:bewarescope} then come back.
+
+\misctitle{Definitions} % rather not make it a section to allow for ??my
+
+A \emph{scope} is an enclosing context where names and values are attached.
+A user's function body, the body of a loop, an individual command line, all
+define scopes; the whole program defines the \emph{global} scope. The
+argument of \tet{eval} is evaluated in the enclosing scope.
+
+Variables are bound to values within a given scope. This is traditionally
+implemented in two different ways:
+
+\item\sidx{lexical scoping} lexical (or static) scoping: the binding makes
+sense within a given block of program text. The value is private to the block
+and may not be accessed from outside. Where to find the value is determined
+at compile time.
+
+\item\sidx{dynamic scoping} dynamic scoping: introducing a local variable,
+say \kbd{x}, pushes a new value on a stack attached to the name \kbd{x}
+(possibly empty at this point), which is popped out when the control flow
+leaves the scope. Evaluating \kbd{x} in any context, possibly outside of the
+given block, always yields the top value on this dynamic stack.
+
+GP implements both lexical and dynamic scoping, using the keywords%
+\footnote{*}{The names are borrowed from the \tet{Perl} scripting language.}
+\tet{my} (lexical) and \tet{local} (dynamic):
+\bprog
+  x = 0;
+  f() = x
+  g() =    my(x = 1); f()
+  h() = local(x = 1); f()
+@eprog\noindent
+The function \kbd{g} returns 0 since the global \kbd{x} binding
+is unaffected by the introduction of a private variable of the same name in
+\kbd{g}. On the other hand, \kbd{h} returns 1; when it calls \kbd{f()}, the
+binding stack for the \kbd{x} identifier contains two items: the global
+binding to 0, and the binding to 1 introduced in \kbd{h}, which is still
+present on the stack since the control flow has not left \kbd{h} yet.
+
+\subsec{Scoping rules}
+
+Named parameters in a function definition, as well as all loop
+indices\footnote{**}{
+More generally, in all iterative constructs which use a variable name
+(\kbd{for}, \kbd{prod}, \kbd{sum}, \kbd{vector}, \kbd{matrix},
+\kbd{plot}, etc.) the given variable is lexically scoped to the construct's
+body.},
+have lexical scope within the function body and the loop body respectively.
+\bprog
+p = 0;
+forprime (p = 2, 11, print(p)); p   \\ prints 0 at the end
+
+x = 0;
+f(x) = x++;
+f(1)  \\ returns 2, and leave global x unaffected (= 0)
+@eprog\noindent
+If you exit the loop prematurely, e.g.~using the \kbd{break} statement, you
+must save the loop index in another variable since its value prior the loop
+will be restored upon exit. For instance
+\bprog
+  for(i = 1, n,
+    if (ok(i), break);
+  );
+  if (i > n, return(failure));
+@eprog\noindent
+is incorrect, since the value of $i$ tested by the $(i > n)$ is quite
+unrelated to the loop index. One ugly workaround is
+\bprog
+  for(i = 1, n,
+    if (ok(i), isave = i; break);
+  );
+  if (isave > n, return(failure));
+@eprog\noindent
+But it is usually more natural to wrap the loop in a user function
+and use \kbd{return} instead of \kbd{break}:
+\bprog
+try() =
+{
+  for(i = 1, n,
+    if (ok(i), return (i));
+  );
+  0 \\ failure
+}
+@eprog
+
+A list of variables can be lexically or dynamically scoped (to the block
+between the declaration and the end of the innermost enclosing scope) using a
+\kbd{my} or \kbd{local} declaration:
+\bprog
+for (i = 1, 10,
+  my(x, y, z, i2 = i^2); \\ temps needed within the loop body
+  ...
+)
+@eprog\noindent
+Note how the declaration can include (optional) initial values, \kbd{i2 =
+i\pow 2} in the above. Variables for which no explicit default value is given
+in the declaration are initialized to $0$. It would be more natural to
+initialize them to free variables, but this would break backward
+compatibility. To obtain this behavior, you may explicitly use the quoting
+operator:
+\bprog
+my(x = 'x, y = 'y, z = 'z);
+@eprog\noindent
+A more complicated example:
+\bprog
+for (i = 1, 3,
+  print("main loop");
+  my(x = i);          \\ local to the outermost loop
+  for (j = 1, 3,
+    my (y = x^2);     \\ local to the innermost loop
+    print (y + y^2);
+    x++;
+  )
+)
+@eprog\noindent
+When we leave the loops, the values of \kbd{x}, \kbd{y}, \kbd{i}, \kbd{j}
+are the same as before they were started.
+
+Note that \tet{eval} is evaluated in the given scope, and can access values
+of lexical variables:
+\bprog
+? x = 1;
+? my(x = 0); eval("x")
+%2 = 0    \\@com we see the local \kbd{x} scoped to this command line, not the global one
+@eprog
+
+Variables dynamically scoped using \kbd{local} should more appropriately be
+called \emph{temporary values} since they are in fact local to the function
+declaring them \emph{and} any subroutine called from within. In practice, you
+almost certainly want true private variables, hence should use almost
+exclusively \kbd{my}.
+
+We strongly recommended to explicitly scope (lexically) all variables to the
+smallest possible block. Should you forget this, in expressions involving such
+``rogue'' variables, the value used will be the one which happens to be on
+top of the value stack at the time of the call; which depends on the whole
+calling context in a non-trivial way. This is in general \emph{not} what you
+want.
+
+\section{User defined functions}\sidx{user defined functions}
+\label{se:user_defined}
+
+The most important thing to understand about user-defined functions is
+that they are ordinary GP objects, bound to variables just like any
+other object. Those variables are subject to scoping rules as any other:
+while you can define all your functions in global scope, it is usually
+possible and cleaner to lexically scope your private helper functions to the
+block of text where they will be needed.
+
+Whenever gp meets a construction of the form \kbd{expr(\var{argument list})}
+and the expression \kbd{expr} evaluates to a function (an object of type
+\typ{CLOSURE}), the function is called with the proper arguments. For
+instance, constructions like \kbd{funcs[i](x)} are perfectly valid,
+assuming \kbd{funcs} is an array of functions.
+
+\subsec{Defining a function}\label{se:userfundef}
+
+A user function is defined as follows:
+
+  \kbd{(\var{list of formal variables}) -> \var{seq}}.
+
+\noindent The list of formal variables is a comma-separated list of
+\emph{distinct} variable names and allowed to be empty. It there is a single
+formal variable, the parentheses are optional. This list corresponds to the
+list of parameters you will supply to your function when calling it.
+
+In most cases you want to assign a function to a variable immediately, as in
+\bprog
+R = (x,y) -> sqrt( x^2+y^2 );
+sq = x -> x^2;  \\@com or equivalently \kbd{(x) -> x\pow2}
+@eprog\noindent
+but it is quite possible to define (a priori short-lived) anonymous functions.
+The trailing semicolon is not part of the definition, but as usual prevents
+\kbd{gp} from printing the result of the evaluation, i.e. the function
+object. The construction
+
+  \kbd{f(\var{list of formal variables}) = \var{seq}}
+
+\noindent is available as an alias for
+
+  \kbd{f = (\var{list of formal variables}) -> \var{seq}}
+
+\noindent Using that syntax, it is not possible to define anonymous functions
+(obviously), and the above two examples become:
+\bprog
+R(x,y) = sqrt( x^2+y^2 );
+sq(x) = x^2;
+@eprog\noindent
+The semicolon serves the same purpose as above: preventing the printing
+of the resulting function object; compare
+\bprog
+? sq(x) = x^2;  \\@com no output
+? sq(x) = x^2   \\@com print the result: a function object
+%2 = (x)->x^2
+@eprog\noindent Of course, the sequence \var{seq} can be arbitrarily
+complicated, in which case it will look better written on consecutive lines,
+with properly scoped variables:
+\bprog
+{
+f(x0, x1, @dots) =
+  my(t0, t1, @dots); \\@com variables lexically scoped to the function body
+  @dots
+}
+@eprog \noindent Note that the following variant would also work:
+\bprog
+f(x0, x1, @dots) =
+{
+  my(t0, t1, @dots); \\@com variables lexically scoped to the function body
+  @dots
+}
+@eprog \noindent
+(the first newline is disregarded due to the preceding \kbd{=} sign, and the
+others because of the enclosing braces). The \tet{my} statements can actually
+occur anywhere within the function body, scoping the variables to more
+restricted blocks than the whole function body.
+
+Arguments are passed by value, not as variables: modifying a function's
+argument in the function body is allowed, but does not modify its value in the
+calling scope. In fact, a \emph{copy} of the actual parameter is assigned to
+the formal parameter when the function is called. (This is not litteraly
+true: a form of copy-on-write is implemented so an object is not duplicated
+unless modified in the function.) Formal parameters are lexically scoped
+to the function body. It is not allowed to use the same variable name for
+different parameters of your function:
+\bprog
+? f(x,x) = 1
+  ***   variable declared twice: f(x,x)=1
+  ***                                ^----
+@eprog
+
+\misctitle{Functions taking an unlimited number of arguments}
+
+A function taking an unlimited number of arguments is called \emph{variadic}.
+To create such a function, use the syntax
+
+  \kbd{(\var{list of formal variables}, \var{var}[..]) -> \var{seq}}
+
+\noindent The parameter \var{var} is replaced by a vector containing all the
+remaining arguments.
+
+\bprog
+? f(c[..]) = sum(i=1,#c,c[i]);
+? f(1,2,3)
+%1 = 6
+? sep(s,v[..]) = for(i=1,#v-1,print1(v[i],s)); if (#v, print(v[#v]));
+? sep(":", 1, 2, 3)
+1:2:3
+@eprog
+
+\misctitle{Finishing touch}
+You can add a specific help message for your function using \kbd{addhelp},
+but the online help system already handles it. By default \kbd{?\var{name}}
+will print the definition of the function \var{name}: the list of arguments,
+as well as their default values, the text of \var{seq} as you input it.
+Just as \b{c} prints the list of all built-in commands, \b{u} outputs the
+list of all user-defined functions.
+
+\misctitle{Backward compatibility (lexical scope)} Lexically scoped
+variables were introduced in version~2.4.2. Before that, the formal
+parameters were dynamically scoped. If your script depends on this behavior,
+you may use the following trick: replace the initial \kbd{f(x) =} \ by
+\bprog
+f(x_orig) = local(x = x_orig)
+@eprog
+\misctitle{Backward compatibility (disjoint namespaces)} Before version
+2.4.2, variables and functions lived in disjoint namespaces and it was not
+possible to have a variable and a function share the same name. Hence the
+need for a \kbd{kill} function allowing to reuse symbols. This is no longer
+the case.
+
+There is now no distinction between variable and function names: we
+have PARI objects (functions of type \typ{CLOSURE}, or more mundane
+mathematical entities, like \typ{INT}, etc.) and variables bound to them.
+There is nothing wrong with the following sequence of assignments:
+\bprog
+? f = 1       \\@com assigns the integer 1 to \kbd{f}
+%1 = 1;
+? f() = 1     \\@com a function with a constant value
+%2 = ()->1
+? f = x^2     \\@com \kbd{f} now holds a polynomial
+%3 = x^2
+? f(x) = x^2  \\@com \dots and now a polynomial function
+%4 = (x)->x^2
+? g(fun) = fun(Pi);\\@com a function taking a function as argument
+? g(cos)
+%6 = -1.000000000000000000000000000
+
+@eprog\noindent
+Previously used names can be recycled as above: you are just redefining the
+variable. The previous definition is lost of course.
+
+\misctitle{Important technical note} Built-in functions are a special case
+since they are read-only (you cannot overwrite their default meaning),
+and they use features not available to user functions, in particular pointer
+arguments. In the present version \vers{}, it is possible to assign a built-in
+function to a variable, or to use a built-in function name to create an
+anonymous function, but some special argument combinations may not be
+available:
+\bprog
+? issquare(9, &e)
+%1 = 1
+? e
+%2 = 3
+? g = issquare;
+? g(9)
+%4 = 1
+? g(9, &e)  \\@com pointers are not implemented for user functions
+  ***   unexpected &: g(9,&e)
+  ***                     ^---
+@eprog
+
+\subsec{Function call, Default arguments}
+
+You may now call your function, as in \kbd{f(1,2)}, supplying values
+for the formal variables. The number of parameters actually supplied may be
+\emph{less} than the number of formal variables in the function definition.
+An uninitialized formal variable is given an implicit default value of (the
+integer)~0, i.e. after the definition
+\bprog
+f(x, y) = ...
+@eprog\noindent
+you may call \kbd{f(1, 2)}, supplying values for the two formal
+parameters, or for example
+\settabs\+\indent&xxxxxxxxx& equivalent to xxxx &\cr
+\+& \kbd{f(2)}  & equivalent to &\kbd{f(2,0)},\cr
+\+& \kbd{f()}   & & \kbd{f(0,0)},\cr
+\+& \kbd{f(,3)} & &\kbd{f(0,3)}.  (``Empty argument'' trick)\cr
+\noindent This \emph{implicit} default value of $0$, is actually deprecated
+and setting
+\bprog
+  default(strictargs, 1)
+@eprog\noindent allows to disable it (see \secref{se:def,strictargs}).\kbdsidx{strictargs}
+
+The recommended practice is to \emph{explicitly} set a default value:
+in the function definition, you can append \kbd{=}\var{expr} to a formal
+parameter, to give that variable a default value. The expression
+gets evaluated the moment the function is called, and may involve the
+preceding function parameters: a default value for $x_i$ may involve $x_j$
+for $j < i$. For instance, after
+\bprog
+f(x = 1, y = 2, z = y+1) = ....
+@eprog\noindent
+typing in \kbd{f(3,4)} would give you \kbd{f(3,4,5)}. In the rare case when
+you want to set some far away argument, and leave the defaults in between as
+they stand, use the ``empty argument'' trick: \kbd{f(6,,1)} would yield
+\kbd{f(6,2,1)}. Of course, \kbd{f()} by itself yields \kbd{f(1,2,3)} as was
+to be expected.
+
+In short, the argument list is filled with user supplied values, in
+order. A comma or closing parenthesis, where a value should have been,
+signals we must use a default value. When no input arguments are left, the
+defaults are used instead to fill in remaining formal parameters.
+A final example:
+\bprog
+f(x, y=2, z=3) = print(x, ":", y, ":", z);
+@eprog
+\noindent defines a function which prints its arguments (at most three of
+them), separated by colons.
+\bprog
+? f(6,7)
+6:7:3
+? f(,5)
+0:5:3
+? f()
+0:2:3
+@eprog\noindent If \kbd{strictargs} is set (recommended), $x$ is now a
+mandatory argument, and the above becomes:
+\bprog
+? default(strictargs,1)
+? f(6,7)
+6:7:3
+? f(,5)
+  ***   at top-level: f(,5)
+  ***                 ^-----
+  ***   in function f: x,y=2,z=3
+  ***                  ^---------
+  ***   missing mandatory argument 'x' in user function.
+@eprog
+
+\misctitle{Example} We conclude with an amusing example, intended to
+illustrate both user-defined functions and the power of the \kbd{sumalt}
+function. Although the \idx{Riemann zeta-function} is included (as
+\kbd{zeta}) among the standard functions, let us assume that we want to check
+other implementations. Since we are highly interested in the critical strip,
+we use the classical formula
+$$ (2^{1-s} - 1)\zeta(s) = \sum_{n\geq 1} (-1)^n n^{-s},
+  \qquad\Re s > 0.$$
+The implementation is obvious:\sidx{zeta function}
+\bprog
+ZETA(s) = sumalt(n=1, (-1)^n*n^(-s)) / (2^(1-s) - 1)
+@eprog
+\noindent
+Note that \kbd{n} is automatically lexically scoped to the \kbd{sumalt}
+``loop'', so that it is unnecessary to add a \kbd{my(n)} declaration to the
+function body. Surprisingly, this gives very good accuracy in a larger region
+than expected:
+\bprog
+? check = z -> ZETA(z) / zeta(z);
+? check(2)
+%1 = 1.000000000000000000000000000
+? check(200)
+%2 = 1.000000000000000000000000000
+? check(0)
+%3 = 0.9999999999999999999999999994
+? check(-5)
+%4 = 1.00000000000000007549266557
+? check(-11)
+%5 = 0.9999752641047824902660847745
+? check(1/2+14.134*I)  \\@com very close to a non-trivial zero
+%6 = 1.000000000000000000003747432 + 7.62329066 E-21*I
+? check(-1+10*I)
+%7 = 1.000000000000000000000002511 + 2.989950968 E-24*I
+@eprog\noindent Now wait a minute; not only are we summing a series which is
+certainly no longer alternating (it has complex coefficients), but we are
+also way outside of the region of convergence, and still get decent results! No
+programming mistake this time: \kbd{sumalt} is a
+``magic'' function\footnote{*}{\kbd{sumalt} is heuristic, but its use can be
+rigorously justified for a given function, in particular our $\zeta(s)$
+formula. Indeed, Peter Borwein (\emph{An efficient algorithm for the Riemann
+zeta function}, CMS Conf.~Proc.~{\bf 27} (2000), pp.~29--34) proved that the
+formula used in \kbd{sumalt} with $n$ terms computes $(1-2^{1-s})\zeta(s)$
+with a relative error of the order of $(3+\sqrt{8})^{-n}|\Gamma(s)|^{-1}$.},
+providing very good convergence acceleration; in effect, we are computing
+the analytic continuation of our original function. To convince ourselves
+that \kbd{sumalt} is a non-trivial implementation, let us try a simpler
+example:
+\bprog
+? sum(n=1, 10^7, (-1)^n/n, 0.) / (-log(2)) \\@com approximates the well-known formula
+time = 7,417 ms.
+%1 = 0.9999999278652515622893405457
+? sumalt(n=1, (-1)^n/n) / (-log(2))        \\@com accurate and fast
+time = 0 ms.
+%2 = 1.000000000000000000000000000
+@eprog\noindent No, we are not using a powerful simplification tool here,
+only numerical computations. Remember, PARI is not a computer algebra system!
+
+
+\subsec{Beware scopes}\label{se:bewarescope}
+Be extra careful with the scopes of variables. What is wrong with the
+following definition?
+\bprog
+FirstPrimeDiv(x) =
+{ my(p);
+  forprime(p=2, x, if (x%p == 0, break));
+  p
+}
+? FirstPrimeDiv(10)
+%1 = 0
+@eprog\noindent \misctitle{Hint} The function body is equivalent to
+\bprog
+{ my(newp = 0);
+  forprime(p=2, x, if (x%p == 0, break));
+  newp
+}
+@eprog\noindent
+\misctitle{Detailed explanation} The index \kbd{p} in the \kbd{forprime}
+loop is lexically scoped to the loop and is not visible to the outside world.
+Hence, it will not survive the \kbd{break} statement. More precisely, at this
+point the loop index is restored to its preceding value. The initial
+\kbd{my(p)}, although well-meant, adds to the confusion: it indeed scopes
+\kbd{p} to the function body, with initial value $0$, but the \kbd{forprime}
+loop introduces \emph{another} variable, unfortunately also called \kbd{p},
+scoped to the loop body, which shadows the one we wanted. So we always return
+$0$, since the value of the \kbd{p} scoped to the function body never changes
+and is initially $0$.
+
+To sum up, the routine returns the \kbd{p} declared local to
+it, not the one which was local to \kbd{forprime} and ran through consecutive
+prime numbers. Here is a corrected version:
+\bprog
+? FirstPrimeDiv(x) = forprime(p=2, x, if (x%p == 0, return(p)))
+@eprog
+
+\subsec{Recursive functions} Recursive functions\sidx{recursion} can easily
+be written as long as one pays proper attention to variable scope. Here is an
+example, used to retrieve the coefficient array of a multivariate polynomial
+(a non-trivial task due to PARI's unsophisticated representation for those
+objects): \sidx{multivariate polynomial}
+\bprog
+coeffs(P, nbvar) =
+{
+  if (type(P) != "t_POL",
+    for (i=1, nbvar, P = [P]);
+    return (P)
+  );
+  vector(poldegree(P)+1, i, coeffs(polcoeff(P, i-1), nbvar-1))
+}
+@eprog
+
+\noindent If $P$ is a polynomial in $k$ variables, show that after the
+assignment {\tt v = coeffs(P,k)}, the coefficient of $x_1^{n_1}\dots
+x_k^{n_k}$ in P is given by {\tt v[$n_1$+1][\dots][$n_k$+1]}.
+
+The operating system automatically limits the \idx{recursion depth}:
+\sidx{deep recursion}
+\bprog
+? dive(n) = dive(n+1)
+? dive(0);
+  ***   [...] at: dive(n+1)
+  ***             ^---------
+  ***   in function dive: dive(n+1)
+  ***                     ^---------
+  \\@com (last 2 lines repeated 19 times)
+  ***   deep recursion.
+@eprog\noindent
+There is no way to increase the recursion limit (which may be different on
+your machine) from within \kbd{gp}. To increase it before launching \kbd{gp},
+you can use \tet{ulimit} or \tet{limit}, depending on your shell, and raise
+the process available stack space (increase \tet{stacksize}).
+
+\subsec{Function which take functions as parameters} This is done as follows:
+\bprog
+? calc(f, x) = f(x)
+? calc(sin, Pi)
+%2 = -5.04870979 E-29
+? g(x) = x^2;
+? calc(g, 3)
+%4 = 9
+@eprog
+\noindent If we do not need \kbd{g} elsewhere, we should use an anonymous
+function here, \kbd{calc(x->x\pow 2, 3)}. Here is a variation:
+\bprog
+? funs = [cos, sin, tan, x->x^3+1]; \\@com an array of functions
+? call(i, x) = funs[i](x)
+@eprog\noindent
+evaluates the appropriate function on argument \kbd{x},
+provided $1\leq i\leq 4$. Finally, a more useful example:
+\bprog
+APPLY(f, v) = vector(#v, i, f(v[i]))
+@eprog\noindent
+applies the function \kbd{f} to every element in the vector \kbd{v}.
+(The built-in function \kbd{apply} is more powerful since it also applies to
+lists and matrices.)
+
+\subsec{Defining functions within a function}
+Defining a single function is easy:
+\bprog
+init(x) = (add = y -> x+y);
+@eprog\noindent Basically, we are defining a global variable \kbd{add}
+whose value is the function \kbd{y->x+y}. The parentheses were added for
+clarity and are not mandatory.
+\bprog
+? init(5);
+? add(2)
+%2 = 7
+@eprog\noindent
+A more refined approach is to
+avoid global variables and \emph{return} the function:
+\bprog
+init(x) = y -> x+y
+add = init(5)
+@eprog\noindent Then \kbd{add(2)} still returns 7, as expected! Of course,
+if \kbd{add} is in global scope, there is no gain, but we can
+lexically scope it to the place where it is useful:
+\bprog
+  my ( add = init(5) );
+@eprog
+
+How about multiple functions then? We can use the last idea and return a
+vector of functions, but if we insist on global variables?
+The first idea
+\bprog
+init(x) = add(y) = x+y; mul(y) = x*y;
+@eprog
+\noindent does not work since in the construction \kbd{f() = }\var{seq}, the
+function body contains everything until the end of the expression. Hence
+executing \kbd{init} defines the wrong function \kbd{add} (itself defining
+a function \kbd{mul}). The way out is to
+use parentheses for grouping, so that enclosed subexpressions will be
+evaluated independently:
+\bprog
+? init(x) = ( add(y) = x+y ); ( mul(y) = x*y );
+? init(5);
+? add(2)
+%3 = 7
+? mul(3)
+%4 = 15
+@eprog\noindent This defines two global functions which have access to the
+lexical variables private to \kbd{init}! The following would work in exactly
+the same way:
+\bprog
+? init5() = my(x = 5); ( add(y) = x+y ); ( mul(y) = x*y );
+@eprog
+
+\subsec{Closures as Objects} Contrary to what you might think after the
+preceding examples, GP's closures may not be used to simulate true
+``objects'', with private and public parts and methods to access and
+manipulate them. In fact, closures indeed incorporate an existing context
+(they may access lexical variables that existed at the time of their
+definition), but then may not change it. More precisely, they access a copy,
+which they are welcome to change, but a further function call still accesses
+the original context, as it existed at the time the function was defined:
+\bprog
+init() =
+{ my(count = 0);
+  inc()=count++;
+  dec()=count--;
+}
+? inc()
+%1 = 1
+? inc()
+%2 = 1
+? inc()
+%3 = 1
+@eprog
+
+\section{Member functions}\sidx{member functions} \label{se:member}
+
+Member functions use the `dot' notation to retrieve information from
+complicated structures. The built-in structures are \tev{bid}, \tev{ell},
+\tev{galois}, \tev{ff}, \tev{nf}, \tev{bnf}, \tev{bnr} and \tev{prid}, which
+will be described at length in Chapter~3. The syntax \kbd{structure.member}
+is taken to mean: retrieve \kbd{member} from \kbd{structure},
+e.g.~\kbd{E.j} returns the $j$-invariant of the elliptic curve \kbd{E},
+or outputs an error message if \kbd{E} is not a proper \tev{ell} structure.
+To define your own member functions, use the syntax
+
+\ \kbd{\var{var}.\var{member} = \var{seq}},
+
+\noindent where the formal variable \var{var} is scoped to the function
+body \var{seq}. This is of course reminiscent of a user function with a
+single formal variable \var{var}. For instance, the current implementation of
+the \kbd{ell} type is a vector, the $j$-invariant being the thirteenth
+component. It could be implemented as
+
+\bprog
+x.j =
+{
+  if (type(x) != "t_VEC" || #x < 14, error("not an elliptic curve: " x));
+  x[13]
+}
+@eprog\noindent As for user functions, you can redefine your member functions
+simply by typing new definitions. On the other hand, as a safety measure, you
+cannot redefine the built-in member functions, so attempting to redefine
+\kbd{x.j} as above would in fact produce an error; you would have to call it
+e.g.~\kbd{x.myj} in order for \kbd{gp} to accept it.
+
+\misctitle{Rationale} In most cases, member functions are simple accessors
+of the form
+\bprog
+  x.a = x[1];
+  x.b = x[2];
+  x.c = x[3];
+@eprog\noindent
+where \kbd{x} is a vector containing relevant data. There are at least
+three alternative approaches to the above member functions: 1) hardcode
+\kbd{x[1]}, etc. in the program text, 2) define constant global variables
+\kbd{AINDEX = 1}, \kbd{BINDEX = 2}  and hardcode \kbd{x[AINDEX]}, 3)
+user functions \kbd{a(x) = x[1]} and so on.
+
+Even if 2) improves on 1), these solutions are neither elegant nor flexible,
+and they scale badly. 3) is a genuine possibility, but the main advantage of
+member functions is that their namespace is independent from the variables
+(and functions) namespace, hence we can use very short identifiers without
+risk. The $j$-invariant is a good example: it would clearly not be a good
+idea to define \kbd{j(E) = E[13]}, because clashes with loop indices are
+likely.
+
+Beware that there is no guarantee that a built-in member function \emph{is}
+a simple accessor and it could involve a computation. Thus you should
+not use them on a constant object in tight loops: store them in a variable
+before the loop.
+
+\misctitle{Note} Typing \b{um} will output all user-defined member functions.
+
+\misctitle{Member function names} A valid name starts with a letter followed
+by any number of keyword characters: \kbd{\_} or alphanumeric characters
+([\kbd{A-Za-z0-9}]). The built-in member function names are reserved and
+cannot be used (see the list with \kbd{?.}). Finally, names starting with
+\kbd{e} or \kbd{E} followed by a digit are forbidden, due to a clash with
+the floating point exponent notation: we understand \kbd{1.e2} as
+$100.000\dots$, not as extracting member \kbd{e2} of object \kbd{1}.
+
+\section{Strings and Keywords}\sidx{string}\sidx{keyword}
+\label{se:strings}
+
+\subsec{Strings} GP variables can hold values of type character string
+(internal type \typ{STR}). This section describes how they are actually used,
+as well as some convenient tricks (automatic concatenation and expansion,
+keywords) valid in string context.
+
+As explained above, the general way to input a string is to enclose
+characters between quotes~\kbd{"}. This is the only input construct where
+whitespace characters are significant: the string will contain the exact
+number of spaces you typed in. Besides, you can ``escape'' characters by
+putting a \kbd{\bs} just before them; the translation is as follows
+\bprog
+   \e: <Escape>
+   \n: <Newline>
+   \t: <Tab>
+@eprog
+For any other character $x$, \b{$x$} is expanded to $x$. In particular, the
+only way to put a \kbd{"} into a string is to escape it. Thus, for
+instance, \kbd{"\bs"a\bs""} would produce the string whose content is
+``a''. This is definitely \emph{not} the same thing as typing \kbd{"a"},
+whose content is merely the one-letter string a.
+
+You can concatenate two strings using the \tet{concat} function. If either
+argument is a string, the other is automatically converted to a string if
+necessary (it will be evaluated first).
+
+\bprog
+? concat("ex", 1+1)
+%1 = "ex2"
+? a = 2; b = "ex"; concat(b, a)
+%2 = "ex2"
+? concat(a, b)
+%3 = "2ex"
+@eprog
+
+Some functions expect strings for some of their arguments: \tet{print} would
+be an obvious example, \tet{Str} is a less obvious but useful one (see the
+end of this section for a complete list). While typing in such an argument,
+you will be said to be in \tev{string context}. The rest of this section is
+devoted to special syntactical tricks which can be used with such arguments
+(and only here; you will get an error message if you try these outside of
+string context):
+
+\item Writing two strings alongside one another will just concatenate
+them, producing a longer string. Thus it is equivalent to type in
+\kbd{"a " "b"} or \kbd{"a b"}. A little tricky point in the first expression:
+the first whitespace is enclosed between quotes, and so is part of a string;
+while the second (before the \kbd{"b"}) is completely optional and \kbd{gp}
+actually suppresses it, as it would with any number of whitespace characters
+at this point (i.e.~outside of any string).
+
+\item If you insert any expression when a string is expected, it gets
+``expanded'': it is evaluated as a standard GP expression, and the final
+result (as would have been printed if you had typed it by itself) is then
+converted to a string, as if you had typed it directly. For instance \kbd{"a"
+1+1 "b"} is equivalent to \kbd{"a2b"}: three strings get created, the middle
+one being the expansion of \kbd{1+1}, and these are then concatenated
+according to the rule described above. Another tricky point here: assume you
+did not assign a value to \kbd{aaa} in a GP expression before. Then typing
+\kbd{aaa} by itself in a string context will actually produce the correct
+output (i.e.~the string whose content is aaa), but in a fortuitous way. This
+\kbd{aaa} gets expanded to the monomial of degree one in the variable
+\kbd{aaa}, which is of course printed as \kbd{aaa}, and thus will expand to
+the three letters you were expecting.
+
+\misctitle{Warning} Expression involving strings are not handled in a
+special way; even in string context, the largest possible expression is
+evaluated, hence \kbd{print("a"[1])} is incorrect since \kbd{"a"} is not an
+object whose first component can be extracted. On the other hand
+\kbd{print("a", [1])} is correct (two distinct argument, each converted to a
+string), and so is \kbd{print("a" 1)} (since \kbd{"a"1} is not a valid
+expression, only \kbd{"a"} gets expanded, then \kbd{1}, and the result is
+concatenated as explained above).
+
+\subsec{Keywords} Since there are cases where expansion is not desirable, we
+now distinguish between ``Keywords'' and ``Strings''. String is what has been
+described so far. Keywords are special relatives of Strings which are
+automatically assumed to be quoted, whether you actually type in the quotes
+or not. Thus expansion is never performed on them. They get concatenated,
+though. The analyzer supplies automatically the quotes you have ``forgotten''
+and treats Keywords just as normal strings otherwise. For instance, if you
+type \kbd{"a"b+b} in Keyword context, you will get the string whose contents
+are ab+b. In String context, on the other hand, you would get a2\kbd{*}b.
+
+All GP functions have prototypes (described in Chapter~3 below) which
+specify the types of arguments they expect: either generic PARI objects
+(GEN), or strings, or keywords, or unevaluated expression sequences. In the
+keyword case, only a very small set of words will actually be meaningful
+(the \kbd{default} function is a prominent example).
+
+\misctitle{Reference} The arguments of the following functions are processed
+in string context:
+
+\settabs\+\indent&\cr
+\+&\tet{Str}\cr
+\+&\tet{addhelp} (second argument)\cr
+\+&\tet{default} (second argument)\cr
+\+&\tet{error}\cr
+\+&\tet{extern}\cr
+\+&\tet{plotstring} (second argument)\cr
+\+&\tet{plotterm} (first argument)\cr
+\+&\tet{read} and \tet{readvec}\cr
+\+&\tet{system}\cr
+\+&all the \tet{print}\var{xxx} functions\cr
+\+&all the \tet{write}\var{xxx} functions\cr
+
+\noindent The arguments of the following functions are processed as keywords:
+
+\+&\tet{alias}\cr
+\+&\tet{default} (first argument)\cr
+\+&\tet{install} (all arguments but the last)\cr
+\+&\tet{trap} (first argument)\cr
+\+&\tet{whatnow}\cr
+
+\subsec{Useful example} The function \kbd{Str} converts its arguments into
+strings and concatenate them. Coupled with \tet{eval}, it is very powerful.
+The following example creates generic matrices\sidx{generic
+matrix}\sidx{matrix}:
+\bprog
+? genmat(u,v,s="x") = matrix(u,v,i,j, eval( Str(s,i,j) ))
+? genmat(2,3) + genmat(2,3,"m")
+%1 =
+[x11 + m11 x12 + m12 x13 + m13]
+[x21 + m21 x22 + m22 x23 + m23]
+@eprog
+
+\section{Errors and error recovery}
+
+\subsec{Errors} Your input program is first compiled to a more efficient
+bytecode; then the latter is evaluated, calling appropriate functions from
+the PARI library. Accordingly, there are two kind of errors: syntax errors
+produced by the compiler, and runtime errors produced by the PARI library
+either by the evaluator itself, or in a mathematical function.
+Both kinds are fatal to your computation: \kbd{gp} will report the error
+and perform some cleanup (restore variables modified while evaluating the
+erroneous command, close open files, reclaim unused memory, etc.).
+
+At this point, the default is to return to the usual prompt, but if the
+\kbd{recover} option (\secref{se:def,recover}) is off then \kbd{gp} exits
+immediately.  This can be useful for batch-mode operation to make untrapped
+errors fatal.
+
+When reporting a \emph{syntax error}, \kbd{gp} gives meaningful
+context by copying (part of) the expression it was trying to compile,
+indicating where the error occurred with a caret \kbd{\pow-}, as in
+\bprog
+? factor()
+  ***   too few arguments: factor()
+  ***                             ^-
+? 1+
+  ***   syntax error, unexpected $end: 1+
+  ***                                   ^-
+@eprog\noindent
+possibly enlarged to a full arrow given enough trailing context
+\bprog
+? if (isprime(1+, do_something())
+  ***   syntax error, unexpected ',': if(isprime(1+,do_something()))
+  ***                                              ^----------------
+@eprog\noindent
+These error messages may be mysterious, because \kbd{gp} cannot guess what
+you were trying to do, and the error may occur once \kbd{gp} has been
+sidetracked. The first error is straightforward: \kbd{factor} has one
+mandatory argument, which is missing.
+
+The other two are simple typos involving an ill-formed addition
+\kbd{1 + } missing its second operand. The error messages differ
+because the parsing context is slightly different: in the first
+case we reach the end of input (\kbd{\$end}) while still expecting a token,
+and in the second one, we received an unexpected token (the comma).
+
+Here is a more complicated one:
+\bprog
+? factor(x
+  ***   syntax error, unexpected $end, expecting )-> or ',' or ')': factor(x
+  ***                                                                      ^-
+@eprog\noindent
+The error is a missing parenthesis, but from \kbd{gp}'s point of view,
+you might as well have intended to give further arguments to \kbd{factor}
+(this is possible and useful, see the description of the function). In fact
+\kbd{gp} expected either a closing parenthesis, or a second argument
+separated from the first by a comma. And this is essentially what the error
+message says: we reached the end  of the input (\kbd{\$end}) while expecting
+a \kbd{')'} or a \kbd{','}.
+
+Actually, a third possibility is mentioned in the error message \kbd{)->},
+which could never be valid in the above context, but a subexpression like
+\kbd{(x)->sin(x)}, defining an inline closure would be valid, and the parser is
+not clever enough to rule that out, so we get the same message as in
+\bprog
+? (x
+  ***   syntax error, unexpected $end, expecting )-> or ',' or ')': (x
+  ***                                                                ^-
+@eprog\noindent
+where all three proposed continuations would be valid.
+
+\emph{Runtime errors} from the evaluator are nicer because they answer a
+correctly worded query, otherwise the bytecode compiler would have protested
+first; here is a slightly pathological case:
+\bprog
+? if (siN(x) < eps, do_something())
+  ***   at top-level: if(siN(x)<eps,do_someth
+  ***                    ^--------------------
+  ***   not a function in function call
+@eprog\noindent (no arrow!) The code is syntactically correct and compiled
+correctly, even though the \kbd{siN} function, a typo for \kbd{sin}, was not
+defined at this point. When trying to evaluate the bytecode, however, it
+turned out that \kbd{siN} is still undefined so we cannot evaluate the
+function call \kbd{siN(x)}.
+
+\emph{Library runtime errors} are even nicer because they have more
+mathematical content, which is easier to grasp than a parser's logic:
+\bprog
+? 1/Mod(2,4)
+  ***   at top-level: 1/Mod(2,4)
+  ***                  ^---------
+  *** _/_: impossible inverse in Fp_inv: Mod(2, 4).
+@eprog\noindent telling us that a runtime error occurred while evaluating the
+binary \kbd{/} operator (the \kbd{\_} surrounding the operator are
+placeholders), more precisely the \kbd{Fp\_inv} library function was fed
+the argument \kbd{Mod(2,4)} and could not invert it. More context is provided
+if the error occurs deep in the call chain:
+\bprog
+? f(x) = 1/x;
+? g(N) = for(i = -N, N, f(i + O(5)));
+? g(10)
+  ***   at top-level: g(10)
+  ***                 ^-----
+  ***   in function g: for(i=-N,N,f(i))
+  ***                             ^-----
+  ***   in function f: 1/x
+  ***                   ^--
+  *** _/_: impossible inverse in ginv: O(5).
+@eprog\noindent In this example, the debugger reports (at least) 3 enclosed
+frames: last (innermost) is the body of user function $f$, the body of $g$,
+and the top-level (global scope). In fact, the \kbd{for} loop in $g$'s body
+defines an extra frame, since there exist variables scoped to the loop body.
+
+\subsec{Error recovery}\sidx{error recovery}\label{se:errorrec}
+
+It is annoying to wait for a program to finish and find out the hard
+way that there was a mistake in it (like the division by 0 above), sending
+you back to the prompt. First you may lose some valuable intermediate data.
+Also, correcting the error may not be obvious; you might have to change your
+program, adding a number of extra statements and tests to narrow down
+the problem.
+
+A different situation, still related to error recovery, is when you
+actually foresee that some error may occur, are unable to prevent it, but
+quite capable of recovering from it, given the chance. Examples include lazy
+factorization, where you knowingly use a pseudo prime $N$ as if it were
+prime; you may then encounter an ``impossible'' situation, but this would
+usually exhibit a factor of $N$, enabling you to refine the factorization and
+go on. Or you might run an expensive computation at low precision to guess
+the size of the output, hence the right precision to use. You can then
+encounter errors like ``precision loss in truncation'', e.g when trying to
+convert \kbd{1E1000}, known to $28$ digits of accuracy, to an integer; or
+``division by 0'', e.g inverting \kbd{0E1000} when all accuracy has been
+lost, and no significant digit remains. It would be enough to restart part of
+the computation at a slightly higher precision.
+
+We now describe \tev{error trapping}, a useful mechanism which alleviates
+much of the pain in the first situation (the break loop debugger), and
+provides satisfactory ways out of the second one (the \tet{iferr} exception
+handler).
+
+\subsec{Break loop}\label{se:break_loop}
+
+A \tev{break loop} is a special debugging mode that you enter whenever a
+user interrupt (\kbd{Control-C}) or runtime error occurs, freezing the
+\kbd{gp} state, and preventing cleanup until you get out of the loop. By
+runtime error, we mean an error from the evaluator, the library or a user error
+(from \tet{error}), \emph{not} syntax errors. When a break loop starts, a
+prompt is issued (\kbd{break>}). You can type in a \kbd{gp} command, which is
+evaluated when you hit the \kbd{<Return>} key, and the result is printed as
+during the main \kbd{gp} loop, except that no history of results is kept. Then
+the break loop prompt reappears and you can type further commands as long as
+you do not exit the loop. If you are using readline, the history of commands is
+kept, and line editing is available as usual. If you type in a command that
+results in an error, you are sent back to the break loop prompt: errors do
+\var{not} terminate the loop.
+
+To get out of a break loop, you can use \tet{next}, \tet{break}, \tet{return},
+or type \kbd{C-d} (\kbd{EOF}), any of which will let \kbd{gp} perform its
+usual cleanup, and send you back to the \kbd{gp} prompt. Note that \kbd{C-d}
+is slightly dangerous, since typing it \emph{twice} will not only send you
+back to the \kbd{gp} prompt, but to your shell prompt! (Since \kbd{C-d} at
+the \kbd{gp} prompt exits the gp session.)
+
+If the break loop was started by a user interrupt \kbd{Control-C}, and not by
+an error, inputting an empty line, i.e hitting the \kbd{<Return>} key at the
+\kbd{break>} prompt, resumes the temporarily interrupted computation. A single
+empty line has no effect in case of a fatal error, to avoid getting get out of
+the loop prematurely, thereby losing valuable debugging data. Any of
+\tet{next}, \tet{break}, \tet{return}, or \kbd{C-d} will abort the computation
+and send you back to  the \kbd{gp} prompt as above.
+
+Break loops are useful as a debugging tool. You may inspect the values of
+\kbd{gp} variables to understand why an error occurred, or change
+\kbd{gp}'s state in the middle of a computation (increase debugging level,
+start storing results in a log file, set variables to different values\dots):
+hit \kbd{C-c}, type in your modifications, then let the computation go on as
+explained above. A break loop looks like this:
+\bprog
+? v = 0; 1/v
+  ***   at top-level: v=0;1/v
+  ***                      ^--
+  *** _/_: impossible inverse in gdiv: 0.
+  ***   Break loop (type 'break' to go back to the GP prompt)
+break>
+@eprog
+\noindent So the standard error message is printed first. The
+\kbd{break>} at the bottom is a prompt, and hitting \kbd{v} then
+\kbd{<Return>}, we see:
+\bprog
+break> v
+0
+@eprog\noindent explaining the problem. We could have typed any \kbd{gp}
+command, not only the name of a variable, of course. Lexically-scoped
+variables are accessible to the evaluator during the break loop:
+\bprog
+? for(v = -2, 2, print(1/v))
+-1/2
+-1
+  ***   at top-level: for(v=-2,2,print(1/v))
+  ***                                   ^----
+  *** _/_: impossible inverse in gdiv: 0.
+  ***   Break loop (type 'break' to go back to the GP prompt)
+break> v
+0
+@eprog\noindent
+Even though loop indices are automatically lexically scoped and no longer
+exist when the break loop is run, enough debugging information is retained in
+the bytecode to reconstruct the evaluation context. Of course, when the error
+occurs in a nested chain of user function calls, lexically scoped variables are
+available only in the corresponding frame:
+\bprog
+? f(x) = 1/x;
+? g(x) = for(i = 1, 10, f(x+i));
+? for(j = -5,5, g(j))
+  ***   at top-level: for(j=-5,5,g(j))
+  ***                            ^-----
+  ***   in function g: for(i=1,10,f(x+i))
+  ***                             ^-------
+  ***   in function f: 1/x
+  ***                   ^--
+  *** _/_: impossible inverse in gdiv: 0.
+  ***   Break loop: type 'break' to go back to GP prompt
+break> [i,j,x]     \\ @com the $x$ in $f$'s body.
+[i, j, 0]
+break> dbg_up      \\ @com go up one frame
+  ***   at top-level: for(j=-5,5,g(j))
+  ***                            ^-----
+  ***   in function g: for(i=1,10,f(x+i))
+  ***                             ^-------
+break> [i,j,x]      \\ @com the $x$ in $g$'s body, $i$ in the for loop.
+[5, j, -5]
+@eprog
+The following GP commands are available during a break loop to help debugging:
+
+\tet{dbg_up}$(n)$: go up $n$ frames, as seen above.
+
+\tet{dbg_down}$(n)$: go down $n$ frames, cancelling previous \kbd{dbg\_up}'s.
+
+\tet{dbg_x}$(t)$: examine $t$, as \kbd{\bs x} but more flexible.
+
+\tet{dbg_err}$()$: returns the current error context \typ{ERROR}. The error
+ components often provide useful additional information:
+\bprog
+  ? O(2) + O(3)
+    ***   at top-level: O(2)+O(3)
+    ***                     ^-----
+    *** _+_: inconsistent addition t_PADIC + t_PADIC.
+    ***   Break loop: type 'break' to go back to GP prompt
+  break> E = dbg_err()
+  error("inconsistent addition t_PADIC + t_PADIC.")
+  break> Vec(E)
+  ["e_OP", "+", O(2), O(3)]
+@eprog
+
+\misctitle{Note} The debugger is enabled by default, and fires up as soon as
+a runtime error occurs. If you do not like this behavior, you may disable it by
+setting the default \tet{breakloop} to 0 in for \kbd{gprc}. A runtime error
+will send you back to the prompt. Note that the break loop is automatically
+disabled when running \kbd{gp} in non interactive mode, i.e.~when the program's
+standard input is not attached to a terminal.
+
+\misctitle{Technical Note} When you enter a break loop due to a PARI stack
+overflow, the PARI stack is reset so that you can run commands. Otherwise the
+stack would immediately overflow again! Still, as explained above, you do not
+lose the value of any \kbd{gp} variable in the process.
+
+\subsec{Protecting code}
+The expression
+
+  \kbd{iferr(\var{statements}, ERR, \var{recovery})}
+
+\noindent evaluates and returns the value of \var{statements}, unless an
+error occurs during the evaluation in which case the value of \var{recovery}
+is returned. As in an if/else clause, with the difference that
+\var{statements} has been partially evaluated, with possible side effects.
+We shall give a lot more details about the \kbd{ERR} argument shortly; it is
+the name of a variable, lexically scoped to the \var{recovery} expression
+sequence, whose value is set by the exception handler to help the recovery
+code decide what to do about the error.
+
+For instance one can define a fault tolerant inversion function as follows:
+\bprog
+? inv(x) = iferr(1/x, ERR, "oo")    \\ ERR is unused...
+? for (i=-1,1, print(inv(i)))
+-1
+oo
+1
+@eprog\noindent Protected codes can be nested without adverse effect.
+Let's now see how \kbd{ERR} can be used; as written, \kbd{inv} is too
+tolerant:
+\bprog
+? inv("blah")
+%2 = "oo"
+@eprog Let's improve it by checking that we caught a ``division by 0''
+exception, and not an unrelated one like the type error \kbd{1 / "blah"}.
+\bprog
+? inv2(x) = {
+  iferr(1/x,
+        ERR, if (errname(ERR) != "e_INV", error(ERR)); "oo")
+}
+? inv2(0)
+%3 = "oo"  \\ as before
+? inv2("blah")
+  ***   at top-level: inv2("blah")
+  ***                 ^------------
+  ***   in function inv2: ...f(errname(ERR)!="e_INV",error(ERR));"oo")
+  ***                                                 ^-----------------
+  *** error: forbidden division t_INT / t_STR.
+  @eprog\noindent In the \kbd{inv2("blah")} example, the error type was not
+expected, so we rethrow the exception: \kbd{error(ERR)} triggers the original
+error that we mistakenly trapped. Since the recovery code should always check
+whether the error is the one expected, this construction is very common and
+can be simplified to
+\bprog
+? inv3(x) = iferr(1/x,
+                  ERR, "oo",
+                  errname(ERR) == "e_INV")
+@eprog\noindent More generally
+
+  \kbd{iferr(\var{statements}, ERR, \var{recovery}, \var{predicate})}
+
+\noindent only catches the exception if \var{predicate} (allowed to check
+various things about \kbd{ERR}, not only its name) is non-zero.
+
+Rather than trapping everything, then rethrowing whatever we do not like, we
+advise to only trap errors of a specific kind, as above. Of course,
+sometimes, one just want to trap \emph{everything} because we do not know
+what to expect. The following function check whether \tet{install} works
+correctly in your \kbd{gp}:
+\bprog
+broken_install() =
+{ \\ can we install?
+  iferr(install(addii,GG),
+        ERR, return ("OS"));
+  \\ can we use the installed function?
+  iferr(if (addii(1,1) != 2, return("BROKEN")),
+        ERR, return("USE"));
+  return (0);
+}
+@eprog
+\noindent The function returns
+\kbd{OS} if the operating system does not support \kbd{install},
+\kbd{USE} if using an installed function triggers an error,
+\kbd{BROKEN} if the installed function did not behave as expected,
+and 0 if everything works.
+
+The \kbd{ERR} formal parameter contains more useful data than just the error
+name, which we recovered using \kbd{errname(ERR)}. In fact, a \typ{ERROR}
+object usually has extra components, which can be accessed as
+\kbd{component(ERR,1)}, \kbd{component(ERR,2)}, and so on. Or globally by
+casting the error to a \typ{VEC}: \kbd{Vec(ERR)} returns the vector
+of all components at once. See \secref{se:iferr} for the list of all
+exception types, and the corresponding contents of \kbd{ERR}.
+
+\section{Interfacing GP with other languages}
+\noindent
+The PARI library was meant to be interfaced with C programs. This specific
+use is dealt with extensively in the \emph{User's guide to the PARI library}.
+Of course, \kbd{gp} itself provides a convenient  interpreter to execute
+rather intricate scripts (see \secref{se:programming}).
+
+Scripts, when properly written, tend to be shorter and clearer than C
+programs, and are certainly easier to write, maintain or debug. You don't
+need to deal with memory management, garbage collection, pointers,
+declarations, and so on. Because of their intrinsic simplicity, they are more
+robust as well. They are unfortunately somewhat slower. Thus their use will
+remain complementary: it is suggested that you test and debug your algorithms
+using scripts, before actually coding them in C if speed is paramount.
+The GP2C compiler often eases this part.
+
+The \kbd{install} command (see~\secref{se:install}) efficiently imports
+foreign functions for use under \kbd{gp}, which can of course be written
+using other libraries than PARI. Thus you may code only critical parts
+of your program in C, and still maintain most of the program as a GP script.
+
+We are aware of three PARI-related Free Software packages to embed PARI in
+other languages. We \emph{neither endorse nor support} any of them, but you
+may want to give them a try if you are familiar with the languages they are
+based on. The first is the Python-based SAGE
+system (\url{http://sagemath.org/}). The second is the \tet{Math::Pari} Perl
+module (see any CPAN mirror), written by Ilya Zakharevich.
+Finally, Michael Stoll and Sam Steingold have integrated PARI into \tet{CLISP}
+(\url{http://clisp.cons.org/}), a Common Lisp implementation.
+
+These provide interfaces to \kbd{gp} functions for use in
+\kbd{python}, \kbd{perl}, or \kbd{Lisp}\sidx{Perl}\sidx{Python}\sidx{Lisp}
+programs, respectively.
+
+\section{Defaults}\sidx{defaults}
+\label{se:defaults}
+
+\noindent There are many internal variables in \kbd{gp}, defining how the
+system will behave in certain situations, unless a specific override has been
+given. Most of them are a matter of basic customization (colors, prompt) and
+will be set once and for all in your \idx{preferences file} (see
+\secref{se:gprc}), but some of them are useful interactively (set timer on,
+increase precision, etc.).
+
+The function used to manipulate these values is called \kbd{default}, which
+is described in \secref{se:default}. The basic syntax is
+
+\kbd{default(\var{def}, \var{value})},
+
+\noindent which sets the default \var{def} to \var{value}. In interactive
+use, most of these can be abbreviated using \kbd{gp} metacommands
+(mostly, starting with \b), which we shall describe in the next section.
+
+Available defaults are described in the reference guide,
+\secref{se:gp_defaults}, the most important one being \tet{parisizemax}.
+Just be aware that typing \kbd{default} by itself will list all of them, as
+well as their current values (see \b{d}).
+
+\misctitle{Note} The suffixes \kbd{k}, \kbd{M} or \kbd{G} can be appended to
+a \var{value} which is a numeric argument, with the effect of multiplying it
+by $10^3$, $10^6$ and $10^9$ respectively. Case is not taken into account
+there, so for instance \kbd{30k} and \kbd{30K} both stand for $30000$. This
+is mostly useful to modify or set the defaults \kbd{parisize} and
+\kbd{parisizemax} which typically involve a lot of trailing zeroes.
+
+\misctitle{(somewhat technical) Note} As we saw in \secref{se:strings},
+the second argument to \kbd{default} is subject to string context
+expansion, which means you can use run-time values. In other words, something
+like
+\bprog
+  a = 3;
+  default(logfile, "file" a ".log")
+@eprog
+logs the output in \kbd{file3.log}.
+
+Some special defaults, corresponding to file names and prompts, expand further
+the resulting value at the time they are set. Two kinds of expansions may be
+performed:
+
+\item \teb{time expansion}: the string is sent through the library
+function \tet{strftime}. This means that \kbd{\%}\var{char} combinations have
+a special meaning, usually related to the time and date. For instance,
+\kbd{\%H} = hour (24-hour clock) and \kbd{\%M} = minute [00,59] (on a Unix
+system, you can try \kbd{man strftime} at your shell prompt to get a complete
+list). This is applied to \kbd{prompt} and \kbd{logfile}. For
+instance,
+
+\kbd{default(prompt,"(\%H:\%M) ? ")}
+
+\noindent
+will prepend the time of day, in the form \kbd{(\var{hh}:\var{mm})}
+to \kbd{gp}'s usual prompt.
+
+\item \teb{environment expansion}: When the string contains a sequence of
+the form \kbd{\$\var{SOMEVAR}}, e.g.~\kbd{\$HOME}, the environment is
+searched and if \var{SOMEVAR} is defined, the sequence is replaced by the
+corresponding value. Also the \kbd{\til} symbol has the same meaning as in
+many shells~--- \kbd{\til} by itself stands for your home directory, and
+\kbd{\til{}user} is expanded to \kbd{user}'s home directory. This is applied
+to all file names\sidx{filename}. \label{se:envir}
+
+\section{Simple metacommands}\label{se:meta}
+
+\noindent
+Simple metacommands are meant as shortcuts and should not be used in GP
+scripts (see \secref{se:programming}). Beware that these, as all of \kbd{gp}
+input, are \emph{case sensitive}. For example, \b{Q} is not identical to
+\b{q}. Two kinds of arguments are allowed: numbers (denoted $n$ below)
+and names (denoted \var{filename} below); braces are used to denote optional
+arguments, , e.g.~$\{n\}$ means that a numeric argument is expected but
+can be omitted. Names can be optionally surrounded by double quotes
+and in this case can contain whitespace, e.g. \kbd{"a b"} and are treated
+as ordinary character strings, see \secref{se:strings} for details.
+
+Whitespace (or spaces) between the metacommand and its arguments and within
+unquoted arguments is optional. (This can cause problems with \b{w},
+when you insist on having a file name whose first character is a digit, and
+with \b{r} or \b{w}, if the file name itself contains a space. In such cases,
+just quote filenames or use the underlying \tet{read} or \tet{write} function).
+
+\subseckbd{?$\{\var{command}\}$} The \kbd{gp} on-line help interface.
+If you type \kbd{?$n$} where $n$ is a number from 1 to 11, you will get the
+list of functions in Section $3.n$ of the manual (the list of sections being
+obtained by simply typing \kbd{?}). \label{se:exthelp}
+
+These names are in general not informative enough. More details can be
+obtained by typing \kbd{?\var{function}}, which gives a short explanation of
+the function's calling convention and effects. Of course, to have complete
+information, read Chapter 3 of this manual (the source code is at your
+disposal as well, though a trifle less readable).
+
+If the line before the copyright message indicates that extended help is
+available (this means \kbd{perl} is present on your system and the PARI
+distribution was correctly installed), you can add more \kbd{?} signs for
+extended functionality:
+
+\kbd{??~\var{keyword}} yields the function description as it stands in this
+manual, usually in Chapter~2 or~3. If you're not satisfied with the default
+chapter chosen, you can impose a given chapter by ending the keyword with
+\kbd{@} followed by the chapter number, e.g.~\kbd{??~Hello@2} will look in
+Chapter~2 for section heading \kbd{Hello} (which doesn't exist, by the way).
+
+All operators (e.g.~\kbd{+}, \kbd{\&\&}, etc.) are accepted by this
+extended help, as well as a few other keywords describing key \kbd{gp} concepts,
+e.g.~\kbd{readline} (the line editor), \kbd{integer}, \kbd{nf} (``number
+field'' as used in most algebraic number theory computations), \kbd{ell}
+(elliptic curves), etc.
+
+In case of conflicts between \emph{function} and \emph{default} names
+(e.g \tet{log},
+\tet{simplify}), the function has higher priority. To get the \emph{default}
+help, use
+\bprog
+  ?? default(log)
+  ?? default(simplify)
+@eprog
+
+\kbd{???~\var{pattern}} produces a list of sections in Chapter~3 of the
+manual related to your query. As before, if \var{pattern} ends by \kbd{@}
+followed by a chapter number, that chapter is searched instead; you also
+have the option to append a simple \kbd{@} (without a chapter number) to
+browse through the whole manual.
+
+If your query contains dangerous characters (e.g \kbd{?} or blanks) it is
+advisable to enclose it within double quotes, as for GP strings (e.g
+\kbd{???~"elliptic curve"}).
+
+Note that extended help is more powerful than the short help, since
+it knows about operators as well: you can type \kbd{??~*} or
+\kbd{??~\&\&}, whereas a single \kbd{?} would just yield a not too helpful
+\bprog
+&&: unknown identifier.
+@eprog\noindent message. Also, you can ask for extended help on section
+number~$n$ in Chapter~3, just by typing \kbd{??~$n$} (where \kbd{?$n$} would
+yield merely a list of functions). Finally, a few key concepts in \kbd{gp} are
+documented in this way: metacommands (e.g \kbd{??~"??"}), defaults (e.g
+\kbd{??~default(log)}) not to be mistaken with \kbd{??~log} (the natural
+logarithm) and type names (e.g \typ{INT} or \kbd{integer}), as well as
+various miscellaneous keywords such as \kbd{edit} (short summary of line
+editor commands), \kbd{operator}, \kbd{member}, \kbd{"user defined"},
+\kbd{nf}, \kbd{ell}, \dots
+
+Last but not least: \kbd{??} without argument will open a \kbd{dvi}
+previewer (\kbd{xdvi} by default, \kbd{\$GPXDVI} if it is defined in your
+environment) containing the full user's manual. \kbd{??tutorial} and
+\kbd{??refcard} do the same with the \idx{tutorial} and \idx{reference card}
+respectively.
+
+\misctitle{Technical note} This functionality is provided by an
+external \kbd{perl} script that you are free to use outside any \kbd{gp} session
+(and modify to your liking, if you are perl-knowledgeable). It is called
+\tet{gphelp}, lies in the \kbd{doc} subdirectory of your distribution
+(just make sure you run \kbd{Configure} first, see Appendix~A) and is
+really two programs in one. The one which is used from within \kbd{gp} is
+\kbd{gphelp} which runs \TeX\ on a selected part of this manual, then opens
+a previewer. \kbd{gphelp -detex} is a text mode equivalent, which looks
+often nicer especially on a colour-capable terminal (see
+\kbd{misc/gprc.dft} for examples). The default \kbd{help} selects which
+help program will be used from within \kbd{gp}. You are welcome to improve this
+help script, or write new ones (and we would like to know about it
+so that we may include them in future distributions). By the way, outside
+of \kbd{gp} you can give more than one keyword as argument to \kbd{gphelp}.
+
+\subseckbd{/*...*/} A comment. Everything between the stars is ignored by
+\kbd{gp}. These comments can span any number of lines.
+
+\subseckbd{\bs\bs} A one-line comment. The rest of the line
+is ignored by \kbd{gp}.
+
+\subsec{\b{a} $\{n\}$} Prints the object number $n$ ($\%n$)
+in raw format. If the number $n$ is omitted, print the latest computed object
+($\%$). \label{se:history}
+
+\subsec{\b{c}}\sidx{available commands} Prints the list of all available
+hardcoded functions under \kbd{gp}, not including operators written as special
+symbols (see \secref{se:operators}). More information can be obtained using
+the \kbd{?} metacommand (see above). For user-defined functions / member
+functions, see \b{u} and \b{um}.
+
+\subsec{\b{d}} Prints the \idx{defaults} as described in the
+previous section (shortcut for \kbd{default()}, see \secref{se:default}).
+
+\subsec{\b{e} $\{n\}$} Switches the \tet{echo} mode on (1) or off (0). If
+$n$ is explicitly given, set echo to $n$.
+
+\subsec{\b{g} $\{n\}$} Sets the debugging level \tet{debug} to the
+non-negative integer $n$.
+
+\subsec{\b{gf} $\{n\}$} Sets the file usage debugging level \tet{debugfiles}
+to the non-negative integer $n$.
+
+\subsec{\b{gm} $\{n\}$} Sets the memory debugging level \tet{debugmem}
+to the non-negative integer $n$.
+
+\subsec{\b{h} $\{m$\kbd{-}$n\}$} Outputs some debugging info about the
+hashtable. If the argument is a number $n$, outputs the contents of cell
+$n$. Ranges can be given in the form $m$\kbd{-}$n$ (from cell $m$ to cell
+$n$, \$ = last cell). If a function name is given instead of a number or
+range, outputs info on the internal structure of the hash cell this
+function occupies (a \kbd{struct entree} in C). If the range is reduced to
+a dash ('\kbd{-}'), outputs statistics about hash cell usage.
+
+\subsec{\b{l} $\{$\var{logfile}$\}$} Switches \tet{log} mode on and off.
+If a \var{logfile} argument is given, change the default logfile name to
+\var{logfile} and switch log mode on.
+
+\subsec{\b{m}} As \b{a}, but using prettymatrix format.
+
+\subsec{\b{o} $\{n\}$} Sets \tet{output} mode to $n$ ($0$: raw, $1$:
+prettymatrix, $3$: external prettyprint).
+
+\subsec{\b{p} $\{n\}$} Sets \tet{realprecision} to $n$ decimal digits.
+Prints its current value if $n$ is omitted.
+
+\subsec{\b{pb} $\{n\}$} Sets \tet{realbitprecision} to $n$ bits.
+Prints its current value if $n$ is omitted.
+
+\subsec{\b{ps} $\{n\}$} Sets \tet{seriesprecision} to $n$ significant terms.
+Prints its current value if $n$ is omitted.
+
+\subsec{\b{q}} Quits the \kbd{gp} session and returns to the system.
+Shortcut for \tet{quit}\kbd{()} (see \secref{se:quit}).
+
+\subsec{\b{r} $\{$\var{filename}$\}$} Reads into \kbd{gp} all the
+commands contained in the named file as if they had been typed from the
+keyboard, one line after the other. Can be used in combination with the \b{w}
+command (see below). Related but not equivalent to the function \kbd{read}
+(see \secref{se:read}); in particular, if the file contains more than one
+line of input, there will be one history entry for each of them, whereas
+\kbd{read} would only record the last one. If \var{filename} is omitted,
+re-read the previously used input file (fails if no file has ever been
+successfully read in the current session). If a \kbd{gp} \tet{binary file}
+(see \secref{se:writebin}) is read using this command, it is silently loaded,
+without cluttering the history.
+
+Assuming \kbd{gp} figures how to decompress files on your machine, this
+command accepts compressed files in \tet{compress}ed (\kbd{.Z}) or
+\tet{gzip}ped (\kbd{.gz} or \kbd{.z}) format. They will be uncompressed on
+the fly as \kbd{gp} reads them, without changing the files themselves.
+
+\subsec{\b{s}} Prints the state of the PARI \tev{stack} and \tev{heap}.
+This is used primarily as a debugging device for PARI.
+
+\subsec{\b{t}} Prints the \idx{internal longword format} of all the PARI
+types. The detailed bit or byte format of the initial codeword(s) is
+explained in Chapter~4, but its knowledge is not necessary for a \kbd{gp}
+user.
+
+\subsec{\b{u}} Prints the definitions of all user-defined functions.
+
+\subsec{\b{um}} Prints the definitions of all user-defined member functions.
+
+\subsec{\b{v}} Prints the \idx{version number} and implementation architecture
+(680x0, Sparc, Alpha, other) of the \kbd{gp} executable you are using.
+
+\subsec{\b{w} $\{n\}$ $\{$\var{filename}$\}$} Writes the object number
+$n$ ( $\%n$ ) into the named file, in raw format. If the number $n$ is
+omitted, writes the latest computed object ( $\%$ ). If \var{filename} is
+omitted, appends to \kbd{logfile} (the GP function \tet{write} is a trifle more
+powerful, as you can have arbitrary file names).
+
+\subsec{\b{x} $\{n\}$} Prints the complete tree with addresses and contents
+(in hexadecimal) of the \idx{internal representation} of the object number
+$n$ ( $\%n$ ). If the number $n$ is omitted, uses the latest computed object
+in \kbd{gp}. As for \b{s}, this is used primarily as a debugging device for
+PARI, and the format should be self-explanatory. The underlying GP
+function \tet{dbg_x} is more versatile, since it can be applied to other
+objects than history entries.
+
+\subsec{\b{y} $\{n\}$} Switches \kbd{simplify} on (1) or off (0). If $n$
+is explicitly given, set simplify to $n$.
+
+\subseckbd{\#} Switches the \kbd{timer} on or off.
+
+\subseckbd{\#\#} Prints the time taken by the latest computation.
+Useful when you forgot to turn on the \kbd{timer}.
+
+\section{The preferences file}\sidx{startup}\sidx{preferences file}
+\label{se:gprc}
+
+This file, called \tet{gprc} in the sequel, is used to modify or extend
+\kbd{gp} default behavior, in all \kbd{gp} sessions: e.g customize
+\kbd{default} values or load common user functions and aliases. \kbd{gp}
+opens the \kbd{gprc} file and processes the commands in there, \emph{before}
+doing anything else, e.g.~creating the PARI stack. If the file does not exist
+or cannot be read, \kbd{gp} will proceed to the initialization phase at once,
+eventually emitting a prompt. If any explicit command line switches are
+given, they override the values read from the preferences file.
+
+\subsec{Syntax} The syntax in the \kbd{gprc} file (and valid in this file
+only) is simple-minded, but should be sufficient for most purposes. The file
+is read line by line; as usual, white space is ignored unless surrounded by
+quotes and the standard multiline constructions using braces, \kbd{\bs}, or
+\kbd{=} are available (multiline comments between \kbd{/*~\dots~*/} are also
+recognized).
+
+\subsubsec{Preprocessor:}
+Two types of lines are first dealt with by a preprocessor:
+
+\item comments are removed. This applies to all text surrounded by
+\kbd{/*~\dots~*/} as well as to everything following \kbd{\bs\bs} on a given
+line.
+
+\item lines starting with \kbd{\#if} \var{boolean} are treated as
+comments if \var{boolean} evaluates to \kbd{false}, and read normally
+otherwise. The condition can be negated using either \kbd{\#if not} (or
+\kbd{\#if !}). If the rest of the current line is empty, the test applies to
+the next line (same behavior as \kbd{=} under \kbd{gp}). The following
+tests can be performed:
+
+\kbd{EMACS}: \kbd{true} if \kbd{gp} is running in an Emacs or TeXmacs shell (see
+\secref{se:emacs}).
+
+\kbd{READL}: \kbd{true} if \kbd{gp} is compiled with \kbd{readline} support (see
+\secref{se:readline}).
+
+\kbd{VERSION} \var{op} \var{number}: where \var{op} is in the set
+$\{ \kbd{>}, \kbd{<}, \kbd{<=}, \kbd{>=} \}$, and \var{number} is a PARI
+version number of the form \var{Major}.\var{Minor}.\var{patch}, where the
+last two components can be omitted (i.e.~$1$ is understood as version $1.0.0$).
+This is \kbd{true} if \kbd{gp}'s version number satisfies the required
+inequality.
+
+\kbd{BITS\_IN\_LONG} \kbd{==} \var{number}: \var{number} is $32$ (resp.~$64$).
+This is \kbd{true} if \kbd{gp} was built for a 32-bit (resp.~64-bit)
+architecture.
+
+\subsubsec{Commands:}
+After preprocessing, the remaining lines are executed as
+sequence of expressions (as usual, separated by \kbd{;} if necessary). Only
+two kinds of expressions are recognized:
+
+\item \var{default} \kbd{=} \var{value}, where \var{default} is one of
+the available defaults (see \secref{se:defaults}), which will be set to
+\var{value} on actual startup. Don't forget the quotes around strings
+(e.g.~for \kbd{prompt} or \kbd{help}).
+
+\item \kbd{read "\var{some\_GP\_file}"} where \kbd{\var{some\_GP\_file}}
+is a regular GP script this time, which will be read just before \kbd{gp}
+prompts you for commands, but after initializing the defaults. In particular,
+file input is delayed until the \kbd{gprc} has been fully loaded. This is the
+right place to input files containing \kbd{alias} commands, or your favorite
+macros.
+
+\noindent For instance you could set your prompt in the following portable way:
+\bprog
+\\ self modifying prompt looking like @com\hbox{\rm(18:03) \key{gp}\kbd{ >}}
+prompt   = "(%H:%M) \e[1mgp\e[m > "
+
+\\ readline wants non-printing characters to be braced between ^A/^B pairs
+#if READL prompt = "(%H:%M) ^A\e[1m^Bgp^A\e[m^B > "
+
+\\ escape sequences not supported under emacs
+#if EMACS prompt = "(%H:%M) gp > "
+@eprog
+
+\noindent Note that any of the last two lines could be broken in the
+following way
+\bprog
+#if EMACS
+  prompt = "(%H:%M) gp > "
+@eprog
+\noindent since the preprocessor directive applies to the next line if the
+current one is empty.
+
+A sample \kbd{gprc} file called \kbd{misc/gprc.dft} is provided in the
+standard distribution. It is a good idea to have a look at it and customize
+it to your needs. Since this file does not use multiline constructs, here is
+one (note the terminating \kbd{;} to separate the expressions):
+\bprog
+#if VERSION > 2.2.3
+{
+  read "my_scripts";     \\ syntax errors in older versions
+  new_galois_format = 1; \\ default introduced in 2.2.4
+}
+#if ! EMACS
+{
+  colors = "9, 5, no, no, 4, 1, 2";
+  help   = "gphelp -detex -ch 4 -cb 0 -cu 2";
+}
+@eprog
+
+\subsec{The gprc location}
+When \kbd{gp} is started, it looks for a customization file, or \kbd{gprc} in
+the following places (in this order, only the first one found will be
+loaded):
+
+\noindent\item \kbd{gp} checks whether the environment variable
+\tet{GPRC} is set. On Unix, this can be done with something like: \smallskip
+
+\settabs\+\indent&\kbd{GPRC=/my/dir/anyname; export GPRC}\quad&\cr
+
+\+&\kbd{GPRC=/my/dir/anyname; export GPRC}\quad&in \kbd{sh} syntax
+(for instance in your \kbd{.profile}),\cr
+
+\+&\kbd{setenv GPRC /my/dir/anyname} &in \kbd{csh} syntax
+(in your \kbd{.login} or \kbd{.cshrc} file).\cr
+
+\+&\kbd{env GPRC=/my/dir/anyname gp} &on the command line launching \kbd{gp}.\cr
+
+\noindent If so, the file named by \kbd{\$GPRC} is the \kbd{gprc}.
+
+\noindent\item If \kbd{GPRC} is not set, and if the environment variable
+\kbd{HOME} is defined, \kbd{gp} then tries
+
+\kbd{\$HOME/.gprc} on a Unix system
+
+\kbd{\$HOME\bs gprc.txt} on a DOS, OS/2, or Windows system.
+
+\noindent\item If no gprc was found among the user files mentioned above
+we look for \kbd{/etc/gprc} for a system-wide gprc file (you will need root
+privileges to set up such a file yourself).
+
+\noindent\item Finally, we look in pari's \kbd{datadir} for a file named
+
+\kbd{.gprc} on a Unix system
+
+\kbd{gprc.txt} on a DOS, OS/2, or Windows system. If you are using our
+Windows installer, this is where the default preferences file is written.
+
+\noindent Note that on Unix systems, the \kbd{gprc}'s default name starts
+with a '.' and thus is hidden to regular \kbd{ls} commands; you need to type
+\kbd{ls -a} to list it.
+
+
+\section{Using readline} \sidx{line editor}\sidx{completion}
+
+This very useful library provides line editing and contextual completion
+to \kbd{gp}. You are encouraged to read the \kbd{readline} user manual,
+but we describe basic usage here.
+
+\misctitle{A (too) short introduction to readline}\label{se:readline}
+In the following, \kbd{C-} stands for ``the \kbd{Control} key combined with
+another'' and the same for \kbd{M-} with the \kbd{Meta} key; generally
+\kbd{C-} combinations act on characters, while the \kbd{M-} ones operate on
+words. The \kbd{Meta} key might be called \kbd{Alt} on some keyboards, will
+display a black diamond on most others, and can safely be replaced by
+\kbd{Esc} in any case.
+
+Typing any ordinary key inserts text where the cursor stands, the arrow keys
+enabling you to move in the line. There are many more movement commands,
+which will be familiar to the Emacs user, for instance \kbd{C-a}/\kbd{C-e}
+will take you to the start/end of the line, \kbd{M-b}/\kbd{M-f} move the
+cursor backward/forward by a word, etc. Just press the \kbd{<Return>} key at
+any point to send your command to \kbd{gp}.
+
+  All the commands you type at the \kbd{gp} prompt are stored in a history,
+a multiline command being saved as a single concatenated line. The Up and Down
+arrows (or \kbd{C-p}/\kbd{C-n}) will move you through the history,
+\kbd{M-<}/\kbd{M->} sending you to the start/end of the history.
+\kbd{C-r}/\kbd{C-s} will start an incremental backward/forward search. You
+can kill text (\kbd{C-k} kills till the end of line, \kbd{M-d} to the end of
+current word) which you can then yank back using the \kbd{C-y} key (\kbd{M-y}
+will rotate the kill-ring). \kbd{C-\_} will undo your last changes
+incrementally (\kbd{M-r} undoes all changes made to the current line).
+\kbd{C-t} and \kbd{M-t} will transpose the character (word) preceding the
+cursor and the one under the cursor.
+
+  Keeping the \kbd{M-} key down while you enter an integer (a minus sign
+meaning reverse behavior) gives an argument to your next readline command
+(for instance \kbd{M-- C-k} will kill text back to the start of line). If you
+prefer \idx{Vi}--style editing, \kbd{M-C-j} will toggle you to Vi mode.
+
+  Of course you can change all these default bindings. For that you need to
+create a file named \kbd{.inputrc} in your home directory. For instance
+(notice the embedding conditional in case you would want specific bindings
+for \kbd{gp}):
+%
+\bprog
+$if Pari-GP
+  set show-all-if-ambiguous
+  "\C-h": backward-delete-char
+  "\e\C-h": backward-kill-word
+  "\C-xd": dump-functions
+  (: "\C-v()\C-b"       #@com can be annoying when copy-pasting!
+  [: "\C-v[]\C-b"
+$endif
+@eprog
+\noindent\kbd{C-x C-r} will re-read this init file, incorporating any
+changes made to it during the current session.
+
+\misctitle{Note} By default, \kbd{(} and \kbd{[} are bound to the function
+\kbd{pari-matched-insert} which, if ``electric parentheses'' are enabled
+(default: off) will automatically insert the matching closure (respectively
+\kbd{)} and \kbd{]}). This behavior can be toggled on and off by giving
+the numeric argument $-2$ to \kbd{(} (\kbd{M--2(}), which is useful if you
+want, e.g to copy-paste some text into the calculator. If you do not want a
+toggle, you can use \kbd{M--0} / \kbd{M--1} to specifically switch it on or
+off).
+
+\misctitle{Note} In some versions of readline (2.1 for instance), the
+\kbd{Alt} or \kbd{Meta} key can give funny results (output 8-bit accented
+characters for instance). If you do not want to fall back to the \kbd{Esc}
+combination, put the following two lines in your \kbd{.inputrc}:
+%
+\bprog
+  set convert-meta on
+  set output-meta off
+@eprog
+
+\misctitle{Command completion and online help} Hitting
+\kbd{<TAB>} will complete words for you. This mechanism is context-dependent:
+\kbd{gp} will strive to only give you meaningful completions in a given
+context (it will fail sometimes, but only under rare and restricted
+conditions).
+
+  For instance, shortly after a \kbd{\til}, we expect a user name, then a
+path to some file. Directly after \kbd{default(} has been typed, we would
+expect one of the \kbd{default} keywords. After a '.', we expect a member
+keyword. And generally of course, we expect any GP symbol which may be found
+in the hashing lists: functions (both yours and GP's), and variables.
+
+  If, at any time, only one completion is meaningful, \kbd{gp} will provide it
+together with
+
+\item an ending comma if we are completing a default,
+
+\item a pair of parentheses if we are completing a function name. In
+that case hitting \kbd{<TAB>} again will provide the argument list as given
+by the online help. (Recall that you can always undo the effect
+of the preceding keys by hitting \kbd{C-\_}; this applies here.)
+
+Otherwise, hitting \kbd{<TAB>} once more will give you the list of possible
+completions. Just experiment with this mechanism as often as possible,
+you will probably find it very convenient. For instance, you can obtain
+\kbd{default(seriesprecision,10)}, just by hitting \kbd{def<TAB>se<TAB>10},
+which saves 18 keystrokes (out of 27).
+
+  Hitting \kbd{M-h} will give you the usual short online help concerning the
+word directly beneath the cursor, \kbd{M-H} will yield the extended help
+corresponding to the \kbd{help} default program (usually opens a \idx{dvi}
+previewer, or runs a primitive tex-to-ASCII program). None of these disturb
+the line you were editing.
+
+\section{GNU Emacs and PariEmacs}
+\label{se:emacs}
+
+If you install the PariEmacs package (see Appendix A), you may use \kbd{gp}
+as a subprocess in \idx{Emacs}. You then need to include in your \kbd{.emacs}
+file the following lines:
+\bprog
+  (autoload 'gp-mode "pari" nil t)
+  (autoload 'gp-script-mode "pari" nil t)
+  (autoload 'gp "pari" nil t)
+  (autoload 'gpman "pari" nil t)
+
+  (setq auto-mode-alist
+    (cons '("\\.gp$" . gp-script-mode) auto-mode-alist))
+@eprog
+\noindent which autoloads functions from the PariEmacs package and ensures
+that file with the \kbd{.gp} suffix are edited in gp-script mode.
+
+Once this is done, under GNU Emacs if you type \kbd{M-x gp} (where as usual
+\kbd{M} is the \kbd{Meta} key), a special shell will be started launching
+\kbd{gp} with the default stack size and prime limit. You can then work as
+usual under \kbd{gp}, but with all the facilities of an advanced text editor.
+See the PariEmacs documentation for customizations, menus, etc.
+
+\newpage

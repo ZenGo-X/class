@@ -1,0 +1,54 @@
+Function: msinit
+Section: modular_symbols
+C-Name: msinit
+Prototype: GGD0,L,
+Help: msinit(G, V, {sign=0}): given G a finite index subgroup of SL(2,Z)
+ and a finite dimensional representation V of GL(2,Q), creates a space of
+ modular symbols, the G-module Hom_G(Div^0(P^1 Q), V). This is canonically
+ isomorphic to H^1_c(X(G), V), and allows to compute modular forms for G.
+ If sign is present and non-zero, it must be +1 or -1 and we consider
+ the subspace defined by Ker (Sigma - sign), where Sigma is induced by
+ [-1,0;0,1]. Currently the only supported groups are the Gamma_0(N), coded by
+ the integer N. The only supported representation is V_k = Q[X,Y]_{k-2}, coded
+ by the integer k >= 2.
+Doc: given $G$ a finite index subgroup of $\text{SL}(2,\Z)$
+ and a finite dimensional representation $V$ of $\text{GL}(2,\Q)$, creates a
+ space of modular symbols, the $G$-module $\Hom_G(\text{Div}^0(\P^1
+ (\Q)), V)$. This is canonically isomorphic to $H^1_c(X(G), V)$, and allows to
+ compute modular forms for $G$. If \emph{sign} is present and non-zero, it
+ must be $\pm1$ and we consider the subspace defined by $\text{Ker} (\sigma -
+ \var{sign})$, where $\sigma$ is induced by \kbd{[-1,0;0,1]}. Currently the
+ only supported groups are the $\Gamma_0(N)$, coded by the integer $N > 0$.
+ The only supported representation is $V_k = \Q[X,Y]_{k-2}$, coded by the
+ integer $k \geq 2$.
+ \bprog
+ ? M = msinit(11,2); msdim(M) \\ Gamma0(11), weight 2
+ %1 = 3
+ ? mshecke(M,2) \\ T_2 acting on M
+ %2 =
+ [3  1  1]
+
+ [0 -2  0]
+
+ [0  0 -2]
+ ? msstar(M) \\ * involution
+ %3 =
+ [1 0 0]
+
+ [0 0 1]
+
+ [0 1 0]
+
+ ? Mp = msinit(11,2, 1); msdim(Mp) \\ + part
+ %4 = 2
+ ? mshecke(Mp,2)  \\ T_2 action on M^+
+ %5 =
+ [3  2]
+
+ [0 -2]
+ ? msstar(Mp)
+ %6 =
+ [1 0]
+
+ [0 1]
+ @eprog

@@ -1,0 +1,18 @@
+Function: ispseudoprimepower
+Section: number_theoretical
+C-Name: ispseudoprimepower
+Prototype: lGD&
+Help: ispseudoprimepower(x,{&n}): if x = p^k is a pseudo-prime power (p
+ pseudo-prime, k > 0),
+ return k, else return 0. If n is present, and the function returns a non-zero
+ result, set n to p, the k-th root of x.
+Doc: if $x = p^k$ is a pseudo-prime power ($p$ pseudo-prime as per
+ \tet{ispseudoprime}, $k > 0$), return $k$, else
+ return 0. If a second argument $\&n$ is given and $x$ is indeed
+ the $k$-th power of a prime $p$, sets $n$ to $p$.
+
+ More precisely, $k$ is always the largest integer such that $x = n^k$ for
+ some integer $n$ and, when $n \leq  2^{64}$ the function returns $k > 0$ if and
+ only if $n$ is indeed prime. When $n > 2^{64}$ is larger than the threshold,
+ the function may return $1$ even though $n$ is composite: it only passed
+ an \kbd{ispseudoprime(n)} test.

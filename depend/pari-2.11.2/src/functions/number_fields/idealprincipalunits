@@ -1,0 +1,20 @@
+Function: idealprincipalunits
+Section: number_fields
+C-Name: idealprincipalunits
+Prototype: GGL
+Help: idealprincipalunits(nf,pr,k): returns the structure [no, cyc, gen]
+ of the multiplicative group (1 + pr) / (1 + pr^k).
+Doc: given a prime ideal in \tet{idealprimedec} format,
+ returns the multiplicative group $(1 + \var{pr}) / (1 + \var{pr}^k)$ as an
+ abelian group. This function is much faster than \tet{idealstar} when the
+ norm of \var{pr} is large, since it avoids (useless) work in the
+ multiplicative group of the residue field.
+ \bprog
+ ? K = nfinit(y^2+1);
+ ? P = idealprimedec(K,2)[1];
+ ? G = idealprincipalunits(K, P, 20);
+ ? G.cyc
+ %4 = [512, 256, 4]   \\ Z/512 x Z/256 x Z/4
+ ? G.gen
+ %5 = [[-1, -2]~, 1021, [0, -1]~] \\ minimal generators of given order
+ @eprog

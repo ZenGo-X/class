@@ -1,0 +1,24 @@
+Function: nfislocalpower
+Section: number_fields
+C-Name: nfislocalpower
+Prototype: lGGGG
+Help: nfislocalpower(nf,pr,a,n): true(1) if a is an n-th power in
+ the local field K_v, false(0) if not.
+Doc: Let \var{nf} be a \var{nf} structure attached to a number field $K$,
+ let $a \in K$ and let \var{pr} be a \var{prid} structure attached to a
+ maximal ideal $v$. Return $1$ if $a$ is an $n$-th power in the completed
+ local field $K_v$, and $0$ otherwise.
+ \bprog
+ ? K = nfinit(y^2+1);
+ ? P = idealprimedec(K,2)[1]; \\ the ramified prime above 2
+ ? nfislocalpower(K,P,-1, 2) \\ -1 is a square
+ %3 = 1
+ ? nfislocalpower(K,P,-1, 4) \\ ... but not a 4-th power
+ %4 = 0
+ ? nfislocalpower(K,P,2, 2)  \\ 2 is not a square
+ %5 = 0
+
+ ? Q = idealprimedec(K,5)[1]; \\ a prime above 5
+ ? nfislocalpower(K,Q, [0, 32]~, 30)  \\ 32*I is locally a 30-th power
+ %7 = 1
+ @eprog

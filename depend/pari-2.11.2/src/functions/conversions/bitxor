@@ -1,0 +1,18 @@
+Function: bitxor
+Section: conversions
+C-Name: gbitxor
+Prototype: GG
+Help: bitxor(x,y): bitwise "exclusive or" of two integers x and y.
+ Negative numbers behave as if modulo big power of 2.
+Description:
+ (small, small):small:parens        $(1)^$(2)
+ (gen, gen):int        gbitxor($1, $2)
+Doc:
+ bitwise (exclusive) \tet{or}
+ \sidx{bitwise exclusive or}of two integers $x$ and $y$, that is the integer
+ $$\sum (x_i~\kbd{xor}~y_i) 2^i$$
+
+ See \secref{se:bitand} for the behavior for negative arguments.
+Variant: Also available is
+ \fun{GEN}{ibitxor}{GEN x, GEN y}, which returns the bitwise \emph{xor}
+ of $|x|$ and $|y|$, two integers.

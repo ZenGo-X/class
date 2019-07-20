@@ -1,0 +1,22 @@
+Function: galoispermtopol
+Section: number_fields
+C-Name: galoispermtopol
+Prototype: GG
+Help: galoispermtopol(gal,perm): gal being a Galois group as output by
+ galoisinit and perm a element of gal.group, return the polynomial defining
+ the corresponding Galois automorphism.
+Doc: \var{gal} being a
+ Galois group as output by \kbd{galoisinit} and \var{perm} a element of
+ $\var{gal}.group$, return the polynomial defining the Galois
+ automorphism, as output by \kbd{nfgaloisconj}, attached to the
+ permutation \var{perm} of the roots $\var{gal}.roots$. \var{perm} can
+ also be a vector or matrix, in this case, \kbd{galoispermtopol} is
+ applied to all components recursively.
+
+ \noindent Note that
+ \bprog
+ G = galoisinit(pol);
+ galoispermtopol(G, G[6])~
+ @eprog\noindent
+ is equivalent to \kbd{nfgaloisconj(pol)}, if degree of \var{pol} is greater
+ or equal to $2$.

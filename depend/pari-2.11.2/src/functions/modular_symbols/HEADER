@@ -1,0 +1,33 @@
+Function: _header_modular_symbols
+Class: header
+Section: modular_symbols
+Doc:
+ \section{Modular symbols}
+
+ Let $\Delta := \text{Div}^0(\P^1(\Q))$ be the abelian group of divisors of
+ degree $0$ on the rational projective line. The standard $\text{GL}(2,\Q)$
+ action on $\P^1(\Q)$ via homographies naturally extends to $\Delta$. Given
+
+ \item $G$ a finite index subgroup of $\text{SL}(2,\Z)$,
+
+ \item a field $F$ and a finite dimensional representation $V/F$ of
+   $\text{GL}(2,\Q)$,
+
+ \noindent we consider the space of \emph{modular symbols} $M :=
+ \Hom_G(\Delta, V)$. This finite dimensional $F$-vector
+ space is a $G$-module, canonically isomorphic to $H^1_c(X(G), V)$,
+ and allows to compute modular forms for $G$.
+
+ Currently, we only support the groups $\Gamma_0(N)$ ($N > 0$ an integer)
+ and the representations $V_k = \Q[X,Y]_{k-2}$ ($k \geq 2$ an integer) over
+ $\Q$. We represent a space of modular symbols by an \var{ms} structure,
+ created by the function \tet{msinit}. It encodes basic data attached to the
+ space: chosen $\Z[G]$-generators $(g_i)$ for $\Delta$ (and relations among
+ those) and an $F$-basis of $M$. A modular symbol $s$ is thus given either in
+ terms of this fixed basis, or as a collection of values $s(g_i)$
+ satisfying certain relations.
+
+ A subspace of $M$ (e.g. the cuspidal or Eisenstein subspaces, the new or
+ old modular symbols, etc.) is given by a structure allowing quick projection
+ and restriction of linear operators; its first component is a matrix whose
+ columns  form  an $F$-basis  of the subspace.

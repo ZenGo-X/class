@@ -1,0 +1,32 @@
+Function: suminf
+Section: sums
+C-Name: suminf0
+Prototype: V=GEp
+Help: suminf(X=a,expr): infinite sum (X goes from a to infinity) of real or
+ complex expression expr.
+Wrapper: (,G)
+Description:
+  (gen,gen):gen:prec suminf(${2 cookie}, ${2 wrapper}, $1, $prec)
+Doc: \idx{infinite sum} of expression
+ \var{expr}, the formal parameter $X$ starting at $a$. The evaluation stops
+ when the relative error of the expression is less than the default precision
+ for 3 consecutive evaluations. The expressions must always evaluate to a
+ complex number.
+
+ If the series converges slowly, make sure \kbd{realprecision} is low (even 28
+ digits may be too much). In this case, if the series is alternating or the
+ terms have a constant sign, \tet{sumalt} and \tet{sumpos} should be used
+ instead.
+
+ \bprog
+ ? \p28
+ ? suminf(i = 1, -(-1)^i / i)   \\@com Had to hit \kbd{C-C}
+   ***   at top-level: suminf(i=1,-(-1)^i/i)
+   ***                                ^------
+   *** suminf: user interrupt after 10min, 20,100 ms.
+ ? sumalt(i = 1, -(-1)^i / i) - log(2)
+ time = 0 ms.
+ %1 = -2.524354897 E-29
+ @eprog
+
+ \synt{suminf}{void *E, GEN (*eval)(void*,GEN), GEN a, long prec}.

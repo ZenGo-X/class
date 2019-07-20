@@ -1,0 +1,47 @@
+Function: ellorder
+Section: elliptic_curves
+C-Name: ellorder
+Prototype: GGDG
+Help: ellorder(E,z,{o}): order of the point z on the elliptic curve E over
+ a number field or a finite field, 0 if non-torsion. The parameter o,
+ if present, represents a non-zero multiple of the order of z.
+Doc: gives the order of the point $z$ on the elliptic
+ curve $E$, defined over a finite field or a number field.
+ Return (the impossible value) zero if the point has infinite order.
+ \bprog
+ ? E = ellinit([-157^2,0]);  \\ the "157-is-congruent" curve
+ ? P = [2,2]; ellorder(E, P)
+ %2 = 2
+ ? P = ellheegner(E); ellorder(E, P) \\ infinite order
+ %3 = 0
+ ? K = nfinit(polcyclo(11,t)); E=ellinit("11a3", K); T = elltors(E);
+ ? ellorder(E, T.gen[1])
+ %5 = 25
+ ? E = ellinit(ellfromj(ffgen(5^10)));
+ ? ellcard(E)
+ %7 = 9762580
+ ? P = random(E); ellorder(E, P)
+ %8 = 4881290
+ ? p = 2^160+7; E = ellinit([1,2], p);
+ ? N = ellcard(E)
+ %9 = 1461501637330902918203686560289225285992592471152
+ ? o = [N, factor(N)];
+ ? for(i=1,100, ellorder(E,random(E)))
+ time = 260 ms.
+ @eprog
+ The parameter $o$, is now mostly useless, and kept for backward
+ compatibility. If present, it represents a non-zero multiple of the order
+ of $z$, see \secref{se:DLfun}; the preferred format for this parameter is
+ \kbd{[ord, factor(ord)]}, where \kbd{ord} is the cardinality of the curve.
+ It is no longer needed since PARI is now able to compute it over large
+ finite fields (was restricted to small prime fields at the time this feature
+ was introduced), \emph{and} caches the result in $E$ so that it is computed
+ and factored only once. Modifying the last example, we see that including
+ this extra parameter provides no improvement:
+ \bprog
+ ? o = [N, factor(N)];
+ ? for(i=1,100, ellorder(E,random(E),o))
+ time = 260 ms.
+ @eprog
+Variant: The obsolete form \fun{GEN}{orderell}{GEN e, GEN z} should no longer be
+ used.

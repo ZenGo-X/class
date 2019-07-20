@@ -1,0 +1,430 @@
+default(parisize,"20M");
+default(realprecision,38);
+/* Test generic */
+
+F={
+  [ellwp, ellzeta, ellsigma,
+  ellformalw, ellformalpoint, ellformaldifferential, ellformallog, ellformalexp,
+  E->ellisoncurve(E,[0,0]), E->ellordinate(E,0),
+  E->elldivpol(E,5), E->ellxn(E,3), E->ellmul(E,[0,0],0), E->ellneg(E,[0,0])
+  ];
+}
+
+L={
+  [1,I,'z,Mod('z,'z^2+5),
+   ellinit([0,0,0,'z,0],nfinit('z^2+5)),
+   Mod(4,1009),ffgen([1009,5],'z)];
+}
+L=apply(x->if(type(x)=="t_VEC",x,ellinit([x,0])),L);
+for(j=1,#F,for(i=1,#L, print(F[j],":",L[i][4],":",F[j](L[i]))));
+
+ellap(ellinit([1,0,1,4,-6]), 2)
+ellap(ellinit([0,17]), 2)
+ellap(ellinit([0, 0, 1, -1, 0]),2486246173)
+
+testgroup(v,p)=
+{ my(E,F,G,g);
+  E=ellinit(v); if(!E || E.disc%p==0, next);
+  G=ellgroup(E,p,1); if (G.no == 1, return);
+  g=G.gen; if (!ellisoncurve(E,g), error(E, G));
+  F=vector(#g,i, ellorder(E,g[i],G.no));
+  if ((p <= 3 && F!=G.cyc) || (p > 3 && F[1] != G.cyc[1]),
+    print("error:",v,":",F,":",G));
+}
+{
+  for(x=10,63,
+    my(p,E,G,g);
+    p=nextprime(2^x);E=ellinit([0,0,1,2,3]);
+    G = ellgroup(E,p,1); if (!ellisoncurve(E,G.gen), error(E));
+    if(ellorder(E,G.gen[1])!=G.cyc[1], error(E));
+    print(p,":",ellgroup(E,p)));
+  for(p=2,3,
+    forvec(v=vector(5,i,[0,p-1]), testgroup(v,p)));
+  forvec(v=vector(2,i,[0,4]), testgroup(v,5));
+}
+setrand(1)
+a=ffgen(2^8,'a); E=ellinit([a,1,0,0,1]);
+P=[a^3,ellordinate(E,a^3)[1]]; Q=ellmul(E,P,113);
+e=elllog(E,P,Q,242)
+ellmul(E,Q,e) == P
+ellpow(E,Q,e) == P
+
+p=655637;
+E=ellinit([123,47], p);
+X=1;until(Y!=[],X++;Y=ellordinate(E,X));
+P=[X,Y[1]]; Q=ellmul(E,P,113);
+o=ellorder(E,P, p+1-ellap(E,p))
+e=elllog(E,P,Q,o)
+ellmul(E,Q,e) == P
+
+p=1073741827;
+E=ellinit([1,3], p);
+G=[Mod(1050932506,p),Mod(12325986,p)];
+P=ellmul(E,G,1023);
+elllog(E,P,G)
+
+ellorder(ellinit([0,2],1),[-1,-1]*Mod(1,997))
+
+ellinit([a1,a2,a3,a4,a6]*Mod(1,5));
+ellinit([a1,a2,a3,a4,a6]);
+ellinit(ellfromj(0)).j
+ellinit(ellfromj(1728)).j
+ellinit(ellfromj(j)).j
+ellinit(ellfromj(Mod(0,2))).j
+ellinit(ellfromj(Mod(0,5))).j
+ellinit(ellfromj(Mod(3,5))).j
+ellinit(ellfromj(j*Mod(1,2))).j
+ellinit(ellfromj(Mod(0,3))).j
+ellinit(ellfromj(j*Mod(1,3))).j
+
+elltwist(ellinit([0,a2,0,a4,a6]),x^2-D/4)
+lift(elltwist(ellinit([a1,a2,a3,a4,a6]*Mod(1,2)),x^2+x+T))
+elltwist(ellinit([a1,a2,a3,a4,a6]),1)
+elltwist(ellinit([a1,a2,a3,a4,a6]),-4)
+elltwist(ellinit([a1,a2,a3,a4,a6]),5)
+
+e = ellinit([4,0]);
+ellminimaltwist(e)
+ellminimaltwist(e,1)
+
+e = ellinit(ellfromj(-882216989/131072));
+e = ellintegralmodel(e,&v)
+v
+ellminimaltwist(e)
+ellminimaltwist(e,1)
+
+twisttest(c4,c6, T)=
+{ my(e = ellinit([c4/-48, c6/-864]));
+  vector(#T, i,
+    my (et = ellinit(elltwist(e, T[i])));
+    my (d = ellminimaltwist(et));
+    et = ellinit(elltwist(et,d));
+    [d, ellminimalmodel(et).disc]);
+}
+T3 = [1,-3];
+twisttest(-4*3,8*3^3, T3)
+twisttest(0,8*3^3, T3)
+twisttest(-4*3,0, T3)
+twisttest(16,-8*19, T3)
+twisttest(-4*3^4, 8*3^6, T3)
+twisttest(4*3^6, 16*3^9, T3)
+T2 = [1,-4,8,-8];
+a=2;b=3; twisttest(3*2^a, 9*2^b, T2)
+a=4;b=5; twisttest(3*2^a, 9*2^b, T2)
+b=5; twisttest(0, 9*2^b, T2)
+a=4; twisttest(3*2^a, 0, T2)
+twisttest(1, -161, T2)
+d=2; twisttest(-17*2^(2*d), 2^(3*d), T2)
+
+ellminimaltwist(ellinit([216,-432]),1)
+
+a=ffgen(2^5,'a);ellinit(ellfromj(a)).j
+a=ffgen(3^5,'a);ellinit(ellfromj(a)).j
+
+ellfromeqn(y^3+(3+2*x)*y^2 +(6+5*x+4*x^2)*y+(10+9*x+8*x^2+7*x^3))
+ellfromeqn(y^2+(2*x^2+3*x+4)*y+(5*x^4+6*x^3+7*x^2+8*x+9))
+ellfromeqn(x^2+(2*y^2+3*y+4)*x+(5*y^4+6*y^3+7*y^2+8*y+9))
+ellfromeqn((x^2+2*x+3)*y^2+(4*x^2+5*x+6)*y+(7*x^2+8*x+9))
+
+e = ellinit([1,2,3,5,7]);
+elldivpol(e,4)
+ellxn(e,0)
+ellxn(e,1)
+ellxn(e,2)
+ellxn(e,4)
+ellxn(e,5)
+P=[-1,1]; Q=ellmul(e,P,20);
+if (ellisdivisible(e,Q,0,&A), A)
+if (ellisdivisible(e,[0],0,&A), A)
+if (ellisdivisible(e,Q,1,&A), A)
+if (ellisdivisible(e,Q,20,&A), A)
+if (ellisdivisible(e,Q,-20,&A), A)
+if (ellisdivisible(e,Q,2,&A), A)
+if (ellisdivisible(e,Q,5,&A), A)
+if (ellisdivisible(e,Q, ellxn(e,5), &A), A)
+if (ellisdivisible(e,Q,11,&A), A)
+if (ellisdivisible(e,Q,22,&A), A)
+e = ellinit([0,1]);
+elldivpol(e,8)
+
+\\ #2106
+e = ellinit([0,0,1,-1,0]); P = [0,0];
+K = nfinit(nfsplitting(elldivpol(e, 3)));
+eK = ellinit([0,0,1,-1,0], K);
+ellisdivisible(eK, P, 3)
+P6 = ellmul(eK, P, 6);
+if (ellisdivisible(eK, P6, 3, &Q), Q)
+if (ellisdivisible(eK, P6, 2, &Q), Q)
+
+e = ellinit([1.,2,3,4,5]);
+e.eta
+E = ellchangecurve(e, [2,3,4,5]);
+E.eta
+e = ellinit([1,2,3,4,5]); e.eta; e.roots;
+E = ellchangecurve(e, [2,3,4,5]);
+E.omega
+E.eta
+E.roots
+ellglobalred(E)
+ellglobalred(e)
+p = 2^64+13;
+E = ellchangecurve(e, [1/p, 2,3,4]);
+elllocalred(E,p)
+
+E = ellchangecurve(e, [1,0,0,0]);
+
+E = ellchangecurve(e, [2,3,4,5]*Mod(1,7));
+E.omega
+E.group
+
+ellminimalmodel(ellinit([1/5,1/4,1/3,1/2,1],1),&v)
+v
+
+j=ffgen(2^5,'a);e = ellinit(ellfromj(j)); e.group; elllog(e,e.gen[1],e.gen[1])
+E = ellchangecurve(e,[3,7,1,0]);
+E.group
+
+e = ellinit(ellfromj(Mod(1,3))); e.group; elllog(e,e.gen[1],e.gen[1])
+E = ellchangecurve(e,[2,7,1,0]);
+E.group
+
+e = ellinit(ellfromj(Mod(1,5))); e.group; elllog(e,e.gen[1],e.gen[1])
+E = ellchangecurve(e,[2,7,1,0]);
+E.group
+
+e = ellinit(ellfromj(1/3) * (1 + O(3^10))); e.roots
+e = ellinit(ellfromj(1/3), O(3^5)); e.tate
+iferr(ellinit(e,O(5)),E,E)
+iferr(ellinit(e,5),E,E)
+iferr(ellinit(e,1.0),E,E)
+e.roots
+E = ellchangecurve(e,[3,1,1,2]);
+E.tate
+ellztopoint(e,3)
+
+e = ellinit(ellfromj(11/8), O(2^5));
+e.tate
+
+e = ellinit([1,0,1,4,-6], O(2^5));
+e.tate
+
+e = ellinit([0,-1,1,-10,-20]);
+\\#1185
+ellwp(e,x+O(x^12))
+\\#1683
+ellztopoint(e,3*e.omega[1]/5)
+ellwp(e, 0.1 + 0.2*I, 1)
+
+\\#1683
+e = ellinit([1,1,0,-1740,22184]);
+z=-3.0059315873096303229151114945365166621 + 0.E-36*I/2;
+ellztopoint(e,z)
+
+\\#1800
+ellztopoint(ellinit([-1,0]), I)
+
+\\#1186
+ellmul(ellinit([3,0]), [1,2], -quadgen(-4))
+
+\\#2060
+ellzeta([1,I],2/10+I)
+\\#2061
+ellsigma([1,I],1/2+I)
+
+logsigma(e,z='x)=if(type(z) != "t_POL" && type(z) != "t_SER", ellsigma(e,z,1));
+v = [ellwp,ellzeta,ellsigma,logsigma];
+ellperiods([1,0.1 + I/10^50])
+e = ellinit([1,1]);
+w = ellperiods([1,I/2])
+w2 = ellperiods([1,I/2], 1)
+u = [e,w,w2];
+{
+for (i = 1, #v,
+  my(f = v[i]);
+  for (j = 1, #u,
+    my (a = u[j]);
+    print([i,j]);
+    print(f(a));
+    print(f(a, x+O(x^10)));
+    print(f(a, 1/3));
+    print(f(a, I/3));
+    print(f(a, (1+I)/3));
+  )
+)
+}
+elleta(e)
+elleta([1,I])
+v = [x->elleisnum(x,2),x->real(elleisnum(x,4,1)),x->real(elleisnum(x,6,1)),x->real(elleisnum(x,10))];
+{
+for (i = 1, #v,
+  my(f = v[i]);
+  print(f);
+  print(f(e));
+  print(f(w));
+  print(f(w2));
+)
+}
+elleisnum([1,I/2^30],2)
+elleisnum([1,I/2^30],4)
+
+\\ #1257
+ellrootno(ellinit([0,-1,1,217,-282]))
+
+\\ #1296
+e=ellinit([0,-1,0,-33,62]);
+ellztopoint(e,-2.5261979245524788020279452840822073870+0.E-36*I)
+
+\\ #1308
+ellinit([108/91,11664/8281,-6561/8281,708588/753571,-14348907/68574961]).disc
+
+e=ellinit([1,3.+I]); x=1/2+I; y=ellordinate(e,x)[1];
+ellztopoint(e,ellpointtoz(e,[x,y]))
+testzellQp(e, P)=
+{ my(a,q,Q);
+  a = ellpointtoz(e,P);
+  Q = ellztopoint(e,a);
+  if (liftall(Q-P),error([e,P]));
+  print(a);
+  q = e.tate[3];
+  a = a^2;
+  if (type(a) == "t_PADIC",
+    a /= q^(valuation(a,a.p) \ valuation(q,a.p)); /* reduce mod q^Z */
+  );
+  a - ellpointtoz(e, elladd(e,P,P));
+}
+e=ellinit([0,-1,1,0,0], O(11^5));
+\\ BIB #1840
+ellpointtoz(e,[Mod(3,'x^2+1),1]);
+testzellQp(e, [0,0])
+
+e=ellinit([1,1,1,-10,-10], O(3^5));
+testzellQp(e, [3,-2])
+testzellQp(e, ellmul(e,[0,0],2)) \\ not on curve !
+
+e=ellinit(ellfromj(2/9), O(3^10)); x=2; y=ellordinate(e,x)[1];
+testzellQp(e, [x,y])
+
+e=ellinit(ellfromj(1/4), O(2^10)); x=1/2; y=ellordinate(e,x)[1];
+testzellQp(e, [x,y])
+
+e=ellinit([1,-1,1,98,126],O(5^10));
+testzellQp(e, [1,14])
+
+e=ellinit([1,1,1,3,-5],O(2^10));
+testzellQp(e,[5,10])
+
+e=ellinit([1,-1,1,-48,147], O(2^10));
+testzellQp(e,[13,-47])
+
+ellinit([1,1], Mod(1,11))
+ellrootno(ellinit([31^4,31^6]), 31)
+e=ellinit([1,0,0,1,1]);
+ellordinate(e, I)
+E=ellchangecurve(e,[1/(2^4*3^4*5^2*7),2,3,4]);
+forprime(p=2,11, if (ellap(e,p) != ellap(E,p),error(p)));
+for(k=2,50, if (ellak(e,k) != ellak(E,k),error(k)));
+if (ellan(e,100) != ellan(E,100),error("ellan"));
+P=ellchangepoint([0,1],[1,2,3,4])
+ellchangepointinv(P,[1,2,3,4])
+
+\\#1416
+E=ellinit([155818018413/16,-78179511999813417/32]);
+ellminimalmodel(E,&v);
+E2=ellchangecurve(E,v); ellminimalmodel(E2,&w); w
+
+\\#1432
+E=ellinit([-3,-60,480,0,0]); ellheight(E,[0,0])
+ellheight(E,[0.,0])
+
+p=10^20+39; q=10^21+117;
+e = ellinit([p^3*q^4,p^6*q^4]);
+ellminimalmodel(e,&v); v
+e = ellinit([p^4*q^4,p^6*q^4]);
+ellminimalmodel(e,&v); v
+
+e=ellminimalmodel(ellinit([1,1]));
+e=ellchangecurve(e,1)
+e=ellchangecurve(e,[2,0,0,0])
+ellinit(ellinit([0,1]*Mod(1,5),ffgen(5^2)));
+
+J=[0,1728,-3375,8000,54000,-32768,287496,-884736,-12288000,16581375,-884736000,-147197952000,-262537412640768000];
+{
+for (i=1,#J,
+  my(e = ellinit(ellfromj(J[i])));
+  my(v = ellan(e,200));
+  print("\n", e.j);
+  forprime(p = 127, 200, print1(v[p]," "));
+  print();
+  forprime(p = 2^65, 2^65+1000, print1(ellap(e,p)," "));
+);
+}
+
+p=2^32+15;
+ellcard(ellinit([1,2,3,4,5], p))
+E=ellinit([625,15625]);
+elllocalred(E,5)
+ellisoncurve(E,[0.,125.])
+ellisoncurve(E,[1e-50,125+1e-50])
+elladd(E,[0.,125.],[0.,125+1e-38])
+iferr(ellmul([0,1,0,2,-15],[2,1],5),E,E)
+x='x;
+E=ellinit([x^2,x])
+ellminimalmodel(E)
+ellweilpairing(E,[0],[0],1)
+ellinit([1])
+ellinit([1,1],quadgen(5))
+ellinit([Mod(1,2),1],O(2))
+ellinit([O(2),1],ffgen(2^3))
+ellinit([O(2),1],1.)
+ellinit([1,2],1.)
+ellinit([ffgen(5),1],5)
+ellinit([ffgen(5),1],3)
+ellinit([1.,1],precision(1.,60))
+ellinit([1.,Mod(1,3)])
+
+\\#1527
+E = ellinit([0,0,0,-82,0]);
+ellrootno(E,2)
+ellrootno(E)
+ellrootno(E,2)
+E=ellinit([0,20,0,-352,512]);
+ellrootno(E,2)
+
+E.disc
+elltamagawa(E)
+ellbsd(E)
+E=ellinit([1,0,1,4,-6]);
+E.disc
+elltamagawa(E)
+ellbsd(E)
+ellbsd(ellinit([-5*36^4,0]))
+
+\\#1558
+ellap(ellinit([-1137195,489565862]),2038074751)
+ellap(ellinit([582304190,64196421]),2147438927)
+e=ellinit([0,-1,1,-2,2]); P=[2,-2]; ellnonsingularmultiple(e, P)
+e=ellinit([-111,214]); P=[35,-198]; v = [4*3,12,214,12];
+e=ellchangecurve(e,v); P=ellchangepoint(P,v);
+ellnonsingularmultiple(e,P)
+e=ellinit([0,-1,1,-2,2]);
+test(f)=print(f(e,,'t)); print(f(e,5)); print(f(e,5,'t));
+F=[ellformalw,ellformalpoint,ellformaldifferential,ellformallog,ellformalexp];
+for(i=1,#F,print(F[i]);test(F[i]));
+ellformalw(e,0)
+ellformalw(e,-1)
+
+\\#1637
+U=[-245369975623514803521420211420402474815373720177518420696215292670924086780233779586506792145074717/4069861969699146045958032034788970995470603578576,-696053034387689435413673877713244121475782562610666903528251447608130654196417305610237634015759861/4069861969699146045958032034788970995470603578576,-49356694805693369953216822105035107974083562942605713355717183776373331122267882948881129025418396548321363993080002121985116427859996985649385099335/4069861969699146045958032034788970995470603578576,5996724761485351384753083917633373954904218466995628499407992841502416127074022935350022919212488198205525833829916828282709837728834438536000230267/1017465492424786511489508008697242748867650894644,-1943033527672518505867347410801184866534773028979571976479290969993491996577167508758887358085512124817167326269402804641328588524702957475568608101932310746684310251168033629279636817525659690186705/4069861969699146045958032034788970995470603578576];
+E=ellinit(U);
+P=[283188771261789732541662405743402980051199109235,39175522019721182331498476245534716069785193060995];
+ellheight(E,P)
+
+\\#1648
+ellinit([0,0,0,0,1]).a1
+
+E=ellinit([-22032-15552*x,0], nfinit(x^2-2)); P=[-72*x-108,0];
+ellpointtoz(E,P)
+
+E=ellinit([134199387,91266697],3031140653);
+P = [911071793,1086747416]; Q = ellmul(E,P,2);
+elllog(E,Q,P)

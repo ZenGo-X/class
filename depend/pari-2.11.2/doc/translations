@@ -1,0 +1,148 @@
+readline        @se:readline@2
+edit            @se:readline@2
+?               @?@2
+??              @?@2
+\\              @\bs\bs@2
+\a              @\b{a}@2
+\b              @\b{b}@2
+\c              @\b{c}@2
+\d              @\b{d}@2
+\e              @\b{e}@2
+\g              @\b{g}@2
+\gf             @\b{gf}@2
+\gm             @\b{gm}@2
+\h              @\b{h}@2
+\k              @\b{k}@2
+\l              @\b{l}@2
+\m              @\b{m}@2
+\p              @\b{p}@2
+\o              @\b{o}@2
+\ps             @\b{ps}@2
+\q              @\b{q}@2
+\r              @\b{r}@2
+\s              @\b{s}@2
+\t              @\b{t}@2
+\u              @\b{u}@2
+\um             @\b{um}@2
+\v              @\b{v}@2
+\w              @\b{w}@2
+\x              @\b{x}@2
+\y              @\b{y}@2
+#               @\#@2
+##              @\#\#@2
+operator        @GP operators@2
+and             @GP operators@2
+or              @GP operators@2
+not             @GP operators@2
+INT             @Integers@2
+integer         @Integers@2
+REAL            @Real numbers@2
+real number     @Real numbers@2
+INTMOD          @Integermods@2
+intmod          @Integermods@2
+FRAC            @Rational numbers@2
+fraction        @Rational numbers@2
+rational        @Rational numbers@2
+COMPLEX         @Complex numbers@2
+complex         @Complex numbers@2
+PADIC           @$p$-adic numbers@2
+padic           @$p$-adic numbers@2
+QUAD            @Quadratic numbers@2
+quadratic       @Quadratic numbers@2
+POLMOD          @Polmods@2
+polmod          @Polmods@2
+POL             @Polynomials@2
+polynomial      @Polynomials@2
+SER             @Power series@2
+RFRAC           @Rational functions@2
+QFR             @Binary quadratic forms of positive or negative discriminant@2
+QFI             @Binary quadratic forms of positive or negative discriminant@2
+VEC             @Row and column vectors@2
+COL             @Row and column vectors@2
+MAT             @Matrices@2
+LIST            @Lists@2
+STR             @Strings@2
+VECSMALL        @Small vectors@2
+ERROR           @Error contexts@2
+e_SYNTAX        @iferr@
+e_BUG           @iferr@
+e_ALARM         @iferr@
+e_FILE          @iferr@
+e_MISC          @iferr@
+e_FLAG          @iferr@
+e_IMPL          @iferr@
+e_ARCH          @iferr@
+e_PACKAGE       @iferr@
+e_NOTFUNC       @iferr@
+e_PREC          @iferr@
+e_TYPE          @iferr@
+e_DIM           @iferr@
+e_VAR           @iferr@
+e_PRIORITY      @iferr@
+e_USER          @iferr@
+e_STACK         @iferr@
+e_OVERFLOW      @iferr@
+e_DOMAIN        @iferr@
+e_COMPONENT     @iferr@
+e_MAXPRIME      @iferr@
+e_CONSTPOL      @iferr@
+e_IRREDPOL      @iferr@
+e_COPRIME       @iferr@
+e_PRIME         @iferr@
+e_MODULUS       @iferr@
+e_ROOTS0        @iferr@
+e_OP            @iferr@
+e_TYPE2         @iferr@
+e_INV           @iferr@
+e_MEM           @iferr@
+e_SQRTN         @iferr@
+local           @Variables and Scope@2
+my              @Variables and Scope@2
+user defined    @User defined functions@2
+user defined function @User defined functions@2
+member function @Member functions@2
+member          @Member functions@2
+\               @\bs
+\/              @\bs/
+^               @\pow
+~               @mattranspose
+%               @\%
+<<              @shift
+>>              @shift
+min             @max
+emacs           @Using GP under GNU Emacs@2
+Emacs           @Using GP under GNU Emacs@2
+0               @Functions and Operations Available in PARI and GP
+1               @Programming in GP: control statements
+2               @Standard monadic or dyadic operators
+3               @Conversions and similar elementary functions or commands
+4               @Combinatorics
+5               @Arithmetic functions
+6               @Polynomials and power series
+7               @Vectors, matrices, linear algebra and sets
+8               @Transcendental functions
+9               @Sums, products, integrals and similar functions
+10              @General number fields
+11              @Associative and central simple algebras
+12              @Elliptic curves
+13              @$L$-functions
+14              @Modular forms
+15              @Modular symbols
+16              @Plotting functions
+ell             @Elliptic curves
+mf              @Modular forms
+nf              @Number field structures
+bnf             @Number field structures
+bnr             @Number field structures
+rnf             @Relative extensions
+ideal           @Algebraic numbers and ideals
+idele           @Algebraic numbers and ideals
+modulus         @Class field theory
+CFT             @Class field theory
+bid             @Class field theory
+prototype       @GP prototypes, parser codes@5
+Lmath           @Data structures describing $L$ and theta functions
+Ldata           @Data structures describing $L$ and theta functions
+Linit           @Data structures describing $L$ and theta functions
+L-function      @Data structures describing $L$ and theta functions
+character       @Dirichlet characters

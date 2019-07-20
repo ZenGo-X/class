@@ -1,0 +1,33 @@
+Function: ellzeta
+Section: elliptic_curves
+C-Name: ellzeta
+Prototype: GDGp
+Help: ellzeta(w,{z='x}): computes the value at z of the Weierstrass Zeta
+ function attached to the lattice w, as given by ellperiods(,1).
+Doc: Computes the value at $z$ of the Weierstrass $\zeta$ function attached to
+ the lattice $w$ as given by \tet{ellperiods}$(,1)$: including quasi-periods
+ is useful, otherwise there are recomputed from scratch for each new $z$.
+ $$ \zeta(z, L) = \dfrac{1}{z} + z^2\sum_{\omega\in L^*}
+ \dfrac{1}{\omega^2(z-\omega)}.$$
+ It is also possible to directly input $w = [\omega_1,\omega_2]$,
+ or an elliptic curve $E$ as given by \kbd{ellinit} ($w = \kbd{E.omega}$).
+ The quasi-periods of $\zeta$, such that
+ $$\zeta(z + a\omega_1 + b\omega_2) = \zeta(z) + a\eta_1 + b\eta_2 $$
+ for integers $a$ and $b$ are obtained as $\eta_i = 2\zeta(\omega_i/2)$.
+ Or using directly \tet{elleta}.
+ \bprog
+ ? w = ellperiods([1,I],1);
+ ? ellzeta(w, 1/2)
+ %2 = 1.5707963267948966192313216916397514421
+ ? E = ellinit([1,0]);
+ ? ellzeta(E, E.omega[1]/2)
+ %4 = 0.84721308479397908660649912348219163647
+ @eprog\noindent One can also compute the series expansion around $z = 0$
+ (the quasi-periods are useless in this case):
+ \bprog
+ ? E = ellinit([0,1]);
+ ? ellzeta(E) \\ at 'x, implicitly at default seriesprecision
+ %4 = x^-1 + 1/35*x^5 - 1/7007*x^11 + O(x^15)
+ ? ellzeta(E, x + O(x^20)) \\ explicit precision
+ %5 = x^-1 + 1/35*x^5 - 1/7007*x^11 + 1/1440257*x^17 + O(x^18)
+ @eprog\noindent

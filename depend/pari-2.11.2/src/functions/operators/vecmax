@@ -1,0 +1,28 @@
+Function: vecmax
+Section: operators
+C-Name: vecmax0
+Prototype: GD&
+Help: vecmax(x,{&v}): largest entry in the vector/matrix x. If v
+ is present, set it to the index of a largest entry (indirect max).
+Description:
+  (gen):gen            vecmax($1)
+  (gen, &gen):gen      vecmax0($1, &$2)
+Doc: if $x$ is a vector or a matrix, returns the largest entry of $x$,
+ otherwise returns a copy of $x$. Error if $x$ is empty.
+
+ If $v$ is given, set it to the index of a largest entry (indirect maximum),
+ when $x$ is a vector. If $x$ is a matrix, set $v$ to coordinates $[i,j]$
+ such that $x[i,j]$ is a largest entry. This flag is ignored if $x$ is not a
+ vector or matrix.
+
+ \bprog
+ ? vecmax([10, 20, -30, 40])
+ %1 = 40
+ ? vecmax([10, 20, -30, 40], &v); v
+ %2 = 4
+ ? vecmax([10, 20; -30, 40], &v); v
+ %3 = [2, 2]
+ @eprog
+
+Variant: When $v$ is not needed, the function \fun{GEN}{vecmax}{GEN x} is
+ also available.

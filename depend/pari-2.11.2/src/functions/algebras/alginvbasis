@@ -1,0 +1,21 @@
+Function: alginvbasis
+Section: algebras
+C-Name: alginvbasis
+Prototype: mG
+Help: alginvbasis(al): basis of the natural order of the central simple algebra
+ al in terms of the stored order.
+Doc: Given an central simple algebra \var{al} output by \tet{alginit}, returns
+ a $\Z$-basis of the natural order in \var{al} with respect to the
+ order~${\cal O}_0$ stored in \var{al}.
+ \bprog
+ A = alginit(nfinit(y), [-1,-1]);
+ ? alginvbasis(A)
+ %2 =
+ [1 0 0 -1]
+
+ [0 1 0 -1]
+
+ [0 0 1 -1]
+
+ [0 0 0  2]
+ @eprog

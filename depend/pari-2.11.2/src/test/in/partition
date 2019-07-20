@@ -1,0 +1,40 @@
+test(N) = /* pentagonal numbers recurrence */
+{ my(s,t,p);
+  p = vector(N); p[1] = 1;
+  for (n=1, N-1,
+    s = 0; t = n+1;
+    for (k=1, n,
+      t -= 2*k-1; /* n+1 - k(3k-1)/2 */
+      if (t<=0,break);
+      s -= (-1)^k*p[t];
+      t -= k;     /* n+1 - k(3k+1)/2 */
+      if (t<=0,break);
+      s -= (-1)^k*p[t]
+    );
+    p[n+1] = s;
+    if (s != numbpart(n), error([n, s]))
+  );
+}
+test(10^4);
+
+numbpart(0)
+numbpart(52602)
+numbpart(147007)
+numbpart(10^15+2)
+partitions(0)
+partitions(1)
+partitions(9)
+partitions(9,3)
+partitions(-1)
+partitions(5,[3,4],[1,2])
+for(i=1,5,print(partitions(i,[0,5],[3,4])))
+forpart(v=-1,)
+forpart(v=5,print(Vec(v)),4,3)
+forpart(v=5,print(Vec(v)),[0,5],[2,4])
+my(i=0); forpart(x=55,i++); i
+forpart(x=9,print(Vec(x)));
+forpart(x=11,print(Vec(x)),,5);
+forpart(x=12,print(Vec(x)),,[2,6]);
+forpart(x=23,print(Vec(x)),[3,6]);
+forpart(x=5, print(Vec(x)),[0,3]);
+forpart(x=15, print(Vec(x)),[0,3],7);

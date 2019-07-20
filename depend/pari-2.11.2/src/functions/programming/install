@@ -1,0 +1,81 @@
+Function: install
+Section: programming/specific
+C-Name: gpinstall
+Prototype: vrrD"",r,D"",s,
+Help: install(name,code,{gpname},{lib}): load from dynamic library 'lib' the
+ function 'name'. Assign to it the name 'gpname' in this GP session, with
+ prototype 'code'. If 'lib' is omitted, all symbols known to gp
+ (includes the whole 'libpari.so' and possibly others) are available.
+ If 'gpname' is omitted, use 'name'.
+Doc: loads from dynamic library \var{lib} the function \var{name}. Assigns to it
+ the name \var{gpname} in this \kbd{gp} session, with \emph{prototype}
+ \var{code} (see below). If \var{gpname} is omitted, uses \var{name}.
+ If \var{lib} is omitted, all symbols known to \kbd{gp} are available: this
+ includes the whole of \kbd{libpari.so} and possibly others (such as
+ \kbd{libc.so}).
+
+ Most importantly, \kbd{install} gives you access to all non-static functions
+ defined in the PARI library. For instance, the function
+ \bprog
+   GEN addii(GEN x, GEN y)
+ @eprog\noindent adds two PARI integers, and is not directly accessible under
+ \kbd{gp} (it is eventually called by the \kbd{+} operator of course):
+ \bprog
+ ? install("addii", "GG")
+ ? addii(1, 2)
+ %1 = 3
+ @eprog\noindent
+ It also allows to add external functions to the \kbd{gp} interpreter.
+ For instance, it makes the function \tet{system} obsolete:
+ \bprog
+ ? install(system, vs, sys,/*omitted*/)
+ ? sys("ls gp*")
+ gp.c            gp.h            gp_rl.c
+ @eprog\noindent This works because \kbd{system} is part of \kbd{libc.so},
+ which is linked to \kbd{gp}. It is also possible to compile a shared library
+ yourself and provide it to gp in this way: use \kbd{gp2c}, or do it manually
+ (see the \kbd{modules\_build} variable in \kbd{pari.cfg} for hints).
+
+ Re-installing a function will print a warning and update the prototype code
+ if needed. However, it will not reload a symbol from the library, even if the
+ latter has been recompiled.
+
+ \misctitle{Prototype} We only give a simplified description here, covering
+ most functions, but there are many more possibilities. The full documentation
+ is available in \kbd{libpari.dvi}, see
+ \bprog
+   ??prototype
+ @eprog
+
+ \item First character \kbd{i}, \kbd{l}, \kbd{v} : return type int / long /
+ void. (Default: \kbd{GEN})
+
+ \item One letter for each mandatory argument, in the same order as they appear
+ in the argument list: \kbd{G} (\kbd{GEN}), \kbd{\&}
+ (\kbd{GEN*}), \kbd{L} (\kbd{long}), \kbd{s} (\kbd{char *}), \kbd{n}
+ (variable).
+
+  \item \kbd{p} to supply \kbd{realprecision} (usually \kbd{long prec} in the
+  argument list), \kbd{P} to supply \kbd{seriesprecision}
+  (usually \kbd{long precdl}).
+
+  \noindent We also have special constructs for optional arguments and default
+  values:
+
+  \item \kbd{DG} (optional \kbd{GEN}, \kbd{NULL} if omitted),
+
+  \item \kbd{D\&} (optional \kbd{GEN*}, \kbd{NULL} if omitted),
+
+  \item \kbd{Dn} (optional variable, $-1$ if omitted),
+
+ For instance the prototype corresponding to
+ \bprog
+   long issquareall(GEN x, GEN *n = NULL)
+ @eprog\noindent is \kbd{lGD\&}.
+
+ \misctitle{Caution} This function may not work on all systems, especially
+ when \kbd{gp} has been compiled statically. In that case, the first use of an
+ installed function will provoke a Segmentation Fault (this should never
+ happen with a dynamically linked executable). If you intend to use this
+ function, please check first on some harmless example such as the one above
+ that it works properly on your machine.

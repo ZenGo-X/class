@@ -1,0 +1,90 @@
+Function: matconcat
+Section: linear_algebra
+C-Name: matconcat
+Prototype: G
+Help: matconcat(v): concatenate the entries of v and return the resulting
+ matrix.
+Doc: returns a \typ{MAT} built from the entries of $v$, which may
+ be a \typ{VEC} (concatenate horizontally), a \typ{COL} (concatenate
+ vertically), or a \typ{MAT} (concatenate vertically each column, and
+ concatenate vertically the resulting matrices). The entries of $v$ are always
+ considered as matrices: they can themselves be \typ{VEC} (seen as a row
+ matrix), a \typ{COL} seen as a column matrix), a \typ{MAT}, or a scalar (seen
+ as an $1 \times 1$ matrix).
+ \bprog
+ ? A=[1,2;3,4]; B=[5,6]~; C=[7,8]; D=9;
+ ? matconcat([A, B]) \\ horizontal
+ %1 =
+ [1 2 5]
+
+ [3 4 6]
+ ? matconcat([A, C]~) \\ vertical
+ %2 =
+ [1 2]
+
+ [3 4]
+
+ [7 8]
+ ? matconcat([A, B; C, D]) \\ block matrix
+ %3 =
+ [1 2 5]
+
+ [3 4 6]
+
+ [7 8 9]
+ @eprog\noindent
+ If the dimensions of the entries to concatenate do not match up, the above
+ rules are extended as follows:
+
+ \item each entry $v_{i,j}$ of $v$ has a natural length and height: $1 \times
+ 1$ for a scalar, $1 \times n$ for a \typ{VEC} of length $n$, $n \times 1$
+ for a \typ{COL}, $m \times n$ for an $m\times n$ \typ{MAT}
+
+ \item let $H_i$ be the maximum over $j$ of the lengths of the $v_{i,j}$,
+ let $L_j$ be the maximum over $i$ of the heights of the $v_{i,j}$.
+ The dimensions of the $(i,j)$-th block in the concatenated matrix are
+ $H_i \times L_j$.
+
+ \item a scalar $s = v_{i,j}$ is considered as $s$ times an identity matrix
+ of the block dimension $\min (H_i,L_j)$
+
+ \item blocks are extended by 0 columns on the right and 0 rows at the
+ bottom, as needed.
+
+ \bprog
+ ? matconcat([1, [2,3]~, [4,5,6]~]) \\ horizontal
+ %4 =
+ [1 2 4]
+
+ [0 3 5]
+
+ [0 0 6]
+ ? matconcat([1, [2,3], [4,5,6]]~) \\ vertical
+ %5 =
+ [1 0 0]
+
+ [2 3 0]
+
+ [4 5 6]
+ ? matconcat([B, C; A, D]) \\ block matrix
+ %6 =
+ [5 0 7 8]
+
+ [6 0 0 0]
+
+ [1 2 9 0]
+
+ [3 4 0 9]
+ ? U=[1,2;3,4]; V=[1,2,3;4,5,6;7,8,9];
+ ? matconcat(matdiagonal([U, V])) \\ block diagonal
+ %7 =
+ [1 2 0 0 0]
+
+ [3 4 0 0 0]
+
+ [0 0 1 2 3]
+
+ [0 0 4 5 6]
+
+ [0 0 7 8 9]
+ @eprog

@@ -1,0 +1,10 @@
+Function: acosh
+Section: transcendental
+C-Name: gacosh
+Prototype: Gp
+Help: acosh(x): inverse hyperbolic cosine of x.
+Doc: principal branch of $\cosh^{-1}(x) = 2
+  \log(\sqrt{(x+1)/2} + \sqrt{(x-1)/2})$. In particular,
+ $\Re(\text{acosh}(x))\geq 0$ and
+ $\Im(\text{acosh}(x))\in ]-\pi,\pi]$; if $x\in \R$ and $x<1$, then
+ $\text{acosh}(x)$ is complex.

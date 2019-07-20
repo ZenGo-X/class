@@ -1,0 +1,13 @@
+Function: getabstime
+Section: programming/specific
+C-Name: getabstime
+Prototype: l
+Help: getabstime(): milliseconds of CPU time since startup.
+Doc: returns the CPU time (in milliseconds) elapsed since \kbd{gp} startup.
+ This provides a reentrant version of \kbd{gettime}:
+ \bprog
+ my (t = getabstime());
+ ...
+ print("Time: ", getabstime() - t);
+ @eprog
+ For a version giving wall-clock time, see \tet{getwalltime}.

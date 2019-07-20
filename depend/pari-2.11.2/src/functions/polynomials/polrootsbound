@@ -1,0 +1,36 @@
+Function: polrootsbound
+Section: polynomials
+C-Name: polrootsbound
+Prototype: GDG
+Help: polrootsbound(T, {tau = 0.01}): return a sharp upper bound for the
+ modulus of the largest complex root of the polynomial T with relative error
+ tau.
+Doc: return a sharp upper bound $B$ for the modulus of
+ the largest complex root of the polynomial $T$ with complex coefficients
+ with relative error $\tau$. More precisely, we have $|z| \leq B$ for all roots
+ and there exist one root such that $|z_0| \geq B \exp(-2\tau)$. Much faster
+ than either polroots or polrootsreal.
+ \bprog
+ ? T=poltchebi(500);
+ ? vecmax(abs(polroots(T)))
+ time = 5,706 ms.
+ %2 = 0.99999506520185816611184481744870013191
+ ? vecmax(abs(polrootsreal(T)))
+ time = 1,972 ms.
+ %3 = 0.99999506520185816611184481744870013191
+ ? polrootsbound(T)
+ time = 217 ms.
+ %4 = 1.0098792554165905155
+ ? polrootsbound(T, log(2)/2) \\ allow a factor 2, much faster
+ time = 51 ms.
+ %5 = 1.4065759938190154354
+ ? polrootsbound(T, 1e-4)
+ time = 504 ms.
+ %6 = 1.0000920717983847741
+ ? polrootsbound(T, 1e-6)
+ time = 810 ms.
+ %7 = 0.9999960628901692905
+ ? polrootsbound(T, 1e-10)
+ time = 1,351 ms.
+ %8 = 0.9999950652993869760
+ @eprog

@@ -1,0 +1,50 @@
+Function: bnrdisclist
+Section: number_fields
+C-Name: bnrdisclist0
+Prototype: GGDG
+Help: bnrdisclist(bnf,bound,{arch}): list of discriminants of
+ ray class fields of all conductors up to norm bound.
+ The ramified Archimedean places are given by arch; all possible values are
+ taken if arch is omitted. Supports the alternative syntax
+ bnrdisclist(bnf,list), where list is as output by ideallist or ideallistarch
+ (with units).
+Doc: $\var{bnf}$ being as output by \kbd{bnfinit} (with units), computes a
+ list of discriminants of Abelian extensions of the number field by increasing
+ modulus norm up to bound \var{bound}. The ramified Archimedean places are
+ given by \var{arch}; all possible values are taken if \var{arch} is omitted.
+
+ The alternative syntax $\kbd{bnrdisclist}(\var{bnf},\var{list})$ is
+ supported, where \var{list} is as output by \kbd{ideallist} or
+ \kbd{ideallistarch} (with units), in which case \var{arch} is disregarded.
+
+ The output $v$ is a vector, where $v[k]$ is itself a vector $w$, whose length
+ is the number of ideals of norm $k$.
+
+ \item We consider first the case where \var{arch} was specified. Each
+ component of $w$ corresponds to an ideal $m$ of norm $k$, and
+ gives invariants attached to the ray class field $L$ of $\var{bnf}$ of
+ conductor $[m, \var{arch}]$. Namely, each contains a vector $[m,d,r,D]$ with
+ the following meaning: $m$ is the prime ideal factorization of the modulus,
+ $d = [L:\Q]$ is the absolute degree of $L$, $r$ is the number of real places
+ of $L$, and $D$ is the factorization of its absolute discriminant. We set $d
+ = r = D = 0$ if $m$ is not the finite part of a conductor.
+
+ \item If \var{arch} was omitted, all $t = 2^{r_1}$ possible values are taken
+ and a component of $w$ has the form
+ $[m, [[d_1,r_1,D_1], \dots, [d_t,r_t,D_t]]]$,
+ where $m$ is the finite part of the conductor as above, and
+ $[d_i,r_i,D_i]$ are the invariants of the ray class field of conductor
+ $[m,v_i]$, where $v_i$ is the $i$-th Archimedean component, ordered by
+ inverse lexicographic order; so $v_1 = [0,\dots,0]$, $v_2 = [1,0\dots,0]$,
+ etc. Again, we set $d_i = r_i = D_i = 0$ if $[m,v_i]$ is not a conductor.
+
+ Finally, each prime ideal $pr = [p,\alpha,e,f,\beta]$ in the prime
+ factorization $m$ is coded as the integer $p\cdot n^2+(f-1)\cdot n+(j-1)$,
+ where $n$ is the degree of the base field and $j$ is such that
+
+ \kbd{pr = idealprimedec(\var{nf},p)[j]}.
+
+ \noindent $m$ can be decoded using \tet{bnfdecodemodule}.
+
+ Note that to compute such data for a single field, either \tet{bnrclassno}
+ or \tet{bnrdisc} are (much) more efficient.

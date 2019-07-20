@@ -1,0 +1,45 @@
+Function: algtype
+Section: algebras
+C-Name: algtype
+Prototype: lG
+Help: algtype(al): type of the algebra al.
+Doc: Given an algebra \var{al} output by \tet{alginit} or by \tet{algtableinit}, returns an integer indicating the type of algebra:
+
+ \item $0$: not a valid algebra.
+
+ \item $1$: table algebra output by \tet{algtableinit}.
+
+ \item $2$: central simple algebra output by \tet{alginit} and represented by
+ a multiplication table over its center.
+
+ \item $3$: central simple algebra output by \tet{alginit} and represented by
+ a cyclic algebra.
+ \bprog
+ ? algtype([])
+ %1 = 0
+ ? mt = [matid(3), [0,0,0; 1,1,0; 0,0,0], [0,0,1; 0,0,0; 1,0,1]];
+ ? A = algtableinit(mt,2);
+ ? algtype(A)
+ %4 = 1
+ ? nf = nfinit(y^3-5);
+ ?  a = y; b = y^2;
+ ?  {m_i = [0,a,0,0;
+            1,0,0,0;
+            0,0,0,a;
+            0,0,1,0];}
+ ?  {m_j = [0, 0,b, 0;
+            0, 0,0,-b;
+            1, 0,0, 0;
+            0,-1,0, 0];}
+ ?  {m_k = [0, 0,0,-a*b;
+            0, 0,b,   0;
+            0,-a,0,   0;
+            1, 0,0,   0];}
+ ?  mt = [matid(4), m_i, m_j, m_k];
+ ?  A = alginit(nf,mt,'x);
+ ? algtype(A)
+ %12 = 2
+ ? A = alginit(nfinit(y), [-1,-1]);
+ ? algtype(A)
+ %14 = 3
+ @eprog

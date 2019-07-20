@@ -1,0 +1,52 @@
+Function: lfuncheckfeq
+Section: l_functions
+C-Name: lfuncheckfeq
+Prototype: lGDGb
+Help: lfuncheckfeq(L,{t}): given an L-function (Lmath, Ldata or Linit),
+ check whether the functional equation is satisfied. If the function has
+ poles, the polar part must be specified. The program returns a bit accuracy
+ which should be a large negative value close to the current bit accuracy.
+ If t is given, it checks the functional equation for the theta function
+ at t and 1/t.
+
+Doc: Given the data attached to an $L$-function (\kbd{Lmath}, \kbd{Ldata}
+ or \kbd{Linit}), check whether the functional equation is satisfied.
+ This is most useful for an \kbd{Ldata} constructed ``by hand'', via
+ \kbd{lfuncreate}, to detect mistakes.
+
+ If the function has poles, the polar part must be specified. The routine
+ returns a bit accuracy $b$ such that $|w - \hat{w}| < 2^{b}$, where $w$ is
+ the root number contained in \kbd{data}, and
+ $$\hat{w} = \theta(1/t) t^{-k} / \overline{\theta}(t)$$ is a computed value
+ derived from the assumed functional equation. If the parameter $t$ is
+ omitted, we try random samples on the real line in the segment
+ $[1, 1.25]$. Of course, a large negative value of the order of
+ \kbd{realbitprecision} is expected but if $\overline{\theta}$ is very small
+ all over the sampled segment, you should first increase
+ \kbd{realbitprecision} by $-\log_2 |\overline{\theta}(t)|$ (which is
+ positive if $\theta$ is small) to get a meaningful result.
+
+ If $t$ is given, it should be close to the unit disc for efficiency and
+ such that $\overline{\theta}(t) \neq 0$. We then check the functional
+ equation at that $t$. Again, if $\overline{\theta}(t)$ is very small, you
+ should first increase \kbd{realbitprecision} to get a useful result.
+ \bprog
+ ? \pb 128       \\ 128 bits of accuracy
+ ? default(realbitprecision)
+ %1 = 128
+ ? L = lfuncreate(1);  \\ Riemann zeta
+ ? lfuncheckfeq(L)
+ %3 = -124
+ @eprog\noindent i.e. the given data is consistent to within 4 bits for the
+ particular check consisting of estimating the root number from all other
+ given quantities. Checking away from the unit disc will either fail with
+ a precision error, or give disappointing results (if $\theta(1/t)$ is
+ large it will be computed with a large absolute error)
+ \bprog
+ ? lfuncheckfeq(L, 2+I)
+ %4 = -115
+ ? lfuncheckfeq(L,10)
+  ***   at top-level: lfuncheckfeq(L,10)
+  ***                 ^------------------
+  *** lfuncheckfeq: precision too low in lfuncheckfeq.
+ @eprog

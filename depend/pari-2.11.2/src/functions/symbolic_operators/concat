@@ -1,0 +1,8 @@
+Function: __
+Help: __: integral concatenation of strings.
+Section: symbolic_operators
+Description:
+ (genstr, genstr):genstr                gconcat($1, $2)
+ (genstr, gen):genstr                   gconcat($1, $2)
+ (gen, genstr):genstr                   gconcat($1, $2)
+ (gen, gen):genstr                      gconcat($genstr:1, $2)

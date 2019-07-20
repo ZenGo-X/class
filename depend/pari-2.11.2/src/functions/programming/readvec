@@ -1,0 +1,33 @@
+Function: readvec
+Section: programming/specific
+C-Name: gp_readvec_file
+Prototype: D"",s,
+Help: readvec({filename}): create a vector whose components are the evaluation
+ of all the expressions found in the input file filename.
+Description:
+ (str):gen      gp_readvec_file($1)
+Doc: reads in the file
+ \var{filename} (subject to string expansion). If \var{filename} is
+ omitted, re-reads the last file that was fed into \kbd{gp}. The return
+ value is a vector whose components are the evaluation of all sequences
+ of instructions contained in the file. For instance, if \var{file} contains
+ \bprog
+ 1
+ 2
+ 3
+ @eprog\noindent
+ then we will get:
+ \bprog
+ ? \r a
+ %1 = 1
+ %2 = 2
+ %3 = 3
+ ? read(a)
+ %4 = 3
+ ? readvec(a)
+ %5 = [1, 2, 3]
+ @eprog
+ In general a sequence is just a single line, but as usual braces and
+ \kbd{\bs} may be used to enter multiline sequences.
+Variant: The underlying library function
+ \fun{GEN}{gp_readvec_stream}{FILE *f} is usually more flexible.

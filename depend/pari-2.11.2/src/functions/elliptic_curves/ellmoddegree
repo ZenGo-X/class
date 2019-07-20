@@ -1,0 +1,30 @@
+Function: ellmoddegree
+Section: elliptic_curves
+C-Name: ellmoddegree
+Prototype: G
+Help: ellmoddegree(e): e being an elliptic curve defined over Q output by
+ ellinit, compute the modular degree of e divided by the square of the
+ Manin constant.
+Doc: $e$ being an elliptic curve defined over $\Q$ output by \kbd{ellinit},
+ compute the modular degree of $e$ divided by the square of
+ the Manin constant $c$. It is conjectured that $c = 1$ for the strong Weil
+ curve in the isogeny class (optimal quotient of $J_0(N)$) and this can be
+ proven using \kbd{ellweilcurve} when the conductor $N$ is moderate.
+ \bprog
+ ? E = ellinit("11a1"); \\ from Cremona table: strong Weil curve and c = 1
+ ? [v,smith] = ellweilcurve(E); smith \\ proof of the above
+ %2 = [[1, 1], [5, 1], [1, 1/5]]
+ ? ellmoddegree(E)
+ %3 = 1
+ ? [ellidentify(e)[1][1] | e<-v]
+ %4 = ["11a1", "11a2", "11a3"]
+ ? ellmoddegree(ellinit("11a2"))
+ %5 = 5
+ ? ellmoddegree(ellinit("11a3"))
+ %6 = 1/5
+ @eprog\noindent The modular degree of \kbd{11a1} is $1$ (because
+ \kbd{ellweilcurve} or Cremona's table prove that the Manin constant
+ is $1$ for this curve); the output of \kbd{ellweilcurve} also proves
+ that the Manin constants of \kbd{11a2} and \kbd{11a3} are 1 and 5
+ respectively, so the actual modular degree of both \kbd{11a2} and \kbd{11a3}
+ is 5.

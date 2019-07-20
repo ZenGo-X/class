@@ -1,0 +1,31 @@
+Function: variables
+Section: conversions
+C-Name: variables_vec
+Prototype: DG
+Help: variables({x}): all variables occuring in object x, sorted by
+ decreasing priority. Returns the list of user variables if x is omitted.
+Doc:
+ returns the list of all variables occuring in object $x$ (all user
+ variables known to the interpreter if $x$ is omitted), sorted by
+ decreasing priority.
+ \bprog
+ ? variables([x^2 + y*z + O(t), a+x])
+ %1 = [x, y, z, t, a]
+ @eprog\noindent The construction
+ \bprog
+    if (!variables(x),...)
+ @eprog\noindent can be used to test whether a variable is attached to $x$.
+
+ If \kbd{varhigher} or \kbd{varlower} are used, it is quite possible to end up
+ with different variables (with different priorities) printed in the same
+ way: they will then appear multiple times in the output:
+ \bprog
+ ? y1 = varhigher("y");
+ ? y2 = varlower("y");
+ ? variables(y*y1*y2)
+ %4 = [y, y, y]
+ @eprog
+
+Variant:
+ Also available is \fun{GEN}{variables_vecsmall}{GEN x} which returns
+ the (sorted) variable numbers instead of the attached monomials of degree 1.

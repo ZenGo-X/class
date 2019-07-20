@@ -1,0 +1,14 @@
+Function: algpow
+Section: algebras
+C-Name: algpow
+Prototype: GGG
+Help: algpow(al,x,n): element x^n in al.
+Doc: Given an element $x$ in \var{al} and an integer $n$, computes the
+ power $x^n$ in the algebra \var{al}.
+ \bprog
+ ? A = alginit(nfinit(y), [-1,-1]);
+ ? algpow(A,[1,1,0,0]~,7)
+ %2 = [8, -8, 0, 0]~
+ @eprog
+
+ Also accepts a square matrix with coefficients in \var{al}.

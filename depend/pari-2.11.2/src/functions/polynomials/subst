@@ -1,0 +1,30 @@
+Function: subst
+Section: polynomials
+C-Name: gsubst
+Prototype: GnG
+Help: subst(x,y,z): in expression x, replace the variable y by the
+ expression z.
+Doc: replace the simple variable $y$ by the argument $z$ in the ``polynomial''
+ expression $x$. Every type is allowed for $x$, but if it is not a genuine
+ polynomial (or power series, or rational function), the substitution will be
+ done as if the scalar components were polynomials of degree zero. In
+ particular, beware that:
+
+ \bprog
+ ? subst(1, x, [1,2; 3,4])
+ %1 =
+ [1 0]
+
+ [0 1]
+
+ ? subst(1, x, Mat([0,1]))
+   ***   at top-level: subst(1,x,Mat([0,1])
+   ***                 ^--------------------
+   *** subst: forbidden substitution by a non square matrix.
+ @eprog\noindent
+ If $x$ is a power series, $z$ must be either a polynomial, a power
+ series, or a rational function. Finally, if $x$ is a vector,
+ matrix or list, the substitution is applied to each individual entry.
+
+ Use the function \kbd{substvec} to replace several variables at once,
+ or the function \kbd{substpol} to replace a polynomial expression.

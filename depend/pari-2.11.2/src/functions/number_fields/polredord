@@ -1,0 +1,7 @@
+Function: polredord
+Section: number_fields
+C-Name: polredord
+Prototype: G
+Obsolete: 2008-07-20
+Help: polredord(x): this function is obsolete, use polredbest.
+Doc: This function is obsolete, use polredbest.

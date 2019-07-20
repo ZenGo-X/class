@@ -1,0 +1,10 @@
+Function: sumdedekind
+Section: number_theoretical
+C-Name: sumdedekind
+Prototype: GG
+Help: sumdedekind(h,k): Dedekind sum attached to h,k.
+Doc: returns the \idx{Dedekind sum} attached to the integers $h$ and $k$,
+  corresponding to a fast implementation of
+  \bprog
+   s(h,k) = sum(n = 1, k-1, (n/k)*(frac(h*n/k) - 1/2))
+  @eprog

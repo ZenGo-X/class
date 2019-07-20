@@ -1,0 +1,32 @@
+Function: chargalois
+Section: number_theoretical
+C-Name: chargalois
+Prototype: GDG
+Help: chargalois(cyc,{ORD}): let cyc represent a finite abelian group G
+ by its elementary divisors cyc, return a list of representatives for the
+ Galois orbits of characters of G. If ORD is present, select characters
+ depending on their orders: if ORD is a t_INT, restrict to orders less than
+ this bound; if ORD is a t_VEC or t_VECSMALL, restrict to orders in the list.
+Doc: Let \var{cyc} represent a finite abelian group by its elementary divisors
+ (any object which has a \kbd{.cyc} method is also allowed, i.e. the output of
+ \kbd{znstar} or \kbd{bnrinit}). Return a list of representatives for the
+ Galois orbits of complex characters of $G$.
+ If \kbd{ORD} is present, select characters depending on their orders:
+
+ \item if \kbd{ORD} is a \typ{INT}, restrict to orders less than this
+ bound;
+
+ \item if \kbd{ORD} is a \typ{VEC} or \typ{VECSMALL}, restrict to orders in
+ the list.
+
+ \bprog
+ ? G = znstar(96);
+ ? #chargalois(G) \\ 16 orbits of characters mod 96
+ %2 = 16
+ ? #chargalois(G,4) \\ order less than 4
+ %3 = 12
+ ? chargalois(G,[1,4]) \\ order 1 or 4; 5 orbits
+ %4 = [[0, 0, 0], [2, 0, 0], [2, 1, 0], [2, 0, 1], [2, 1, 1]]
+ @eprog\noindent
+ Given a character $\chi$, of order $n$ (\kbd{charorder(G,chi)}), the
+ elements in its orbit are the $\phi(n)$ characters $\chi^i$, $(i,n)=1$.

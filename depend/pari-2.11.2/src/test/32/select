@@ -1,0 +1,23 @@
+[2, 5, 17, 37, 101, 197, 257, 401, 577, 677, 1297, 1601]
+Vecsmall([2, 3, 5])
+List([2, 3, 5])
+List([2, 3, 5])
+
+[1 2]
+
+[2 0]
+
+
+[0]
+
+[0]
+
+[]
+[1, 3]
+  ***   at top-level: select(x->x,v,1)
+  ***                 ^----------------
+  *** select: incorrect type in select (t_VECSMALL).
+  ***   at top-level: select(x->x,v)
+  ***                 ^--------------
+  *** select: incorrect type in select (t_VECSMALL).
+Total time spent: 0

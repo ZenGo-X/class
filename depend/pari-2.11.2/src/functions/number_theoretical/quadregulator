@@ -1,0 +1,9 @@
+Function: quadregulator
+Section: number_theoretical
+C-Name: quadregulator
+Prototype: Gp
+Help: quadregulator(x): regulator of the real quadratic field of
+ discriminant x.
+Doc: regulator of the quadratic field of positive discriminant $x$. Returns
+ an error if $x$ is not a discriminant (fundamental or not) or if $x$ is a
+ square. See also \kbd{quadclassunit} if $x$ is large.

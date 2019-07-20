@@ -1,0 +1,53 @@
+Function: idealfactorback
+Section: number_fields
+C-Name: idealfactorback
+Prototype: GGDGD0,L,
+Help: idealfactorback(nf,f,{e},{flag = 0}): given a factorization f, gives the
+ ideal product back. If e is present, f has to be a
+ vector of the same length, and we return the product of the f[i]^e[i]. If
+ flag is non-zero, perform idealred along the way.
+Doc: gives back the ideal corresponding to a factorization. The integer $1$
+ corresponds to the empty factorization.
+ If $e$ is present, $e$ and $f$ must be vectors of the same length ($e$ being
+ integral), and the corresponding factorization is the product of the
+ $f[i]^{e[i]}$.
+
+ If not, and $f$ is vector, it is understood as in the preceding case with $e$
+ a vector of 1s: we return the product of the $f[i]$. Finally, $f$ can be a
+ regular factorization, as produced by \kbd{idealfactor}.
+ \bprog
+ ? nf = nfinit(y^2+1); idealfactor(nf, 4 + 2*y)
+ %1 =
+ [[2, [1, 1]~, 2, 1, [1, 1]~] 2]
+
+ [[5, [2, 1]~, 1, 1, [-2, 1]~] 1]
+
+ ? idealfactorback(nf, %)
+ %2 =
+ [10 4]
+
+ [0  2]
+
+ ? f = %1[,1]; e = %1[,2]; idealfactorback(nf, f, e)
+ %3 =
+ [10 4]
+
+ [0  2]
+
+ ? % == idealhnf(nf, 4 + 2*y)
+ %4 = 1
+ @eprog
+ If \kbd{flag} is non-zero, perform ideal reductions (\tet{idealred}) along the
+ way. This is most useful if the ideals involved are all \emph{extended}
+ ideals (for instance with trivial principal part), so that the principal parts
+ extracted by \kbd{idealred} are not lost. Here is an example:
+ \bprog
+ ? f = vector(#f, i, [f[i], [;]]);  \\ transform to extended ideals
+ ? idealfactorback(nf, f, e, 1)
+ %6 = [[1, 0; 0, 1], [2, 1; [2, 1]~, 1]]
+ ? nffactorback(nf, %[2])
+ %7 = [4, 2]~
+ @eprog
+ The extended ideal returned in \kbd{\%6} is the trivial ideal $1$, extended
+ with a principal generator given in factored form. We use \tet{nffactorback}
+ to recover it in standard form.

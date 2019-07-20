@@ -1,0 +1,30 @@
+Function: numerator
+Section: conversions
+C-Name: numerator
+Prototype: GDG
+Help: numerator(f,{D}): numerator of f.
+Doc:
+ numerator of $f$. This is defined as \kbd{f * denominator(f,D)}, see
+ \kbd{denominator} for details. The optional argument $D$ allows to control
+ over which ring we compute the denominator:
+
+ \item $1$: we only consider the underlying $\Q$-structure and the
+ denominator is a (positive) rational integer
+
+ \item a simple variable, say \kbd{'x}: all entries as rational functions
+ in $K(x)$ and the denominator is a polynomial in $x$.
+
+ \bprog
+ ? f = x + 1/y + 1/2;
+ ? numerator(f) \\ a t_POL in x
+ %2 = x + ((y + 2)/(2*y))
+ ? numerator(f, 1) \\ Q-denominator is 2
+ %3 = x + ((y + 2)/y)
+ ? numerator(f, y) \\ as a rational function in y
+ %5 = 2*y*x + (y + 2)
+ @eprog
+Variant: Also available are
+ \fun{GEN}{numer}{GEN x}  which implements the not very useful default
+ behaviour ($D$ is \kbd{NULL}) and
+ \fun{GEN}{Q_remove_denom}{GEN x, GEN *ptd} ($D = 1$) and also returns the
+ denominator (coding $1$ as \kbd{NULL}).

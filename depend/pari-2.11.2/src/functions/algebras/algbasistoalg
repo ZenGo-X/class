@@ -1,0 +1,18 @@
+Function: algbasistoalg
+Section: algebras
+C-Name: algbasistoalg
+Prototype: GG
+Help: algbasistoalg(al,x): transforms the column vector x on the integral
+ basis of al into an element of al in algebraic form.
+
+Doc: Given an element \var{x} in the central simple algebra \var{al} output
+ by \tet{alginit}, transforms it to its algebraic representation in \var{al}.
+ This is the inverse function of \tet{algalgtobasis}.
+ \bprog
+ ? A = alginit(nfinit(y^2-5),[2,y]);
+ ? z = algbasistoalg(A,[0,1,0,0,2,-3,0,0]~);
+ ? liftall(z)
+ %3 = [(-1/2*y - 2)*x + (-1/4*y + 5/4), -3/4*y + 7/4]~
+ ? algalgtobasis(A,z)
+ %4 = [0, 1, 0, 0, 2, -3, 0, 0]~
+ @eprog

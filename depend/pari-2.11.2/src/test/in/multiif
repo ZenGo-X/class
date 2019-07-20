@@ -1,0 +1,22 @@
+f(x)=
+{
+  if(x==1,print(1));
+  if(x==1,print(1)
+         ,print("default"));
+  if(x==1,print(1)
+    ,x==2,print(2));
+  if(x==1,print(1)
+    ,x==2,print(2)
+         ,print("default"));
+  if(x==1,print(1)
+    ,x==2,print(2)
+    ,x==3,print(3));
+  if(x==1,print(1)
+    ,x==2,print(2)
+    ,x==3,print(3)
+    ,print("default"));
+}
+for(i=1,4,f(i));
+g(x)=if(x,return(1),return(2),return(3));
+g(1)
+g(0)

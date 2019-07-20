@@ -1,0 +1,11 @@
+Function: contfraceval
+Section: sums
+C-Name: contfraceval
+Prototype: GGD-1,L,
+Help: contfraceval(CF,t,{lim=-1}): given a continued fraction CF from
+ contfracinit, evaluate the first lim terms of the continued fraction at t
+ (all terms if lim is negative or omitted).
+Doc: Given a continued fraction \kbd{CF} output by \kbd{contfracinit}, evaluate
+ the first \kbd{lim} terms of the continued fraction at \kbd{t} (all
+ terms if \kbd{lim} is negative or omitted; if positive, \kbd{lim} must be
+ less than or equal to the length of \kbd{CF}.

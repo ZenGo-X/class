@@ -1,0 +1,7 @@
+Function: _.tu
+Help: _.tu
+Section: member_functions
+C-Name: member_tu
+Prototype: G
+Description:
+ (gen):gen:copy        member_tu($1)

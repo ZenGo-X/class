@@ -1,0 +1,13 @@
+Function: rnflllgram
+Section: number_fields
+C-Name: rnflllgram
+Prototype: GGGp
+Help: rnflllgram(nf,pol,order): given a pol with coefficients in nf and an
+ order as output by rnfpseudobasis or similar, gives [[neworder],U], where
+ neworder is a reduced order and U is the unimodular transformation matrix.
+Doc: given a polynomial
+ \var{pol} with coefficients in \var{nf} defining a relative extension $L$ and
+ a suborder \var{order} of $L$ (of maximal rank), as output by
+ \kbd{rnfpseudobasis}$(\var{nf},\var{pol})$ or similar, gives
+ $[[\var{neworder}],U]$, where \var{neworder} is a reduced order and $U$ is
+ the unimodular transformation matrix.

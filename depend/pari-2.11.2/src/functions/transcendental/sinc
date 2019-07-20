@@ -1,0 +1,9 @@
+Function: sinc
+Section: transcendental
+C-Name: gsinc
+Prototype: Gp
+Help: sinc(x): sinc function of x.
+Doc: cardinal sine of $x$, i.e. $\sin(x)/x$ if $x\neq 0$, $1$ otherwise.
+ Note that this function also allows to compute
+ $$(1-\cos(x)) / x^2 = \kbd{sinc}(x/2)^2 / 2$$
+ accurately near $x = 0$.

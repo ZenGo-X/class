@@ -1,0 +1,10 @@
+Function: Catalan
+Section: transcendental
+C-Name: mpcatalan
+Prototype: p
+Help: Catalan=Catalan(): Catalan's number with current precision.
+Description:
+ ():real:prec        mpcatalan($prec)
+Doc: Catalan's constant $G = \sum_{n>=0}\dfrac{(-1)^n}{(2n+1)^2}=0.91596\cdots$.
+ Note that \kbd{Catalan} is one of the few reserved names which cannot be
+ used for user variables.

@@ -1,0 +1,16 @@
+Function: polinterpolate
+Section: polynomials
+C-Name: polint
+Prototype: GDGDGD&
+Help: polinterpolate(X,{Y},{t = 'x},{&e}): polynomial interpolation at t
+ according to data vectors X, Y (i.e. given P of minimal degree
+ such that P(X[i]) = Y[i] for all i, return P(t)). If Y is omitted,
+ take P such that P(i) = X[i]. If present, e will contain an error estimate on
+ the returned value.
+Doc: given the data vectors
+ $X$ and $Y$ of the same length $n$ ($X$ containing the $x$-coordinates,
+ and $Y$ the corresponding $y$-coordinates), this function finds the
+ \idx{interpolating polynomial} $P$ of minimal degree passing through these
+ points and evaluates it at~$t$. If $Y$ is omitted, the polynomial $P$
+ interpolates the $(i,X[i])$. If present, $e$ will contain an error estimate
+ on the returned value.

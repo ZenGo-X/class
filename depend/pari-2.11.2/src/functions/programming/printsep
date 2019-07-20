@@ -1,0 +1,14 @@
+Function: printsep
+Section: programming/specific
+C-Name: printsep
+Prototype: vss*
+Help: printsep(sep,{str}*): outputs its string arguments (in raw format),
+ separated by 'sep', ending with a newline.
+Doc: outputs its arguments in raw format, ending with a newline.
+ The arguments are converted to strings following the rules in
+ \secref{se:strings}. Successive entries are separated by \var{sep}:
+ \bprog
+ ? printsep(":", 1,2,3,4)
+ 1:2:3:4
+ @eprog
+ %\syn{NO}

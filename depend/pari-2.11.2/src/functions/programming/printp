@@ -1,0 +1,22 @@
+Function: printp
+Section: programming/specific
+C-Name: printp
+Prototype: vs*
+Help: printp({str}*): outputs its string arguments (in prettymatrix format)
+ ending with a newline.
+Description:
+ (?gen,...):void  pari_printf("${2 format_string}\n"${2 format_args})
+Doc: outputs its arguments in prettymatrix format, ending with a
+ newline. The arguments are converted to strings following the rules in
+ \secref{se:strings}.
+ \bprog
+ ? m = matid(2);
+ ? print(m)  \\ raw format
+ [1, 0; 0, 1]
+ ? printp(m) \\ prettymatrix format
+
+ [1 0]
+
+ [0 1]
+ @eprog
+ %\syn{NO}

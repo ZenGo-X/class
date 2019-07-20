@@ -1,0 +1,32 @@
+Function: matadjoint
+Section: linear_algebra
+C-Name: matadjoint0
+Prototype: GD0,L,
+Help: matadjoint(M,{flag=0}): adjoint matrix of M using Leverrier-Faddeev's
+ algorithm. If flag is 1, compute the characteristic polynomial independently
+ first.
+Doc:
+ \idx{adjoint matrix} of $M$, i.e.~a matrix $N$
+ of cofactors of $M$, satisfying $M*N=\det(M)*\Id$. $M$ must be a
+ (non-necessarily invertible) square matrix of dimension $n$.
+ If $\fl$ is 0 or omitted, we try to use Leverrier-Faddeev's algorithm,
+ which assumes that $n!$ invertible. If it fails or $\fl = 1$,
+ compute $T = \kbd{charpoly}(M)$ independently first and return
+ $(-1)^{n-1} (T(x)-T(0))/x$ evaluated at $M$.
+ \bprog
+ ? a = [1,2,3;3,4,5;6,7,8] * Mod(1,4);
+ %2 =
+ [Mod(1, 4) Mod(2, 4) Mod(3, 4)]
+
+ [Mod(3, 4) Mod(0, 4) Mod(1, 4)]
+
+ [Mod(2, 4) Mod(3, 4) Mod(0, 4)]
+ @eprog\noindent
+ Both algorithms use $O(n^4)$ operations in the base ring, and are usually
+ slower than computing the characteristic polynomial or the inverse of $M$
+ directly.
+Variant: Also available are
+ \fun{GEN}{adj}{GEN x} (\fl=0) and
+ \fun{GEN}{adjsafe}{GEN x} (\fl=1).
+
+

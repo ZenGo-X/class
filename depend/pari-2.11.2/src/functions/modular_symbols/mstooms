@@ -1,0 +1,67 @@
+Function: mstooms
+Section: modular_symbols
+C-Name: mstooms
+Prototype: GG
+Help: mstooms(Mp, phi): given Mp from mspadicinit, lift the
+ (classical) eigen symbol phi to a distribution-valued overconvergent symbol
+ in the sense of Pollack and Stevens.
+ The resulting overconvergent eigensymbol can then be used in
+ mspadicmoments, then mspadicL or mspadicseries.
+Doc: given \kbd{Mp} from \kbd{mspadicinit}, lift the (classical) eigen symbol
+ \kbd{phi} to a $p$-adic distribution-valued overconvergent symbol in the
+ sense of Pollack and Stevens. More precisely, let $\phi$ belong to the space
+ $W$ of modular symbols of level $N$, $v_p(N) \leq 1$, and weight $k$ which is
+ an eigenvector for the Hecke operator $T_N(p)$ for a non-zero eigenvalue
+ $a_p$ and let $N_0 = \text{lcm}(N,p)$.
+
+ Under the action of $T_{N_0}(p)$, $\phi$ generates a subspace $W_\phi$ of
+ dimension $1$ (if $p\mid N$) or $2$ (if $p$ does not divide $N$) in the
+ space of modular symbols of level $N_0$.
+
+ Let $V_p=[p,0;0,1]$ and $C_p=[a_p,p^{k-1};-1,0]$.
+ When $p$ does not divide $N$ and $a_p$ is divisible by $p$, \kbd{mstooms}
+ returns the lift $\Phi$ of $(\phi,\phi|_k V_p)$ such that
+  $$T_{N_0}(p) \Phi = C_p \Phi$$
+
+ When $p$ does not divide $N$ and $a_p$ is not divisible by $p$, \kbd{mstooms}
+ returns the lift $\Phi$ of $\phi - \alpha^{-1} \phi|_k V_p$
+ which is an eigenvector of $T_{N_0}(p)$ for the unit eigenvalue
+ where $\alpha^2 - a_p \alpha + p^{k-1}=0$.
+
+ The resulting overconvergent eigensymbol can then be used in
+ \tet{mspadicmoments}, then \tet{mspadicL} or \tet{mspadicseries}.
+ \bprog
+ ? M = msinit(3,6, 1); p = 5;
+ ? Tp = mshecke(M, p); factor(charpoly(Tp))
+ %2 =
+ [x - 3126 2]
+
+ [   x - 6 1]
+ ? phi = matker(Tp - 6)[,1] \\ generator of p-Eigenspace, a_p = 6
+ %3 = [5, -3, -1]~
+ ? Mp = mspadicinit(M, p, 10, 0); \\ restrict to ordinary symbols, mod p^10
+ ? PHI = mstooms(Mp, phi);
+ ? mu = mspadicmoments(Mp, PHI);
+ ? mspadicL(mu)
+ %7 = 5 + 2*5^2 + 2*5^3 + ...
+ @eprog
+ A non ordinary symbol.
+ \bprog
+ ? M = msinit(4,6,1); p = 3;
+ ? Tp = mshecke(M, p); factor(charpoly(Tp))
+ %2 =
+ [x - 244 3]
+
+ [ x + 12 1]
+ ? phi = matker(Tp + 12)[,1] \\ a_p = -12 is divisible by p = 3
+ %3 = [-1/32, -1/4, -1/32, 1]~
+ ? msissymbol(M,phi)
+ %4 = 1
+ ? Mp = mspadicinit(M,3,5,0);
+ ? PHI = mstooms(Mp,phi);
+  ***   at top-level: PHI=mstooms(Mp,phi)
+  ***                     ^---------------
+  *** mstooms: incorrect type in mstooms [v_p(ap) > mspadicinit flag] (t_VEC).
+ ? Mp = mspadicinit(M,3,5,1);
+ ? PHI = mstooms(Mp,phi);
+ @eprog

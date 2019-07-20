@@ -1,0 +1,59 @@
+F="io-testfile";
+del()=system(Str("rm -f ", F));
+del()
+write(F, 123)
+write(F, 456)
+write1(F, "a",7)
+write1(F, "b")
+write(F)
+writetex(F, 1/2)
+readstr(F)
+del()
+\\
+write(F, 1)
+write(F, "1+2")
+readvec(F)
+del()
+\\
+writebin(F,1)
+read(F)
+del()
+writebin(F)
+read(F)
+del()
+L=List();writebin(F,L)
+read(F)
+del()
+\\
+write(F,"1+1")
+extern("cat "F)
+externstr("cat "F)
+del()
+{
+  my(f=fileopen(F,"w"));
+  for(i=1,10, filewrite(f,i));
+  fileclose(f);
+  my(f=fileopen(F,"a"));
+  for(i=1,10, filewrite1(f,i); fileflush(f));
+  filewrite1(f,"\n");
+  fileclose(f);
+  my(i=0,l,f=fileopen(F));
+  while(l=fileread(f),
+    print(i++,":",eval(l)));
+  fileclose(f);
+  my(i=0,l,f=fileopen(F,"r"));
+  while(l=filereadstr(f),
+    print(i++,":",l));
+  fileflush();
+  fileclose(f);
+}
+my(f=fileopen(F));fileclose(f);fileread(f)
+my(f=fileopen(F));fileclose(f);filereadstr(f)
+my(f=fileopen(F));fileclose(f);filewrite(f,"b")
+my(f=fileopen(F));fileclose(f);filewrite1(f,"b")
+my(f=fileopen(F));fileclose(f);fileflush(f)
+my(f=fileopen(F,"w"));fileread(f)
+my(f=fileopen(F,"a"));filereadstr(f)
+my(f=fileopen(F));filewrite(f,"b");
+my(f=fileopen(F,"r"));filewrite1(f,"b");
+fileflush('x)

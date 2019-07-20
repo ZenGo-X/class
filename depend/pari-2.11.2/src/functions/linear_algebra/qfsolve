@@ -1,0 +1,26 @@
+Function: qfsolve
+Section: linear_algebra
+C-Name: qfsolve
+Prototype: G
+Help: qfsolve(G): solve over Q the quadratic equation X^t G X = 0, where
+ G is a symmetric matrix.
+Doc: Given a square symmetric matrix $G$ of dimension $n \geq 1$, solve over
+ $\Q$ the quadratic equation $X^tGX = 0$. The matrix $G$ must have rational
+ coefficients. The solution might be a single non-zero vector (vectorv) or a
+ matrix (whose columns generate a totally isotropic subspace).
+
+ If no solution exists, returns an integer, that can be a prime $p$ such that
+ there is no local solution at $p$, or $-1$ if there is no real solution,
+ or $-2$ if $n = 2$ and $-\det G$ is positive but not a square (which implies
+ there is a real solution, but no local solution at some $p$ dividing $\det G$).
+ \bprog
+ ? G = [1,0,0;0,1,0;0,0,-34];
+ ? qfsolve(G)
+ %1 = [-3, -5, 1]~
+ ? qfsolve([1,0; 0,2])
+ %2 = -1   \\ no real solution
+ ? qfsolve([1,0,0;0,3,0; 0,0,-2])
+ %3 = 3    \\ no solution in Q_3
+ ? qfsolve([1,0; 0,-2])
+ %4 = -2   \\ no solution, n = 2
+ @eprog

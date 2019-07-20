@@ -1,0 +1,11 @@
+Function: asin
+Section: transcendental
+C-Name: gasin
+Prototype: Gp
+Help: asin(x): arc sine of x.
+Doc: principal branch of $\sin^{-1}(x) = -i \log(ix + \sqrt{1 - x^2})$.
+ In particular, $\Re(\text{asin}(x))\in [-\pi/2,\pi/2]$ and if $x\in \R$ and
+ $|x|>1$ then $\text{asin}(x)$ is complex. The branch cut is in two pieces:
+ $]-\infty,-1]$, continuous with quadrant II, and $[1,+\infty[$ continuous
+ with quadrant IV. The function satisfies $i \text{asin}(x) =
+ \text{asinh}(ix)$.

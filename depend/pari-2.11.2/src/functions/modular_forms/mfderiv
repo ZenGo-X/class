@@ -1,0 +1,17 @@
+Function: mfderiv
+Section: modular_forms
+C-Name: mfderiv
+Prototype: GD1,L,
+Help: mfderiv(F,{m=1}): m-th formal derivative of the power series
+ corresponding to the generalized modular form F, with respect to the
+ differential operator q.d/dq (default m=1).
+Doc:  $m$-th formal derivative of the power series corresponding to
+ the generalized modular form $F$, with respect to the differential operator
+ $qd/dq$ (default $m=1$).
+ \bprog
+ ? D=mfDelta();
+ ? mfcoefs(D, 4)
+ %2 = [0, 1, -24, 252, -1472]
+ ? mfcoefs(mfderiv(D), 4)
+ %3 = [0, 1, -48, 756, -5888]
+ @eprog

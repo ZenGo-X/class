@@ -1,0 +1,64 @@
+Function: ellisotree
+Section: elliptic_curves
+C-Name: ellisotree
+Prototype: G
+Help: ellisotree(E): E being an elliptic curve over Q or a set of isogenous
+ rational curves as given by ellisomat, return minimal models of the isomorphism
+ classes of elliptic curves isogenous to E (or in the set) and the oriented
+ graph of isogenies of prime degree (adjacency matrix).
+Doc: Given an elliptic curve $E$ defined over $\Q$ or a set of
+ $\Q$-isogenous curves as given by \kbd{ellisomat}, return a pair $[L,M]$ where
+
+ \item $L$ lists the minimal models of the isomorphism classes of elliptic
+ curves $\Q$-isogenous to $E$ (or in the set of isogenous curves),
+
+ \item $M$ is the adjacency matrix of the prime degree isogenies tree:
+ there is an edge from $E_i$ to $E_j$ if there is an isogeny $E_i \to E_j$ of
+ prime degree such that the N\'eron differential forms are preserved.
+
+ \bprog
+ ? E = ellinit("14a1");
+ ? [L,M] = ellisotree(E);
+ ? M
+ %3 =
+ [0 0 3 2 0 0]
+
+ [3 0 0 0 2 0]
+
+ [0 0 0 0 0 2]
+
+ [0 0 0 0 0 3]
+
+ [0 0 0 3 0 0]
+
+ [0 0 0 0 0 0]
+ ? [L2,M2] = ellisotree(ellisomat(E,2,1));
+ %4 =
+ [0 2]
+
+ [0 0]
+ ? [L3,M3] = ellisotree(ellisomat(E,3,1));
+ ? M3
+ %6 =
+ [0 0 3]
+
+ [3 0 0]
+
+ [0 0 0]
+ @eprog\noindent Compare with the result of \kbd{ellisomat}.
+ \bprog
+ ? [L,M]=ellisomat(E,,1);
+ ? M
+ %7 =
+ [1  3  3 2  6  6]
+
+ [3  1  9 6  2 18]
+
+ [3  9  1 6 18  2]
+
+ [2  6  6 1  3  3]
+
+ [6  2 18 3  1  9]
+
+ [6 18  2 3  9  1]
+ @eprog

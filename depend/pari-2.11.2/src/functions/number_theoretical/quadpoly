@@ -1,0 +1,19 @@
+Function: quadpoly
+Section: number_theoretical
+C-Name: quadpoly0
+Prototype: GDn
+Help: quadpoly(D,{v='x}): quadratic polynomial corresponding to the
+ discriminant D, in variable v.
+Doc: creates the ``canonical'' quadratic
+ polynomial (in the variable $v$) corresponding to the discriminant $D$,
+ i.e.~the minimal polynomial of $\kbd{quadgen}(D)$. $D$ must be an integer
+ congruent to 0 or 1 modulo 4, which is not a square.
+
+ \bprog
+ ? quadpoly(5,'y)
+ %1 = y^2 - y - 1
+ ? quadpoly(0,'y)
+  ***   at top-level: quadpoly(0,'y)
+  ***                 ^--------------
+  *** quadpoly: domain error in quadpoly: issquare(disc) = 1
+ @eprog

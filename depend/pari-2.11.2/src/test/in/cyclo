@@ -1,0 +1,39 @@
+allocatemem(8000000);
+poliscyclo(1)
+poliscyclo(x^0)
+poliscyclo(x)
+for (i=1,100, if (poliscyclo(polcyclo(i)) != i, error(i)))
+for (i=1,100, if (!poliscycloprod(x^i-1), error(i)))
+poliscyclo(polcyclo(10^5))
+poliscyclo(polcyclo(12345))
+{
+  for (i=1,10,
+    f = polcyclo(i);
+    for(j=i+1,10,
+      g = f*polcyclo(j);
+      if (poliscyclo(g), error("is ", [i,j]));
+      if (!poliscycloprod(g), error("prod ", [i,j]));
+      print (polcyclofactors(g))
+    )
+  );
+}
+poliscycloprod((x-1)^2)
+poliscycloprod((x+1)^2*(x-1))
+test(n,t)= if (polcyclo(n,t) != subst(polcyclo(n),x,t), error([n,t]));
+test(5,1);test(5,-1);
+test(10,1);test(10,-1);
+test(40,1);test(40,-1);
+test(2,-1);
+test(10,-1);
+test(11,-1);
+test(5,Mod(-1,3))
+
+\\ roots of 1
+test(20, I)
+test(10, Mod(3,11))
+test(10, 2 + O(11))
+test(30, -1.0)
+z15 = Mod(t,polcyclo(15,t));
+test(15, z15)
+test(30, z15)
+test(105, z15)

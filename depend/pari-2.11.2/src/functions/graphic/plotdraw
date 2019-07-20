@@ -1,0 +1,17 @@
+Function: plotdraw
+Section: graphic
+C-Name: plotdraw
+Prototype: vGD0,L,
+Help: plotdraw(w, {flag=0}): draw rectwindow w. More generally,
+ w can be of the form [w1,x1,y1, w2,x2,y2,etc.]: draw rectwindows wi
+ at given xi,yi positions. If flag!=0, the xi,yi express fractions of the size
+ of the current output device.
+Doc: physically draw the rectwindow $w$. More generally,
+ $w$ can be of the form $[w_1,x_1,y_1,w_2,x_2,y_2,\dots]$ (number of
+ components must be divisible by $3$; the windows $w_1$, $w_2$, etc.~are
+ physically placed with their upper left corner at physical position
+ $(x_1,y_1)$, $(x_2,y_2)$,\dots\ respectively, and are then drawn together.
+ Overlapping regions will thus be drawn twice, and the windows are considered
+ transparent. Then display the whole drawing in a window on your screen.
+ If $\fl \neq 0$, $x_1$, $y_1$ etc. express fractions of the size of the
+ current output device

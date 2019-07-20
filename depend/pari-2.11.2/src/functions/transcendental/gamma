@@ -1,0 +1,22 @@
+Function: gamma
+Section: transcendental
+C-Name: ggamma
+Prototype: Gp
+Help: gamma(s): gamma function at s, a complex or p-adic number, or a series.
+Doc: For $s$ a complex number, evaluates Euler's gamma
+ function \sidx{gamma-function}
+ $$\Gamma(s)=\int_0^\infty t^{s-1}\exp(-t)\,dt.$$
+ Error if $s$ is a non-positive integer, where $\Gamma$ has a pole.
+
+ For $s$ a \typ{PADIC}, evaluates the Morita gamma function at $s$, that
+ is the unique continuous $p$-adic function on the $p$-adic integers
+ extending $\Gamma_p(k)=(-1)^k \prod_{j<k}'j$, where the prime means that $p$
+ does not divide $j$.
+ \bprog
+ ? gamma(1/4 + O(5^10))
+ %1= 1 + 4*5 + 3*5^4 + 5^6 + 5^7 + 4*5^9 + O(5^10)
+ ? algdep(%,4)
+ %2 = x^4 + 4*x^2 + 5
+ @eprog
+Variant: For a \typ{PADIC} $x$, the function \fun{GEN}{Qp_gamma}{GEN x} is
+ also available.

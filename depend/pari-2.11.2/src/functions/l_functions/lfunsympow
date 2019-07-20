@@ -1,0 +1,10 @@
+Function: lfunsympow
+Section: l_functions
+C-Name: lfunsympow
+Prototype: GU
+Help: lfunsympow(E, m): returns the Ldata structure attached to the
+ L-function attached to m-th symmetric power of the elliptic curve E defined
+ over the rationals.
+Doc: returns the \kbd{Ldata} structure attached to the $L$ function
+ attached to the $m$-th symmetric power of the elliptic curve $E$ defined over
+ the rationals.

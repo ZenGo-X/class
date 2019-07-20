@@ -1,0 +1,9 @@
+Function: qfbpowraw
+Section: number_theoretical
+C-Name: qfbpowraw
+Prototype: GL
+Help: qfbpowraw(x,n): n-th power without reduction of the binary quadratic
+ form x.
+Doc: $n$-th power of the binary quadratic form
+ $x$, computed without doing any \idx{reduction} (i.e.~using \kbd{qfbcompraw}).
+ Here $n$ must be non-negative and $n<2^{31}$.

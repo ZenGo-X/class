@@ -1,0 +1,11 @@
+Function: _def_recover
+Class: default
+Section: default
+C-Name: sd_recover
+Prototype:
+Help:
+Doc: this toggle is either 1 (on) or 0 (off). If you change this to $0$, any
+ error becomes fatal and causes the gp interpreter to exit immediately. Can be
+ useful in batch job scripts.
+
+ The default value is \kbd{1}.

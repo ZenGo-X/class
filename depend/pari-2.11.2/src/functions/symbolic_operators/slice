@@ -1,0 +1,14 @@
+Function: _[_.._]
+Section: symbolic_operators
+C-Name: vecslice0
+Prototype: GD0,L,L
+Help: x[a..b] = [x[a],x[a+1],...,x[b]]
+
+Function: _[_.._,_.._]
+Section: symbolic_operators
+C-Name: matslice0
+Prototype: GD0,L,D0,L,D0,L,D0,L,
+Help: x[a..b,c..d] = [x[a,c],  x[a+1,c],  ...,x[b,c];
+                      x[a,c+1],x[a+1,c+1],...,x[b,c+1];
+                        ...       ...          ...
+                      x[a,d],  x[a+1,d]  ,...,x[b,d]]

@@ -1,0 +1,11 @@
+#! /bin/sh
+t=$1; shift
+if test -n "$t"; then
+  L=-Wl
+  for c in "$@"; do
+    L=$L,"$c"
+  done;
+  echo $L
+else
+  echo "$@"
+fi

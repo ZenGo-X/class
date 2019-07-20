@@ -1,0 +1,182 @@
+Function: nfinit
+Section: number_fields
+C-Name: nfinit0
+Prototype: GD0,L,p
+Help: nfinit(pol,{flag=0}): pol being a nonconstant irreducible polynomial,
+ gives the vector: [pol,[r1,r2],discf,index,[M,MC,T2,T,different] (see
+ manual),r1+r2 first roots, integral basis, matrix of power basis in terms of
+ integral basis, multiplication table of basis]. flag is optional and can be
+ set to 0: default; 1: do not compute different; 2: first use polred to find
+ a simpler polynomial; 3: outputs a two-element vector [nf,Mod(a,P)], where
+ nf is as in 2 and Mod(a,P) is a polmod equal to Mod(x,pol) and P=nf.pol.
+Description:
+ (gen, ?0):nf:prec       nfinit0($1, 0, $prec)
+ (gen, 1):nf:prec        nfinit0($1, 1, $prec)
+ (gen, 2):nf:prec        nfinit0($1, 2, $prec)
+ (gen, 3):gen:prec       nfinit0($1, 3, $prec)
+ (gen, 4):nf:prec        nfinit0($1, 4, $prec)
+ (gen, 5):gen:prec       nfinit0($1, 5, $prec)
+ (gen, #small):void      $"incorrect flag in nfinit"
+ (gen, small):gen:prec   nfinit0($1, $2, $prec)
+Doc: \var{pol} being a non-constant,
+ preferably monic, irreducible polynomial in $\Z[X]$, initializes a
+ \emph{number field} structure (\kbd{nf}) attached to the field $K$ defined
+ by \var{pol}. As such, it's a technical object passed as the first argument
+ to most \kbd{nf}\var{xxx} functions, but it contains some information which
+ may be directly useful. Access to this information via \emph{member
+ functions} is preferred since the specific data organization given below
+ may change in the future. Currently, \kbd{nf} is a row vector with 9
+ components:
+
+ $\var{nf}[1]$ contains the polynomial \var{pol} (\kbd{\var{nf}.pol}).
+
+ $\var{nf}[2]$ contains $[r1,r2]$ (\kbd{\var{nf}.sign}, \kbd{\var{nf}.r1},
+ \kbd{\var{nf}.r2}), the number of real and complex places of $K$.
+
+ $\var{nf}[3]$ contains the discriminant $d(K)$ (\kbd{\var{nf}.disc}) of $K$.
+
+ $\var{nf}[4]$ contains the index of $\var{nf}[1]$ (\kbd{\var{nf}.index}),
+ i.e.~$[\Z_K : \Z[\theta]]$, where $\theta$ is any root of $\var{nf}[1]$.
+
+ $\var{nf}[5]$ is a vector containing 7 matrices $M$, $G$, \var{roundG}, $T$,
+ $MD$, $TI$, $MDI$ useful for certain computations in the number field $K$.
+
+ \quad\item $M$ is the $(r1+r2)\times n$ matrix whose columns represent
+ the numerical values of the conjugates of the elements of the integral
+ basis.
+
+ \quad\item $G$ is an $n\times n$ matrix such that $T2 = {}^t G G$,
+ where $T2$ is the quadratic form $T_2(x) = \sum |\sigma(x)|^2$, $\sigma$
+ running over the embeddings of $K$ into $\C$.
+
+ \quad\item \var{roundG} is a rescaled copy of $G$, rounded to nearest
+ integers.
+
+ \quad\item $T$ is the $n\times n$ matrix whose coefficients are
+ $\text{Tr}(\omega_i\omega_j)$ where the $\omega_i$ are the elements of the
+ integral basis. Note also that $\det(T)$ is equal to the discriminant of the
+ field $K$. Also, when understood as an ideal, the matrix $T^{-1}$
+ generates the codifferent ideal.
+
+ \quad\item The columns of $MD$ (\kbd{\var{nf}.diff}) express a $\Z$-basis
+ of the different of $K$ on the integral basis.
+
+ \quad\item $TI$ is equal to the primitive part of $T^{-1}$, which has integral
+ coefficients.
+
+ \quad\item Finally, $MDI$ is a two-element representation (for faster
+ ideal product) of $d(K)$ times the codifferent ideal
+ (\kbd{\var{nf}.disc$*$\var{nf}.codiff}, which is an integral ideal). $MDI$
+ is only used in \tet{idealinv}.
+
+ $\var{nf}[6]$ is the vector containing the $r1+r2$ roots
+ (\kbd{\var{nf}.roots}) of $\var{nf}[1]$ corresponding to the $r1+r2$
+ embeddings of the number field into $\C$ (the first $r1$ components are real,
+ the next $r2$ have positive imaginary part).
+
+ $\var{nf}[7]$ is an integral basis for $\Z_K$ (\kbd{\var{nf}.zk}) expressed
+ on the powers of~$\theta$. Its first element is guaranteed to be $1$. This
+ basis is LLL-reduced with respect to $T_2$ (strictly speaking, it is a
+ permutation of such a basis, due to the condition that the first element be
+ $1$).
+
+ $\var{nf}[8]$ is the $n\times n$ integral matrix expressing the power
+ basis in terms of the integral basis, and finally
+
+ $\var{nf}[9]$ is the $n\times n^2$ matrix giving the multiplication table
+ of the integral basis.
+
+ If a non monic polynomial is input, \kbd{nfinit} will transform it into a
+ monic one, then reduce it (see $\fl=3$). It is allowed, though not very
+ useful given the existence of \tet{nfnewprec}, to input a \var{nf} or a
+ \var{bnf} instead of a polynomial. It is also allowed to
+ input a \var{rnf}, in which case an \kbd{nf} structure attached to the
+ absolute defining polynomial \kbd{polabs} is returned (\fl is then ignored).
+
+ \bprog
+ ? nf = nfinit(x^3 - 12); \\ initialize number field Q[X] / (X^3 - 12)
+ ? nf.pol   \\ defining polynomial
+ %2 = x^3 - 12
+ ? nf.disc  \\ field discriminant
+ %3 = -972
+ ? nf.index \\ index of power basis order in maximal order
+ %4 = 2
+ ? nf.zk    \\ integer basis, lifted to Q[X]
+ %5 = [1, x, 1/2*x^2]
+ ? nf.sign  \\ signature
+ %6 = [1, 1]
+ ? factor(abs(nf.disc ))  \\ determines ramified primes
+ %7 =
+ [2 2]
+
+ [3 5]
+ ? idealfactor(nf, 2)
+ %8 =
+ [[2, [0, 0, -1]~, 3, 1, [0, 1, 0]~] 3]  \\ @com $\goth{p}_2^3$
+ @eprog
+
+ \misctitle{Huge discriminants, helping nfdisc}
+
+ In case \var{pol} has a huge discriminant which is difficult to factor,
+ it is hard to compute from scratch the maximal order. The special input
+ format $[\var{pol}, B]$ is also accepted where \var{pol} is a polynomial as
+ above and $B$ has one of the following forms
+
+ \item an integer basis, as would be computed by \tet{nfbasis}: a vector of
+ polynomials with first element $1$. This is useful if the maximal order is
+ known in advance.
+
+ \item an argument \kbd{listP} which specifies a list of primes (see
+ \tet{nfbasis}). Instead of the maximal order, \kbd{nfinit} then computes an
+ order which is maximal at these particular primes as well as the primes
+ contained in the private prime table (see \tet{addprimes}). The result is
+ unconditionaly correct when the discriminant \kbd{nf.disc} factors
+ completely over this set of primes. The function \tet{nfcertify} automates
+ this:
+ \bprog
+ ? pol = polcompositum(x^5 - 101, polcyclo(7))[1];
+ ? nf = nfinit( [pol, 10^3] );
+ ? nfcertify(nf)
+ %3 = []
+ @eprog\noindent A priori, \kbd{nf.zk} defines an order which is only known
+ to be maximal at all primes $\leq 10^3$ (no prime $\leq 10^3$ divides
+ \kbd{nf.index}). The certification step proves the correctness of the
+ computation. Had it failed, that particular \kbd{nf} structure could
+ not have been trusted and may have caused routines using it to fail randomly.
+ One particular function that remains trustworthy in all cases is
+ \kbd{idealprimedec} when applied to a prime included in the above list
+ of primes or, more generally, a prime not dividing any entry in
+ \kbd{nfcertify} output.
+ \medskip
+
+ If $\fl=2$: \var{pol} is changed into another polynomial $P$ defining the same
+ number field, which is as simple as can easily be found using the
+ \tet{polredbest} algorithm, and all the subsequent computations are done
+ using this new polynomial. In particular, the first component of the result
+ is the modified polynomial.
+
+ If $\fl=3$, apply \kbd{polredbest} as in case 2, but outputs
+ $[\var{nf},\kbd{Mod}(a,P)]$, where $\var{nf}$ is as before and
+ $\kbd{Mod}(a,P)=\kbd{Mod}(x,\var{pol})$ gives the change of
+ variables. This is implicit when \var{pol} is not monic: first a linear change
+ of variables is performed, to get a monic polynomial, then \kbd{polredbest}.
+Variant: Also available are
+ \fun{GEN}{nfinit}{GEN x, long prec} ($\fl = 0$),
+ \fun{GEN}{nfinitred}{GEN x, long prec} ($\fl = 2$),
+ \fun{GEN}{nfinitred2}{GEN x, long prec} ($\fl = 3$).
+ Instead of the above hardcoded numerical flags in \kbd{nfinit0}, one should
+ rather use
+
+ \fun{GEN}{nfinitall}{GEN x, long flag, long prec}, where \fl\ is an
+ or-ed combination of
+
+ \item \tet{nf_RED}: find a simpler defining polynomial,
+
+ \item \tet{nf_ORIG}: if \tet{nf_RED} set, also return the change of variable,
+
+ \item \tet{nf_ROUND2}: \emph{Deprecated}. Slow down the routine by using an
+ obsolete normalization algorithm (do not use this one!),
+
+ \item \tet{nf_PARTIALFACT}: \emph{Deprecated}. Lazy factorization of the
+ polynomial discriminant. Result is conditional unless \kbd{nfcertify}
+ can certify it.

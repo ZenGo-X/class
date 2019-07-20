@@ -1,0 +1,30 @@
+Function: sqr
+Section: transcendental
+C-Name: gsqr
+Prototype: G
+Help: sqr(x): square of x. NOT identical to x*x.
+Description:
+ (int):int        sqri($1)
+ (mp):mp          gsqr($1)
+ (gen):gen        gsqr($1)
+Doc: square of $x$. This operation is not completely
+ straightforward, i.e.~identical to $x * x$, since it can usually be
+ computed more efficiently (roughly one-half of the elementary
+ multiplications can be saved). Also, squaring a $2$-adic number increases
+ its precision. For example,
+ \bprog
+ ? (1 + O(2^4))^2
+ %1 = 1 + O(2^5)
+ ? (1 + O(2^4)) * (1 + O(2^4))
+ %2 = 1 + O(2^4)
+ @eprog\noindent
+ Note that this function is also called whenever one multiplies two objects
+ which are known to be \emph{identical}, e.g.~they are the value of the same
+ variable, or we are computing a power.
+ \bprog
+ ? x = (1 + O(2^4)); x * x
+ %3 = 1 + O(2^5)
+ ? (1 + O(2^4))^4
+ %4 = 1 + O(2^6)
+ @eprog\noindent
+ (note the difference between \kbd{\%2} and \kbd{\%3} above).

@@ -1,0 +1,108 @@
+Function: polredabs
+Section: number_fields
+C-Name: polredabs0
+Prototype: GD0,L,
+Help: polredabs(T,{flag=0}): a smallest generating polynomial of the number
+ field for the T2 norm on the roots, with smallest index for the minimal T2
+ norm. flag is optional, whose binary digit mean 1: give the element whose
+ characteristic polynomial is the given polynomial. 4: give all polynomials
+ of minimal T2 norm (give only one of P(x) and P(-x)).
+Doc: returns a canonical defining polynomial $P$ for the number field
+ $\Q[X]/(T)$ defined by $T$, such that the sum of the squares of the modulus
+ of the roots (i.e.~the $T_2$-norm) is minimal. Different $T$ defining
+ isomorphic number fields will yield the same $P$. All $T$ accepted by
+ \tet{nfinit} are also allowed here, e.g. non-monic polynomials, or pairs
+ \kbd{[T, listP]} specifying that a non-maximal order may be used. For
+ convenience, any number field structure (\var{nf}, \var{bnf},\dots) can also
+ be used instead of $T$.
+ \bprog
+ ? polredabs(x^2 + 16)
+ %1 = x^2 + 1
+ ? K = bnfinit(x^2 + 16); polredabs(K)
+ %2 = x^2 + 1
+ @eprog
+
+ \misctitle{Warning 1} Using a \typ{POL} $T$ requires computing
+ and fully factoring the discriminant $d_K$ of the maximal order which may be
+ very hard. You can use the format \kbd{[T, listP]}, where \kbd{listP}
+ encodes a list of known coprime divisors of $\disc(T)$ (see \kbd{??nfbasis}),
+ to help the routine, thereby replacing this part of the algorithm by a
+ polynomial time computation But this may only compute a suborder of the
+ maximal order, when the divisors are not squarefree or do not include all
+ primes dividing $d_K$. The routine attempts to certify the result
+ independently of this order computation as per \tet{nfcertify}: we try to
+ prove that the computed order is maximal. If the certification fails,
+ the routine then fully factors the integers returned by \kbd{nfcertify}.
+ You can use \tet{polredbest} or \kbd{polredabs(,16)} to avoid this
+ factorization step; in both cases, the result is no longer canonical.
+
+ \misctitle{Warning 2} Apart from the factorization of the discriminant of
+ $T$, this routine runs in polynomial time for a \emph{fixed} degree.
+ But the complexity is exponential in the degree: this routine
+ may be exceedingly slow when the number field has many subfields, hence a
+ lot of elements of small $T_2$-norm. If you do not need a canonical
+ polynomial, the function \tet{polredbest} is in general much faster (it runs
+ in polynomial time), and tends to return polynomials with smaller
+ discriminants.
+
+ The binary digits of $\fl$ mean
+
+ 1: outputs a two-component row vector $[P,a]$, where $P$ is the default
+ output and \kbd{Mod(a, P)} is a root of the original $T$.
+
+ 4: gives \emph{all} polynomials of minimal $T_2$ norm; of the two polynomials
+ $P(x)$ and $\pm P(-x)$, only one is given.
+
+ 16: Possibly use a suborder of the maximal order, \emph{without} attempting to
+ certify the result as in Warning 1: we always return a polynomial and never
+ $0$. The result is a priori not canonical.
+
+ \bprog
+ ? T = x^16 - 136*x^14 + 6476*x^12 - 141912*x^10 + 1513334*x^8 \
+       - 7453176*x^6 + 13950764*x^4 - 5596840*x^2 + 46225
+ ? T1 = polredabs(T); T2 = polredbest(T);
+ ? [ norml2(polroots(T1)), norml2(polroots(T2)) ]
+ %3 = [88.0000000, 120.000000]
+ ? [ sizedigit(poldisc(T1)), sizedigit(poldisc(T2)) ]
+ %4 = [75, 67]
+ @eprog
+
+ The precise definition of the output of \tet{polredabs} is as follows.
+
+ \item Consider the finite list of characteristic polynomials of primitive
+ elements of~$K$ that are in~$\Z_K$ and minimal for the~$T_2$ norm;
+ now remove from the list the polynomials whose discriminant do not have
+ minimal absolute value. Note that this condition is restricted to the
+ original list of polynomials with minimal $T_2$ norm and does not imply that
+ the defining polynomial for the field with smallest discriminant belongs to
+ the list !
+
+ \item To a polynomial $P(x) = x^n + \dots + a_n \in \R[x]$ we attach
+ the sequence $S(P)$ given by $|a_1|, a_1, \dots, |a_n|, a_n$.
+ Order the polynomials $P$ by the lexicographic order on the coefficient
+ vectors $S(P)$. Then the output of \tet{polredabs} is the smallest
+ polynomial in the above list for that order. In other words, the monic
+ polynomial which is lexicographically smallest with respect to the absolute
+ values of coefficients, favouring negative coefficients to break ties, i.e.
+ choosing $x^3-2$ rather than $x^3+2$.
+
+Variant: Instead of the above hardcoded numerical flags, one should use an
+ or-ed combination of
+
+ \item \tet{nf_PARTIALFACT}: possibly use a suborder of the maximal order,
+ \emph{without} attempting to certify the result.
+
+ \item \tet{nf_ORIG}: return $[P, a]$, where \kbd{Mod(a, P)} is a root of $T$.
+
+ \item \tet{nf_RAW}: return $[P, b]$, where \kbd{Mod(b, T)} is a root of $P$.
+ The algebraic integer $b$ is the raw result produced by the small vectors
+ enumeration in the maximal order; $P$ was computed as the characteristic
+ polynomial of \kbd{Mod(b, T)}. \kbd{Mod(a, P)} as in \tet{nf_ORIG}
+ is obtained with \tet{modreverse}.
+
+ \item \tet{nf_ADDZK}: if $r$ is the result produced with some of the above
+ flags (of the form $P$ or $[P,c]$), return \kbd{[r,zk]}, where \kbd{zk} is a
+ $\Z$-basis for the maximal order of $\Q[X]/(P)$.
+
+ \item \tet{nf_ALL}: return a vector of results of the above form, for all
+ polynomials of minimal $T_2$-norm.

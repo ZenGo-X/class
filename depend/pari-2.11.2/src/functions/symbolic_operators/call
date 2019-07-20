@@ -1,0 +1,8 @@
+Function: _(_)
+Section: symbolic_operators
+Help: f(a,b,...): evaluate the function f on a,b,...
+Description:
+ (gen):gen          closure_callgenall($1, 0)
+ (gen,gen):gen      closure_callgen1($1, $2)
+ (gen,gen,gen):gen  closure_callgen2($1, $2, $3)
+ (gen,gen,...):gen  closure_callgenall($1, ${nbarg 1 sub}, $3)

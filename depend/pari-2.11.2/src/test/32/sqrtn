@@ -1,0 +1,62 @@
+0.E-38
+0.E-12
+0.E-12 + 0.E-12*I
+0.79370052598409973737585281963615413020
+1.1739849967053285099666839718862667420
+2 + O(17^100)
+1010311380446684911802268122009368691535646607849018888903290947605488591556
+607742
+125907569
+31622776601683793319988935444327185337
+3300034791125284639
+  ***   at top-level: sqrtn(Mod(0,3),-2)
+  ***                 ^------------------
+  *** sqrtn: impossible inverse in Fl_sqrtn: Mod(0, 3).
+  ***   at top-level: sqrtn(O(3),-2)
+  ***                 ^--------------
+  *** sqrtn: impossible inverse in ginv: O(3).
+  ***   at top-level: sqrtn(0*ffgen((2^64+13)^2),-2)
+  ***                 ^------------------------------
+  *** sqrtn: impossible inverse in FpXQ_sqrtn: 0.
+  ***   at top-level: sqrtn(0*ffgen(3^2),-2)
+  ***                 ^----------------------
+  *** sqrtn: impossible inverse in Flxq_sqrtn: Vecsmall([0]).
+  ***   at top-level: sqrtn(0*ffgen(2^2),-2)
+  ***                 ^----------------------
+  *** sqrtn: impossible inverse in F2xq_sqrtn: Vecsmall([0]).
+9
+1.0717734625362931642130063250233420229
+0.80901699437494742410229341718281905886 + 0.5877852522924731291687059546390
+7276860*I
+1 + 3^2 + 2*3^4 + 2*3^5 + 3^6 + O(3^8)
+2 + 2*3 + 2*3^2 + 2*3^3 + 2*3^4 + 2*3^5 + 2*3^6 + 2*3^7 + O(3^8)
+1 + O(3^2)
+1
+1
+1
+  ***   at top-level: sqrtn(Mod(2,4),3)
+  ***                 ^-----------------
+  *** sqrtn: impossible inverse in Fl_inv: Mod(2, 4).
+  ***   at top-level: sqrtn(Mod(2,4),3,&z)
+  ***                 ^--------------------
+  *** sqrtn: impossible inverse in Fl_inv: Mod(2, 4).
+1.0000000000000000000000000000000000000
+0
+error("not an n-th power residue in Qp_sqrt: 1 + 2 + O(2^2).")
+error("not an n-th power residue in Qp_sqrt: 1 + 2 + O(2^3).")
+error("not an n-th power residue in gsqrt: Mod(2, 11).")
+error("not a prime number in Fl_sqrt [modulus]: 33.")
+0.E-5 + 0.E-5*I
+[1 + O(3), 1]
+[1 + O(2), -1]
+[2 + O(2^3), 1 + 2 + O(2^2)]
+[2.0000000000000000000000000000000000000, 3.00000000000000000000000000000000
+00000]
+error("not an n-th power residue in gsqrtn: Mod(2, 7).")
+[0, 0]
+Mod(2, 21)
+error("not a prime number in sqrtn [modulus]: 35.")
+[Mod(99, 101), Mod(100, 101)]
+error("not an n-th power residue in gsqrtn: Mod(3, 19).")
+0.E-38
+Total time spent: 100

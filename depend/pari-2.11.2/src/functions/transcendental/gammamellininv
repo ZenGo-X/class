@@ -1,0 +1,22 @@
+Function: gammamellininv
+Section: transcendental
+C-Name: gammamellininv
+Prototype: GGD0,L,b
+Help: gammamellininv(G,t,{m=0}): returns G(t), where G is as output
+ by gammamellininvinit. The alternative syntax gammamellininv(A,t,m)
+ is also available.
+Doc: returns the value at $t$ of the inverse Mellin transform
+ $G$ initialized by \tet{gammamellininvinit}.
+ \bprog
+ ? G = gammamellininvinit([0]);
+ ? gammamellininv(G, 2) - 2*exp(-Pi*2^2)
+ %2 = -4.484155085839414627 E-44
+ @eprog
+
+ The alternative shortcut
+ \bprog
+   gammamellininv(A,t,m)
+ @eprog\noindent for
+ \bprog
+   gammamellininv(gammamellininvinit(A,m), t)
+ @eprog\noindent is available.

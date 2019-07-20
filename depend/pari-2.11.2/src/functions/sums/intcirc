@@ -1,0 +1,25 @@
+Function: intcirc
+Section: sums
+C-Name: intcirc0
+Prototype: V=GGEDGp
+Help: intcirc(X=a,R,expr,{tab}): numerical integration of expr on the circle
+ |z-a|=R, divided by 2*I*Pi. tab is as in intnum.
+Wrapper: (,,G)
+Description:
+  (gen,gen,gen,?gen):gen:prec intcirc(${3 cookie}, ${3 wrapper}, $1, $2, $4, $prec)
+Doc: numerical
+ integration of $(2i\pi)^{-1}\var{expr}$ with respect to $X$ on the circle
+ $|X-a| = R$.
+ In other words, when \var{expr} is a meromorphic
+ function, sum of the residues in the corresponding disk; \var{tab} is as in
+ \kbd{intnum}, except that if computed with \kbd{intnuminit} it should be with
+ the endpoints \kbd{[-1, 1]}.
+
+ \bprog
+ ? \p105
+ ? intcirc(s=1, 0.5, zeta(s)) - 1
+ time = 496 ms.
+ %1 = 1.2883911040127271720 E-101 + 0.E-118*I
+ @eprog
+
+ \synt{intcirc}{void *E, GEN (*eval)(void*,GEN), GEN a,GEN R,GEN tab, long prec}.

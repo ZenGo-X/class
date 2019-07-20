@@ -1,0 +1,7 @@
+Function: mathess
+Section: linear_algebra
+C-Name: hess
+Prototype: G
+Help: mathess(x): Hessenberg form of x.
+Doc: returns a matrix similar to the square matrix $x$, which is in upper Hessenberg
+ form (zero entries below the first subdiagonal).

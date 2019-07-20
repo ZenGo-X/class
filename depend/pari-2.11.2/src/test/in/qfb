@@ -1,0 +1,42 @@
+vec(x) = [component(x,1), component(x,2), component(x,3)];
+vec( qfbred(Qfb(6,6,-1),1) )
+default(realprecision,38)
+q=Qfb(7, 30, -14)^2;
+qfbpowraw(q,-1)
+q*q^2
+q^0
+q^1
+q^-1
+q^-(2^64+1)
+q=Qfb(2, 1, 3); q2=q*q;
+q3=qfbcompraw(q,q2)
+qfbpowraw(q,3)
+qfbred(q3,1)
+q=Qfb(1009, 60, 99108027750247771)
+qfbnupow(q, 8839368315)
+L = sqrtnint(abs(poldisc(q)), 4);
+qfbnupow(q, 8839368315,L)
+q=Qfb(22000957029,25035917443,7122385192);
+qfbred(q)
+qfbredsl2(q)
+q=Qfb(1099511627776,1879224363605,802966544317);
+[qr,U]=qfbredsl2(q)
+qfeval(q,U)
+qfeval(q,U[,1])
+qfeval(q,U[,2])
+qfeval(q,U[,1],U[,2])
+D=poldisc(q);
+qfbredsl2(q,[D,sqrtint(D)])
+qfbredsl2(q,[D]);
+p=2^64+13;
+qfbprimeform(-4,p)
+qfbprimeform(5,p)
+
+\\ Errors, keep at end of file
+qfbredsl2(q,[D,1.]);
+f=Qfb(12,5,3);g=Qfb(5,5,2);
+f*g
+f/g
+f=Qfb(8,14,1);g=Qfb(4,12,6);
+f*g \\ should fail
+f/g

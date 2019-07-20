@@ -1,0 +1,27 @@
+filter_output(p, v) =
+{
+  vecsort(vector(#v, j,
+    if (type(v[j]) == type([]),
+      my([D,e,f,d]=v[j]); [valuation(poldisc(D), p), e, f, d]
+    ,
+      valuation(poldisc(v[j]), p)))
+  , cmp);
+}
+
+do(p,N,flag)=filter_output(p, padicfields(p,N,flag));
+
+p = 2; for (d = 2, 50, if (d%p, print(do(p,d,1))))
+p = 3; for (d = 2, 50, if (d%p, print(do(p,d,1))))
+do(2, 105, 1)
+do(5, 21, 1)
+do(23, 75, 1)
+do(23459, 18, 1)
+do(2, [8,12], 1)
+do(2^21+17, 30, 1)
+do(2^64+13, 8, 1)
+do(2^64+13, 2, 1)
+padicfields(2^64+13, 8, 2)
+do(2, 4, 1)
+do(2, 3, 0)
+padicfields(3,3)
+padicfields(5,5)

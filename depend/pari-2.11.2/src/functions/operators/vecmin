@@ -1,0 +1,29 @@
+Function: vecmin
+Section: operators
+C-Name: vecmin0
+Prototype: GD&
+Help: vecmin(x,{&v}): smallest entry in the vector/matrix x. If v is
+ present, set it to the index of a smallest
+ entry (indirect min).
+Description:
+  (gen):gen            vecmin($1)
+  (gen, &gen):gen      vecmin0($1, &$2)
+Doc: if $x$ is a vector or a matrix, returns the smallest entry of $x$,
+ otherwise returns a copy of $x$. Error if $x$ is empty.
+
+ If $v$ is given, set it to the index of a smallest entry (indirect minimum),
+ when $x$ is a vector. If $x$ is a matrix, set $v$ to coordinates $[i,j]$ such
+ that $x[i,j]$ is a smallest entry. This is ignored if $x$ is not a vector or
+ matrix.
+
+ \bprog
+ ? vecmin([10, 20, -30, 40])
+ %1 = -30
+ ? vecmin([10, 20, -30, 40], &v); v
+ %2 = 3
+ ? vecmin([10, 20; -30, 40], &v); v
+ %3 = [2, 1]
+ @eprog
+
+Variant: When $v$ is not needed, the function \fun{GEN}{vecmin}{GEN x} is also
+ available.

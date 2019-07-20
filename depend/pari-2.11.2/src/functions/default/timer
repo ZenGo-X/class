@@ -1,0 +1,26 @@
+Function: _def_timer
+Class: default
+Section: default
+C-Name: sd_timer
+Prototype:
+Help:
+Doc: this toggle is either 1 (on) or 0 (off). Every instruction sequence
+ in the gp calculator (anything ended by a newline in your input) is timed,
+ to some accuracy depending on the hardware and operating system. When
+ \tet{timer} is on, each such timing is printed immediately before the
+ output as follows:
+ \bprog
+ ? factor(2^2^7+1)
+ time = 108 ms.     \\ this line omitted if 'timer' is 0
+ %1 =
+ [     59649589127497217 1]
+
+ [5704689200685129054721 1]
+ @eprog\noindent (See also \kbd{\#} and \kbd{\#\#}.)
+
+ The time measured is the user \idx{CPU time}, \emph{not} including the time
+ for printing the results. If the time is negligible ($< 1$ ms.), nothing is
+ printed: in particular, no timing should be printed when defining a user
+ function or an alias, or installing a symbol from the library.
+
+ The default value is \kbd{0} (off).

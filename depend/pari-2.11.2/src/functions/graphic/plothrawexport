@@ -1,0 +1,19 @@
+Function: plothrawexport
+Section: graphic
+C-Name: plothrawexport
+Prototype: GGGD0,L,
+Help: plothrawexport(fmt, X,Y,{flag=0}): plot in high resolution
+ points whose x (resp. y) coordinates are in X (resp. Y), returning
+ the resulting picture as a character string. If flag is 1, join points,
+ other non-0 flags should be combinations of bits 8,16,32,64,128,256 meaning
+ the same as for ploth().
+Doc: given $X$ and $Y$ two vectors of equal length, plots (in high precision)
+ the points whose $(x,y)$-coordinates are given in $X$ and $Y$, returning the
+ resulting picture as a character string which can then be written to a file.
+ The format \kbd{fmt} is either \kbd{"ps"} (PostScript output) or \kbd{"svg"}
+ (Scalable Vector Graphics).
+
+ Automatic positioning and scaling is done, but with the same scaling factor
+ on $x$ and $y$. If $\fl$ is 1, join points, other non-0 flags toggle display
+ options and should be combinations of bits $2^k$, $k \geq 3$ as in
+ \kbd{ploth}.

@@ -1,0 +1,23 @@
+Function: idealfrobenius
+Section: number_fields
+C-Name: idealfrobenius
+Prototype: GGG
+Help: idealfrobenius(nf,gal,pr): returns the Frobenius element (pr|nf/Q)
+ attached to the unramified prime ideal pr in prid format, in the Galois
+ group gal of the number field nf.
+Doc: Let $K$ be the number field defined by $nf$ and assume $K/\Q$ be a
+ Galois extension with Galois group given \kbd{gal=galoisinit(nf)},
+ and that \var{pr} is an unramified prime ideal $\goth{p}$ in \kbd{prid}
+ format.
+ This function returns a permutation of \kbd{gal.group} which defines
+ the Frobenius element $\Frob_{\goth{p}}$ attached to $\goth{p}$.
+ If $p$ is the unique prime number in $\goth{p}$, then
+ $\Frob(x)\equiv x^p\mod\goth{p}$ for all $x\in\Z_K$.
+ \bprog
+ ? nf = nfinit(polcyclo(31));
+ ? gal = galoisinit(nf);
+ ? pr = idealprimedec(nf,101)[1];
+ ? g = idealfrobenius(nf,gal,pr);
+ ? galoispermtopol(gal,g)
+ %5 = x^8
+ @eprog\noindent This is correct since $101\equiv 8\mod{31}$.

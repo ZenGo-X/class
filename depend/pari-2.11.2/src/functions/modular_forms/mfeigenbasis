@@ -1,0 +1,60 @@
+Function: mfeigenbasis
+Section: modular_forms
+C-Name: mfeigenbasis
+Prototype: G
+Help: mfeigenbasis(mf): vector of the eigenforms for the space mf.
+Doc: vector of the eigenforms for the space \kbd{mf}.
+ The initial basis of forms computed by \kbd{mfinit} before splitting
+ is also available via \kbd{mfbasis}.
+ \bprog
+ ? mf = mfinit([26,2],0);
+ ? see(L) = for(i=1,#L,print(mfcoefs(L[i],6)));
+ ? see( mfeigenbasis(mf) )
+ [0, 1, -1, 1, 1, -3, -1]
+ [0, 1, 1, -3, 1, -1, -3]
+ ? see( mfbasis(mf) )
+ [0, 2, 0, -2, 2, -4, -4]
+ [0, -2, -4, 10, -2, 0, 8]
+ @eprog
+ The eigenforms are internally expressed as (algebraic) linear combinations of
+ \kbd{mfbasis(mf)} and it is very inefficient to compute many coefficients
+ of those forms individually: you should rather use \kbd{mfcoefs(mf)}
+ to expand the basis once and for all, then multiply by \kbd{mftobasis(mf,f)}
+ for the forms you're interested in:
+ \bprog
+ ? mf = mfinit([96,6],0); B = mfeigenbasis(mf); #B
+ %1 = 8;
+ ? vector(#B, i, mfcoefs(B[i],1000)); \\ expanded individually: slow
+ time = 7,881 ms.
+ ? M = mfcoefs(mf, 1000); \\ initialize once
+ time = 982 ms.
+ ? vector(#B, i, M * mftobasis(mf,B[i])); \\ then expand: much faster
+ time = 623 ms.
+ @eprog
+
+ When the eigenforms are defined over an extension field of $\Q(\chi)$ for a
+ non-rational character, their coefficients are hard to read and you may want
+ to lift them or to express them in an absolute number field. In the
+ construction below $T$ defines $\Q(f)$ over $\Q$, $a$ is the image of the
+ generator \kbd{Mod}$(t, t^2+t+1)$ of $\Q(\chi)$ in $\Q(f)$
+ and $y - ka$ is the image of the root $y$ of \kbd{f.mod}:
+ \bprog
+ ? mf = mfinit([31, 2, Mod(25,31)], 0); [f] = mfeigenbasis(mf);
+ ? f.mod
+ %2 = Mod(1, t^2 + t + 1)*y^2 + Mod(2*t + 2, t^2 + t + 1)
+ ? v = liftpol(mfcoefs(f,5))
+ %3 = [0, 1, (-t - 1)*y - 1, t*y + (t + 1), (2*t + 2)*y + 1, t]
+ ? [T,a,k] = rnfequation(mf.mod, f.mod, 1)
+ %4 = [y^4 + 2*y^2 + 4, Mod(-1/2*y^2 - 1, y^4 + 2*y^2 + 4), 0]
+ ? liftpol(substvec(v, [t,y], [a, y-k*a]))
+ %5 = [0, 1, 1/2*y^3 - 1, -1/2*y^3 - 1/2*y^2 - y, -y^3 + 1, -1/2*y^2 - 1]
+ @eprog\noindent Beware that the meaning of $y$ has changed in the last line
+ is different: it now represents of root of $T$, no longer of \kbd{f.mod}
+ (the notions coincide if $k = 0$ as here but it will not always be the case).
+ This can be avoided with an extra variable substitution, for instance
+ \bprog
+ ? [T,a,k] = rnfequation(mf.mod, subst(f.mod,'y,'x), 1)
+ %6 = [x^4 + 2*x^2 + 4, Mod(-1/2*x^2 - 1, x^4 + 2*x^2 + 4), 0]
+ ? liftpol(substvec(v, [t,y], [a, x-k*a]))
+ %7 = [0, 1, 1/2*x^3 - 1, -1/2*x^3 - 1/2*x^2 - x, -x^3 + 1, -1/2*x^2 - 1]
+ @eprog

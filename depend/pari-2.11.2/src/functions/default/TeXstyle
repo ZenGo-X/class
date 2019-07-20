@@ -1,0 +1,17 @@
+Function: _def_TeXstyle
+Class: default
+Section: default
+C-Name: sd_TeXstyle
+Prototype:
+Help:
+Doc: the bits of this default allow
+ \kbd{gp} to use less rigid TeX formatting commands in the logfile. This
+ default is only taken into account when $\kbd{log} = 3$. The bits of
+ \kbd{TeXstyle} have the following meaning
+
+ 2: insert \kbd{\bs right} / \kbd{\bs left} pairs where appropriate.
+
+ 4: insert discretionary breaks in polynomials, to enhance the probability of
+ a good line break.
+
+ The default value is \kbd{0}.

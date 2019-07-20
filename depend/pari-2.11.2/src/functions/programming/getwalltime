@@ -1,0 +1,12 @@
+Function: getwalltime
+Section: programming/specific
+C-Name: getwalltime
+Prototype:
+Help: getwalltime(): time (in milliseconds) since the UNIX Epoch.
+Doc: returns the time (in milliseconds) elapsed since
+ 00:00:00 UTC Thursday 1, January 1970 (the Unix epoch).
+ \bprog
+ my (t = getwalltime());
+ ...
+ print("Time: ", getwalltime() - t);
+ @eprog

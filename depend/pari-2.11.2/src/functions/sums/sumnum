@@ -1,0 +1,163 @@
+Function: sumnum
+Section: sums
+C-Name: sumnum0
+Prototype: V=GEDGp
+Help: sumnum(n=a,f,{tab}): numerical summation of f(n) from
+ n = a to +infinity using Euler-MacLaurin summation. Assume that f
+ corresponds to a series with positive terms and is a C^oo function; a
+ must be an integer, and tab, if given, is the output of sumnuminit.
+Wrapper: (,G)
+Description:
+  (gen,gen,?gen):gen:prec sumnum(${2 cookie}, ${2 wrapper}, $1, $3, $prec)
+Doc: Numerical summation of $f(n)$ at high accuracy using Euler-MacLaurin,
+ the variable $n$ taking values from $a$ to $+\infty$, where $f$ is assumed to
+ have positive values and is a $C^\infty$ function; \kbd{a} must be an integer
+ and \kbd{tab}, if given, is the output of \kbd{sumnuminit}. The latter
+ precomputes abscissas and weights, speeding up the computation; it also allows
+ to specify the behavior at infinity via \kbd{sumnuminit([+oo, asymp])}.
+ \bprog
+ ? \p500
+ ? z3 = zeta(3);
+ ? sumpos(n = 1, n^-3) - z3
+ time = 2,332 ms.
+ %2 = 2.438468843 E-501
+ ? sumnum(n = 1, n^-3) - z3 \\ here slower than sumpos
+ time = 2,752 ms.
+ %3 = 0.E-500
+ @eprog
+
+ \misctitle{Complexity}
+ The function $f$ will be evaluated at $O(D \log D)$ real arguments,
+ where $D \approx \kbd{realprecision} \cdot \log(10)$. The routine is geared
+ towards slowly decreasing functions: if $f$ decreases exponentially fast,
+ then one of \kbd{suminf} or \kbd{sumpos} should be preferred.
+ If $f$ satisfies the stronger hypotheses required for Monien summation,
+ i.e. if $f(1/z)$ is holomorphic in a complex neighbourhood of $[0,1]$,
+ then \tet{sumnummonien} will be faster since it only requires $O(D/\log D)$
+ evaluations:
+ \bprog
+ ? sumnummonien(n = 1, 1/n^3) - z3
+ time = 1,985 ms.
+ %3 = 0.E-500
+ @eprog\noindent The \kbd{tab} argument precomputes technical data
+ not depending on the expression being summed and valid for a given accuracy,
+ speeding up immensely later calls:
+ \bprog
+ ? tab = sumnuminit();
+ time = 2,709 ms.
+ ? sumnum(n = 1, 1/n^3, tab) - z3 \\ now much faster than sumpos
+ time = 40 ms.
+ %5 = 0.E-500
+
+ ? tabmon = sumnummonieninit(); \\ Monien summation allows precomputations too
+ time = 1,781 ms.
+ ? sumnummonien(n = 1, 1/n^3, tabmon) - z3
+ time = 2 ms.
+ %7 = 0.E-500
+ @eprog\noindent The speedup due to precomputations becomes less impressive
+ when the function $f$ is expensive to evaluate, though:
+ \bprog
+ ? sumnum(n = 1, lngamma(1+1/n)/n, tab);
+ time = 14,180 ms.
+
+ ? sumnummonien(n = 1, lngamma(1+1/n)/n, tabmon); \\ fewer evaluations
+ time = 717 ms.
+ @eprog
+
+ \misctitle{Behaviour at infinity}
+ By default, \kbd{sumnum} assumes that \var{expr} decreases slowly at infinity,
+ but at least like $O(n^{-2})$. If the function decreases like $n^{\alpha}$
+ for some $-2 < \alpha < -1$, then it must be indicated via
+ \bprog
+   tab = sumnuminit([+oo, alpha]); /* alpha < 0 slow decrease */
+ @eprog\noindent otherwise loss of accuracy is expected.
+ If the functions decreases quickly, like $\exp(-\alpha n)$ for some
+ $\alpha > 0$, then it must be indicated via
+ \bprog
+   tab = sumnuminit([+oo, alpha]); /* alpha  > 0 exponential decrease */
+ @eprog\noindent otherwise exponent overflow will occur.
+ \bprog
+ ? sumnum(n=1,2^-n)
+  ***   at top-level: sumnum(n=1,2^-n)
+  ***                             ^----
+  *** _^_: overflow in expo().
+ ? tab = sumnuminit([+oo,log(2)]); sumnum(n=1,2^-n, tab)
+ %1 = 1.000[...]
+ @eprog
+
+ As a shortcut, one can also input
+ \bprog
+   sumnum(n = [a, asymp], f)
+ @eprog\noindent instead of
+ \bprog
+   tab = sumnuminit(asymp);
+   sumnum(n = a, f, tab)
+ @eprog
+
+ \misctitle{Further examples}
+ \bprog
+ ? \p200
+ ? sumnum(n = 1, n^(-2)) - zeta(2) \\ accurate, fast
+ time = 200 ms.
+ %1 = -2.376364457868949779 E-212
+ ? sumpos(n = 1, n^(-2)) - zeta(2)  \\ even faster
+ time = 96 ms.
+ %2 = 0.E-211
+ ? sumpos(n=1,n^(-4/3)) - zeta(4/3)   \\ now much slower
+ time = 13,045 ms.
+ %3 = -9.980730723049589073 E-210
+ ? sumnum(n=1,n^(-4/3)) - zeta(4/3)  \\ fast but inaccurate
+ time = 365 ms.
+ %4 = -9.85[...]E-85
+ ? sumnum(n=[1,-4/3],n^(-4/3)) - zeta(4/3) \\ with decrease rate, now accurate
+ time = 416 ms.
+ %5 = -4.134874156691972616 E-210
+
+ ? tab = sumnuminit([+oo,-4/3]);
+ time = 196 ms.
+ ? sumnum(n=1, n^(-4/3), tab) - zeta(4/3) \\ faster with precomputations
+ time = 216 ms.
+ %5 = -4.134874156691972616 E-210
+ ? sumnum(n=1,-log(n)*n^(-4/3), tab) - zeta'(4/3)
+ time = 321 ms.
+ %7 = 7.224147951921607329 E-210
+ @eprog
+
+ Note that in the case of slow decrease ($\alpha < 0$), the exact
+ decrease rate must be indicated, while in the case of exponential decrease,
+ a rough value will do. In fact, for exponentially decreasing functions,
+ \kbd{sumnum} is given for completeness and comparison purposes only: one
+ of \kbd{suminf} or \kbd{sumpos} should always be preferred.
+ \bprog
+ ? sumnum(n=[1, 1], 2^-n) \\ pretend we decrease as exp(-n)
+ time = 240 ms.
+ %8 = 1.000[...] \\ perfect
+ ? sumpos(n=1, 2^-n)
+ %9 = 1.000[...] \\ perfect and instantaneous
+ @eprog
+
+ \misctitle{Beware cancellation} The function $f(n)$ is evaluated for huge
+ values of $n$, so beware of cancellation in the evaluation:
+ \bprog
+ ? f(n) = 2 - 1/n - 2*n*log(1+1/n); \\ result is O(1/n^2)
+ ? z = -2 + log(2*Pi) - Euler;
+ ? sumnummonien(n=1, f(n)) - z
+ time = 149 ms.
+ %12 = 0.E-212  \\ perfect
+ ? sumnum(n=1, f(n)) - z
+ time = 116 ms.
+ %13 = -948.216[...] \\ junk
+ @eprog\noindent As \kbd{sumnum(n=1, print(n))} shows, we evaluate $f(n)$ for
+ $n > 1e233$ and our implementation of $f$ suffers from massive cancellation
+ since we are summing two terms of the order of $O(1)$ for a result in
+ $O(1/n^2)$. You can either rewrite your sum so that individual terms are
+ evaluated without cancellation or locally replace $f(n)$ by an accurate
+ asymptotic expansion:
+ \bprog
+ ? F = truncate( f(1/x + O(x^30)) );
+ ? sumnum(n=1, if(n > 1e7, subst(F,x,1/n), f(n))) - z
+ %15 = 1.1 E-212 \\ now perfect
+ @eprog
+
+ \synt{sumnum}{(void *E, GEN (*eval)(void*, GEN), GEN a, GEN tab, long prec)}
+ where an omitted \var{tab} is coded as \kbd{NULL}.

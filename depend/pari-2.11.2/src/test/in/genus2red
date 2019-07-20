@@ -1,0 +1,711 @@
+\\ Input from Namikawa-Ueno's list of curves of genus 2
+\\ with expected reduction types.
+
+\\ t is to be substituted with a prime number bigger or equal to 7
+\\ and can be taken to be 5 most of the time...
+\\ a, b, c are generic integers (to be changed if unexpected output)
+do(P, s) = print("Type: ", s); genus2red(subst(P,'t,7),7);
+
+P0=x^5+a*x^3+b*x^2+c*x+1;
+do(substvec(P0, [a,b,c], [1,-2,3]), "[I{0-0-0}], p. 155")
+
+P0=x^5+a*t^2*x^3+b*t^3*x^2+c*t^4*x+t^5;
+do(substvec(P0, [a,b,c], [1,-2,3]), "[I*{0-0-0}], p. 155")
+
+P0=x^6+a*t*x^4+b*t^2*x^2+t^3;
+do(substvec(P0, [a,b], [4,-1]), "[II], p. 155")
+genus2red(substvec(P0,[a,b,t],[4,-1,3]),3)
+
+P0=x^6+a*t*x^3+t^2;
+do(subst(P0, 'a, 4), "[III], p. 155")
+
+P0=t*(x^6+a*t*x^3+t^2);
+do(subst(P0, 'a, 5), "[IV], p. 155")
+
+P0=x^6+t;
+do(P0, "[V], p. 156")
+
+P0=x^6+t^5;
+do(P0, "[V*], p. 156")
+
+P0=x*(x^4+a*t*x^2+t^2);
+do(subst(P0, 'a, 3), "[VI], p. 156")
+
+P0=x*(x^4+t);
+do(P0, "[VII], p. 156")
+
+P0=x*(x^4+t^5);
+do(P0, "[VII*], p. 156")
+
+P0=x^5+t;
+do(P0, "[VIII-1], p. 156")
+
+P0=x^5+t^3;
+do(P0, "[VIII-2], p. 157")
+
+P0=x^5+t^7;
+do(P0, "[VIII-3], p. 157")
+
+P0=x^5+t^9;
+do(P0, "[VIII-4], p. 157")
+
+P0=x^5+t^2;
+do(P0, "[IX-1], p. 157")
+
+P0=x^5+t^4;
+do(P0, "[IX-2], p. 157")
+
+P0=x^5+t^6;
+do(P0, "[IX-3], p. 157")
+
+P0=x^5+t^8;
+do(P0, "[IX-4], p. 158")
+
+\\ Elliptic type,
+\\ m > 0 FIXME: changed !
+m = 10;
+P0=(x^3+a*x+1)*(x^3+b*t^(4*m)*x+t^(6*m)) ;
+do(substvec(P0, [a,b], [3,10]), Strprintf("[I{0}-I{0}-%ld], p. 158", m))
+\\ misprint in N-U: m+1 must be m.
+genus2red(substvec(P0,['a,'b,'t],[-1,1,3]),3)
+
+\\ m >= 0
+m = 10;
+P0=((x-1)^3+a*t^2*(x-1)+t^3)*(x^3+b*t^(4*m+2)*x+t^(6*m+3));
+do(substvec(P0, [a,b], [3,10]), Strprintf("[I{0}*-I{0}*-%ld], p. 158", m))
+genus2red(substvec(P0,['a,'b,'t],[-1,1,3]),3)
+
+\\ m >= 0
+m = 10;
+P0=(x^3+a*x+1)*(x^3+b*t^(4*m+2)*x+t^(6*m+3));
+do(substvec(P0, [a,b], [3,10]), Strprintf("[I{0}-I{0}*-%ld], p. 159", m))
+genus2red(substvec(P0,['a,'b,'t],[-1,1,3]),3)
+
+\\ m >= 0
+m = 10;
+P0=(x^2-t)^3+a*t^(2*m+4)*(x^2-t)+t^(3*m+6);
+do(subst(P0, 'a, 3), Strprintf("[2I{0}-%ld], p. 159",m+1))
+genus2red(substvec(P0,['a,'t],[-1,3]),3)
+
+\\ m >= 0
+m = 10;
+P0=(x^2-t)^3+a*t^(2*m+3)*(x^2-t)+t^(3*m+4)*x;
+do(subst(P0, 'a, 3), Strprintf("[2I{0}*-%ld], p. 159",m))
+
+\\ m >= 0
+m = 10;
+P0=(x^2-t)^3+a*t^(2*m+3)*(x^2-t)+t^(3*m+4)*x;
+do(subst(P0, 'a, 3), Strprintf("[2I{0}*-%ld], p. 159",m))
+
+\\ m >= 0
+m = 10;
+P0=(x^3+t^(6*m+1))*(x^2+a*x+1);
+do(subst(P0, 'a, 3), Strprintf("[I{0}-II-%ld], p. 159",m))
+
+\\ m >= 0
+m = 10;
+P0=(x^3+t^(6*m+5))*(x^2+a*x+1);
+do(subst(P0, 'a, 3), Strprintf("[I{0}-II*-%ld], p. 160",m))
+genus2red(substvec(P0,['a,'t],[3,3]),3)
+
+\\ m >= 0
+m = 10;
+P0=(x^3+t^(6*m+2))*(x^2+a*x+1);
+do(subst(P0, 'a, 3), Strprintf("[I{0}-IV-%ld], p. 160",m))
+genus2red(substvec(P0,['a,'t],[3,3]),3)
+
+\\ m >= 0
+m = 10;
+P0=(x^3+t^(6*m+4))*(x^2+a*x+1);
+do(subst(P0, 'a, 3), Strprintf("[I{0}-IV*-%ld], p. 160",m))
+genus2red(substvec(P0,['a,'t],[3,3]),3)
+
+\\ m >= 0
+m = 10;
+P0=t*(x^3+t^(6*m+4))*(x^2+a*x+1);
+do(subst(P0, 'a, 3), Strprintf("[I{0}*-II-%ld], p. 160",m))
+genus2red(substvec(P0,['a,'t],[3,3]),3)
+
+\\ m >= -1
+m = 10;
+P0=t*(x^3+t^(6*m+8))*(x^2+a*x+1);
+do(subst(P0, 'a, 3), Strprintf("[I{0}*-II*-%ld], p. 160-161",m))
+genus2red(substvec(P0,['a,'t],[3,3]),3)
+
+\\ m >= 0
+m = 10;
+P0=t*(x^3+t^(6*m+5))*(x^2+a*x+1);
+do(subst(P0, 'a, 3), Strprintf("[I{0}*-IV-%ld], p. 161",m))
+
+\\ m >= -1
+m = 10;
+P0=t*(x^3+t^(6*m+7))*(x^2+a*x+1);
+do(subst(P0, 'a, 3), Strprintf("[I{0}*-IV*-%ld], p. 161",m))
+
+\\ m >= 0
+m = 10;
+P0=x*(x^2+t^(4*m+1))*(x^2+a*x+1);
+do(subst(P0, 'a, 3), Strprintf("[I{0}-III-%ld], p. 161",m))
+
+\\ m >= 0
+m = 10;
+P0=x*(x^2+t^(4*m+3))*(x^2+a*x+1);
+do(subst(P0, 'a, 3), Strprintf("[I{0}-III*-%ld], p. 162",m))
+
+\\ m >= 0
+m = 10;
+P0=t*x*(x^2+t^(4*m+3))*(x^2+a*x+1);
+do(subst(P0, 'a, 3), Strprintf("[I{0}*-III-%ld], p. 162",m))
+
+\\ m >= -1
+m = 10;
+P0=t*x*(x^2+t^(4*m+5))*(x^2+a*x+1);
+do(subst(P0, 'a, 3), Strprintf("[I{0}*-III*-%ld], p. 162",m))
+
+\\ m >= 0
+m = 10;
+P0=(x^2-t)^3+t^(3*m+3)*x;
+do(P0, Strprintf("[2II-%ld], p. 162",m))
+genus2red(subst(P0,'t,3),3)
+
+\\ m >= 0
+m = 10;
+P0=(x^2-t)^3+t^(3*m+5)*x;
+do(P0, Strprintf("[2II*-%ld], p. 163",m))
+genus2red(subst(P0,'t,3),3)
+
+\\ m >= 0
+m = 10;
+P0=(x^3+t^(6*m+1))*((x-1)^3+t);
+do(P0, Strprintf("[II-II-%ld], p. 163",m))
+
+\\ m >= 0
+m = 10;
+P0=(x^3+t^(6*m+1))*((x-1)^3+t^5);
+do(P0, Strprintf("[II-II*-%ld], p. 163",m))
+
+\\ m >= 0
+m = 10;
+P0=(x^3+t^(6*m+5))*((x-1)^3+t^5);
+do(P0, Strprintf("[II*-II*-%ld], p. 163",m))
+
+\\ m = -1
+P0=t*(x^3+t^2)*((x-1)^3+t^2);
+do(P0, "[II*-II*-(-1)], p. 163")
+
+\\ m >= 0
+m = 10;
+P0=(x^3+t^(6*m+1))*((x-1)^3+t^2);
+do(P0, Strprintf("[II-IV-%ld], p. 164",m))
+
+\\ m >= 0
+m = 10;
+P0=(x^3+t^(6*m+1))*((x-1)^3+t^4);
+do(P0, Strprintf("[II-IV*-%ld], p. 164",m))
+
+\\ m >= 0
+m = 10;
+P0=(x^3+t^(6*m+5))*((x-1)^3+t^2);
+do(P0, Strprintf("[II*-IV-%ld], p. 164",m))
+
+\\ m = -1
+P0=(x^3+t^2)*(x^3+t);
+do(P0, "[II*-IV-(-1)], p. 164")
+
+\\ m bigger or equal -1
+m = 10;
+P0=t*(x^3+t^(6*m+7))*((x-1)^3+t^2);
+do(P0, Strprintf("[II*-IV*-%ld], p. 164-165",m))
+
+\\ m >= 0
+m = 10;
+P0=(x^2-t)^3+t^(3*m+4);
+do(P0, Strprintf("[2IV-%ld], p. 165",m))
+genus2red(subst(P0,'t,3),3)
+
+\\ m >= 0
+m = 10;
+P0=(x^2-t)^3+t^(3*m+5);
+do(P0, Strprintf("[2IV*-%ld], p. 165",m))
+genus2red(subst(P0,'t,3),3)
+
+\\ m >= 0
+m = 10;
+P0=(x^3+t^(6*m+2))*((x-1)^3+t^2);
+do(P0, Strprintf("[IV-IV-%ld], p. 165",m))
+
+\\ m >= 0
+m = 10;
+P0=(x^3+t^(6*m+2))*((x-1)^3+t^4);
+do(P0, Strprintf("[IV-IV*-%ld], p. 165",m))
+
+\\ m >= -1
+m = 10;
+P0=t*(x^3+t^(6*m+7))*((x-1)^3+t);
+do(P0, Strprintf("[IV*-IV*-%ld], p. 166",m))
+
+\\ m >= 0
+m = 10;
+P0=x*(x^2+t^(4*m+1))*((x-1)^3+t);
+do(P0, Strprintf("[II-III-%ld], p. 166",m))
+
+\\ m >= 0
+m = 10;
+P0=x*(x^2+t^(4*m+3))*((x-1)^3+t);
+do(P0, Strprintf("[II-III*-%ld], p. 166",m))
+
+\\ m >= 0
+m = 10;
+P0=x*(x^2+t^(4*m+1))*((x-1)^3+t^5);
+do(P0, Strprintf("[II*-III-%ld], p. 166",m))
+
+\\ m = -1
+P0=(x^2+t)*(x^3+t^2);
+do(P0, "[II*-III-(-1)], p. 167")
+
+\\ m at least -1
+m = 10;
+P0=t*x*(x^2+t^(4*m+5))*((x-1)^3+t^2);
+do(P0, Strprintf("[II*-III*-%ld], p. 167",m))
+
+\\ m >= 0
+m = 10;
+P0=x*(x^2+t^(4*m+1))*((x-1)^3+t^2);
+do(P0, Strprintf("[IV-III-%ld], p. 167",m))
+genus2red(subst(P0,'t,3),3)
+
+\\ m >= 0
+m = 10;
+P0=x*(x^2+t^(4*m+3))*((x-1)^3+t^2);
+do(P0, Strprintf("[IV-III*-%ld], p. 167",m))
+genus2red(subst(P0,'t,3),3)
+
+\\ m = -1
+P0=x*(x^2+t)*(x^3+t);
+do(P0, "[IV-III*-(-1)], p. 167")
+\\ the top horizontal line has mult. 3.
+
+\\ m >= 0
+m = 10;
+P0=x*(x^2+t^(4*m+1))*((x-1)^3+t^4);
+do(P0, Strprintf("[IV*-III-%ld], p. 168",m))
+
+\\ m at least -1
+m = 10;
+P0=t*x*(x^2+t^(4*m+5))*((x-1)^3+t);
+do(P0, Strprintf("[IV*-III*-%ld], p. 168",m))
+
+\\ m >= 0
+m = 10;
+P0=(x^2-t)*((x^2-t)^2+t^(2*m+2)*x);
+do(P0, Strprintf("[2III-%ld], p. 168",m))
+genus2red(subst(P0,'t,3),3)
+
+\\ m >= 0
+m = 10;
+P0=(x^2-t)*((x^2-t)^2+t^(2*m+3)*x);
+do(P0, Strprintf("[2III*-%ld], p. 168",m))
+genus2red(subst(P0,'t,3),3)
+
+\\ m >= 0
+m = 10;
+P0=x*(x^2+t^(4*m+1))*(x-1)*((x-1)^2+t);
+do(P0, Strprintf("[III-III-%ld], p. 169",m))
+
+\\ m >= 0
+m = 10;
+P0=x*(x^2+t^(4*m+1))*(x-1)*((x-1)^2+t^3);
+do(P0, Strprintf("[III-III*-%ld], p. 169",m))
+
+\\ m >= -1
+m = 10;
+P0=t*x*(x^2+t^(4*m+5))*(x-1)*((x-1)^2+t);
+do(P0, Strprintf("[III*-III*-{%ld}], p. 169",m))
+
+\\ Parabolic type
+\\ n > 0
+n = 9;
+P0=(x^3+a*x+1)*(x^2+t^n);
+do(subst(P0, 'a, 3), Strprintf("[I{%ld-0-0}], p. 170",n))
+
+\\ n, m > 0
+n = 9; m = 10;
+P0=(x^3+a*t^(4*m)*x+t^(6*m))*((x-1)^2+t^n);
+do(subst(P0, 'a, 3), Strprintf("[I{%ld}-I{0}-%ld], p. 170",n, m))
+genus2red(substvec(P0,['a,'t],[-1,3]),3)
+
+\\ n, m >= 0
+n = 9; m = 10;
+P0=(x+t)*(x^2+t^(n+2))*((x-1)^3+a*t^(4*m)*(x-1)+t^(6*m));
+do(subst(P0, 'a, 3), Strprintf("[I{0}-I*{%ld}-%ld], p. 170",n, m))
+genus2red(substvec(P0,['a,'t],[-1,3]),3)
+
+\\ n, m >= 0
+n = 9; m = 10;
+P0=(x^3+a*t^(4*m+2)*x+t^(6*m+3))*((x-1)^2+t^n);
+do(subst(P0, 'a, 3), Strprintf("[I{%ld}-I{0}*-%ld], p. 171",n, m))
+
+\\ n > 0
+n = 9;
+P0=t*(x^3+a*x+1)*(x^2+t^n);
+do(subst(P0, 'a, 3), Strprintf("[I*{%ld-0-0}], p. 171",n))
+
+\\ n, m >= 0
+n = 9; m = 10;
+P0=(x+t)*(x^2+t^(n+2))*((x-1)^3+a*t^(4*m+2)*(x-1)+t^(6*m+3));
+do(subst(P0, 'a, 3), Strprintf("[I*{%ld}-I{0}*-%ld], p. 171",n, m))
+
+\\ n > 0
+n = 9;
+P0=(x^4+a*t*x^2+t^2)*((x-1)^2+t^(n-1));
+do(subst(P0, 'a, 3), Strprintf("[II{%ld-0}], p. 171",n))
+
+\\ n > 0
+n = 9;
+P0=t*(x^4+a*t*x^2+t^2)*((x-1)^2+t^(n-1));
+do(subst(P0, 'a, 3), Strprintf("[II*{%ld-0}], p. 172",n))
+
+\\ n > 0, m >= 0
+n = 9; m = 10;
+P0=(x^3+t^(6*m+1))*((x-1)^2+t^n);
+do(P0, Strprintf("[II-I{%ld}-%ld], p. 172",n, m))
+
+\\ n > 0, m >= 0
+n = 9; m = 10;
+P0=(x^3+t^(6*m+5))*((x-1)^2+t^n);
+do(P0, Strprintf("[II*-I{%ld}-%ld], p. 172",n, m))
+
+\\ n > 0, m >= 0
+n = 9; m = 10;
+P0=(x^3+t^(6*m+2))*((x-1)^2+t^n);
+do(P0, Strprintf("[IV-I{%ld}-%ld], p. 173",n, m))
+
+\\ n > 0, m >= 0
+n = 9; m = 10;
+P0=(x^3+t^(6*m+4))*((x-1)^2+t^n);
+do(P0, Strprintf("[IV*-I{%ld}-%ld], p. 173",n, m))
+
+\\ n, m >= 0
+n = 9; m = 10;
+P0=(x-1+t)*((x-1)^2+t^(n+2))*(x^3+t^(6*m+1));
+do(P0, Strprintf("[II-I*{%ld}-%ld], p. 173",n, m))
+
+\\ n, m >= 0
+n = 9; m = 10;
+P0=(x-1+t)*((x-1)^2+t^(n+2))*(x^3+t^(6*m+5));
+do(P0, Strprintf("[II*-I*{%ld}-%ld], p. 174",n, m))
+
+\\ n >= 0, m = -1
+n = 9;
+P0=t*((x-1)^2+t^n)*(x^3+t^2);
+do(P0, Strprintf("[II*-I*{%ld}-(-1)], p. 174",n))
+
+\\ n, m >= 0
+n = 9; m = 10;
+P0=(x-1+t)*((x-1)^2+t^(n+2))*(x^3+t^(6*m+2));
+do(P0, Strprintf("[IV-I*{%ld}-%ld], p. 174",n, m))
+
+\\ n, m >= 0
+n = 9; m = 10;
+P0=(x-1+t)*((x-1)^2+t^(n+2))*(x^3+t^(6*m+4));
+do(P0, Strprintf("[IV*-I*{%ld}-%ld], p. 174",n, m))
+
+\\ n >= 0, m = -1
+n = 9;
+P0=t*((x-1)^2+t^n)*(x^3+t);
+do(P0, Strprintf("[IV*-I*{%ld}-(-1)], p. 175",n))
+genus2red(subst(P0,'t,3),3)
+
+\\ n >= 0
+n = 9;
+P0=x*(x^3+t)*((x-1)^2+t^n);
+do(P0, Strprintf("[IV-II{%ld}], p. 175",n))
+genus2red(subst(P0,'t,3),3)
+
+\\ n > 0
+n = 9;
+P0=x*(x^3+t^2)*((x-1)^2+t^(n-1));
+do(P0, Strprintf("[IV*-II{%ld}], p. 175",n))
+genus2red(subst(P0,'t,3),3)
+
+\\ n = 0
+P0=(x^2+t^3)*(x^3+t^4);
+do(P0, "[IV*-II{0}], p. 175")
+genus2red(subst(P0,'t,3),3)
+
+\\ n >= 0
+n = 9;
+P0=(x^3+t)*(x^2+t^(n+1));
+do(P0, Strprintf("[II-II*{%ld}], p. 176",n))
+genus2red(subst(P0,'t,3),3)
+
+\\ n >= 0
+n = 9;
+P0=t*x*(x^3+t)*((x-1)^2+t^n);
+do(P0, Strprintf("[II*-II*{%ld}], p. 176",n))
+genus2red(subst(P0,'t,3),3)
+
+\\ n > 0, m >= 0
+n = 9; m = 10;
+P0=x*(x^2+t^(4*m+1))*((x-1)^2+t^n);
+do(P0, Strprintf("[III-I{%ld}-%ld], p. 176",n,m))
+genus2red(subst(P0,'t,3),3)
+
+\\ n > 0, m >= 0
+n = 9; m = 10;
+P0=x*(x^2+t^(4*m+3))*((x-1)^2+t^n);
+do(P0, Strprintf("[III*-I{%ld}-%ld], p. 176",n,m))
+genus2red(subst(P0,'t,3),3)
+
+\\ n, m >= 0
+n = 9; m = 10;
+P0=(x+t)*(x^2+t^(n+2))*(x-1)*((x-1)^2+t^(4*m+1));
+do(P0, Strprintf("[III-I*{%ld}-%ld], p. 177",n,m))
+genus2red(subst(P0,'t,3),3)
+
+\\ n, m >= 0
+n = 9; m = 10;
+P0=(x+t)*(x^2+t^(n+2))*(x-1)*((x-1)^2+t^(4*m+3));
+do(P0, Strprintf("[III*-I*{%ld}-%ld], p. 177",n,m))
+genus2red(subst(P0,'t,3),3)
+
+\\ n >= 0, m = -1
+n = 9;
+P0=t*x*(x^2+t)*((x-1)^2+t^n);
+do(P0, Strprintf("[III*-I*{%ld}-(-1)], p. 177",n))
+\\ attach one more projective line of mult. 1 to the component 2B
+
+\\ n >= 0
+n = 9;
+P0=(x^4+t)*((x-1)^2+t^n);
+do(P0, Strprintf("[III-II{%ld}], p. 177",n))
+
+\\ n > 0
+n = 9;
+P0=(x^4+t^3)*((x-1)^2+t^(n-1));
+do(P0, Strprintf("[III*-II{%ld}], p. 178",n))
+
+\\ n = 0
+P0=t*(x^2+t)*(x^4+t);
+do(P0, "[III*-II{0}], p. 178")
+
+\\ n >= 0
+n = 9;
+P0=(x^4+t)*(x^2+t^(n+1));
+do(P0, Strprintf("[III-II*{%ld}], p. 178",n))
+
+\\ n >= 0
+n = 9;
+P0=(x^4+t^3)*(x^2+t^(n+2));
+do(P0, Strprintf("[III*-II*{%ld}], p. 178",n))
+
+\\ Parabolic type continued
+
+\\ n, p > 0
+n = 9; p = 8;
+P0=(x^2+t^n)*((x+1)^2+t^p)*(x-1);
+do(P0, Strprintf("[I{%ld-%ld-0}], p. 179",n,p))
+
+\\ n, p, m > 0
+n = 9; p = 8; m = 10;
+P0=(x+t^(2*m))*(x^2+t^(4*m+n))*((x-1)^2+t^p);
+do(P0, Strprintf("[I{%ld}-I{%ld}-%ld}], p. 179",n,p,m))
+
+\\ n, p > 0
+n = 9; p = 8;
+P0=t*(x^2+t^n)*((x+1)^2+t^p)*(x-1);
+do(P0, Strprintf("[I*{%ld-%ld-0}], p. 180",n,p))
+genus2red(subst(P0,'t,3),3)
+
+\\ n, p > 0, m >= 0
+n = 9; p = 8; m = 10;
+P0=(x+t^(2*m+1))*(x^2+t^(4*m+n+2))*(x-1+t)*((x-1)^2+t^(p+2));
+do(P0, Strprintf("[I*{%ld}-I*{%ld}-%ld], p. 180",n,p,m))
+
+\\ n, p > 0, m >= 0
+n = 9; p = 8; m = 10;
+P0=(x+t^(2*m+1))*(x^2+t^(4*m+p+2))*((x-1)^2+t^n);
+do(P0, Strprintf("[I{%ld}-I*{%ld}-%ld], p. 180",n,p,m))
+genus2red(subst(P0,'t,3),3)
+
+\\ n > 0 even, m > 0
+k = 4; m = 10; n=2*k;
+P0=((x^2-t)+t^(m+1))*((x^2-t)^2+t^(2*m+k+2));
+do(P0, Strprintf("[2I{%ld}-%ld], p. 181",n,m))
+genus2red(subst(P0,'t,3),3)
+
+\\ n > 0 odd, m > 0
+k = 4; m = 10; n=2*k+1;
+P0=((x^2-t)+t^(m+1))*((x^2-t)^2+t^(2*m+k+2)*x);
+do(P0, Strprintf("[2I{%ld}-%ld}], p. 181",n,m))
+
+\\ n > 0 even, m=0
+k = 4; n=2*k;
+P0=((x^2-t)+a*t)*((x^2-t)^2+t^(k+2));
+do(subst(P0, 'a, 2), Strprintf("[2I{%ld}-0], p. 181",n))
+
+\\ n > 0 odd, m=0
+k = 4; n=2*k+1;
+P0=((x^2-t)+a*t)*((x^2-t)^2+t^(k+2)*x);
+do(subst(P0, 'a, 2), Strprintf("[2I{%ld}-0], p. 181",n))
+
+\\ n > 0 even, m >= 0
+k = 4; m = 10; n=2*k;
+P0=((x^2-t)+t^(m+1)*x)*((x^2-t)^2+t^(2*m+k+3));
+do(P0, Strprintf("[2I*{%ld}-%ld}], p. 181",n,m))
+genus2red(subst(P0,'t,3),3)
+
+\\ n > 0 odd, m
+k = 4; m = 10; n=2*k+1;
+P0=((x^2-t)+t^(m+1)*x)*((x^2-t)^2+t^(2*m+k+3)*x);
+do(P0, Strprintf("[2I*{%ld}-%ld}], p. 181",n,m))
+
+\\ n, p > 0
+n = 9; p = 8;
+P0=(x^2+t)*(x^2+t^(p+1))*((x-1)^2+t^(n-1));
+do(P0, Strprintf("[II{%ld-%ld}], p. 182",n,p))
+genus2red(subst(P0,'t,3),3)
+
+\\ n > 0 even
+k = 4; n=2*k;
+P0=x*((x^2-t^3)^2+t^(k+6));
+do(P0, Strprintf("[III{%ld}], p. 182",n))
+
+\\ n > 0 odd
+k = 4; n=2*k+1;
+P0=x*((x^2-t^3)^2+t^(k+5)*x);
+do(P0, Strprintf("[III{%ld}], p. 182",n))
+
+\\ n, p, q > 0
+n = 9; p = 8; q = 5;
+P0=(x^2+t^n)*((x-1)^2+t^p)*((x-2)^2+t^q);
+do(P0, Strprintf("[I{%ld-%ld-%ld}], pp. 182-183",n,p,q))
+
+\\ n, p, q > 0
+n = 9; p = 8; q = 5;
+P0=t*(x^2+t^n)*((x-1)^2+t^p)*((x-2)^2+t^q);
+do(P0, Strprintf("[I*{%ld-%ld-%ld}], pp. 183",n,p,q))
+
+\\ n, p > 0, p even
+n = 9; k = 4; p=2*k;
+P0=((x^2-t)^2+t^(k+2))*((x-1)^2+t^(n-1));
+do(P0, Strprintf("[II{%ld-%ld}], p. 183",n,p))
+genus2red(subst(P0,'t,3),3)
+
+\\ n, p > 0, p odd
+n = 9; k = 4; p=2*k+1;
+P0=((x^2-t)^2+t^(k+2)*x)*((x-1)^2+t^(n-1));
+do(P0, Strprintf("[II{%ld-%ld}], p. 183",n,p))
+genus2red(subst(P0,'t,3),3)
+
+\\ n, p > 0
+n = 9; k = 4; l = 0; p=2*k+l;
+P0=t*((x^2-t)^2+t^(k+2)*x^l)*((x-1)^2+t^(n-1));
+do(P0, Strprintf("[II*{%ld-%ld}], p. 184",n,p))
+
+\\ n, p > 0
+n = 9; k = 4; l = 1; p=2*k+l;
+P0=t*((x^2-t)^2+t^(k+2)*x^l)*((x-1)^2+t^(n-1));
+do(P0, Strprintf("[II*{%ld-%ld}], p. 184",n,p))
+
+\\ n > 0
+k = 4; l = 0; n=3*k+l;
+P0=(x^3-t)^2+t^(k+2)*x^l;
+do(P0, Strprintf("[III{%ld}], p. 184",n))
+genus2red(subst(P0,'t,3),3)
+
+\\ n > 0
+k = 4; l = 1; n=3*k+l;
+P0=(x^3-t)^2+t^(k+2)*x^l;
+do(P0, Strprintf("[III{%ld}], p. 184",n))
+genus2red(subst(P0,'t,3),3)
+
+\\ n > 0
+k = 4; l = 2; n=3*k+l;
+P0=(x^3-t)^2+t^(k+2)*x^l;
+do(P0, Strprintf("[III{%ld}], p. 184",n))
+genus2red(subst(P0,'t,3),3)
+
+\\ n > 0
+k = 2; l = 0; n=3*k+l;
+P0=t*((x^3-t)^2+t^(k+2)*x^l);
+do(P0, Strprintf("[III*{%ld}], p. 184",n))
+genus2red(subst(P0,'t,3),3)
+
+\\ n > 0
+k = 2; l = 1; n=3*k+l;
+P0=t*((x^3-t)^2+t^(k+2)*x^l);
+do(P0, Strprintf("[III*{%ld}], p. 184",n))
+genus2red(subst(P0,'t,3),3)
+
+\\ n > 0
+k = 2; l = 2; n=3*k+l;
+P0=(x^3-t)^2+t^(k+2)*x^l;
+do(P0, Strprintf("[III{%ld}], p. 184",n))
+genus2red(subst(P0,'t,3),3)
+
+\\ Extras : p = 3
+\e
+\\ Colin Stahlke, bug28
+genus2red(-x^6-6*x^2-7,3)
+genus2red(-9*x^6+6*x^5-8*x^4-5*x^3+5*x^2-10*x+3,3)
+\\ M. Stoll, bug28
+genus2red(3*x^6+3*x^4+3*x^3+x^2-5*x-5,3)
+\\ Colin Stahlke, bug28
+genus2red(-3*x^6+6*x^5-1*x^4+6*x^3-6*x^2-1*x-6,3)
+\\ J. Mueller, bug28
+genus2red((x^3+2*x+1)*(x^3+3^2*x^2+3^8),3)
+
+\\ A. Brumer, bug28
+P=x^6+4*x^5-24*x^4-16*x^3-52*x^2-48*x;
+genus2red(P,3)
+
+P=x^6+4*x^5+24*x^4+32*x^3+56*x^2+48*x+24;
+genus2red(P,3)
+
+P=24*x^5+56*x^4+76*x^3+33*x^2-4*x-20;
+genus2red(P,3)
+
+P=-3*x^6+6*x^5-25*x^4+36*x^3-69*x^2+38*x-39;
+genus2red(P,3)
+
+\\ M. Stoll, bug28
+P=-5*x^5+5*x^4+10*x^3-7;
+genus2red([P,1],3)
+
+P=-5*x^6-3*x^5-10*x^4-10*x^3-7;
+genus2red([P,1],3)
+
+P=3*x^5+5*x^4+5*x-4;
+genus2red([P,1],3)
+
+Q=x^2+x; P=-9*x^6+6*x^5-8*x^4-5*x^3+5*x^2-10*x+3;
+genus2red([P,Q],3)
+
+\\ M. Stoll, bug27
+Q=x^3+1; P=-7*x^6+5*x^3+5*x^2-6*x+1;
+genus2red([P,Q],3)
+
+\\ #1596
+genus2red(27*x^5 + 97*x^4 + 118*x^3 + 60*x^2 + 13*x + 1,3)
+
+\\ #1597
+genus2red([-x^6 - 3*x^4 - 10*x^2 - 1,x],3)
+\\ #1597
+genus2red([-60*x^6-203*x^5-291*x^4-244*x^3-129*x^2-41*x-7,x^3+x^2+x+1])
+\\ #1597
+genus2red(6*x^6+5*x^4+x^2+1,7)
+\\ #1597
+genus2red([1,x^3-1])
+
+genus2red(x^5+1/5, 5)
+
+genus2red(273*x^6-38933/5*x^5-4483763/4*x^4+371954149/10*x^3+569046245/4*x^2+12389355*x-42117075,5)
+
+\\ #1826
+genus2red(177*x^6+126*x^5-63*x^4+72*x+84,3)
+
+\\ #2053
+genus2red(3*(4*x^6 + 6*x^5 + 3*x^4 + 8*x^3 + 9*x^2 - 3), 3)
+
+genus2red(x^6+27,3)

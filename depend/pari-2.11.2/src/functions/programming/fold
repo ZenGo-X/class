@@ -1,0 +1,24 @@
+Function: fold
+Section: programming/specific
+C-Name: fold0
+Prototype: GG
+Help: fold(f, A): return f(...f(f(A[1],A[2]),A[3]),...,A[#A]).
+Wrapper: (GG)
+Description:
+  (closure,gen):gen    genfold(${1 cookie}, ${1 wrapper}, $2)
+Doc: Apply the \typ{CLOSURE} \kbd{f} of arity $2$ to the entries of \kbd{A},
+ in order to return \kbd{f(\dots f(f(A[1],A[2]),A[3])\dots ,A[\#A])}.
+ \bprog
+ ? fold((x,y)->x*y, [1,2,3,4])
+ %1 = 24
+ ? fold((x,y)->[x,y], [1,2,3,4])
+ %2 = [[[1, 2], 3], 4]
+ ? fold((x,f)->f(x), [2,sqr,sqr,sqr])
+ %3 = 256
+ ? fold((x,y)->(x+y)/(1-x*y),[1..5])
+ %4 = -9/19
+ ? bestappr(tan(sum(i=1,5,atan(i))))
+ %5 = -9/19
+ @eprog
+Variant: Also available is
+ \fun{GEN}{genfold}{void *E, GEN (*fun)(void*,GEN, GEN), GEN A}.

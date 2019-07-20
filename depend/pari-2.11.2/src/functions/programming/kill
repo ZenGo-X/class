@@ -1,0 +1,45 @@
+Function: kill
+Section: programming/specific
+C-Name: kill0
+Prototype: vr
+Help: kill(sym): restores the symbol sym to its ``undefined'' status and kill
+ attached help messages.
+Doc: restores the symbol \kbd{sym} to its ``undefined'' status, and deletes any
+ help messages attached to \kbd{sym} using \kbd{addhelp}. Variable names
+ remain known to the interpreter and keep their former priority: you cannot
+ make a variable ``less important" by killing it!
+ \bprog
+ ? z = y = 1; y
+ %1 = 1
+ ? kill(y)
+ ? y            \\ restored to ``undefined'' status
+ %2 = y
+ ? variable()
+ %3 = [x, y, z] \\ but the variable name y is still known, with y > z !
+ @eprog\noindent
+ For the same reason, killing a user function (which is an ordinary
+ variable holding a \typ{CLOSURE}) does not remove its name from the list of
+ variable names.
+
+ If the symbol is attached to a variable --- user functions being an
+ important special case ---, one may use the \idx{quote} operator
+ \kbd{a = 'a} to reset variables to their starting values. However, this
+ will not delete a help message attached to \kbd{a}, and is also slightly
+ slower than \kbd{kill(a)}.
+ \bprog
+ ? x = 1; addhelp(x, "foo"); x
+ %1 = 1
+ ? x = 'x; x   \\ same as 'kill', except we don't delete help.
+ %2 = x
+ ? ?x
+ foo
+ @eprog\noindent
+ On the other hand, \kbd{kill} is the only way to remove aliases and installed
+ functions.
+ \bprog
+ ? alias(fun, sin);
+ ? kill(fun);
+
+ ? install(addii, GG);
+ ? kill(addii);
+ @eprog

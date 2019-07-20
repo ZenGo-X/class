@@ -1,0 +1,14 @@
+#!/bin/sh
+# to be run from the Oxxx directory. Called iff $TOP/.git/index exists
+TOP=..
+cfg=$TOP/config
+f=paricfg.h
+rm -f $f.old
+cp $f $f.old
+. $cfg/get_head
+. $cfg/version # need $TOP
+v="GP/PARI CALCULATOR Version ${version}.${patch} (${status})"
+sed -e "s,define PARIVERSION.*,define PARIVERSION \"$v\",;
+        s,define PARI_VCSVERSION.*,define PARI_VCSVERSION \"${vcsversion}\",;
+        s,define PARI_VERSION_CODE.*,define PARI_VERSION_CODE ${version_code}," $f.old > $f
+

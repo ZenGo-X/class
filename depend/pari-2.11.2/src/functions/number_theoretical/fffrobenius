@@ -1,0 +1,20 @@
+Function: fffrobenius
+Section: number_theoretical
+C-Name: fffrobenius
+Prototype: GD1,L,
+Help: fffrobenius(m,{n=1}): return the n-th power of the Frobenius map over
+ the field of definition of m.
+Doc: return the $n$-th power of the Frobenius map over the field of definition
+ of $m$.
+ \bprog
+ ? a = ffgen([3,5],'a);
+ ? f = fffrobenius(a);
+ ? ffmap(f,a) == a^3
+ %3 = 1
+ ? g = fffrobenius(a, 5);
+ ? ffmap(g,a) == a
+ %5 = 1
+ ? h = fffrobenius(a, 2);
+ ? h == ffcompomap(f,f)
+ %7 = 1
+ @eprog

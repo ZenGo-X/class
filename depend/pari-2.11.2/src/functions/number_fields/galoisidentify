@@ -1,0 +1,23 @@
+Function: galoisidentify
+Section: number_fields
+C-Name: galoisidentify
+Prototype: G
+Help: galoisidentify(gal): gal being a Galois group as output by galoisinit,
+ output the isomorphism class of the underlying abstract group as a
+ two-components vector [o,i], where o is the group order, and i is the group
+ index in the GAP4 small group library.
+Doc: \var{gal} being be a Galois group as output by \tet{galoisinit},
+ output the isomorphism class of the underlying abstract group as a
+ two-components vector $[o,i]$, where $o$ is the group order, and $i$ is the
+ group index in the GAP4 Small Group library, by Hans Ulrich Besche, Bettina
+ Eick and Eamonn O'Brien.
+
+ This command also accepts subgroups returned by \kbd{galoissubgroups}.
+
+ The current implementation is limited to degree less or equal to $127$.
+ Some larger ``easy'' orders are also supported.
+
+ The output is similar to the output of the function \kbd{IdGroup} in GAP4.
+ Note that GAP4 \kbd{IdGroup} handles all groups of order less than $2000$
+ except $1024$, so you can use \tet{galoisexport} and GAP4 to identify large
+ Galois groups.

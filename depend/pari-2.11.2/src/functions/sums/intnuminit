@@ -1,0 +1,56 @@
+Function: intnuminit
+Section: sums
+C-Name: intnuminit
+Prototype: GGD0,L,p
+Help: intnuminit(a,b,{m=0}): initialize tables for integrations from a to b.
+ See help for intnum for coding of a and b. Possible types: compact interval,
+ semi-compact (one extremity at + or - infinity) or R, and very slowly, slowly
+ or exponentially decreasing, or sine or cosine oscillating at infinities.
+Doc: initialize tables for integration from
+ $a$ to $b$, where $a$ and $b$ are coded as in \kbd{intnum}. Only the
+ compactness, the possible existence of singularities, the speed of decrease
+ or the oscillations at infinity are taken into account, and not the values.
+ For instance {\tt intnuminit(-1,1)} is equivalent to {\tt intnuminit(0,Pi)},
+ and {\tt intnuminit([0,-1/2],oo)} is equivalent to
+ {\tt intnuminit([-1,-1/2], -oo)}; on the other hand, the order matters
+ and
+ {\tt intnuminit([0,-1/2], [1,-1/3])} is \emph{not} equivalent to
+ {\tt intnuminit([0,-1/3], [1,-1/2])} !
+
+ If $m$ is present, it must be non-negative and we multiply the default
+ number of sampling points by $2^m$ (increasing the running time by a
+ similar factor).
+
+ The result is technical and liable to change in the future, but we document
+ it here for completeness. Let $x=\phi(t)$, $t\in ]-\infty,\infty[$ be an
+ internally chosen change of variable, achieving double exponential decrease of
+ the integrand at infinity. The integrator \kbd{intnum} will compute
+ $$ h \sum_{|n| < N} \phi'(nh) F(\phi(nh)) $$
+ for some integration step $h$ and truncation parameter $N$.
+ In basic use, let
+ \bprog
+ [h, x0, w0, xp, wp, xm, wm] = intnuminit(a,b);
+ @eprog
+
+ \item $h$ is the integration step
+
+ \item $x_0 = \phi(0)$  and $w_0 = \phi'(0)$,
+
+ \item \var{xp} contains the $\phi(nh)$, $0 < n < N$,
+
+ \item \var{xm} contains the $\phi(nh)$, $0 < -n < N$, or is empty.
+
+ \item \var{wp} contains the $\phi'(nh)$, $0 < n < N$,
+
+ \item \var{wm} contains the $\phi'(nh)$, $0 < -n < N$, or is empty.
+
+ The arrays \var{xm} and \var{wm} are left empty when $\phi$ is an odd
+ function. In complicated situations when non-default behavior is specified at
+ end points, \kbd{intnuminit} may return up to $3$ such arrays, corresponding
+ to a splitting of up to $3$ integrals of basic type.
+
+ If the functions to be integrated later are of the form $F = f(t) k(t,z)$
+ for some kernel $k$ (e.g. Fourier, Laplace, Mellin, \dots), it is
+ useful to also precompute the values of $f(\phi(nh))$, which is accomplished
+ by \tet{intfuncinit}. The hard part is to determine the behavior
+ of $F$ at endpoints, depending on $z$.

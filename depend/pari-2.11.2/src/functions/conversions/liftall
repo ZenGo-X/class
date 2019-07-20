@@ -1,0 +1,23 @@
+Function: liftall
+Section: conversions
+C-Name: liftall
+Prototype: G
+Help: liftall(x): lifts every element of Z/nZ to Z, of Qp to Q, and of
+ K[x]/(P) to K[x].
+Description:
+ (pol):pol        liftall($1)
+ (vec):vec        liftall($1)
+ (gen):gen        liftall($1)
+Doc:
+ recursively lift all components of $x$ from $\Z/n\Z$ to $\Z$,
+ from $\Q_p$ to $\Q$ (as \tet{truncate}), and polmods to
+ polynomials. \typ{FFELT} are not lifted, nor are List elements: you may
+ convert the latter to vectors first, or use \kbd{apply(liftall,L)}. More
+ generally, components for which such lifts are meaningless (e.g. character
+ strings) are copied verbatim.
+ \bprog
+ ? liftall(x * (1 + O(3)) + Mod(2,3))
+ %1 = x + 2
+ ? liftall(x * Mod(y,y^2+1) + Mod(2,3)*Mod(z,z^2))
+ %2 = y*x + 2*z
+ @eprog

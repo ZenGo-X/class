@@ -1,0 +1,18 @@
+Function: mftraceform
+Section: modular_forms
+C-Name: mftraceform
+Prototype: GD0,L,
+Help: mftraceform(NK,{space=0}): If NK=[N,k,CHI,.] as in
+ mfinit with k integral, gives the trace form in the corresponding subspace
+ of S_k(G_0(N),chi). The supported values for space are 0: the newspace
+ (default), 1: the full cuspidal space.
+Doc: If $NK=[N,k,CHI,.]$ as in \kbd{mfinit} with $k$ integral, gives the
+ trace form in the corresponding subspace of $S_k(\Gamma_0(N),\chi)$.
+ The supported values for \kbd{space} are 0: the newspace (default),
+ 1: the full cuspidal space.
+ \bprog
+ ? F = mftraceform([23,2]); mfcoefs(F,16)
+ %1 = [0, 2, -1, 0, -1, -2, -5, 2, 0, 4, 6, -6, 5, 6, 4, -10, -3]
+ ? F = mftraceform([23,1,-23]); mfcoefs(F,16)
+ %2 = [0, 1, -1, -1, 0, 0, 1, 0, 1, 0, 0, 0, 0, -1, 0, 0, -1]
+ @eprog

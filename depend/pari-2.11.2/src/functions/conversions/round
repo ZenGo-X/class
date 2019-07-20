@@ -1,0 +1,35 @@
+Function: round
+Section: conversions
+C-Name: round0
+Prototype: GD&
+Help: round(x,{&e}): take the nearest integer to all the coefficients of x.
+ If e is present, do not take into account loss of integer part precision,
+ and set e = error estimate in bits.
+Description:
+ (small):small:parens   $1
+ (int):int:copy:parens  $1
+ (real):int             roundr($1)
+ (mp):int               mpround($1)
+ (mp, &small):int       grndtoi($1, &$2)
+ (mp, &int):int         round0($1, &$2)
+ (gen):gen              ground($1)
+ (gen, &small):gen      grndtoi($1, &$2)
+ (gen, &int):gen        round0($1, &$2)
+Doc: If $x$ is in $\R$, rounds $x$ to the nearest integer (rounding to
+ $+\infty$ in case of ties), then and sets $e$ to the number of error bits,
+ that is the binary exponent of the difference between the original and the
+ rounded value (the ``fractional part''). If the exponent of $x$ is too large
+ compared to its precision (i.e.~$e>0$), the result is undefined and an error
+ occurs if $e$ was not given.
+
+ \misctitle{Important remark} Contrary to the other truncation functions,
+ this function operates on every coefficient at every level of a PARI object.
+ For example
+ $$\text{truncate}\left(\dfrac{2.4*X^2-1.7}{X}\right)=2.4*X,$$
+ whereas
+ $$\text{round}\left(\dfrac{2.4*X^2-1.7}{X}\right)=\dfrac{2*X^2-2}{X}.$$
+ An important use of \kbd{round} is to get exact results after an approximate
+ computation, when theory tells you that the coefficients must be integers.
+
+Variant: Also available are \fun{GEN}{grndtoi}{GEN x, long *e} and
+ \fun{GEN}{ground}{GEN x}.

@@ -1,0 +1,39 @@
+Function: matdet
+Section: linear_algebra
+C-Name: det0
+Prototype: GD0,L,
+Help: matdet(x,{flag=0}): determinant of the matrix x using an appropriate
+ algorithm depending on the coefficients. If (optional) flag is set to 1, use
+ classical Gaussian elimination (usually worse than the default).
+Description:
+ (gen, ?0):gen           det($1)
+ (gen, 1):gen            det2($1)
+ (gen, #small):gen       $"incorrect flag in matdet"
+ (gen, small):gen        det0($1, $2)
+Doc: determinant of the square matrix $x$.
+
+ If $\fl=0$, uses an appropriate algorithm depending on the coefficients:
+
+ \item integer entries: modular method due to Dixon, Pernet and Stein.
+
+ \item real or $p$-adic entries: classical Gaussian elimination using maximal
+ pivot.
+
+ \item intmod entries: classical Gaussian elimination using first non-zero
+ pivot.
+
+ \item other cases: Gauss-Bareiss.
+
+ If $\fl=1$, uses classical Gaussian elimination with appropriate pivoting
+ strategy (maximal pivot for real or $p$-adic coefficients). This is usually
+ worse than the default.
+
+Variant: Also available are \fun{GEN}{det}{GEN x} ($\fl=0$),
+ \fun{GEN}{det2}{GEN x} ($\fl=1$) and \fun{GEN}{ZM_det}{GEN x} for integer
+ entries.
+
+Function: _ZM_det_worker
+C-Name: ZM_det_worker
+Prototype: GG
+Section: programming/internals
+Help: worker for ZM_det

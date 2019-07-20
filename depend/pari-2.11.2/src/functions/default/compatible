@@ -1,0 +1,8 @@
+Function: _def_compatible
+Class: default
+Section: default
+C-Name: sd_compatible
+Prototype:
+Help:
+Obsolete: 2014-10-11
+Doc: Obsolete. This default is now a no-op.

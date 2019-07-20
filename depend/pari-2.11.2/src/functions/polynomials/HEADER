@@ -1,0 +1,10 @@
+Function: _header_polynomials
+Class: header
+Section: polynomials
+Doc:
+ \section{Polynomials and power series}
+
+ We group here all functions which are specific to polynomials or power
+ series. Many other functions which can be applied on these objects are
+ described in the other sections. Also, some of the functions described here
+ can be applied to other types.

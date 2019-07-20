@@ -1,0 +1,32 @@
+Function: matkermod
+Section: linear_algebra
+C-Name: matkermod
+Prototype: GGD&
+Help: matkermod(x,d,&im): basis of the kernel of the matrix x modulo d.
+Doc: gives a Howell basis (unique representation for submodules of~$(\Z/d\Z)^n$,
+ cf. \kbd{matimagemod}) for the kernel of the matrix $x$ modulo $d$ as columns
+ of a matrix. The matrix $x$ must have \typ{INT} entries, and $d$ can be an
+ arbitrary positive integer. If $im$ is present, set it to a basis of the image
+ of~$x$ (which is computed on the way).
+
+ \bprog
+ ? A = [1,2,3;5,1,4]
+ %1 =
+ [1 2 3]
+
+ [5 1 4]
+
+ ? K = matkermod(A,6)
+ %2 =
+ [2 1]
+
+ [2 1]
+
+ [0 3]
+
+ ? (A*K)%6
+ %3 =
+ [0 0]
+
+ [0 0]
+ @eprog

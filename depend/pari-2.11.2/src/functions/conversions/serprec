@@ -1,0 +1,21 @@
+Function: serprec
+Section: conversions
+C-Name: gpserprec
+Prototype: Gn
+Help: serprec(x,v):
+ return the absolute precision x with respect to power series in the variable v.
+Doc: returns the absolute precision of $x$ with respect to power series
+ in the variable $v$; this is the
+ minimum precision of the components of $x$. The result is \tet{+oo} if $x$
+ is an exact object (as a series in $v$):
+ \bprog
+ ? serprec(x + O(y^2), y)
+ %1 = 2
+ ? serprec(x + 2, x)
+ %2 = +oo
+ ? serprec(2 + x + O(x^2), y)
+ %3 = +oo
+ @eprog
+
+Variant: Also available is \fun{long}{serprec}{GEN x, GEN p}, which returns
+ \tet{LONG_MAX} if $x = 0$, otherwise the series precision as a \kbd{long} integer.

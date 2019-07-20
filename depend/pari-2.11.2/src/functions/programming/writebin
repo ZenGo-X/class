@@ -1,0 +1,38 @@
+Function: writebin
+Section: programming/specific
+C-Name: gpwritebin
+Prototype: vsDG
+Help: writebin(filename,{x}): write x as a binary object to file filename.
+ If x is omitted, write all session variables.
+Doc: writes (appends) to
+ \var{filename} the object $x$ in binary format. This format is not human
+ readable, but contains the exact internal structure of $x$, and is much
+ faster to save/load than a string expression, as would be produced by
+ \tet{write}. The binary file format includes a magic number, so that such a
+ file can be recognized and correctly input by the regular \tet{read} or \b{r}
+ function. If saved objects refer to polynomial variables that are not
+ defined in the new session, they will be displayed as \kbd{t$n$} for some
+ integer $n$ (the attached variable number).
+ Installed functions and history objects can not be saved via this function.
+
+ If $x$ is omitted, saves all user variables from the session, together with
+ their names. Reading such a ``named object'' back in a \kbd{gp} session will set
+ the corresponding user variable to the saved value. E.g after
+ \bprog
+ x = 1; writebin("log")
+ @eprog\noindent
+ reading \kbd{log} into a clean session will set \kbd{x} to $1$.
+ The relative variables priorities (see \secref{se:priority}) of new variables
+ set in this way remain the same (preset variables retain their former
+ priority, but are set to the new value). In particular, reading such a
+ session log into a clean session will restore all variables exactly as they
+ were in the original one.
+
+ Just as a regular input file, a binary file can be compressed
+ using \tet{gzip}, provided the file name has the standard \kbd{.gz}
+ extension.\sidx{binary file}
+
+ In the present implementation, the binary files are architecture dependent
+ and compatibility with future versions of \kbd{gp} is not guaranteed. Hence
+ binary files should not be used for long term storage (also, they are
+ larger and harder to compress than text files).

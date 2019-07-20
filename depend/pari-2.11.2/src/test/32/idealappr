@@ -1,0 +1,9 @@
+3
+[23/2, [6, 1/2]~]
+-23/2
+[0, 0]
+  ***   at top-level: idealtwoelt(K,[;],1)
+  ***                 ^--------------------
+  *** idealtwoelt: domain error in idealtwoelt2: element mod ideal != 0
+0
+Total time spent: 1

@@ -1,0 +1,74 @@
+Function: thue
+Section: polynomials
+C-Name: thue
+Prototype: GGDG
+Help: thue(tnf,a,{sol}): solve the equation P(x,y)=a, where tnf was created
+ with thueinit(P), and sol, if present, contains the solutions of Norm(x)=a
+ modulo units in the number field defined by P. If tnf was computed without
+ assuming GRH (flag 1 in thueinit), the result is unconditional. If tnf is a
+ polynomial, compute thue(thueinit(P,0), a).
+Doc: returns all solutions of the equation
+ $P(x,y)=a$ in integers $x$ and $y$, where \var{tnf} was created with
+ $\kbd{thueinit}(P)$. If present, \var{sol} must contain the solutions of
+ $\Norm(x)=a$ modulo units of positive norm in the number field
+ defined by $P$ (as computed by \kbd{bnfisintnorm}). If there are infinitely
+ many solutions, an error is issued.
+
+ It is allowed to input directly the polynomial $P$ instead of a \var{tnf},
+ in which case, the function first performs \kbd{thueinit(P,0)}. This is
+ very wasteful if more than one value of $a$ is required.
+
+ If \var{tnf} was computed without assuming GRH (flag $1$ in \tet{thueinit}),
+ then the result is unconditional. Otherwise, it depends in principle of the
+ truth of the GRH, but may still be unconditionally correct in some
+ favorable cases. The result is conditional on the GRH if
+ $a\neq \pm 1$ and $P$ has a single irreducible rational factor, whose
+ attached tentative class number $h$ and regulator $R$ (as computed
+ assuming the GRH) satisfy
+
+ \item $h > 1$,
+
+ \item $R/0.2 > 1.5$.
+
+ Here's how to solve the Thue equation $x^{13} - 5y^{13} = - 4$:
+ \bprog
+ ? tnf = thueinit(x^13 - 5);
+ ? thue(tnf, -4)
+ %1 = [[1, 1]]
+ @eprog\noindent In this case, one checks that \kbd{bnfinit(x\pow13 -5).no}
+ is $1$. Hence, the only solution is $(x,y) = (1,1)$ and the result is
+ unconditional. On the other hand:
+ \bprog
+ ? P = x^3-2*x^2+3*x-17; tnf = thueinit(P);
+ ? thue(tnf, -15)
+ %2 = [[1, 1]]  \\ a priori conditional on the GRH.
+ ? K = bnfinit(P); K.no
+ %3 = 3
+ ? K.reg
+ %4 = 2.8682185139262873674706034475498755834
+ @eprog
+ This time the result is conditional. All results computed using this
+ particular \var{tnf} are likewise conditional, \emph{except} for a right-hand
+ side of $\pm 1$.
+ The above result is in fact correct, so we did not just disprove the GRH:
+ \bprog
+ ? tnf = thueinit(x^3-2*x^2+3*x-17, 1 /*unconditional*/);
+ ? thue(tnf, -15)
+ %4 = [[1, 1]]
+ @eprog
+ Note that reducible or non-monic polynomials are allowed:
+ \bprog
+ ? tnf = thueinit((2*x+1)^5 * (4*x^3-2*x^2+3*x-17), 1);
+ ? thue(tnf, 128)
+ %2 = [[-1, 0], [1, 0]]
+ @eprog\noindent Reducible polynomials are in fact much easier to handle.
+
+ \misctitle{Note} When $P$ is irreducible without a real root, the default
+ strategy is to use brute force enumeration in time $|a|^{1/\deg P}$ and
+ avoid computing a touch \var{bnf} attached to $P$, see \kbd{thueinit}.
+ Besides reusing a quantity you might need for other purposes, the
+ default argument \emph{sol} can also be used to use a different strategy
+ and prove that there are no solutions; of course you need to compute a
+ \var{bnf} on you own to obtain \emph{sol}. If there \emph{are} solutions
+ this won't help unless $P$ is quadratic, since the enumeration will be
+ performed in any case.

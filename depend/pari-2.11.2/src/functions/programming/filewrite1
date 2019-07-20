@@ -1,0 +1,11 @@
+Function: filewrite1
+Section: programming/specific
+C-Name: gp_filewrite1
+Prototype: vLs
+Help: filewrite1(n, s): write the string s to file number n without ending with newline.
+Doc: write the string $s$ to the file attached to descriptor $n$.
+ The file must have been opened with \kbd{fileopen} in \kbd{"w"} or \kbd{"a"}
+ mode.
+
+ If you want to append a newline at the end of $s$, you can use
+ \kbd{Str(s,"\bs n")} or \kbd{filewrite}.

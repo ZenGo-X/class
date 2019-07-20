@@ -1,0 +1,32 @@
+default(realprecision,38);
+default(seriesprecision,6);
+besseljh(1,2^64)
+besseljh(10,x)
+NU = [x,0,1,1/2,sqrt(2),10,1+I];
+ARG = [x,1,1/2,1+I];
+F=[besselh1,besselh2,besseli,besselj,besseljh,besselk,besseln];
+test(f)=
+{
+print(f);
+for (i=1,#NU,
+  for (j=1,#ARG,
+    print([i,j],": ", iferr(f(NU[i],ARG[j]), E,E));
+  )
+);
+}
+for(i=1,#F,test(F[i]));
+for(i=1,#F,print(F[i](1,Mod(x,x^2+1))));
+for(i=1,#F,print(F[i](1,[1])));
+for(i=1,#F,print(F[i](1,[1]~)));
+for(i=1,#F,print(F[i](1,Mat(1))));
+besseljh(2,0.)
+besseljh(2,1e-50)
+besselk(1,1000)
+besselk(1e-5,20)
+besselk(I,1000)
+besselk(1e-20,1e-5)
+\\ errors
+for(i=1,#F,print(iferr(F[i](O(2),1),E,E)));
+for(i=1,#F,print(iferr(F[i]("",1),E,E)));
+for(i=1,#F,print(iferr(F[i](1,O(2)),E,E)));
+for(i=1,#F,print(iferr(F[i](1,""),E,E)));

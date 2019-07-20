@@ -1,0 +1,33 @@
+Function: padicprec
+Section: conversions
+C-Name: gppadicprec
+Prototype: GG
+Help: padicprec(x,p):
+ return the absolute p-adic precision of object x.
+Doc: returns the absolute $p$-adic precision of the object $x$; this is the
+ minimum precision of the components of $x$. The result is \tet{+oo} if $x$
+ is an exact object (as a $p$-adic):
+ \bprog
+ ? padicprec((1 + O(2^5)) * x + (2 + O(2^4)), 2)
+ %1 = 4
+ ? padicprec(x + 2, 2)
+ %2 = +oo
+ ? padicprec(2 + x + O(x^2), 2)
+ %3 = +oo
+ @eprog\noindent The function raises an exception if it encounters
+ an object incompatible with $p$-adic computations:
+ \bprog
+ ? padicprec(O(3), 2)
+  ***   at top-level: padicprec(O(3),2)
+  ***                 ^-----------------
+  *** padicprec: inconsistent moduli in padicprec: 3 != 2
+
+ ? padicprec(1.0, 2)
+  ***   at top-level: padicprec(1.0,2)
+  ***                 ^----------------
+  *** padicprec: incorrect type in padicprec (t_REAL).
+ @eprog
+
+Variant: Also available is the function \fun{long}{padicprec}{GEN x, GEN p},
+ which returns \tet{LONG_MAX} if $x = 0$ and the $p$-adic precision as a
+ \kbd{long} integer.

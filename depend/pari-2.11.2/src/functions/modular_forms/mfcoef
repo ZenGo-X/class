@@ -1,0 +1,13 @@
+Function: mfcoef
+Section: modular_forms
+C-Name: mfcoef
+Prototype: GL
+Help: mfcoef(F,n): Compute the n-th Fourier coefficient a(n) of the
+ modular form F.
+Doc: Compute the $n$-th Fourier coefficient of the generalized modular form $F$.
+ Note that this is the $n+1$-st component of the vector
+ \kbd{mfcoefs(F,n)} as well as the second component of \kbd{mfcoefs(F,1,n)}.
+ \bprog
+ ? mfcoef(mfDelta(),10)
+ %1 = -115920
+ @eprog

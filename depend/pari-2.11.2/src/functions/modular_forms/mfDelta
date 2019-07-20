@@ -1,0 +1,10 @@
+Function: mfDelta
+Section: modular_forms
+C-Name: mfDelta
+Prototype:
+Help: mfDelta(): mf corresponding to the Ramanujan Delta function.
+Doc: mf structure corresponding to the Ramanujan Delta function $\Delta$.
+ \bprog
+ ? mfcoefs(mfDelta(),4)
+ %1 = [0, 1, -24, 252, -1472]
+ @eprog

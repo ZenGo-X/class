@@ -1,0 +1,7 @@
+Function: _.e
+Help: _.e
+Section: member_functions
+C-Name: member_e
+Prototype: mG
+Description:
+ (prid):small        pr_get_e($1)

@@ -1,0 +1,73 @@
+Function: select
+Section: programming/specific
+C-Name: select0
+Prototype: GGD0,L,
+Help: select(f, A, {flag = 0}): selects elements of A according to the selection
+ function f. If flag is 1, return the indices of those elements (indirect
+ selection).
+Wrapper: (bG)
+Description:
+  (gen,gen):gen    genselect(${1 cookie}, ${1 wrapper}, $2)
+  (gen,gen,0):gen  genselect(${1 cookie}, ${1 wrapper}, $2)
+  (gen,gen,1):vecsmall  genindexselect(${1 cookie}, ${1 wrapper}, $2)
+Doc: We first describe the default behavior, when $\fl$ is 0 or omitted.
+ Given a vector or list \kbd{A} and a \typ{CLOSURE} \kbd{f}, \kbd{select}
+ returns the elements $x$ of \kbd{A} such that $f(x)$ is non-zero. In other
+ words, \kbd{f} is seen as a selection function returning a boolean value.
+ \bprog
+ ? select(x->isprime(x), vector(50,i,i^2+1))
+ %1 = [2, 5, 17, 37, 101, 197, 257, 401, 577, 677, 1297, 1601]
+ ? select(x->(x<100), %)
+ %2 = [2, 5, 17, 37]
+ @eprog\noindent returns the primes of the form $i^2+1$ for some $i\leq 50$,
+ then the elements less than 100 in the preceding result. The \kbd{select}
+ function also applies to a matrix \kbd{A}, seen as a vector of columns, i.e. it
+ selects columns instead of entries, and returns the matrix whose columns are
+ the selected ones.
+
+ \misctitle{Remark} For $v$ a \typ{VEC}, \typ{COL}, \typ{LIST} or \typ{MAT},
+ the alternative set-notations
+ \bprog
+ [g(x) | x <- v, f(x)]
+ [x | x <- v, f(x)]
+ [g(x) | x <- v]
+ @eprog\noindent
+ are available as shortcuts for
+ \bprog
+ apply(g, select(f, Vec(v)))
+ select(f, Vec(v))
+ apply(g, Vec(v))
+ @eprog\noindent respectively:
+ \bprog
+ ? [ x | x <- vector(50,i,i^2+1), isprime(x) ]
+ %1 = [2, 5, 17, 37, 101, 197, 257, 401, 577, 677, 1297, 1601]
+ @eprog
+
+ \noindent If $\fl = 1$, this function returns instead the \emph{indices} of
+ the selected elements, and not the elements themselves (indirect selection):
+ \bprog
+ ? V = vector(50,i,i^2+1);
+ ? select(x->isprime(x), V, 1)
+ %2 = Vecsmall([1, 2, 4, 6, 10, 14, 16, 20, 24, 26, 36, 40])
+ ? vecextract(V, %)
+ %3 = [2, 5, 17, 37, 101, 197, 257, 401, 577, 677, 1297, 1601]
+ @eprog\noindent
+ The following function lists the elements in $(\Z/N\Z)^*$:
+ \bprog
+ ? invertibles(N) = select(x->gcd(x,N) == 1, [1..N])
+ @eprog
+
+ \noindent Finally
+ \bprog
+ ? select(x->x, M)
+ @eprog\noindent selects the non-0 entries in \kbd{M}. If the latter is a
+ \typ{MAT}, we extract the matrix of non-0 columns. Note that \emph{removing}
+ entries instead of selecting them just involves replacing the selection
+ function \kbd{f} with its negation:
+ \bprog
+ ? select(x->!isprime(x), vector(50,i,i^2+1))
+ @eprog
+
+ \synt{genselect}{void *E, long (*fun)(void*,GEN), GEN a}. Also available
+ is \fun{GEN}{genindexselect}{void *E, long (*fun)(void*, GEN), GEN a},
+ corresponding to $\fl = 1$.

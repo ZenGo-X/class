@@ -1,0 +1,239 @@
+randdistinct(n) =
+{
+  my(i=0,j=0);
+  while(i==j,
+    i = random([1,n]);
+    j = random([1,n]);
+  );
+  [i,j];
+}
+randSLn(n,nb,B,A = matid(n)) =
+{
+  my(i,j,a,tmp);
+  for(count=1,nb,
+    [i,j] = randdistinct(n);
+    a = random([-B,B]);
+    A[,i] = A[,i] + a*A[,j];
+    [i,j] = randdistinct(n);
+  );
+  A;
+}
+rmzerocol(A) =
+{
+  my(L=[]);
+  for(i=1,#A,
+    if(A[,i]!=0, L = concat(L,[A[,i]]))
+  );
+  matconcat(L);
+}
+print("bb hermite Z/NZ");
+N=1800;
+nb = 500;
+setrand(1);
+print("imagemod");
+{for(m=1,4,
+  for(n=1,4,
+    for(count=1,nb,
+      A = matrix(m,n,i,j,random([0,N-1]));
+      h1 = mathnfmodid(A,N);
+      h2 = matimagemod(A,N,&U);
+      if(rmzerocol(h1%N)!=h2, print("fail: ", A));
+      if(A*(U*Mod(1,N))!=h2, print("fail2: ", A, "\n", h2, "\n", U));
+    );
+  );
+);}
+{M = matdiagonal([900,4,9,25,10]);M[1,]=[900,2*65,9*13,25*11,5*17];}
+H = matimagemod(M,N)
+nb = 250;
+{for(count=1,nb,
+  A = randSLn(5,50,N,M);
+  if(H != matimagemod(A,N),
+    print("fail3: ", A);
+  );
+);}
+{M = [11,28,-1;
+      2,1,89;
+      5,78,15;
+      0,8,3;
+      0,0,3
+];}
+H = matimagemod(M,N)
+{for(count=1,300,
+  A = randSLn(3,30,N,M);
+  if(H != matimagemod(A,N),
+    print("fail4: ", A);
+  );
+);}
+print("kermod");
+d=1800;
+nb=250;
+setrand(1);
+{for(m=1,5,
+  for(n=1,5,
+    for(count=1,nb,
+      M = matrix(m,n,i,j,random([0,d-1]));
+      K = matkermod(M,d,&im);
+      if((M*K)%d!=0, print("fail:", M));
+      K2 = matsolvemod(M,d,0,1)[2];
+      K3 = matimagemod(K2,d);
+      if(K!=K3, print("fail2:", M, K, K3));
+      im2 = matimagemod(M,d);
+      if(im!=im2, print("fail3:", M, im, im2));
+    );
+  );
+);}
+d = 6;
+matkermod(Mat([0]),d)
+matkermod(Mat([1]),d)
+matkermod(Mat([2]),d)
+matkermod([1;0],d)
+matkermod([2;0],d)
+matkermod([0;0],d)
+matkermod([3;0],d)
+matkermod([0;1],d)
+matkermod([0;2],d)
+matkermod([1;3],d)
+matkermod([2;3],d)
+matkermod([2;4],d)
+matkermod(Mat([1,0]),d)
+matkermod(Mat([0,1]),d)
+matkermod(Mat([2,0]),d)
+matkermod(Mat([1,3]),d)
+matkermod(Mat([0,3]),d)
+matkermod(Mat([2,3]),d)
+matkermod([1,0;0,0],d)
+matkermod([2,0;0,3],d)
+matkermod([1,1;0,1],d)
+matkermod([2,1;0,3],d)
+matkermod([4,2;4,2],d)
+matkermod([2,2;3,0],d)
+print("invmod");
+d=1800;
+nb=100;
+setrand(1);
+{for(m=1,5,
+  for(n=1,5,
+    for(count=1,nb,
+      M = matrix(m,n,i,j,random([0,d-1]));
+      U = 0;
+      iferr(U = matinvmod(M,d),E,
+        if(errname(E)!="e_INV", print(E))
+      );
+      if(U!=0 && (U*M)%d != 1, printsep(" ", "fail 1800:", M, U, (U*M)%d));
+    );
+  );
+);}
+d=31;
+nb=100;
+setrand(1);
+{for(m=1,5,
+  for(n=1,5,
+    for(count=1,nb,
+      M = matrix(m,n,i,j,random([0,d-1]));
+      U = 0;
+      iferr(U = matinvmod(M,d),E,
+        if(errname(E)!="e_INV", print(E))
+      );
+      if(U!=0 && (U*M)%d != 1, printsep(" ", "fail 31:", M, U, (U*M)%d));
+    );
+  );
+);}
+
+\\matsolvemod
+aff2lin(X) = mathnf(matconcat([X[2],X[1];0,1]));
+M = [1,2;3,4];
+aff2lin(matsolvemod(M, [3,4]~, [1,2]~, 1))
+aff2lin(matsolvemod(M, 3, [1,1]~, 1))
+aff2lin(matsolvemod([1,1;1,1], [15,6]~, [2,2]~, 1))
+aff2lin(matsolvemod(Mat([2,4,6]), 8, [2]~, 1))
+aff2lin(matsolvemod([3;5;7], [2,3,5]~, [-1,-2,-3]~, 1))
+aff2lin(matsolvemod([7,8,6;1,11,16],512,[-1,-1]~,1))
+matsolvemod([1,1;1,1], 32, [17,1]~)
+matsolvemod(Mat(1),2,[1]~)
+matsolvemod([;],2,1)
+matsolvemod([;],2,0)
+matsolvemod([;],[2,2]~,1)
+matsolvemod([;],[2,2]~,0)
+matsolvemod([;],[2,2]~,[0,0]~)
+matsolvemod([;],[2,2]~,[1,2]~)
+matsolvemod([;],2,[1,2]~)
+matsolvemod(Mat(1),2,1)
+matsolvemod([1,2;3,4],0,1)
+
+\\zero ring
+matimagemod([1,2;3,4],1)
+matdetmod(Mat(3),1)
+matdetmod([;],1)
+matkermod([1,2;3,4],1)
+matinvmod([1,2;3,4],1)
+matinvmod([1,2;3,4;5,6],1)
+matsolvemod(Mat(1),1,[1]~,1)
+
+\\examples from docu
+A = [2,1;0,2];
+matimagemod(A,6,&U)
+U
+(A*U)%6
+A = [1,2,3;5,1,4]
+K = matkermod(A,6)
+(A*K)%6
+A = [3,1,2;1,2,1;3,1,1];
+U = matinvmod(A,6)
+(U*A)%6
+A = [4,2,3; 4,5,6; 7,8,9]; matdetmod(A,27)
+\\end examples
+matdetmod([0,1;1,0],9)
+matdetmod([7,1;1,0],9)
+matdetmod([6,0;0,1],9)
+matimagemod([1;2],4)
+matimagemod([4,1;0,4],8,&U)
+U
+
+matsolvemod(matrix(1,0),0,[0]~)
+matsolvemod(matrix(1,0),0,0)
+matsolvemod(matrix(1,0),[0]~,[0]~)
+matsolvemod(matrix(1,0),[0]~,[0]~,1)
+matsolvemod(Mat([1]),[0]~,[0]~)
+matsolvemod(Mat([1]),[0]~,0)
+matsolvemod(Mat([1]),0,0,1)
+matsolvemod(Mat([2]),0,1,1)
+matsolvemod(Mat([21,110]),0,1,1)
+
+\\matdetmod fixes
+M = [21,7,7;23,2,7;20,21,31];
+n=36;
+matdetmod(M,n) == matdet(M)%n
+M = matrix(11,11,i,j,if(j<i,1,i==j,prime(i+2)%n,0));
+matdetmod(M,n) == matdet(M)%n
+
+\\bad inputs
+matimagemod([],1);
+matimagemod([;],'x);
+matimagemod([0,'x;1,0],1);
+matkermod([],1);
+matkermod([;],'x);
+matkermod([0,'x;1,0],1);
+matinvmod([],1);
+matinvmod([;],'x);
+matinvmod([0,'x;1,0],1);
+matdetmod([],1);
+matdetmod(Mat([1,2]),1);
+matdetmod(Mat(1/2),3);
+matimagemod(Mat(1),-1);
+matdetmod(Mat(1),0);
+matkermod(Mat(1),0);
+matinvmod(Mat(1),0);
+matinvmod([1,2,3;4,5,6],1);
+matsolvemod([;],[2,2]~,[1,2,3]~)
+matsolvemod(Mat(1),[1,2]~,1)
+matsolvemod(Mat(1),2,[1,2]~)
+matsolvemod(Mat(1),[2],1)
+matsolvemod(Mat(1),2,[1])
+matsolvemod("a",2,1)
+matsolvemod(Mat(1),-2,1)
+matsolvemod([1,2;3,4],[2,-3]~,1)
+matsolvemod(Mat(1/2),1,1)
+matsolvemod(Mat(1),1/2,1)
+matsolvemod(Mat(1),1,1/2)
+matsolvemod(Mat(1),[1/2]~,1)
+matsolvemod(Mat(1),1,[1/2]~)

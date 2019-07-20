@@ -1,0 +1,7 @@
+Function: _.t2
+Help: _.t2
+Section: member_functions
+C-Name: member_t2
+Prototype: G
+Description:
+ (gen):vec                      member_t2($1)

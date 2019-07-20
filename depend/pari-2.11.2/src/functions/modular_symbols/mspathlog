@@ -1,0 +1,39 @@
+Function: mspathlog
+Section: modular_symbols
+C-Name: mspathlog
+Prototype: GG
+Help: mspathlog(M,p): M being a full modular symbol space, as given by
+ msinit and p being a path between two elements in P^1(Q), return (p_i)
+ in Z[G] such that p = \sum p_i g_i, and the g_i are fixed Z[G]-generators
+ for Div^0(P^1 Q), see mspathgens.
+Doc: Let $\Delta:=\text{Div}^0(\P^1(\Q))$.
+ Let $M$ being a full modular symbol space, as given by \kbd{msinit},
+ encoding fixed $\Z[G]$-generators $(g_i)$ of $\Delta$ (see \tet{mspathgens}).
+ A path $p=[a,b]$ between two elements in $\P^1(\Q)$ corresponds to
+ $[b]-[a]\in \Delta$. The path extremities $a$ and $b$ may be given as
+ \typ{INT}, \typ{FRAC} or $\kbd{oo} = (1:0)$. Finally, we also allow
+ to input a path as a $2\times 2$ integer matrix, whose first
+ and second column give $a$ and $b$ respectively, with the convention
+ $[x,y]\til = (x:y)$ in $\P^1(\Q)$.
+
+ Returns $(p_i)$ in $\Z[G]$ such that $p = \sum_i p_i g_i$.
+ \bprog
+ ? M = msinit(2,8); \\ M_8(Gamma_0(2))
+ ? [g,R] = mspathgens(M);
+ ? g
+ %3 = [[+oo, 0], [0, 1]]
+ ? p = mspathlog(M, [1/2,2/3]);
+ ? p[1]
+ %5 =
+ [[1, 0; 2, 1] 1]
+
+ ? p[2]
+ %6 =
+ [[1, 0; 0, 1] 1]
+
+ [[3, -1; 4, -1] 1]
+ ? mspathlog(M, [1,2;2,3]) == p  \\ give path via a 2x2 matrix
+ %7 = 1
+ @eprog\noindent
+ Note that the output depends only on the group $G$, not on the
+ representation $V$.

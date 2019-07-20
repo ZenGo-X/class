@@ -1,0 +1,25 @@
+\\package:elldata
+{
+  forell(E,1,9999,
+    N = ellconvertname(E[1])[1];
+    M = ellglobalred( ellinit(E[2], 1) )[1];
+    if (N != M, print(E," bad for N = ",N))
+  );
+}
+ellidentify(ellinit([1,1]))
+ellsearch("11a1")
+ellsearch("11a")
+ellsearch("11b")
+ellsearch("11")
+ellsearch([11,0,1])
+ellsearch([11,0])
+ellsearch([11])
+ellsearch(11)
+ellinit("11a1").j
+iferr(ellsearch([0,0,0,0]),E,E)
+iferr(ellsearch([0,0,0]),E,E)
+iferr(ellsearch("curve"),E,E)
+iferr(ellsearch(I),E,E)
+c=0;forell(E,1,100,c++); c
+c=0;forell(E,1,100,c++,1); c
+ellidentify(ellinit([1,1],nfinit('a^2-5)))

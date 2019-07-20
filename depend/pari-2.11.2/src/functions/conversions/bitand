@@ -1,0 +1,30 @@
+Function: bitand
+Section: conversions
+C-Name: gbitand
+Prototype: GG
+Help: bitand(x,y): bitwise "and" of two integers x and y. Negative numbers
+ behave as if modulo big power of 2.
+Description:
+ (small, small):small:parens        $(1)&$(2)
+ (gen, gen):int        gbitand($1, $2)
+Doc:
+ bitwise \tet{and}
+ \sidx{bitwise and}of two integers $x$ and $y$, that is the integer
+ $$\sum_i (x_i~\kbd{and}~y_i) 2^i$$
+
+ Negative numbers behave $2$-adically, i.e.~the result is the $2$-adic limit
+ of \kbd{bitand}$(x_n,y_n)$, where $x_n$ and $y_n$ are non-negative integers
+ tending to $x$ and $y$ respectively. (The result is an ordinary integer,
+ possibly negative.)
+
+ \bprog
+ ? bitand(5, 3)
+ %1 = 1
+ ? bitand(-5, 3)
+ %2 = 3
+ ? bitand(-5, -3)
+ %3 = -7
+ @eprog
+Variant: Also available is
+ \fun{GEN}{ibitand}{GEN x, GEN y}, which returns the bitwise \emph{and}
+ of $|x|$ and $|y|$, two integers.

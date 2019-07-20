@@ -1,0 +1,50 @@
+Function: ellztopoint
+Section: elliptic_curves
+C-Name: pointell
+Prototype: GGp
+Help: ellztopoint(E,z): inverse of ellpointtoz. Returns the coordinates of
+ point P on the curve E corresponding to a complex or p-adic z.
+Doc:
+ $E$ being an \var{ell} as output by
+ \kbd{ellinit}, computes the coordinates $[x,y]$ on the curve $E$
+ corresponding to the complex or $p$-adic parameter $z$. Hence this is the
+ inverse function of \kbd{ellpointtoz}.
+
+ \item If $E$ is defined over a $p$-adic field and has multiplicative
+ reduction, then $z$ is understood as an element on the
+ Tate curve $\bar{Q}_p^* / q^\Z$.
+ \bprog
+ ? E = ellinit([0,-1,1,0,0], O(11^5));
+ ? [u2,u,q] = E.tate; type(u)
+ %2 = "t_PADIC" \\ split multiplicative reduction
+ ? z = ellpointtoz(E, [0,0])
+ %3 = 3 + 11^2 + 2*11^3 + 3*11^4 + 6*11^5 + 10*11^6 + 8*11^7 + O(11^8)
+ ? ellztopoint(E,z)
+ %4 = [O(11^9), O(11^9)]
+
+ ? E = ellinit(ellfromj(1/4), O(2^6)); x=1/2; y=ellordinate(E,x)[1];
+ ? z = ellpointtoz(E,[x,y]); \\ non-split: t_POLMOD with t_PADIC coefficients
+ ? P = ellztopoint(E, z);
+ ? P[1] \\ y coordinate is analogous, more complicated
+ %8 = Mod(O(2^4)*x + (2^-1 + O(2^5)), x^2 + (1 + 2^2 + 2^4 + 2^5 + O(2^7)))
+ @eprog
+
+ \item If $E$ is defined over the complex numbers (for instance over $\Q$),
+ $z$ is understood as a complex number in $\C/\Lambda_E$. If the
+ short Weierstrass equation is $y^2 = 4x^3 - g_2x - g_3$, then $[x,y]$
+ represents the Weierstrass $\wp$-function\sidx{Weierstrass $\wp$-function}
+ and its derivative. For a general Weierstrass equation we have
+ $$x = \wp(z) - b_2/12,\quad y = \wp'(z)/2 - (a_1 x + a_3)/2.$$
+ If $z$ is in the lattice defining $E$ over $\C$, the result is the point at
+ infinity $[0]$.
+ \bprog
+ ? E = ellinit([0,1]); P = [2,3];
+ ? z = ellpointtoz(E, P)
+ %2 = 3.5054552633136356529375476976257353387
+ ? ellwp(E, z)
+ %3 = 2.0000000000000000000000000000000000000
+ ? ellztopoint(E, z) - P
+ %4 = [2.548947057811923643 E-57, 7.646841173435770930 E-57]
+ ? ellztopoint(E, 0)
+ %5 = [0] \\ point at infinity
+ @eprog

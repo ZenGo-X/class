@@ -1,0 +1,23 @@
+Function: _header_combinatorics
+Class: header
+Section: combinatorics
+Doc:
+ \section{Combinatorics}\label{se:combinat}
+
+ Permutations are represented in gp as \typ{VECSMALL}s and can be input
+ directly as \kbd{Vecsmall([1,3,2,4])} or obtained from the iterator
+ \kbd{forperm}:
+ \bprog
+ ? forperm(3, p, print(p))  \\ iterate through S_3
+ Vecsmall([1, 2, 3])
+ Vecsmall([1, 3, 2])
+ Vecsmall([2, 1, 3])
+ Vecsmall([2, 3, 1])
+ Vecsmall([3, 1, 2])
+ Vecsmall([3, 2, 1])
+ @eprog
+
+ Permutations can be multiplied via \kbd{*}, raised to some power using
+ \kbd{\pow}, inverted using \kbd{\pow(-1)}, conjugated as
+ \kbd{p * q * p\pow(-1)}. Their order and signature is available via
+ \kbd{permorder} and \kbd{permsign}.

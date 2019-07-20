@@ -1,0 +1,39 @@
+Function: rnfeltdown
+Section: number_fields
+C-Name: rnfeltdown0
+Prototype: GGD0,L,
+Help: rnfeltdown(rnf,x,{flag=0}): expresses x on the base field if possible;
+ returns an error otherwise.
+Doc: $\var{rnf}$ being a relative number
+ field extension $L/K$ as output by \kbd{rnfinit} and $x$ being an element of
+ $L$ expressed as a polynomial or polmod with polmod coefficients (or as a
+ \typ{COL} on \kbd{nfinit(rnf).zk}), computes
+ $x$ as an element of $K$ as a \typ{POLMOD} if $\fl = 0$ and as a \typ{COL}
+ otherwise. If $x$ is not in $K$, a domain error occurs.
+ \bprog
+ ? K = nfinit(y^2+1); L = rnfinit(K, x^2-y);
+ ? L.pol
+ %2 = x^4 + 1
+ ? rnfeltdown(L, Mod(x^2, L.pol))
+ %3 = Mod(y, y^2 + 1)
+ ? rnfeltdown(L, Mod(x^2, L.pol), 1)
+ %4 = [0, 1]~
+ ? rnfeltdown(L, Mod(y, x^2-y))
+ %5 = Mod(y, y^2 + 1)
+ ? rnfeltdown(L, Mod(y,K.pol))
+ %6 = Mod(y, y^2 + 1)
+ ? rnfeltdown(L, Mod(x, L.pol))
+  ***   at top-level: rnfeltdown(L,Mod(x,x
+  ***                 ^--------------------
+  *** rnfeltdown: domain error in rnfeltdown: element not in the base field
+ ? rnfeltdown(L, Mod(y, x^2-y), 1) \\ as a t_COL
+ %7 = [0, 1]~
+ ? rnfeltdown(L, [0,1,0,0]~) \\ not allowed without absolute nf struct
+   *** rnfeltdown: incorrect type in rnfeltdown (t_COL).
+ ? nfinit(L); \\ add absolute nf structure to L
+ ? rnfeltdown(L, [0,1,0,0]~) \\ now OK
+ %8 = Mod(y, y^2 + 1)
+ @eprog\noindent If we had started with
+ \kbd{L = rnfinit(K, x\pow2-y, 1)}, then the final would have worked directly.
+Variant: Also available is
+ \fun{GEN}{rnfeltdown}{GEN rnf, GEN x} ($\fl = 0$).

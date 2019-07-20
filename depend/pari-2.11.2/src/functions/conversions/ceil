@@ -1,0 +1,16 @@
+Function: ceil
+Section: conversions
+C-Name: gceil
+Prototype: G
+Help: ceil(x): ceiling of x = smallest integer >= x.
+Description:
+ (small):small:parens   $1
+ (int):int:copy:parens  $1
+ (real):int             ceilr($1)
+ (mp):int               mpceil($1)
+ (gen):gen              gceil($1)
+Doc:
+ ceiling of $x$. When $x$ is in $\R$, the result is the
+ smallest integer greater than or equal to $x$. Applied to a rational
+ function, $\kbd{ceil}(x)$ returns the Euclidean quotient of the numerator by
+ the denominator.

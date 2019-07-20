@@ -1,0 +1,23 @@
+Function: Set
+Section: conversions
+C-Name: gtoset
+Prototype: DG
+Help: Set({x=[]}): convert x into a set, i.e. a row vector with strictly
+ increasing coefficients. Empty set if x is omitted.
+Description:
+ ():vec           cgetg(1,t_VEC)
+ (gen):vec        gtoset($1)
+Doc:
+ converts $x$ into a set, i.e.~into a row vector, with strictly increasing
+ entries with respect to the (somewhat arbitrary) universal comparison function
+ \tet{cmp}. Standard container types \typ{VEC}, \typ{COL}, \typ{LIST} and
+ \typ{VECSMALL} are converted to the set with corresponding elements. All
+ others are converted to a set with one element.
+ \bprog
+ ? Set([1,2,4,2,1,3])
+ %1 = [1, 2, 3, 4]
+ ? Set(x)
+ %2 = [x]
+ ? Set(Vecsmall([1,3,2,1,3]))
+ %3 = [1, 2, 3]
+ @eprog

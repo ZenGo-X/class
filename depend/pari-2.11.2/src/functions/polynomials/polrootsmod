@@ -1,0 +1,35 @@
+Function: polrootsmod
+Section: polynomials
+C-Name: polrootsmod
+Prototype: GDG
+Help: polrootsmod(f,{D}): roots of the polynomial f over the finite field
+ defined by the domain D.
+Doc: vector of roots of the polynomial $f$ over the finite field defined
+ by the domain $D$ as follows:
+
+ \item $D = p$ a prime: factor over $\F_p$;
+
+ \item $D = [T,p]$ for a prime $p$ and $T$ an irreducible polynomial over
+ $\F_p$: factor over $\F_p[x]/(T)$;
+
+ \item $D$ a \typ{FFELT}: factor over the attached field;
+
+ \item $D$ omitted: factor over the field of definition of $f$, which
+ must be a finite field.
+
+ \noindent Multiple roots are \emph{not} repeated.
+ \bprog
+ ? polrootsmod(x^2-1,2)
+ %1 = [Mod(1, 2)]~
+ ? polrootsmod(x^2+1,3)
+ %2 = []~
+ ? polrootsmod(x^2+1, [3,y^2+1])
+ %3 = [Mod(Mod(1, 3)*y, Mod(1, 3)*y^2 + Mod(1, 3)),
+       Mod(Mod(2, 3)*y, Mod(1, 3)*y^2 + Mod(1, 3))]~
+ ? polrootsmod(x^2 + Mod(1,3))
+ %4 = []~
+ ? liftall( polrootsmod(x^2 + Mod(Mod(1,3),y^2+1)) )
+ %5 = [y, 2*y]~
+ ? t = ffgen(y^2+Mod(1,3)); polrootsmod(x^2 + t^0)
+ %6 = [y, 2*y]~
+ @eprog

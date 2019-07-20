@@ -1,0 +1,16 @@
+Function: lfunqf
+Section: l_functions
+C-Name: lfunqf
+Prototype: Gp
+Help: lfunqf(Q): returns the Ldata structure attached to the
+ theta function of the lattice attached to the definite positive quadratic
+ form Q.
+Doc: returns the \kbd{Ldata} structure attached to the $\Theta$ function
+ of the lattice attached to the definite positive quadratic form $Q$.
+ \bprog
+ ? L = lfunqf(matid(2));
+ ? lfunqf(L,2)
+ %2 = 6.0268120396919401235462601927282855839
+ ? lfun(x^2+1,2)*4
+ %3 = 6.0268120396919401235462601927282855839
+ @eprog

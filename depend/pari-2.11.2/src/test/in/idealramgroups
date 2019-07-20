@@ -1,0 +1,24 @@
+{
+  K=nfinit(x^30 - 240*x^28 + 24364*x^26 - 1366520*x^24 + 46492470*x^22 - 994986280*x^20 + 13527103660*x^18 - 116596891080*x^16 + 634140564945*x^14 - 2144111162280*x^12 + 4349007947424*x^10 - 4933119511040*x^8 + 2746986107136*x^6 - 564152514560*x^4 + 40138752000*x^2 - 409600000);
+  G=galoisinit(K);
+  forprime(p=2,37,
+    pr = idealprimedec(K,p)[1];
+    print(pr.p,":", apply(galoisidentify,idealramgroups(K,G,pr))))
+}
+K=nfinit(x^6 + 12*x^5 + 60*x^4 + 376*x^3 + 80268*x^2 + 4569240*x + 66227068);
+G=galoisinit(K);
+D=idealprimedec(K,29)[1];
+[idealfrobenius(K,G,D),idealramgroups(K,G,D)]
+
+K=nfinit(polcyclo(24));
+G=galoisinit(K);
+P=idealprimedec(K,2)[1];
+idealramgroups(K,G,P)
+
+\\#1755
+P=x^8-12*x^6+36*x^4-36*x^2+9;N=nfinit(P);G=galoisinit(N);
+idealramgroups(N,G,idealprimedec(N,3)[1])
+
+\\#1908
+P=x^12+60*x^10+1260*x^8+10900*x^6+34200*x^4+9000*x^2+500;N=nfinit(P);
+G=galoisinit(N); pr=idealprimedec(N,2)[1]; ram=idealramgroups(N,G,pr); #ram

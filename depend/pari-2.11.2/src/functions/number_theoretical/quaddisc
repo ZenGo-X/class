@@ -1,0 +1,16 @@
+Function: quaddisc
+Section: number_theoretical
+C-Name: quaddisc
+Prototype: G
+Help: quaddisc(x): discriminant of the quadratic field Q(sqrt(x)).
+Doc: discriminant of the \'etale algebra $\Q(\sqrt{x})$, where $x\in\Q^*$.
+ This is the same as \kbd{coredisc}$(d)$ where $d$ is the integer square-free
+ part of $x$, so x=$d f^2$ with $f\in \Q^*$ and $d\in\Z$.
+ This returns $0$ for $x = 0$, $1$ for $x$ square and the discriminant of the
+ quadratic field $\Q(\sqrt{x})$ otherwise.
+ \bprog
+ ? quaddisc(7)
+ %1 = 28
+ ? quaddisc(-7)
+ %2 = -7
+ @eprog

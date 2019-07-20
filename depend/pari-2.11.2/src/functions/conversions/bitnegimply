@@ -1,0 +1,19 @@
+Function: bitnegimply
+Section: conversions
+C-Name: gbitnegimply
+Prototype: GG
+Help: bitnegimply(x,y): bitwise "negated imply" of two integers x and y,
+ in other words, x BITAND BITNEG(y). Negative numbers behave as if modulo big
+ power of 2.
+Description:
+ (small, small):small:parens        $(1)&~$(2)
+ (gen, gen):int        gbitnegimply($1, $2)
+Doc:
+ bitwise negated imply of two integers $x$ and
+ $y$ (or \kbd{not} $(x \Rightarrow y)$), that is the integer $$\sum
+ (x_i~\kbd{and not}(y_i)) 2^i$$
+
+ See \secref{se:bitand} for the behavior for negative arguments.
+Variant: Also available is
+ \fun{GEN}{ibitnegimply}{GEN x, GEN y}, which returns the bitwise negated
+ imply of $|x|$ and $|y|$, two integers.

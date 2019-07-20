@@ -1,0 +1,60 @@
+Function: quadclassunit
+Section: number_theoretical
+C-Name: quadclassunit0
+Prototype: GD0,L,DGp
+Help: quadclassunit(D,{flag=0},{tech=[]}): compute the structure of the
+ class group and the regulator of the quadratic field of discriminant D.
+ See manual for the optional technical parameters.
+Doc: \idx{Buchmann-McCurley}'s sub-exponential algorithm for computing the
+ class group of a quadratic order of discriminant $D$.
+
+ This function should be used instead of \tet{qfbclassno} or \tet{quadregula}
+ when $D<-10^{25}$, $D>10^{10}$, or when the \emph{structure} is wanted. It
+ is a special case of \tet{bnfinit}, which is slower, but more robust.
+
+ The result is a vector $v$ whose components should be accessed using member
+ functions:
+
+ \item \kbd{$v$.no}: the class number
+
+ \item \kbd{$v$.cyc}: a vector giving the structure of the class group as a
+ product of cyclic groups;
+
+ \item \kbd{$v$.gen}: a vector giving generators of those cyclic groups (as
+ binary quadratic forms).
+
+ \item \kbd{$v$.reg}: the regulator, computed to an accuracy which is the
+ maximum of an internal accuracy determined by the program and the current
+ default (note that once the regulator is known to a small accuracy it is
+ trivial to compute it to very high accuracy, see the tutorial).
+
+ The $\fl$ is obsolete and should be left alone. In older versions,
+ it supposedly computed the narrow class group when $D>0$, but this did not
+ work at all; use the general function \tet{bnfnarrow}.
+
+ Optional parameter \var{tech} is a row vector of the form $[c_1, c_2]$,
+ where $c_1 \leq c_2$ are non-negative real numbers which control the execution
+ time and the stack size, see \ref{se:GRHbnf}. The parameter is used as a
+ threshold to balance the relation finding phase against the final linear
+ algebra. Increasing the default $c_1$ means that relations are easier
+ to find, but more relations are needed and the linear algebra will be
+ harder. The default value for $c_1$ is $0$ and means that it is taken equal
+ to $c_2$. The parameter $c_2$ is mostly obsolete and should not be changed,
+ but we still document it for completeness: we compute a tentative class
+ group by generators and relations using a factorbase of prime ideals
+ $\leq c_1 (\log |D|)^2$, then prove that ideals of norm
+ $\leq c_2 (\log |D|)^2$ do
+ not generate a larger group. By default an optimal $c_2$ is chosen, so that
+ the result is provably correct under the GRH --- a famous result of Bach
+ states that $c_2 = 6$ is fine, but it is possible to improve on this
+ algorithmically. You may provide a smaller $c_2$, it will be ignored
+ (we use the provably correct
+ one); you may provide a larger $c_2$ than the default value, which results
+ in longer computing times for equally correct outputs (under GRH).
+Variant: If you really need to experiment with the \var{tech} parameter, it is
+ usually more convenient to use
+ \fun{GEN}{Buchquad}{GEN D, double c1, double c2, long prec}. If only the
+ class number is needed, \fun{GEN}{quadclassno}{GEN D} will be faster (still
+ assuming the GRH), but will not provide the group structure. For negative
+ $D$, $|D| < 10^{20}$, \tet{qfbclassno} should be faster but may return a
+ wrong result.

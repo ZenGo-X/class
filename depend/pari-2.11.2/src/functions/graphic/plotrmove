@@ -1,0 +1,9 @@
+Function: plotrmove
+Section: graphic
+C-Name: plotrmove
+Prototype: vLGG
+Help: plotrmove(w,dx,dy): move cursor to position (dx,dy) relative to the
+ present position in the rectwindow w.
+Doc: move the virtual cursor of the rectwindow $w$ to position
+ $(x1+dx,y1+dy)$, where $(x1,y1)$ is the initial position of the cursor
+ (i.e.~to position $(dx,dy)$ relative to the initial cursor).

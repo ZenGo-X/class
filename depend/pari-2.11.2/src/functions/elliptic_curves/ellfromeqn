@@ -1,0 +1,48 @@
+Function: ellfromeqn
+Section: elliptic_curves
+C-Name: ellfromeqn
+Prototype: G
+Help: ellfromeqn(P): given a genus 1 plane curve, defined by the affine
+ equation f(x,y) = 0, return the coefficients [a1,a2,a3,a4,a6] of a
+ Weierstrass equation for its Jacobian.
+ This allows to recover a Weierstrass model for an elliptic curve given by a
+ general plane cubic or by a binary quartic or biquadratic model.
+Doc:
+ Given a genus $1$ plane curve, defined by the affine equation $f(x,y) = 0$,
+ return the coefficients $[a_1,a_2,a_3,a_4,a_6]$ of a Weierstrass equation
+ for its Jacobian. This allows to recover a Weierstrass model for an elliptic
+ curve given by a general plane cubic or by a binary quartic or biquadratic
+ model. The function implements the $f \mapsto f^*$ formulae of Artin, Tate
+ and Villegas (Advances in Math. 198 (2005), pp. 366--382).
+
+ In the example below, the function is used to convert between twisted Edwards
+ coordinates and Weierstrass coordinates.
+ \bprog
+ ? e = ellfromeqn(a*x^2+y^2 - (1+d*x^2*y^2))
+ %1 = [0, -a - d, 0, -4*d*a, 4*d*a^2 + 4*d^2*a]
+ ? E = ellinit(ellfromeqn(y^2-x^2 - 1 +(121665/121666*x^2*y^2)),2^255-19);
+ ? isprime(ellcard(E) / 8)
+ %3 = 1
+ @eprog
+
+ The elliptic curve attached to the sum of two cubes is given by
+ \bprog
+ ? ellfromeqn(x^3+y^3 - a)
+ %1 = [0, 0, -9*a, 0, -27*a^2]
+ @eprog
+
+ \misctitle{Congruent number problem:}
+ Let $n$ be an integer, if $a^2+b^2=c^2$ and $a\*b=2\*n$,
+ then by substituting $b$ by $2\*n/a$ in the first equation,
+ we get $((a^2+(2\*n/a)^2)-c^2)\*a^2 = 0$.
+ We set $x=a$, $y=a\*c$.
+ \bprog
+ ? En = ellfromeqn((x^2 + (2*n/x)^2 - (y/x)^2)*x^2)
+ %1 = [0, 0, 0, -16*n^2, 0]
+ @eprog
+ For example $23$ is congruent since the curve has a point of infinite order,
+ namely:
+ \bprog
+ ? ellheegner( ellinit(subst(En, n, 23)) )
+ %2 = [168100/289, 68053440/4913]
+ @eprog

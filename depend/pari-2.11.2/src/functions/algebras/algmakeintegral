@@ -1,0 +1,23 @@
+Function: algmakeintegral
+Section: algebras
+C-Name: algmakeintegral
+Prototype: GD0,L,
+Help: algmakeintegral(mt,{maps=0}): computes an integral multiplication table
+ for an isomorphic algebra.
+Doc: \var{mt} being a multiplication table over $\Q$ in the same format as the
+ input of \tet{algtableinit}, computes an integral multiplication table for an
+ isomorphic algebra. When $\var{maps}=1$, returns a \typ{VEC}
+ $[\var{mt2},\var{S},\var{T}]$ where \var{S} and \var{T} are matrices
+ respectively representing the map from the algebra defined by \var{mt} to the
+ one defined by \var{mt2} and its inverse.
+ \bprog
+ ? mt = [matid(2),[0,-1/4;1,0]];
+ ? algtableinit(mt);
+   ***   at top-level: algtableinit(mt)
+   ***                 ^----------------
+   *** algtableinit: domain error in algtableinit: denominator(mt) != 1
+ ? mt2 = algmakeintegral(mt);
+ ? al = algtableinit(mt2);
+ ? algisassociative(al)
+ %4 = 1
+ @eprog

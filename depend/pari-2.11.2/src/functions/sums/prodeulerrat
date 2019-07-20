@@ -1,0 +1,13 @@
+Function: prodeulerrat
+Section: sums
+C-Name: prodeulerrat
+Prototype: GDGD2,L,p
+Help: prodeulerrat(F,{s=1},{a=2}): product from primes p = a to infinity of
+ F(p^s), where F is a rational function.
+Doc: $\prod_{p\ge a, p prime}F(p^s)$, where $F$ is a rational function.
+ \bprog
+ ? prodeulerrat(1+1/q^3,1)
+ %1 = 1.1815649490102569125693997341604542605
+ ? zeta(3)/zeta(6)
+ %2 = 1.1815649490102569125693997341604542606
+ @eprog

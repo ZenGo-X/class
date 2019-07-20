@@ -1,0 +1,4520 @@
+  ***   too few arguments: abs()
+  ***                          ^-
+  ***   at top-level: addell()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: addell(e,z1,z2) ===> elladd(e,z1,z2)
+
+elladd(E,z1,z2): sum of the points z1 and z2 on elliptic curve E.
+
+
+[]
+  ***   at top-level: adj()
+  ***                 ^-----
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: adj(x) ===> matadjoint(x)
+
+matadjoint(M,{flag=0}): adjoint matrix of M using Leverrier-Faddeev's 
+algorithm. If flag is 1, compute the characteristic polynomial independently 
+first.
+
+
+  ***   at top-level: akell()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: akell(e,n) ===> ellak(e,n)
+
+ellak(E,n): computes the n-th Fourier coefficient of the L-function of the 
+elliptic curve E (assumes E is an integral model).
+
+
+  ***   at top-level: algdep2()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: algdep2(x,n,dec) ===> algdep(x,n,dec)
+
+algdep(z,k,{flag=0}): algebraic relations up to degree n of z, using 
+lindep([1,z,...,z^(k-1)], flag).
+
+
+  ***   at top-level: algtobasis()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: algtobasis(nf,x) ===> nfalgtobasis(nf,x)
+
+nfalgtobasis(nf,x): transforms the algebraic number x into a column vector on 
+the integral basis nf.zk.
+
+
+  ***   at top-level: anell()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: anell(e,n) ===> ellan(e,n)
+
+ellan(E,n): computes the first n Fourier coefficients of the L-function of the 
+elliptic curve E defined over a number field (n<2^24 on a 32-bit machine).
+
+
+  ***   at top-level: apell()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: apell(e,n) ===> ellap(e,n)
+
+ellap(E,{p}): given an elliptic curve E defined over a finite field Fq, return 
+the trace of Frobenius a_p = q+1-#E(Fq); for other fields of definition K, p 
+must define a finite residue field, (p prime for K = Qp or Q; p a maximal ideal 
+for K a number field), return the order of the (non-singular) reduction of E.
+
+
+  ***   at top-level: apell2()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: apell2(e,n) ===> ellap(e,n)
+
+ellap(E,{p}): given an elliptic curve E defined over a finite field Fq, return 
+the trace of Frobenius a_p = q+1-#E(Fq); for other fields of definition K, p 
+must define a finite residue field, (p prime for K = Qp or Q; p a maximal ideal 
+for K a number field), return the order of the (non-singular) reduction of E.
+
+
+  ***   at top-level: apprpadic()
+  ***                 ^-----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: apprpadic(x,a) ===> padicappr(x,a)
+
+padicappr(pol,a): p-adic roots of the polynomial pol congruent to a mod p.
+
+
+  ***   at top-level: assmat()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: assmat(x) ===> matcompanion(x)
+
+matcompanion(x): companion matrix to polynomial x.
+
+
+  ***   at top-level: basis()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: basis(x) ===> nfbasis(x)
+
+nfbasis(T): integral basis of the field Q[a], where a is a root of the 
+polynomial T, using the round 4 algorithm. An argument [T,listP] is possible, 
+where listP is a list of primes (to get an order which is maximal at certain 
+primes only) or a prime bound.
+
+
+  ***   at top-level: basis2()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: basis2(x) ===> nfbasis(x,2)
+
+nfbasis(T): integral basis of the field Q[a], where a is a root of the 
+polynomial T, using the round 4 algorithm. An argument [T,listP] is possible, 
+where listP is a list of primes (to get an order which is maximal at certain 
+primes only) or a prime bound.
+
+
+  ***   at top-level: basistoalg()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: basistoalg(nf,x) ===> nfbasistoalg(nf,x)
+
+nfbasistoalg(nf,x): transforms the column vector x on the integral basis into 
+an algebraic number.
+
+
+  ***   at top-level: bilhell()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: bilhell(e,z1,z2) ===> ellbil(e,z1,z2)
+
+ellbil(E,z1,z2): deprecated alias for ellheight(E,P,Q).
+
+
+  ***   at top-level: bin()
+  ***                 ^-----
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: bin(x,y) ===> binomial(x,y)
+
+binomial(x,{k}): binomial coefficient x*(x-1)...*(x-k+1)/k! defined for k in Z 
+and any x. If k is omitted and x an integer, return the vector 
+[binomial(x,1),...,binomial(x,x)].
+
+
+  ***   at top-level: boundcf()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: boundcf(x,lmax) ===> contfrac(x,,lmax)
+
+contfrac(x,{b},{nmax}): continued fraction expansion of x (x rational,real or 
+rational function). b and nmax are both optional, where b is the vector of 
+numerators of the continued fraction, and nmax is a bound for the number of 
+terms in the continued fraction expansion.
+
+
+  ***   at top-level: boundfact()
+  ***                 ^-----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: boundfact(x,lim) ===> factor(x,lim)
+
+factor(x,{D}): factorization of x over domain D. If x and D are both integers, 
+return partial factorization, using primes < D.
+
+
+  ***   at top-level: buchcertify()
+  ***                 ^-------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: buchcertify(bnf) ===> bnfcertify(bnf)
+
+bnfcertify(bnf,{flag = 0}): certify the correctness (i.e. remove the GRH) of 
+the bnf data output by bnfinit. If flag is present, only certify that the class 
+group is a quotient of the one computed in bnf (much simpler in general).
+
+
+  ***   at top-level: buchfu()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+This function no longer exists
+
+
+  ***   at top-level: buchgen()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+This function no longer exists
+
+
+  ***   at top-level: buchgenforcefu()
+  ***                 ^----------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+This function no longer exists
+
+
+  ***   at top-level: buchgenfu()
+  ***                 ^-----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+This function no longer exists
+
+
+  ***   at top-level: buchimag()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: buchimag(D,c1,c2,g) ===> quadclassunit(D,,[c1,c2,g])
+
+quadclassunit(D,{flag=0},{tech=[]}): compute the structure of the class group 
+and the regulator of the quadratic field of discriminant D. See manual for the 
+optional technical parameters.
+
+
+  ***   at top-level: buchinit()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: buchinit(P) ===> bnfinit(P,2)
+
+bnfinit(P,{flag=0},{tech=[]}): compute the necessary data for future use in 
+ideal and unit group computations, including fundamental units if they are not 
+too large. flag and tech are both optional. flag can be any of 0: default, 1: 
+insist on having fundamental units. See manual for details about tech.
+
+
+  ***   at top-level: buchinitforcefu()
+  ***                 ^-----------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: buchinitforcefu(P) ===> bnfinit(P,1)
+
+bnfinit(P,{flag=0},{tech=[]}): compute the necessary data for future use in 
+ideal and unit group computations, including fundamental units if they are not 
+too large. flag and tech are both optional. flag can be any of 0: default, 1: 
+insist on having fundamental units. See manual for details about tech.
+
+
+  ***   at top-level: buchinitfu()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: buchinitfu(P) ===> bnfinit(P)
+
+bnfinit(P,{flag=0},{tech=[]}): compute the necessary data for future use in 
+ideal and unit group computations, including fundamental units if they are not 
+too large. flag and tech are both optional. flag can be any of 0: default, 1: 
+insist on having fundamental units. See manual for details about tech.
+
+
+  ***   at top-level: buchnarrow()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: buchnarrow(bnf) ===> bnfnarrow(bnf)
+
+bnfnarrow(bnf): given a big number field as output by bnfinit, gives as a 
+3-component vector the structure of the narrow class group.
+
+
+  ***   at top-level: buchray()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: buchray(bnf,ideal) ===> bnrinit(bnf,ideal)
+
+bnrinit(bnf,f,{flag=0}): given a bnf as output by bnfinit and a modulus f, 
+initializes data linked to the ray class group structure corresponding to this 
+module. flag is optional, and can be 0: default, 1: compute also the 
+generators.
+
+
+  ***   at top-level: buchrayinit()
+  ***                 ^-------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: buchrayinit(bnf,ideal) ===> bnrinit(bnf,ideal)
+
+bnrinit(bnf,f,{flag=0}): given a bnf as output by bnfinit and a modulus f, 
+initializes data linked to the ray class group structure corresponding to this 
+module. flag is optional, and can be 0: default, 1: compute also the 
+generators.
+
+
+  ***   at top-level: buchrayinitgen()
+  ***                 ^----------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: buchrayinitgen(bnf,ideal) ===> bnrinit(bnf,ideal,1)
+
+bnrinit(bnf,f,{flag=0}): given a bnf as output by bnfinit and a modulus f, 
+initializes data linked to the ray class group structure corresponding to this 
+module. flag is optional, and can be 0: default, 1: compute also the 
+generators.
+
+
+  ***   at top-level: buchreal()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: buchreal(D) ===> quadclassunit(D)
+
+quadclassunit(D,{flag=0},{tech=[]}): compute the structure of the class group 
+and the regulator of the quadratic field of discriminant D. See manual for the 
+optional technical parameters.
+
+
+  ***   at top-level: bytesize()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: bytesize(x) ===> sizebyte(x)
+
+sizebyte(x): number of bytes occupied by the complete tree of the object x.
+
+
+  ***   at top-level: cf()
+  ***                 ^----
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: cf(x) ===> contfrac(x)
+
+contfrac(x,{b},{nmax}): continued fraction expansion of x (x rational,real or 
+rational function). b and nmax are both optional, where b is the vector of 
+numerators of the continued fraction, and nmax is a bound for the number of 
+terms in the continued fraction expansion.
+
+
+  ***   at top-level: cf2()
+  ***                 ^-----
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: cf2(b,x) ===> contfrac(x,b)
+
+contfrac(x,{b},{nmax}): continued fraction expansion of x (x rational,real or 
+rational function). b and nmax are both optional, where b is the vector of 
+numerators of the continued fraction, and nmax is a bound for the number of 
+terms in the continued fraction expansion.
+
+
+  ***   at top-level: changevar()
+  ***                 ^-----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+This function no longer exists
+
+
+  ***   at top-level: char()
+  ***                 ^------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: char(x,y) ===> charpoly(x,y)
+
+charpoly(A,{v='x},{flag=5}): det(v*Id-A)=characteristic polynomial of the 
+matrix or polmod A. flag is optional and ignored unless A is a matrix; it may 
+be set to 0 (Le Verrier), 1 (Lagrange interpolation), 2 (Hessenberg form), 3 
+(Berkowitz), 4 (modular) if A is integral, or 5 (default, choose best method). 
+Algorithms 0 (Le Verrier) and 1 (Lagrange) assume that n! is invertible, where 
+n is the dimension of the matrix.
+
+
+  ***   at top-level: char1()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: char1(x,y) ===> charpoly(x,y,1)
+
+charpoly(A,{v='x},{flag=5}): det(v*Id-A)=characteristic polynomial of the 
+matrix or polmod A. flag is optional and ignored unless A is a matrix; it may 
+be set to 0 (Le Verrier), 1 (Lagrange interpolation), 2 (Hessenberg form), 3 
+(Berkowitz), 4 (modular) if A is integral, or 5 (default, choose best method). 
+Algorithms 0 (Le Verrier) and 1 (Lagrange) assume that n! is invertible, where 
+n is the dimension of the matrix.
+
+
+  ***   at top-level: char2()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: char2(x,y) ===> charpoly(x,y,2)
+
+charpoly(A,{v='x},{flag=5}): det(v*Id-A)=characteristic polynomial of the 
+matrix or polmod A. flag is optional and ignored unless A is a matrix; it may 
+be set to 0 (Le Verrier), 1 (Lagrange interpolation), 2 (Hessenberg form), 3 
+(Berkowitz), 4 (modular) if A is integral, or 5 (default, choose best method). 
+Algorithms 0 (Le Verrier) and 1 (Lagrange) assume that n! is invertible, where 
+n is the dimension of the matrix.
+
+
+  ***   at top-level: chell()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: chell(x,y) ===> ellchangecurve(x,y)
+
+ellchangecurve(E,v): change data on elliptic curve according to v=[u,r,s,t].
+
+
+  ***   at top-level: chptell()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: chptell(x,y) ===> ellchangepoint(x,y)
+
+ellchangepoint(x,v): change data on point or vector of points x on an elliptic 
+curve according to v=[u,r,s,t].
+
+
+  ***   at top-level: classno()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: classno(x) ===> qfbclassno(x)
+
+qfbclassno(D,{flag=0}): class number of discriminant D using Shanks's method by 
+default. If (optional) flag is set to 1, use Euler products.
+
+
+  ***   at top-level: classno2()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: classno2(x) ===> qfbclassno(x,1)
+
+qfbclassno(D,{flag=0}): class number of discriminant D using Shanks's method by 
+default. If (optional) flag is set to 1, use Euler products.
+
+
+  ***   at top-level: coeff()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: coeff(x,s) ===> polcoeff(x,s)
+
+polcoeff(x,n,{v}): deprecated alias for polcoef.
+
+
+  ***   at top-level: compimag()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: compimag(x,y) ===> x*y
+
+x*y: product of x and y.
+
+
+  ***   at top-level: compo()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: compo(x,s) ===> component(x,s)
+
+component(x,n): the n'th component of the internal representation of x. For 
+vectors or matrices, it is simpler to use x[]. For list objects such as nf, 
+bnf, bnr or ell, it is much easier to use member functions starting with ".".
+
+
+  ***   at top-level: compositum()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: compositum(pol1,pol2) ===> polcompositum(pol1,pol2)
+
+polcompositum(P,Q,{flag=0}): vector of all possible compositums of the number 
+fields defined by the polynomials P and Q; flag is optional, whose binary 
+digits mean 1: output for each compositum, not only the compositum polynomial 
+pol, but a vector [R,a,b,k] where a (resp. b) is a root of P (resp. Q) 
+expressed as a polynomial modulo R, and a small integer k such that al2+k*al1 
+is the chosen root of R; 2: assume that the number fields defined by P and Q 
+are linearly disjoint.
+
+
+  ***   at top-level: compositum2()
+  ***                 ^-------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: compositum2(pol1,pol2) ===> polcompositum(pol1,pol2,1)
+
+polcompositum(P,Q,{flag=0}): vector of all possible compositums of the number 
+fields defined by the polynomials P and Q; flag is optional, whose binary 
+digits mean 1: output for each compositum, not only the compositum polynomial 
+pol, but a vector [R,a,b,k] where a (resp. b) is a root of P (resp. Q) 
+expressed as a polynomial modulo R, and a small integer k such that al2+k*al1 
+is the chosen root of R; 2: assume that the number fields defined by P and Q 
+are linearly disjoint.
+
+
+  ***   at top-level: comprealraw()
+  ***                 ^-------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: comprealraw(x,y) ===> qfbcompraw(x,y)
+
+qfbcompraw(x,y): Gaussian composition without reduction of the binary quadratic 
+forms x and y.
+
+
+  ***   at top-level: conductor()
+  ***                 ^-----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: conductor(a1) ===> bnrconductor(a1)
+
+bnrconductor(A,{B},{C},{flag=0}): conductor f of the subfield of the ray class 
+field given by A,B,C. flag is optional and can be 0: default, 1: returns [f, 
+Cl_f, H], H subgroup of the ray class group modulo f defining the extension, 2: 
+returns [f, bnr(f), H].
+
+
+  ***   at top-level: conductorofchar()
+  ***                 ^-----------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: conductorofchar(bnr,chi) ===> bnrconductorofchar(bnr,chi)
+
+bnrconductorofchar(bnr,chi): this function is obsolete, use bnrconductor.
+
+
+  ***   at top-level: convol()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: convol(x,y) ===> serconvol(x,y)
+
+serconvol(x,y): convolution (or Hadamard product) of two power series.
+
+
+  ***   at top-level: core2()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: core2(x) ===> core(x,1)
+
+core(n,{flag=0}): unique squarefree integer d dividing n such that n/d is a 
+square. If (optional) flag is non-null, output the two-component row vector 
+[d,f], where d is the unique squarefree integer dividing n such that n/d=f^2 is 
+a square.
+
+
+  ***   at top-level: coredisc2()
+  ***                 ^-----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: coredisc2(x) ===> coredisc(x,1)
+
+coredisc(n,{flag=0}): discriminant of the quadratic field Q(sqrt(n)). If 
+(optional) flag is non-null, output a two-component row vector [d,f], where d 
+is the discriminant of the quadratic field Q(sqrt(n)) and n=df^2. f may be a 
+half integer.
+
+
+  ***   at top-level: cvtoi()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: cvtoi(x) ===> truncate(x,&e)
+
+truncate(x,{&e}): truncation of x; when x is a power series,take away the 
+O(X^). If e is present, do not take into account loss of integer part 
+precision, and set e = error estimate in bits.
+
+
+  ***   at top-level: cyclo()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: cyclo(n) ===> polcyclo(n)
+
+polcyclo(n,{a = 'x}): n-th cyclotomic polynomial evaluated at a.
+
+
+  ***   at top-level: decodefactor()
+  ***                 ^--------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: decodefactor(fa) ===> factorback(fa)
+
+factorback(f,{e}): given a factorization f, gives the factored object back. If 
+e is present, f has to be a vector of the same length, and we return the 
+product of the f[i]^e[i].
+
+
+  ***   at top-level: decodemodule()
+  ***                 ^--------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: decodemodule(nf,fa) ===> bnfdecodemodule(nf,fa)
+
+bnfdecodemodule(nf,m): given a coded module m as in bnrdisclist, gives the true 
+module.
+
+
+  ***   at top-level: degree()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: degree(x) ===> poldegree(x)
+
+poldegree(x,{v}): degree of the polynomial or rational function x with respect 
+to main variable if v is omitted, with respect to v otherwise. For scalar x, 
+return 0 if x is non-zero and -oo otherwise.
+
+
+  ***   at top-level: denom()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: denom(x) ===> denominator(x)
+
+denominator(f,{D}): denominator of f.
+
+
+  ***   at top-level: deplin()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: deplin(x) ===> lindep(x,-1)
+
+lindep(v,{flag=0}): integral linear dependencies between components of v. flag 
+is optional, and can be 0: default, guess a suitable accuracy, or positive: 
+accuracy to use for the computation, in decimal digits.
+
+
+  ***   at top-level: det()
+  ***                 ^-----
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: det(x) ===> matdet(x)
+
+matdet(x,{flag=0}): determinant of the matrix x using an appropriate algorithm 
+depending on the coefficients. If (optional) flag is set to 1, use classical 
+Gaussian elimination (usually worse than the default).
+
+
+  ***   at top-level: det2()
+  ***                 ^------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: det2(x) ===> matdet(x,1)
+
+matdet(x,{flag=0}): determinant of the matrix x using an appropriate algorithm 
+depending on the coefficients. If (optional) flag is set to 1, use classical 
+Gaussian elimination (usually worse than the default).
+
+
+  ***   at top-level: detint()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: detint(x) ===> matdetint(x)
+
+matdetint(B): some multiple of the determinant of the lattice generated by the 
+columns of B (0 if not of maximal rank). Useful with mathnfmod.
+
+
+  ***   at top-level: diagonal()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: diagonal(x) ===> matdiagonal(x)
+
+matdiagonal(x): creates the diagonal matrix whose diagonal entries are the 
+entries of the vector x.
+
+
+  ***   at top-level: disc()
+  ***                 ^------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: disc(x) ===> poldisc(x)
+
+poldisc(pol,{v}): discriminant of the polynomial pol, with respect to main 
+variable if v is omitted, with respect to v otherwise.
+
+
+  ***   at top-level: discf()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: discf(x) ===> nfdisc(x)
+
+nfdisc(T): discriminant of the number field defined by the polynomial T. An 
+argument [T,listP] is possible, where listP is a list of primes or a prime 
+bound.
+
+
+  ***   at top-level: discf2()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: discf2(x) ===> nfdisc(x,2)
+
+nfdisc(T): discriminant of the number field defined by the polynomial T. An 
+argument [T,listP] is possible, where listP is a list of primes or a prime 
+bound.
+
+
+  ***   at top-level: discrayabs()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: discrayabs(bnr,subgroup) ===> bnrdisc(bnr,subgroup)
+
+bnrdisc(A,{B},{C},{flag=0}): absolute or relative [N,R1,discf] of the field 
+defined by A,B,C. [A,{B},{C}] is of type [bnr], [bnr,subgroup], [bnf, modulus] 
+or [bnf,modulus,subgroup], where bnf is as output by bnfinit, bnr by bnrinit, 
+and subgroup is the HNF matrix of a subgroup of the corresponding ray class 
+group (if omitted, the trivial subgroup). flag is optional whose binary digits 
+mean 1: give relative data; 2: return 0 if modulus is not the conductor.
+
+
+  ***   at top-level: discrayabscond()
+  ***                 ^----------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: discrayabscond(bnr) ===> bnrdisc(bnr,,,2)
+
+bnrdisc(A,{B},{C},{flag=0}): absolute or relative [N,R1,discf] of the field 
+defined by A,B,C. [A,{B},{C}] is of type [bnr], [bnr,subgroup], [bnf, modulus] 
+or [bnf,modulus,subgroup], where bnf is as output by bnfinit, bnr by bnrinit, 
+and subgroup is the HNF matrix of a subgroup of the corresponding ray class 
+group (if omitted, the trivial subgroup). flag is optional whose binary digits 
+mean 1: give relative data; 2: return 0 if modulus is not the conductor.
+
+
+  ***   at top-level: discrayabslist()
+  ***                 ^----------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: discrayabslist(bnf,list) ===> bnrdisclist(bnf,list)
+
+bnrdisclist(bnf,bound,{arch}): list of discriminants of ray class fields of all 
+conductors up to norm bound. The ramified Archimedean places are given by arch; 
+all possible values are taken if arch is omitted. Supports the alternative 
+syntax bnrdisclist(bnf,list), where list is as output by ideallist or 
+ideallistarch (with units).
+
+
+  ***   at top-level: discrayabslistarch()
+  ***                 ^--------------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: discrayabslistarch(bnf,arch,bound) ===> bnrdisclist(bnf,bound,arch)
+
+bnrdisclist(bnf,bound,{arch}): list of discriminants of ray class fields of all 
+conductors up to norm bound. The ramified Archimedean places are given by arch; 
+all possible values are taken if arch is omitted. Supports the alternative 
+syntax bnrdisclist(bnf,list), where list is as output by ideallist or 
+ideallistarch (with units).
+
+
+  ***   at top-level: discrayabslistarchall()
+  ***                 ^-----------------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: discrayabslistarchall(bnf,bound) ===> bnrdisclist(bnf,bound,,1)
+
+bnrdisclist(bnf,bound,{arch}): list of discriminants of ray class fields of all 
+conductors up to norm bound. The ramified Archimedean places are given by arch; 
+all possible values are taken if arch is omitted. Supports the alternative 
+syntax bnrdisclist(bnf,list), where list is as output by ideallist or 
+ideallistarch (with units).
+
+
+  ***   at top-level: discrayabslistlong()
+  ***                 ^--------------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: discrayabslistlong(bnf,bound) ===> bnrdisclist(bnf,bound)
+
+bnrdisclist(bnf,bound,{arch}): list of discriminants of ray class fields of all 
+conductors up to norm bound. The ramified Archimedean places are given by arch; 
+all possible values are taken if arch is omitted. Supports the alternative 
+syntax bnrdisclist(bnf,list), where list is as output by ideallist or 
+ideallistarch (with units).
+
+
+  ***   at top-level: discrayrel()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: discrayrel(bnr,subgroup) ===> bnrdisc(bnr,subgroup,,1)
+
+bnrdisc(A,{B},{C},{flag=0}): absolute or relative [N,R1,discf] of the field 
+defined by A,B,C. [A,{B},{C}] is of type [bnr], [bnr,subgroup], [bnf, modulus] 
+or [bnf,modulus,subgroup], where bnf is as output by bnfinit, bnr by bnrinit, 
+and subgroup is the HNF matrix of a subgroup of the corresponding ray class 
+group (if omitted, the trivial subgroup). flag is optional whose binary digits 
+mean 1: give relative data; 2: return 0 if modulus is not the conductor.
+
+
+  ***   at top-level: discrayrelcond()
+  ***                 ^----------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: discrayrelcond(bnr,subgroup) ===> bnrdisc(bnr,subgroup,,3)
+
+bnrdisc(A,{B},{C},{flag=0}): absolute or relative [N,R1,discf] of the field 
+defined by A,B,C. [A,{B},{C}] is of type [bnr], [bnr,subgroup], [bnf, modulus] 
+or [bnf,modulus,subgroup], where bnf is as output by bnfinit, bnr by bnrinit, 
+and subgroup is the HNF matrix of a subgroup of the corresponding ray class 
+group (if omitted, the trivial subgroup). flag is optional whose binary digits 
+mean 1: give relative data; 2: return 0 if modulus is not the conductor.
+
+
+  ***   at top-level: divres()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: divres(x,y) ===> divrem(x,y)
+
+divrem(x,y,{v}): euclidean division of x by y giving as a 2-dimensional column 
+vector the quotient and the remainder, with respect to v (to main variable if v 
+is omitted).
+
+
+  ***   at top-level: divsum()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: divsum(n,X,expr) ===> sumdiv(n,X,expr)
+
+sumdiv(n,X,expr): sum of expression expr, X running over the divisors of n.
+
+
+  ***   at top-level: eigen()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: eigen(x) ===> mateigen(x)
+
+mateigen(x,{flag=0}): complex eigenvectors of the matrix x given as columns of 
+a matrix H. If flag=1, return [L,H], where L contains the eigenvalues and H the 
+corresponding eigenvectors.
+
+
+  ***   at top-level: euler()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: euler ===> Euler
+
+Euler=Euler(): Euler's constant with current precision.
+
+
+  ***   at top-level: extract()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: extract(x,y) ===> vecextract(x,y)
+
+vecextract(x,y,{z}): extraction of the components of the matrix or vector x 
+according to y and z. If z is omitted, y represents columns, otherwise y 
+corresponds to rows and z to columns. y and z can be vectors (of indices), 
+strings (indicating ranges as in "1..10") or masks (integers whose binary 
+representation indicates the indices to extract, from left to right 1, 2, 4, 8, 
+etc.).
+
+
+  ***   at top-level: fact()
+  ***                 ^------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: fact(x) ===> factorial(x)
+
+factorial(x): factorial of x, the result being given as a real number.
+
+
+  ***   at top-level: factcantor()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: factcantor(x,p) ===> factorcantor(x,p)
+
+factorcantor(x,p): this function is obsolete, use factormod.
+
+
+  ***   at top-level: factfq()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: factfq(x,p,a) ===> factorff(x,p,a)
+
+factorff(x,{p},{a}): obsolete, use factormod.
+
+
+  ***   at top-level: factmod()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: factmod(x,p) ===> factormod(x,p)
+
+factormod(f,{D},{flag=0}): factors the polynomial f over the finite field 
+defined by the domain D; flag is optional, and can be 0: default or 1: only the 
+degrees of the irreducible factors are given.
+
+
+  ***   at top-level: factoredbasis()
+  ***                 ^---------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: factoredbasis(x,p) ===> nfbasis(x,,p)
+
+nfbasis(T): integral basis of the field Q[a], where a is a root of the 
+polynomial T, using the round 4 algorithm. An argument [T,listP] is possible, 
+where listP is a list of primes (to get an order which is maximal at certain 
+primes only) or a prime bound.
+
+
+  ***   at top-level: factoreddiscf()
+  ***                 ^---------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: factoreddiscf(x,p) ===> nfdisc(x,,p)
+
+nfdisc(T): discriminant of the number field defined by the polynomial T. An 
+argument [T,listP] is possible, where listP is a list of primes or a prime 
+bound.
+
+
+  ***   at top-level: factoredpolred()
+  ***                 ^----------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: factoredpolred(x,p) ===> polred(x,,p)
+
+polred(T,{flag=0}): deprecated, use polredbest. Reduction of the polynomial T 
+(gives minimal polynomials only). The following binary digits of (optional) 
+flag are significant 1: partial reduction, 2: gives also elements.
+
+
+  ***   at top-level: factoredpolred2()
+  ***                 ^-----------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: factoredpolred2(x,p) ===> polred(x,2,p)
+
+polred(T,{flag=0}): deprecated, use polredbest. Reduction of the polynomial T 
+(gives minimal polynomials only). The following binary digits of (optional) 
+flag are significant 1: partial reduction, 2: gives also elements.
+
+
+  ***   at top-level: factorpadic2()
+  ***                 ^--------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: factorpadic2(x,p,r) ===> factorpadic(x,p,r,1)
+
+factorpadic(pol,p,r): p-adic factorization of the polynomial pol to precision 
+r.
+
+
+  ***   at top-level: factpol()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: factpol(x,l,hint) ===> factor(x)
+
+factor(x,{D}): factorization of x over domain D. If x and D are both integers, 
+return partial factorization, using primes < D.
+
+
+  ***   at top-level: factpol2()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: factpol2(x,l,hint) ===> factor(x)
+
+factor(x,{D}): factorization of x over domain D. If x and D are both integers, 
+return partial factorization, using primes < D.
+
+
+  ***   at top-level: fibo()
+  ***                 ^------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: fibo(x) ===> fibonacci(x)
+
+fibonacci(x): fibonacci number of index x (x C-integer).
+
+
+  ***   at top-level: fpn()
+  ***                 ^-----
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: fpn(p,n) ===> ffinit(p,n)
+
+ffinit(p,n,{v='x}): monic irreducible polynomial of degree n over F_p[v].
+
+
+  ***   at top-level: galois()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: galois(x) ===> polgalois(x)
+
+polgalois(T): Galois group of the polynomial T (see manual for group coding). 
+Return [n, s, k, name] where n is the group order, s the signature, k the index 
+and name is the GAP4 name of the transitive group.
+
+
+  ***   at top-level: galoisapply()
+  ***                 ^-------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: galoisapply(nf,aut,x) ===> nfgaloisapply(nf,aut,x)
+
+nfgaloisapply(nf,aut,x): apply the Galois automorphism aut to the object x 
+(element or ideal) in the number field nf.
+
+
+  ***   at top-level: galoisconj()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: galoisconj(nf) ===> nfgaloisconj(nf)
+
+nfgaloisconj(nf,{flag=0},{d}): list of conjugates of a root of the polynomial 
+x=nf.pol in the same number field. flag is optional (set to 0 by default), 
+meaning 0: use combination of flag 4 and 1, always complete; 1: use nfroots; 4: 
+use Allombert's algorithm, complete if the field is Galois of degree <= 35 (see 
+manual for details). nf can be simply a polynomial.
+
+
+  ***   at top-level: galoisconj1()
+  ***                 ^-------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: galoisconj1(nf) ===> nfgaloisconj(nf,2)
+
+nfgaloisconj(nf,{flag=0},{d}): list of conjugates of a root of the polynomial 
+x=nf.pol in the same number field. flag is optional (set to 0 by default), 
+meaning 0: use combination of flag 4 and 1, always complete; 1: use nfroots; 4: 
+use Allombert's algorithm, complete if the field is Galois of degree <= 35 (see 
+manual for details). nf can be simply a polynomial.
+
+
+  ***   at top-level: galoisconjforce()
+  ***                 ^-----------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: galoisconjforce ===> nfgaloisconj(nf,1)
+
+nfgaloisconj(nf,{flag=0},{d}): list of conjugates of a root of the polynomial 
+x=nf.pol in the same number field. flag is optional (set to 0 by default), 
+meaning 0: use combination of flag 4 and 1, always complete; 1: use nfroots; 4: 
+use Allombert's algorithm, complete if the field is Galois of degree <= 35 (see 
+manual for details). nf can be simply a polynomial.
+
+
+  ***   at top-level: gamh()
+  ***                 ^------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: gamh(x) ===> gammah(x)
+
+gammah(x): gamma of x+1/2 (x integer).
+
+
+  ***   at top-level: gauss()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: gauss(a,b) ===> matsolve(a,b)
+
+matsolve(M,B): solution of MX=B (M matrix, B column vector or matrix).
+
+
+  ***   at top-level: gaussmodulo()
+  ***                 ^-------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: gaussmodulo(M,D,Y) ===> matsolvemod(M,D,Y)
+
+matsolvemod(M,D,B,{flag=0}): one solution of system of congruences MX=B mod D 
+(M matrix, B and D column vectors). If (optional) flag is non-null return all 
+solutions.
+
+
+  ***   at top-level: gaussmodulo2()
+  ***                 ^--------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: gaussmodulo2(M,D,Y) ===> matsolvemod(M,D,Y,1)
+
+matsolvemod(M,D,B,{flag=0}): one solution of system of congruences MX=B mod D 
+(M matrix, B and D column vectors). If (optional) flag is non-null return all 
+solutions.
+
+
+  ***   at top-level: globalred()
+  ***                 ^-----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: globalred(x,y) ===> ellglobalred(x,y)
+
+ellglobalred(E): E being an elliptic curve over a number field, returns [N, v, 
+c, faN, L], where N is the conductor of E, c is the product of the local 
+Tamagawa numbers c_p, faN is the factorization of N and L[i] is elllocalred(E, 
+faN[i,1]); v is an obsolete field.
+
+
+  ***   at top-level: goto()
+  ***                 ^------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+This function no longer exists
+
+
+  ***   at top-level: hclassno()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: hclassno(x) ===> qfbhclassno(x)
+
+qfbhclassno(x): Hurwitz-Kronecker class number of x>0.
+
+
+  ***   at top-level: hell()
+  ***                 ^------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: hell(e,x) ===> ellheight(e,x)
+
+ellheight(E,P,{Q}): canonical height of point P on elliptic curve E, resp. the 
+value of the attached bilinear form at (P,Q).
+
+
+  ***   at top-level: hell2()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: hell2(e,x) ===> ellheight(e,x,1)
+
+ellheight(E,P,{Q}): canonical height of point P on elliptic curve E, resp. the 
+value of the attached bilinear form at (P,Q).
+
+
+  ***   at top-level: hermite()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: hermite(x) ===> mathnf(x)
+
+mathnf(M,{flag=0}): (upper triangular) Hermite normal form of M, basis for the 
+lattice formed by the columns of M. flag is optional whose value range from 0 
+to 3 have a binary meaning. Bit 1: complete output, returns a 2-component 
+vector [H,U] such that H is the HNF of M, and U is an invertible matrix such 
+that MU=H. Bit 2: allow polynomial entries, otherwise assume that M is 
+integral. These use a naive algorithm; larger values correspond to more 
+involved algorithms and are restricted to integer matrices; flag = 4: returns 
+[H,U] using LLL reduction along the way; flag = 5: return [H,U,P] where P is a 
+permutation of row indices such that P applied to M U is H.
+
+
+  ***   at top-level: hermite2()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: hermite2(x) ===> mathnf(x,1)
+
+mathnf(M,{flag=0}): (upper triangular) Hermite normal form of M, basis for the 
+lattice formed by the columns of M. flag is optional whose value range from 0 
+to 3 have a binary meaning. Bit 1: complete output, returns a 2-component 
+vector [H,U] such that H is the HNF of M, and U is an invertible matrix such 
+that MU=H. Bit 2: allow polynomial entries, otherwise assume that M is 
+integral. These use a naive algorithm; larger values correspond to more 
+involved algorithms and are restricted to integer matrices; flag = 4: returns 
+[H,U] using LLL reduction along the way; flag = 5: return [H,U,P] where P is a 
+permutation of row indices such that P applied to M U is H.
+
+
+  ***   at top-level: hermitehavas()
+  ***                 ^--------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+This function no longer exists
+
+
+  ***   at top-level: hermitemod()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: hermitemod(x,d) ===> mathnfmod(x,d)
+
+mathnfmod(x,d): (upper triangular) Hermite normal form of x, basis for the 
+lattice formed by the columns of x, where d is a multiple of the non-zero 
+determinant of this lattice.
+
+
+  ***   at top-level: hermitemodid()
+  ***                 ^--------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: hermitemodid(x,d) ===> mathnfmodid(x,d)
+
+mathnfmodid(x,d): (upper triangular) Hermite normal form of x concatenated with 
+matdiagonal(d).
+
+
+  ***   at top-level: hermiteperm()
+  ***                 ^-------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: hermiteperm(x) ===> mathnf(x,3)
+
+mathnf(M,{flag=0}): (upper triangular) Hermite normal form of M, basis for the 
+lattice formed by the columns of M. flag is optional whose value range from 0 
+to 3 have a binary meaning. Bit 1: complete output, returns a 2-component 
+vector [H,U] such that H is the HNF of M, and U is an invertible matrix such 
+that MU=H. Bit 2: allow polynomial entries, otherwise assume that M is 
+integral. These use a naive algorithm; larger values correspond to more 
+involved algorithms and are restricted to integer matrices; flag = 4: returns 
+[H,U] using LLL reduction along the way; flag = 5: return [H,U,P] where P is a 
+permutation of row indices such that P applied to M U is H.
+
+
+  ***   at top-level: hess()
+  ***                 ^------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: hess(x) ===> mathess(x)
+
+mathess(x): Hessenberg form of x.
+
+
+  ***   at top-level: hilb()
+  ***                 ^------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: hilb(x,y) ===> hilbert(x,y)
+
+hilbert(x,y,{p}): Hilbert symbol at p of x,y.
+
+
+  ***   at top-level: hilbp()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: hilbp(x,y,p) ===> hilbert(x,y,p)
+
+hilbert(x,y,{p}): Hilbert symbol at p of x,y.
+
+
+  ***   at top-level: hvector()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: hvector(n,X,expr) ===> vector(n,X,expr)
+
+vector(n,{X},{expr=0}): row vector with n components of expression expr (X 
+ranges from 1 to n). By default, fill with 0s.
+
+
+  ***   at top-level: i()
+  ***                 ^---
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: i ===> I
+
+I=I(): square root of -1.
+
+
+  ***   at top-level: idealaddmultone()
+  ***                 ^-----------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: idealaddmultone(nf,list) ===> idealaddtoone(nf,list)
+
+idealaddtoone(nf,x,{y}): if y is omitted, when the sum of the ideals in the 
+number field K defined by nf and given in the vector x is equal to Z_K, gives a 
+vector of elements of the corresponding ideals who sum to 1. Otherwise, x and y 
+are ideals, and if they sum up to 1, find one element in each of them such that 
+the sum is 1.
+
+
+  ***   at top-level: idealaddone()
+  ***                 ^-------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: idealaddone(nf,x,y) ===> idealaddtoone(nf,x,y)
+
+idealaddtoone(nf,x,{y}): if y is omitted, when the sum of the ideals in the 
+number field K defined by nf and given in the vector x is equal to Z_K, gives a 
+vector of elements of the corresponding ideals who sum to 1. Otherwise, x and y 
+are ideals, and if they sum up to 1, find one element in each of them such that 
+the sum is 1.
+
+
+  ***   at top-level: idealapprfact()
+  ***                 ^---------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: idealapprfact(nf,x) ===> idealappr(nf,x,1)
+
+idealappr(nf,x,{flag}): x being a fractional ideal, gives an element b such 
+that v_p(b)=v_p(x) for all prime ideals p dividing x, and v_p(b)>=0 for all 
+other p; x may also be a prime ideal factorization with possibly zero 
+exponents. flag is deprecated (ignored), kept for backward compatibility.
+
+
+  ***   at top-level: idealdivexact()
+  ***                 ^---------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: idealdivexact(nf,x,y) ===> idealdiv(nf,x,y,1)
+
+idealdiv(nf,x,y,{flag=0}): quotient x/y of two ideals x and y in HNF in the 
+number field nf. If (optional) flag is non-null, the quotient is supposed to be 
+an integral ideal (slightly faster).
+
+
+  ***   at top-level: idealhermite()
+  ***                 ^--------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: idealhermite(nf,x) ===> idealhnf(nf,x)
+
+idealhnf(nf,u,{v}): hermite normal form of the ideal u in the number field nf 
+if v is omitted. If called as idealhnf(nf,u,v), the ideal is given as uZ_K + 
+vZ_K in the number field K defined by nf.
+
+
+  ***   at top-level: idealhermite2()
+  ***                 ^---------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: idealhermite2(nf,x) ===> idealhnf(nf,x)
+
+idealhnf(nf,u,{v}): hermite normal form of the ideal u in the number field nf 
+if v is omitted. If called as idealhnf(nf,u,v), the ideal is given as uZ_K + 
+vZ_K in the number field K defined by nf.
+
+
+  ***   at top-level: idealinv2()
+  ***                 ^-----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: idealinv2(nf,x) ===> idealinv(nf,x,1)
+
+idealinv(nf,x): inverse of the ideal x in the number field nf.
+
+
+  ***   at top-level: ideallistarchgen()
+  ***                 ^------------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: ideallistarchgen(nf,list,arch) ===> ideallistarch(nf,list,arch)
+
+ideallistarch(nf,list,arch): list is a vector of vectors of bid's as output by 
+ideallist. Return a vector of vectors with the same number of components as the 
+original list. The leaves give information about moduli whose finite part is as 
+in original list, in the same order, and Archimedean part is now arch. The 
+information contained is of the same kind as was present in the input.
+
+
+  ***   at top-level: ideallistunit()
+  ***                 ^---------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: ideallistunit(nf,list) ===> ideallist(nf,list,2)
+
+ideallist(nf,bound,{flag=4}): vector of vectors L of all idealstar of all 
+ideals of norm<=bound. If (optional) flag is present, its binary digits are 
+toggles meaning 1: give generators; 2: add units; 4: give only the ideals and 
+not the bid.
+
+
+  ***   at top-level: ideallistunitarch()
+  ***                 ^-------------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: ideallistunitarch ===> ideallistarch(nf,list,arch)
+
+ideallistarch(nf,list,arch): list is a vector of vectors of bid's as output by 
+ideallist. Return a vector of vectors with the same number of components as the 
+original list. The leaves give information about moduli whose finite part is as 
+in original list, in the same order, and Archimedean part is now arch. The 
+information contained is of the same kind as was present in the input.
+
+
+  ***   at top-level: ideallistunitarchgen()
+  ***                 ^----------------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: ideallistunitarchgen ===> ideallistarch(nf,list,arch)
+
+ideallistarch(nf,list,arch): list is a vector of vectors of bid's as output by 
+ideallist. Return a vector of vectors with the same number of components as the 
+original list. The leaves give information about moduli whose finite part is as 
+in original list, in the same order, and Archimedean part is now arch. The 
+information contained is of the same kind as was present in the input.
+
+
+  ***   at top-level: ideallistunitgen()
+  ***                 ^------------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: ideallistunitgen ===> ideallist(nf,list,3)
+
+ideallist(nf,bound,{flag=4}): vector of vectors L of all idealstar of all 
+ideals of norm<=bound. If (optional) flag is present, its binary digits are 
+toggles meaning 1: give generators; 2: add units; 4: give only the ideals and 
+not the bid.
+
+
+  ***   at top-level: ideallistzstar()
+  ***                 ^----------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: ideallistzstar(nf,bound) ===> ideallist(nf,bound)
+
+ideallist(nf,bound,{flag=4}): vector of vectors L of all idealstar of all 
+ideals of norm<=bound. If (optional) flag is present, its binary digits are 
+toggles meaning 1: give generators; 2: add units; 4: give only the ideals and 
+not the bid.
+
+
+  ***   at top-level: ideallistzstargen()
+  ***                 ^-------------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: ideallistzstargen(nf,bound) ===> ideallist(nf,bound,1)
+
+ideallist(nf,bound,{flag=4}): vector of vectors L of all idealstar of all 
+ideals of norm<=bound. If (optional) flag is present, its binary digits are 
+toggles meaning 1: give generators; 2: add units; 4: give only the ideals and 
+not the bid.
+
+
+  ***   at top-level: ideallllred()
+  ***                 ^-------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: ideallllred(nf,x,vdir) ===> idealred(nf,x,vdir)
+
+idealred(nf,I,{v=0}): LLL reduction of the ideal I in the number field nf along 
+direction v, in HNF.
+
+
+  ***   at top-level: idealmulred()
+  ***                 ^-------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: idealmulred(nf,x,y) ===> idealmul(nf,x,y,1)
+
+idealmul(nf,x,y,{flag=0}): product of the two ideals x and y in the number 
+field nf. If (optional) flag is non-nul, reduce the result.
+
+
+  ***   at top-level: idealpowred()
+  ***                 ^-------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: idealpowred(nf,x,y) ===> idealpow(nf,x,y,1)
+
+idealpow(nf,x,k,{flag=0}): k-th power of the ideal x in HNF in the number field 
+nf. If (optional) flag is non-null, reduce the result.
+
+
+  ***   at top-level: idealtwoelt2()
+  ***                 ^--------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: idealtwoelt2(nf,x,a) ===> idealtwoelt(nf,x,a)
+
+idealtwoelt(nf,x,{a}): two-element representation of an ideal x in the number 
+field nf. If (optional) a is non-zero, first element will be equal to a.
+
+
+  ***   at top-level: idmat()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: idmat(n) ===> matid(n)
+
+matid(n): identity matrix of order n.
+
+
+  ***   at top-level: image()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: image(x) ===> matimage(x)
+
+matimage(x,{flag=0}): basis of the image of the matrix x. flag is optional and 
+can be set to 0 or 1, corresponding to two different algorithms.
+
+
+  ***   at top-level: image2()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: image2(x) ===> matimage(x,1)
+
+matimage(x,{flag=0}): basis of the image of the matrix x. flag is optional and 
+can be set to 0 or 1, corresponding to two different algorithms.
+
+
+  ***   at top-level: imagecompl()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: imagecompl(x) ===> matimagecompl(x)
+
+matimagecompl(x): vector of column indices not corresponding to the indices 
+given by the function matimage.
+
+
+  ***   at top-level: incgam1()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+This function no longer exists
+
+
+  ***   at top-level: incgam2()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+This function no longer exists
+
+
+  ***   at top-level: incgam3()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+This function no longer exists
+
+
+  ***   at top-level: incgam4()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: incgam4(s,x,y) ===> incgam(s,x,y)
+
+incgam(s,x,{g}): incomplete gamma function. g is optional and is the 
+precomputed value of gamma(s).
+
+
+  ***   at top-level: indexrank()
+  ***                 ^-----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: indexrank(x) ===> matindexrank(x)
+
+matindexrank(M): gives two extraction vectors (rows and columns) for the matrix 
+M such that the extracted matrix is square of maximal rank.
+
+
+  ***   at top-level: indsort()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: indsort(x) ===> vecsort(x,,1)
+
+vecsort(x,{cmpf},{flag=0}): sorts the vector of vectors (or matrix) x in 
+ascending order, according to the comparison function cmpf, if not omitted. (If 
+cmpf is an integer k, sort according to the value of the k-th component of each 
+entry.) Binary digits of flag (if present) mean: 1: indirect sorting, return 
+the permutation instead of the permuted vector, 4: use descending instead of 
+ascending order, 8: remove duplicate entries.
+
+
+  ***   at top-level: initalg()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: initalg(pol) ===> nfinit(pol)
+
+nfinit(pol,{flag=0}): pol being a nonconstant irreducible polynomial, gives the 
+vector: [pol,[r1,r2],discf,index,[M,MC,T2,T,different] (see manual),r1+r2 first 
+roots, integral basis, matrix of power basis in terms of integral basis, 
+multiplication table of basis]. flag is optional and can be set to 0: default; 
+1: do not compute different; 2: first use polred to find a simpler polynomial; 
+3: outputs a two-element vector [nf,Mod(a,P)], where nf is as in 2 and Mod(a,P) 
+is a polmod equal to Mod(x,pol) and P=nf.pol.
+
+
+  ***   at top-level: initalgred()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: initalgred(x) ===> nfinit(x,2)
+
+nfinit(pol,{flag=0}): pol being a nonconstant irreducible polynomial, gives the 
+vector: [pol,[r1,r2],discf,index,[M,MC,T2,T,different] (see manual),r1+r2 first 
+roots, integral basis, matrix of power basis in terms of integral basis, 
+multiplication table of basis]. flag is optional and can be set to 0: default; 
+1: do not compute different; 2: first use polred to find a simpler polynomial; 
+3: outputs a two-element vector [nf,Mod(a,P)], where nf is as in 2 and Mod(a,P) 
+is a polmod equal to Mod(x,pol) and P=nf.pol.
+
+
+  ***   at top-level: initalgred2()
+  ***                 ^-------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: initalgred2(x) ===> nfinit(x,3)
+
+nfinit(pol,{flag=0}): pol being a nonconstant irreducible polynomial, gives the 
+vector: [pol,[r1,r2],discf,index,[M,MC,T2,T,different] (see manual),r1+r2 first 
+roots, integral basis, matrix of power basis in terms of integral basis, 
+multiplication table of basis]. flag is optional and can be set to 0: default; 
+1: do not compute different; 2: first use polred to find a simpler polynomial; 
+3: outputs a two-element vector [nf,Mod(a,P)], where nf is as in 2 and Mod(a,P) 
+is a polmod equal to Mod(x,pol) and P=nf.pol.
+
+
+  ***   at top-level: initell()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: initell(x) ===> ellinit(x)
+
+ellinit(x,{D=1}): let x be a vector [a1,a2,a3,a4,a6], or [a4,a6] if a1=a2=a3=0, 
+defining the curve Y^2 + a1.XY + a3.Y = X^3 + a2.X^2 + a4.X + a6; x can also be 
+a string, in which case the curve with matching name is retrieved from the 
+elldata database, if available. This function initializes an elliptic curve 
+over the domain D (inferred from coefficients if omitted).
+
+
+  ***   at top-level: initzeta()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+This function no longer exists
+
+
+  ***   at top-level: integ()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: integ(x,y) ===> intformal(x,y)
+
+intformal(x,{v}): formal integration of x with respect to v, or to the main 
+variable of x if v is omitted.
+
+
+  ***   at top-level: intersect()
+  ***                 ^-----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: intersect(x,y) ===> matintersect(x,y)
+
+matintersect(x,y): intersection of the vector spaces whose bases are the 
+columns of x and y.
+
+
+  ***   at top-level: intgen()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: intgen(x=a,b,s) ===> intnum(x=a,b,s,1)
+
+intnum(X=a,b,expr,{tab}): numerical integration of expr from a to b with 
+respect to X. Plus/minus infinity is coded as +oo/-oo. Finally tab is either 
+omitted (let the program choose the integration step), a non-negative integer m 
+(divide integration step by 2^m), or data precomputed with intnuminit.
+
+
+  ***   at top-level: intinf()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: intinf(x=a,b,s) ===> intnum(x=a,b,s,2)
+
+intnum(X=a,b,expr,{tab}): numerical integration of expr from a to b with 
+respect to X. Plus/minus infinity is coded as +oo/-oo. Finally tab is either 
+omitted (let the program choose the integration step), a non-negative integer m 
+(divide integration step by 2^m), or data precomputed with intnuminit.
+
+
+  ***   at top-level: intopen()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: intopen(x=a,b,s) ===> intnum(x=a,b,s,3)
+
+intnum(X=a,b,expr,{tab}): numerical integration of expr from a to b with 
+respect to X. Plus/minus infinity is coded as +oo/-oo. Finally tab is either 
+omitted (let the program choose the integration step), a non-negative integer m 
+(divide integration step by 2^m), or data precomputed with intnuminit.
+
+
+  ***   at top-level: inverseimage()
+  ***                 ^--------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: inverseimage(x,y) ===> matinverseimage(x,y)
+
+matinverseimage(x,y): an element of the inverse image of the vector y by the 
+matrix x if one exists, the empty vector otherwise.
+
+
+  ***   at top-level: isdiagonal()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: isdiagonal(x) ===> matisdiagonal(x)
+
+matisdiagonal(x): true(1) if x is a diagonal matrix, false(0) otherwise.
+
+
+  ***   at top-level: isfund()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: isfund(x) ===> isfundamental(x)
+
+isfundamental(D): true(1) if D is a fundamental discriminant (including 1), 
+false(0) if not.
+
+
+  ***   at top-level: isideal()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: isideal(nf,x) ===> nfisideal(nf,x)
+
+nfisideal(nf,x): true(1) if x is an ideal in the number field nf, false(0) if 
+not.
+
+
+  ***   at top-level: isincl()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: isincl(x,y) ===> nfisincl(x,y)
+
+nfisincl(f,g): let f and g define number fields, either irreducible rational 
+polynomials or number fields as output by nfinit; tests whether the number 
+field f is isomorphic to a subfield of g. Return 0 if not, and otherwise all 
+the isomorphisms.
+
+
+  ***   at top-level: isinclfast()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: isinclfast(nf1,nf2) ===> nfisincl(nf1,nf2,1)
+
+nfisincl(f,g): let f and g define number fields, either irreducible rational 
+polynomials or number fields as output by nfinit; tests whether the number 
+field f is isomorphic to a subfield of g. Return 0 if not, and otherwise all 
+the isomorphisms.
+
+
+  ***   at top-level: isirreducible()
+  ***                 ^---------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: isirreducible(x) ===> polisirreducible(x)
+
+polisirreducible(pol): true(1) if pol is an irreducible non-constant 
+polynomial, false(0) if pol is reducible or constant.
+
+
+  ***   at top-level: isisom()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: isisom(x,y) ===> nfisisom(x,y)
+
+nfisisom(f,g): as nfisincl but tests whether f is isomorphic to g.
+
+
+  ***   at top-level: isisomfast()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: isisomfast(x,y) ===> nfisisom(x,y)
+
+nfisisom(f,g): as nfisincl but tests whether f is isomorphic to g.
+
+
+  ***   at top-level: isoncurve()
+  ***                 ^-----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: isoncurve(e,x) ===> ellisoncurve(e,x)
+
+ellisoncurve(E,z): true(1) if z is on elliptic curve E, false(0) if not.
+
+
+  ***   at top-level: isprincipal()
+  ***                 ^-------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: isprincipal(bnf,x) ===> bnfisprincipal(bnf,x,0)
+
+bnfisprincipal(bnf,x,{flag=1}): bnf being output by bnfinit (with flag<=2), 
+gives [v,alpha], where v is the vector of exponents on the class group 
+generators and alpha is the generator of the resulting principal ideal. In 
+particular x is principal if and only if v is the zero vector. flag is 
+optional, whose binary digits mean 1: output [v,alpha] (only v if unset); 2: 
+increase precision until alpha can be computed (do not insist if unset).
+
+
+  ***   at top-level: isprincipalforce()
+  ***                 ^------------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: isprincipalforce(bnf,x) ===> bnfisprincipal(bnf,x,2)
+
+bnfisprincipal(bnf,x,{flag=1}): bnf being output by bnfinit (with flag<=2), 
+gives [v,alpha], where v is the vector of exponents on the class group 
+generators and alpha is the generator of the resulting principal ideal. In 
+particular x is principal if and only if v is the zero vector. flag is 
+optional, whose binary digits mean 1: output [v,alpha] (only v if unset); 2: 
+increase precision until alpha can be computed (do not insist if unset).
+
+
+  ***   at top-level: isprincipalgen()
+  ***                 ^----------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: isprincipalgen(bnf,x) ===> bnfisprincipal(bnf,x)
+
+bnfisprincipal(bnf,x,{flag=1}): bnf being output by bnfinit (with flag<=2), 
+gives [v,alpha], where v is the vector of exponents on the class group 
+generators and alpha is the generator of the resulting principal ideal. In 
+particular x is principal if and only if v is the zero vector. flag is 
+optional, whose binary digits mean 1: output [v,alpha] (only v if unset); 2: 
+increase precision until alpha can be computed (do not insist if unset).
+
+
+  ***   at top-level: isprincipalgenforce()
+  ***                 ^---------------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: isprincipalgenforce(bnf,x) ===> bnfisprincipal(bnf,x,3)
+
+bnfisprincipal(bnf,x,{flag=1}): bnf being output by bnfinit (with flag<=2), 
+gives [v,alpha], where v is the vector of exponents on the class group 
+generators and alpha is the generator of the resulting principal ideal. In 
+particular x is principal if and only if v is the zero vector. flag is 
+optional, whose binary digits mean 1: output [v,alpha] (only v if unset); 2: 
+increase precision until alpha can be computed (do not insist if unset).
+
+
+  ***   at top-level: isprincipalray()
+  ***                 ^----------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: isprincipalray(bnf,x) ===> bnrisprincipal(bnf,x)
+
+bnrisprincipal(bnr,x,{flag=1}): bnr being output by bnrinit and x being an 
+ideal coprime to bnr.mod, returns [v,alpha], where v is the vector of exponents 
+on the ray class group generators and alpha is the generator of the resulting 
+principal ideal. If (optional) flag is set to 0, output only v.
+
+
+  ***   at top-level: isprincipalraygen()
+  ***                 ^-------------------
+  ***   not a function in function call
+  ***   at top-level: ispsp()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: ispsp(x) ===> ispseudoprime(x)
+
+ispseudoprime(x,{flag}): true(1) if x is a strong pseudoprime, false(0) if not. 
+If flag is 0 or omitted, use BPSW test, otherwise use strong Rabin-Miller test 
+for flag randomly chosen bases.
+
+
+  ***   at top-level: isqrt()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: isqrt(x) ===> sqrtint(x)
+
+sqrtint(x): integer square root of x, where x is a non-negative integer.
+
+
+  ***   at top-level: isset()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: isset(x) ===> setisset(x)
+
+setisset(x): true(1) if x is a set (row vector with strictly increasing 
+entries), false(0) if not.
+
+
+  ***   at top-level: issqfree()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: issqfree(x) ===> issquarefree(x)
+
+issquarefree(x): true(1) if x is squarefree, false(0) if not.
+
+
+  ***   at top-level: isunit()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: isunit(bnf,x) ===> bnfisunit(bnf,x)
+
+bnfisunit(bnf,x): bnf being output by bnfinit, gives the column vector of 
+exponents of x on the fundamental units and the roots of unity if x is a unit, 
+the empty vector otherwise.
+
+
+  ***   at top-level: jacobi()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: jacobi(x) ===> qfjacobi(x)
+
+qfjacobi(A): eigenvalues and orthogonal matrix of eigenvectors of the real 
+symmetric matrix A.
+
+
+  ***   at top-level: jbesselh()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: jbesselh(n,x) ===> besseljh(n,x)
+
+besseljh(n,x): J-bessel function of index n+1/2 and argument x, where n is a 
+non-negative integer.
+
+
+  ***   at top-level: jell()
+  ***                 ^------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: jell(x) ===> ellj(x)
+
+ellj(x): elliptic j invariant of x.
+
+
+  ***   at top-level: karamul()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+This function no longer exists
+
+
+  ***   at top-level: kbessel()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: kbessel(nu,x) ===> besselk(nu,x)
+
+besselk(nu,x): K-bessel function of index nu and argument x.
+
+
+  ***   at top-level: kbessel2()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: kbessel2(nu,x) ===> besselk(nu,x)
+
+besselk(nu,x): K-bessel function of index nu and argument x.
+
+
+  ***   at top-level: ker()
+  ***                 ^-----
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: ker(x) ===> matker(x)
+
+matker(x,{flag=0}): basis of the kernel of the matrix x. flag is optional, and 
+may be set to 0: default; non-zero: x is known to have integral entries.
+
+
+  ***   at top-level: keri()
+  ***                 ^------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: keri(x) ===> matker(x,1)
+
+matker(x,{flag=0}): basis of the kernel of the matrix x. flag is optional, and 
+may be set to 0: default; non-zero: x is known to have integral entries.
+
+
+  ***   at top-level: kerint()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: kerint(x) ===> matkerint(x)
+
+matkerint(x,{flag=0}): LLL-reduced Z-basis of the kernel of the matrix x with 
+integral entries. flag is deprecated, and may be set to 0 or 1 for backward 
+compatibility.
+
+
+  ***   at top-level: kerint1()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: kerint1(x) ===> matkerint(x,1)
+
+matkerint(x,{flag=0}): LLL-reduced Z-basis of the kernel of the matrix x with 
+integral entries. flag is deprecated, and may be set to 0 or 1 for backward 
+compatibility.
+
+
+  ***   at top-level: kerint2()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+This function no longer exists
+
+
+  ***   at top-level: kro()
+  ***                 ^-----
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: kro(x,y) ===> kronecker(x,y)
+
+kronecker(x,y): kronecker symbol (x/y).
+
+
+  ***   at top-level: label()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+This function no longer exists
+
+
+  ***   at top-level: lambdak()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+This function no longer exists
+
+
+  ***   at top-level: laplace()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: laplace(x) ===> serlaplace(x)
+
+serlaplace(x): replaces the power series sum of a_n*x^n/n! by sum of a_n*x^n. 
+For the reverse operation, use serconvol(x,exp(X)).
+
+
+  ***   at top-level: legendre()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: legendre(n) ===> pollegendre(n)
+
+pollegendre(n,{a='x}): legendre polynomial of degree n evaluated at a.
+
+
+  ***   at top-level: lexsort()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: lexsort(x) ===> vecsort(x,,2)
+
+vecsort(x,{cmpf},{flag=0}): sorts the vector of vectors (or matrix) x in 
+ascending order, according to the comparison function cmpf, if not omitted. (If 
+cmpf is an integer k, sort according to the value of the k-th component of each 
+entry.) Binary digits of flag (if present) mean: 1: indirect sorting, return 
+the permutation instead of the permuted vector, 4: use descending instead of 
+ascending order, 8: remove duplicate entries.
+
+
+  ***   at top-level: lindep2()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: lindep2(x) ===> lindep(x,1)
+
+lindep(v,{flag=0}): integral linear dependencies between components of v. flag 
+is optional, and can be 0: default, guess a suitable accuracy, or positive: 
+accuracy to use for the computation, in decimal digits.
+
+
+  ***   at top-level: lll()
+  ***                 ^-----
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: lll(x) ===> qflll(x)
+
+qflll(x,{flag=0}): LLL reduction of the vectors forming the matrix x (gives the 
+unimodular transformation matrix T such that x*T is LLL-reduced). flag is 
+optional, and can be 0: default, 1: assumes x is integral, 2: assumes x is 
+integral, returns a partially reduced basis, 4: assumes x is integral, returns 
+[K,T] where K is the integer kernel of x and T the LLL reduced image, 5: same 
+as 4 but x may have polynomial coefficients, 8: same as 0 but x may have 
+polynomial coefficients.
+
+
+  ***   at top-level: lll1()
+  ***                 ^------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+This function no longer exists
+
+
+  ***   at top-level: lllgen()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: lllgen(x) ===> qflll(x,8)
+
+qflll(x,{flag=0}): LLL reduction of the vectors forming the matrix x (gives the 
+unimodular transformation matrix T such that x*T is LLL-reduced). flag is 
+optional, and can be 0: default, 1: assumes x is integral, 2: assumes x is 
+integral, returns a partially reduced basis, 4: assumes x is integral, returns 
+[K,T] where K is the integer kernel of x and T the LLL reduced image, 5: same 
+as 4 but x may have polynomial coefficients, 8: same as 0 but x may have 
+polynomial coefficients.
+
+
+  ***   at top-level: lllgram()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: lllgram(x) ===> qflllgram(x)
+
+qflllgram(G,{flag=0}): LLL reduction of the lattice whose gram matrix is G 
+(gives the unimodular transformation matrix). flag is optional and can be 0: 
+default,1: assumes x is integral, 4: assumes x is integral, returns [K,T], 
+where K is the integer kernel of x and T the LLL reduced image, 5: same as 4 
+but x may have polynomial coefficients, 8: same as 0 but x may have polynomial 
+coefficients.
+
+
+  ***   at top-level: lllgram1()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+This function no longer exists
+
+
+  ***   at top-level: lllgramgen()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: lllgramgen(x) ===> qflllgram(x,8)
+
+qflllgram(G,{flag=0}): LLL reduction of the lattice whose gram matrix is G 
+(gives the unimodular transformation matrix). flag is optional and can be 0: 
+default,1: assumes x is integral, 4: assumes x is integral, returns [K,T], 
+where K is the integer kernel of x and T the LLL reduced image, 5: same as 4 
+but x may have polynomial coefficients, 8: same as 0 but x may have polynomial 
+coefficients.
+
+
+  ***   at top-level: lllgramint()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: lllgramint(x) ===> qflllgram(x,1)
+
+qflllgram(G,{flag=0}): LLL reduction of the lattice whose gram matrix is G 
+(gives the unimodular transformation matrix). flag is optional and can be 0: 
+default,1: assumes x is integral, 4: assumes x is integral, returns [K,T], 
+where K is the integer kernel of x and T the LLL reduced image, 5: same as 4 
+but x may have polynomial coefficients, 8: same as 0 but x may have polynomial 
+coefficients.
+
+
+  ***   at top-level: lllgramkerim()
+  ***                 ^--------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: lllgramkerim(x) ===> qflllgram(x,4)
+
+qflllgram(G,{flag=0}): LLL reduction of the lattice whose gram matrix is G 
+(gives the unimodular transformation matrix). flag is optional and can be 0: 
+default,1: assumes x is integral, 4: assumes x is integral, returns [K,T], 
+where K is the integer kernel of x and T the LLL reduced image, 5: same as 4 
+but x may have polynomial coefficients, 8: same as 0 but x may have polynomial 
+coefficients.
+
+
+  ***   at top-level: lllgramkerimgen()
+  ***                 ^-----------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: lllgramkerimgen(x) ===> qflllgram(x,5)
+
+qflllgram(G,{flag=0}): LLL reduction of the lattice whose gram matrix is G 
+(gives the unimodular transformation matrix). flag is optional and can be 0: 
+default,1: assumes x is integral, 4: assumes x is integral, returns [K,T], 
+where K is the integer kernel of x and T the LLL reduced image, 5: same as 4 
+but x may have polynomial coefficients, 8: same as 0 but x may have polynomial 
+coefficients.
+
+
+  ***   at top-level: lllint()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: lllint(x) ===> qflll(x,1)
+
+qflll(x,{flag=0}): LLL reduction of the vectors forming the matrix x (gives the 
+unimodular transformation matrix T such that x*T is LLL-reduced). flag is 
+optional, and can be 0: default, 1: assumes x is integral, 2: assumes x is 
+integral, returns a partially reduced basis, 4: assumes x is integral, returns 
+[K,T] where K is the integer kernel of x and T the LLL reduced image, 5: same 
+as 4 but x may have polynomial coefficients, 8: same as 0 but x may have 
+polynomial coefficients.
+
+
+  ***   at top-level: lllintpartial()
+  ***                 ^---------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: lllintpartial(x) ===> qflll(x,2)
+
+qflll(x,{flag=0}): LLL reduction of the vectors forming the matrix x (gives the 
+unimodular transformation matrix T such that x*T is LLL-reduced). flag is 
+optional, and can be 0: default, 1: assumes x is integral, 2: assumes x is 
+integral, returns a partially reduced basis, 4: assumes x is integral, returns 
+[K,T] where K is the integer kernel of x and T the LLL reduced image, 5: same 
+as 4 but x may have polynomial coefficients, 8: same as 0 but x may have 
+polynomial coefficients.
+
+
+  ***   at top-level: lllkerim()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: lllkerim(x) ===> qflll(x,4)
+
+qflll(x,{flag=0}): LLL reduction of the vectors forming the matrix x (gives the 
+unimodular transformation matrix T such that x*T is LLL-reduced). flag is 
+optional, and can be 0: default, 1: assumes x is integral, 2: assumes x is 
+integral, returns a partially reduced basis, 4: assumes x is integral, returns 
+[K,T] where K is the integer kernel of x and T the LLL reduced image, 5: same 
+as 4 but x may have polynomial coefficients, 8: same as 0 but x may have 
+polynomial coefficients.
+
+
+  ***   at top-level: lllkerimgen()
+  ***                 ^-------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: lllkerimgen(x) ===> qflll(x,5)
+
+qflll(x,{flag=0}): LLL reduction of the vectors forming the matrix x (gives the 
+unimodular transformation matrix T such that x*T is LLL-reduced). flag is 
+optional, and can be 0: default, 1: assumes x is integral, 2: assumes x is 
+integral, returns a partially reduced basis, 4: assumes x is integral, returns 
+[K,T] where K is the integer kernel of x and T the LLL reduced image, 5: same 
+as 4 but x may have polynomial coefficients, 8: same as 0 but x may have 
+polynomial coefficients.
+
+
+  ***   at top-level: lllrat()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+This function no longer exists
+
+
+  ***   at top-level: ln()
+  ***                 ^----
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: ln(x) ===> log(x)
+
+log(x): natural logarithm of x.
+
+
+  ***   at top-level: localred()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: localred(e) ===> elllocalred(e)
+
+elllocalred(E,{p}): E being an elliptic curve, returns [f,kod,[u,r,s,t],c], 
+where f is the conductor's exponent, kod is the Kodaira type for E at p, 
+[u,r,s,t] is the change of variable needed to make E minimal at p, and c is the 
+local Tamagawa number c_p.
+
+
+  ***   at top-level: logagm()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: logagm(x) ===> log(x,1)
+
+log(x): natural logarithm of x.
+
+
+  ***   at top-level: lseriesell()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: lseriesell(e,s,N,A) ===> elllseries(e,s,A)
+
+elllseries(E,s,{A=1}): L-series at s of the elliptic curve E, where A a cut-off 
+point close to 1.
+
+
+  ***   at top-level: makebigbnf()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: makebigbnf(sbnf) ===> bnfinit(sbnf)
+
+bnfinit(P,{flag=0},{tech=[]}): compute the necessary data for future use in 
+ideal and unit group computations, including fundamental units if they are not 
+too large. flag and tech are both optional. flag can be any of 0: default, 1: 
+insist on having fundamental units. See manual for details about tech.
+
+
+  ***   at top-level: mat()
+  ***                 ^-----
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: mat(x) ===> Mat(x)
+
+Mat({x=[]}): transforms any GEN x into a matrix. Empty matrix if x is omitted.
+
+
+  ***   at top-level: matextract()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: matextract(x,y,z) ===> vecextract(x,y,z)
+
+vecextract(x,y,{z}): extraction of the components of the matrix or vector x 
+according to y and z. If z is omitted, y represents columns, otherwise y 
+corresponds to rows and z to columns. y and z can be vectors (of indices), 
+strings (indicating ranges as in "1..10") or masks (integers whose binary 
+representation indicates the indices to extract, from left to right 1, 2, 4, 8, 
+etc.).
+
+
+  ***   at top-level: mathell()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: mathell(e,x) ===> ellheightmatrix(e,x)
+
+ellheightmatrix(E,x): gives the height matrix for vector of points x on 
+elliptic curve E.
+
+
+  ***   at top-level: matrixqz2()
+  ***                 ^-----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: matrixqz2(x,p) ===> matrixqz(x,-1)
+
+matrixqz(A,{p=0}): if p>=0, transforms the rational or integral mxn (m>=n) 
+matrix A into an integral matrix with gcd of maximal determinants coprime to p. 
+If p=-1, finds a basis of the intersection with Z^n of the lattice spanned by 
+the columns of A. If p=-2, finds a basis of the intersection with Z^n of the 
+Q-vector space spanned by the columns of A.
+
+
+  ***   at top-level: matrixqz3()
+  ***                 ^-----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: matrixqz3(x,p) ===> matrixqz(x,-2)
+
+matrixqz(A,{p=0}): if p>=0, transforms the rational or integral mxn (m>=n) 
+matrix A into an integral matrix with gcd of maximal determinants coprime to p. 
+If p=-1, finds a basis of the intersection with Z^n of the lattice spanned by 
+the columns of A. If p=-2, finds a basis of the intersection with Z^n of the 
+Q-vector space spanned by the columns of A.
+
+
+  ***   at top-level: minideal()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: minideal(nf,ix,vdir) ===> idealmin(nf,ix,vdir)
+
+idealmin(nf,ix,{vdir}): pseudo-minimum of the ideal ix in the direction vdir in 
+the number field nf.
+
+
+  ***   at top-level: minim()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: minim(x,bound,maxnum) ===> qfminim(x,bound,maxnum)
+
+qfminim(x,{b},{m},{flag=0}): x being a square and symmetric matrix representing 
+a positive definite quadratic form, this function deals with the vectors of x 
+whose norm is less than or equal to b, enumerated using the Fincke-Pohst 
+algorithm, storing at most m vectors (no limit if m is omitted). The function 
+searches for the minimal non-zero vectors if b is omitted. The precise behavior 
+depends on flag. 0: returns at most 2m vectors (unless m omitted), returns 
+[N,M,mat] where N is the number of vectors enumerated, M the maximum norm among 
+these, and mat lists half the vectors (the other half is given by -mat). 1: 
+ignores m and returns the first vector whose norm is less than b. 2: as 0 but 
+uses a more robust, slower implementation, valid for non integral quadratic 
+forms.
+
+
+  ***   at top-level: minim2()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: minim2(x,bound) ===> qfminim(x,bound,,1)
+
+qfminim(x,{b},{m},{flag=0}): x being a square and symmetric matrix representing 
+a positive definite quadratic form, this function deals with the vectors of x 
+whose norm is less than or equal to b, enumerated using the Fincke-Pohst 
+algorithm, storing at most m vectors (no limit if m is omitted). The function 
+searches for the minimal non-zero vectors if b is omitted. The precise behavior 
+depends on flag. 0: returns at most 2m vectors (unless m omitted), returns 
+[N,M,mat] where N is the number of vectors enumerated, M the maximum norm among 
+these, and mat lists half the vectors (the other half is given by -mat). 1: 
+ignores m and returns the first vector whose norm is less than b. 2: as 0 but 
+uses a more robust, slower implementation, valid for non integral quadratic 
+forms.
+
+
+  ***   at top-level: mod()
+  ***                 ^-----
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: mod(x,y) ===> Mod(x,y)
+
+Mod(a,b): creates 'a modulo b'.
+
+
+  ***   at top-level: modp()
+  ***                 ^------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: modp(x,y,p) ===> Mod(x,y)
+
+Mod(a,b): creates 'a modulo b'.
+
+
+  ***   at top-level: modulargcd()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: modulargcd(x,y) ===> gcd(x,y,1)
+
+gcd(x,{y}): greatest common divisor of x and y.
+
+
+  ***   at top-level: mu()
+  ***                 ^----
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: mu(n) ===> moebius(n)
+
+moebius(x): Moebius function of x.
+
+
+  ***   at top-level: nfdiv()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: nfdiv(nf,a,b) ===> nfeltdiv(nf,a,b)
+
+nfeltdiv(nf,x,y): element x/y in nf.
+
+
+  ***   at top-level: nfdiveuc()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: nfdiveuc(nf,a,b) ===> nfeltdiveuc(nf,a,b)
+
+nfeltdiveuc(nf,x,y): gives algebraic integer q such that x-qy is small.
+
+
+  ***   at top-level: nfdivres()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: nfdivres(nf,a,b) ===> nfeltdivrem(nf,a,b)
+
+nfeltdivrem(nf,x,y): gives [q,r] such that r=x-qy is small.
+
+
+  ***   at top-level: nfhermite()
+  ***                 ^-----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: nfhermite(nf,x) ===> nfhnf(nf,x)
+
+nfhnf(nf,x,{flag=0}): if x=[A,I], gives a pseudo-basis [B,J] of the module sum 
+A_jI_j. If flag is non-zero, return [[B,J], U], where U is the transformation 
+matrix such that AU = [0|B].
+
+
+  ***   at top-level: nfhermitemod()
+  ***                 ^--------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: nfhermitemod(nf,x,detx) ===> nfhnfmod(nf,x,detx)
+
+nfhnfmod(nf,x,detx): if x=[A,I], and detx is a multiple of the ideal 
+determinant of x, gives a pseudo-basis of the module sum A_jI_j.
+
+
+  ***   at top-level: nfmod()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: nfmod(nf,a,b) ===> nfeltmod(nf,a,b)
+
+nfeltmod(nf,x,y): gives r such that r=x-qy is small with q algebraic integer.
+
+
+  ***   at top-level: nfmul()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: nfmul(nf,a,b) ===> nfeltmul(nf,a,b)
+
+nfeltmul(nf,x,y): element x.y in nf.
+
+
+  ***   at top-level: nfpow()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: nfpow(nf,a,k) ===> nfeltpow(nf,a,k)
+
+nfeltpow(nf,x,k): element x^k in nf.
+
+
+  ***   at top-level: nfreduce()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: nfreduce(nf,a,id) ===> nfeltreduce(nf,a,id)
+
+nfeltreduce(nf,a,id): gives r such that a-r is in the ideal id and r is small.
+
+
+  ***   at top-level: nfsmith()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: nfsmith(nf,x) ===> nfsnf(nf,x)
+
+nfsnf(nf,x,{flag=0}): if x=[A,I,J], outputs D=[d_1,...d_n] Smith normal form of 
+x. If flag is non-zero return [D,U,V], where UAV = Id.
+
+
+  ***   at top-level: nfval()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: nfval(nf,a,pr) ===> nfeltval(nf,a,pr)
+
+nfeltval(nf,x,pr,{&y}): valuation of element x at the prime pr as output by 
+idealprimedec.
+
+
+  ***   at top-level: nucomp()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: nucomp(x,y,l) ===> qfbnucomp(x,y,l)
+
+qfbnucomp(x,y,L): composite of primitive positive definite quadratic forms x 
+and y using nucomp and nudupl, where L=[|D/4|^(1/4)] is precomputed.
+
+
+  ***   at top-level: numer()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: numer(x) ===> numerator(x)
+
+numerator(f,{D}): numerator of f.
+
+
+  ***   at top-level: nupow()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: nupow(x,n) ===> qfbnupow(x,n)
+
+qfbnupow(x,n,{L}): n-th power of primitive positive definite quadratic form x 
+using nucomp and nudupl.
+
+
+  ***   at top-level: o()
+  ***                 ^---
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: o(x) ===> O(x)
+
+O(p^e): p-adic or power series zero with precision given by e.
+
+
+  ***   at top-level: ordell()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: ordell(e,x) ===> ellordinate(e,x)
+
+ellordinate(E,x): y-coordinates corresponding to x-ordinate x on elliptic curve 
+E.
+
+
+  ***   at top-level: order()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: order(x) ===> znorder(x)
+
+znorder(x,{o}): order of the integermod x in (Z/nZ)*. Optional o represents a 
+multiple of the order of the element.
+
+
+  ***   at top-level: orderell()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: orderell(e,x) ===> ellorder(e,x)
+
+ellorder(E,z,{o}): order of the point z on the elliptic curve E over a number 
+field or a finite field, 0 if non-torsion. The parameter o, if present, 
+represents a non-zero multiple of the order of z.
+
+
+  ***   at top-level: ordred()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: ordred(x) ===> polredord(x)
+
+polredord(x): this function is obsolete, use polredbest.
+
+
+  ***   at top-level: pascal()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: pascal(n) ===> matpascal(n)
+
+matpascal(n,{q}): Pascal triangle of order n if q is omitted. q-Pascal triangle 
+otherwise.
+
+
+  ***   at top-level: perf()
+  ***                 ^------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: perf(a) ===> qfperfection(a)
+
+qfperfection(G): rank of matrix of xx~ for x minimal vectors of a gram matrix 
+G.
+
+
+  ***   at top-level: permutation()
+  ***                 ^-------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: permutation(n,k) ===> numtoperm(n,k)
+
+numtoperm(n,k): permutation number k (mod n!) of n letters (n C-integer).
+
+
+  ***   at top-level: permutation2num()
+  ***                 ^-----------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: permutation2num(vect) ===> permtonum(vect)
+
+permtonum(x): ordinal (between 1 and n!) of permutation x.
+
+
+  ***   at top-level: pf()
+  ***                 ^----
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: pf(x,p) ===> qfbprimeform(x,p)
+
+qfbprimeform(x,p): returns the prime form of discriminant x, whose first 
+coefficient is p.
+
+
+  ***   at top-level: phi()
+  ***                 ^-----
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: phi(x) ===> eulerphi(x)
+
+eulerphi(x): Euler's totient function of x.
+
+
+  ***   at top-level: pi()
+  ***                 ^----
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: pi ===> Pi
+
+Pi=Pi(): the constant pi, with current precision.
+
+
+  ***   at top-level: pnqn()
+  ***                 ^------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: pnqn(x) ===> contfracpnqn(x)
+
+contfracpnqn(x, {n=-1}): [p_n,p_{n-1}; q_n,q_{n-1}] corresponding to the 
+continued fraction x. If n >= 0 is present, returns all convergents from 
+p_0/q_0 up to p_n/q_n.
+
+
+  ***   at top-level: pointell()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: pointell(e,z) ===> ellztopoint(e,z)
+
+ellztopoint(E,z): inverse of ellpointtoz. Returns the coordinates of point P on 
+the curve E corresponding to a complex or p-adic z.
+
+
+  ***   at top-level: polint()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: polint(xa,ya,x) ===> polinterpolate(xa,ya,p)
+
+polinterpolate(X,{Y},{t = 'x},{&e}): polynomial interpolation at t according to 
+data vectors X, Y (i.e. given P of minimal degree such that P(X[i]) = Y[i] for 
+all i, return P(t)). If Y is omitted, take P such that P(i) = X[i]. If present, 
+e will contain an error estimate on the returned value.
+
+
+  ***   at top-level: polred2()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: polred2(x) ===> polred(x,2)
+
+polred(T,{flag=0}): deprecated, use polredbest. Reduction of the polynomial T 
+(gives minimal polynomials only). The following binary digits of (optional) 
+flag are significant 1: partial reduction, 2: gives also elements.
+
+
+  ***   at top-level: polredabs2()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: polredabs2(x) ===> polredabs(x,1)
+
+polredabs(T,{flag=0}): a smallest generating polynomial of the number field for 
+the T2 norm on the roots, with smallest index for the minimal T2 norm. flag is 
+optional, whose binary digit mean 1: give the element whose characteristic 
+polynomial is the given polynomial. 4: give all polynomials of minimal T2 norm 
+(give only one of P(x) and P(-x)).
+
+
+  ***   at top-level: polredabsall()
+  ***                 ^--------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: polredabsall(x) ===> polredabs(x,4)
+
+polredabs(T,{flag=0}): a smallest generating polynomial of the number field for 
+the T2 norm on the roots, with smallest index for the minimal T2 norm. flag is 
+optional, whose binary digit mean 1: give the element whose characteristic 
+polynomial is the given polynomial. 4: give all polynomials of minimal T2 norm 
+(give only one of P(x) and P(-x)).
+
+
+  ***   at top-level: polredabsfast()
+  ***                 ^---------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: polredabsfast(x) ===> polredabs(x,8)
+
+polredabs(T,{flag=0}): a smallest generating polynomial of the number field for 
+the T2 norm on the roots, with smallest index for the minimal T2 norm. flag is 
+optional, whose binary digit mean 1: give the element whose characteristic 
+polynomial is the given polynomial. 4: give all polynomials of minimal T2 norm 
+(give only one of P(x) and P(-x)).
+
+
+  ***   at top-level: polredabsnored()
+  ***                 ^----------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: polredabsnored(x) ===> polredabs(x,2)
+
+polredabs(T,{flag=0}): a smallest generating polynomial of the number field for 
+the T2 norm on the roots, with smallest index for the minimal T2 norm. flag is 
+optional, whose binary digit mean 1: give the element whose characteristic 
+polynomial is the given polynomial. 4: give all polynomials of minimal T2 norm 
+(give only one of P(x) and P(-x)).
+
+
+  ***   at top-level: polvar()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: polvar(x) ===> variable(x)
+
+variable({x}): main variable of object x. Gives p for p-adic x, 0 if no 
+variable can be attached to x. Returns the list of user variables if x is 
+omitted.
+
+
+  ***   at top-level: poly()
+  ***                 ^------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: poly(x,v) ===> Pol(x,v)
+
+Pol(t,{v='x}): convert t (usually a vector or a power series) into a polynomial 
+with variable v, starting with the leading coefficient.
+
+
+  ***   at top-level: polylogd()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: polylogd(m,x) ===> polylog(m,x,1)
+
+polylog(m,x,{flag=0}): m-th polylogarithm of x. flag is optional, and can be 0: 
+default, 1: D_m~-modified m-th polylog of x, 2: D_m-modified m-th polylog of x, 
+3: P_m-modified m-th polylog of x.
+
+
+  ***   at top-level: polylogdold()
+  ***                 ^-------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: polylogdold(m,x) ===> polylog(m,x,2)
+
+polylog(m,x,{flag=0}): m-th polylogarithm of x. flag is optional, and can be 0: 
+default, 1: D_m~-modified m-th polylog of x, 2: D_m-modified m-th polylog of x, 
+3: P_m-modified m-th polylog of x.
+
+
+  ***   at top-level: polylogp()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: polylogp(m,x) ===> polylog(m,x,3)
+
+polylog(m,x,{flag=0}): m-th polylogarithm of x. flag is optional, and can be 0: 
+default, 1: D_m~-modified m-th polylog of x, 2: D_m-modified m-th polylog of x, 
+3: P_m-modified m-th polylog of x.
+
+
+  ***   at top-level: polyrev()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: polyrev(x,v) ===> Polrev(x,v)
+
+Polrev(t,{v='x}): convert t (usually a vector or a power series) into a 
+polynomial with variable v, starting with the constant term.
+
+
+  ***   at top-level: polzag()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: polzag(n,m) ===> polzagier(n,m)
+
+polzagier(n,m): Zagier's polynomials of index n,m.
+
+
+  ***   at top-level: powell()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: powell(e,x,n) ===> ellmul(e,x,n)
+
+ellmul(E,z,n): n times the point z on elliptic curve E (n in Z).
+
+
+  ***   at top-level: powrealraw()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: powrealraw(x,n) ===> qfbpowraw(x,n)
+
+qfbpowraw(x,n): n-th power without reduction of the binary quadratic form x.
+
+
+  ***   at top-level: prec()
+  ***                 ^------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: prec(x,n) ===> precision(x,n)
+
+precision(x,{n}): if n is present, return x at precision n. If n is omitted, 
+return real precision of object x.
+
+
+  ***   at top-level: primedec()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: primedec(nf,p) ===> idealprimedec(nf,p)
+
+idealprimedec(nf,p,{f=0}): prime ideal decomposition of the prime number p in 
+the number field nf as a vector of prime ideals. If f is present and non-zero, 
+restrict the result to primes of residue degree <= f.
+
+
+  ***   at top-level: primroot()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: primroot(n) ===> znprimroot(n)
+
+znprimroot(n): returns a primitive root of n when it exists.
+
+
+  ***   at top-level: principalideal()
+  ***                 ^----------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+This function no longer exists
+
+
+  ***   at top-level: principalidele()
+  ***                 ^----------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+This function no longer exists
+
+
+  ***   at top-level: prodinf1()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: prodinf1(X=a,expr) ===> prodinf(X=a,expr,1)
+
+prodinf(X=a,expr,{flag=0}): infinite product (X goes from a to infinity) of 
+real or complex expression. flag can be 0 (default) or 1, in which case compute 
+the product of the 1+expr instead.
+
+
+  ***   at top-level: qfi()
+  ***                 ^-----
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: qfi(a,b,c) ===> Qfb(a,b,c)
+
+Qfb(a,b,c,{D=0.}): binary quadratic form a*x^2+b*x*y+c*y^2. D is optional (0.0 
+by default) and initializes Shanks's distance if b^2-4*a*c>0.
+
+
+  ***   at top-level: qfr()
+  ***                 ^-----
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: qfr(a,b,c,d) ===> Qfb(a,b,c,d)
+
+Qfb(a,b,c,{D=0.}): binary quadratic form a*x^2+b*x*y+c*y^2. D is optional (0.0 
+by default) and initializes Shanks's distance if b^2-4*a*c>0.
+
+
+1546275796
+  ***   at top-level: rank()
+  ***                 ^------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: rank(x) ===> matrank(x)
+
+matrank(x): rank of the matrix x.
+
+
+  ***   at top-level: rayclassno()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: rayclassno(bnf,x) ===> bnrclassno(bnf,x)
+
+bnrclassno(A,{B},{C}): relative degree of the class field defined by A,B,C. 
+[A,{B},{C}] is of type [bnr], [bnr,subgroup], [bnf,modulus], or 
+[bnf,modulus,subgroup]. Faster than bnrinit if only the ray class number is 
+wanted.
+
+
+  ***   at top-level: rayclassnolist()
+  ***                 ^----------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: rayclassnolist(bnf,liste) ===> bnrclassnolist(bnf,liste)
+
+bnrclassnolist(bnf,list): if list is as output by ideallist or similar, gives 
+list of corresponding ray class numbers.
+
+
+  ***   at top-level: recip()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: recip(x) ===> polrecip(x)
+
+polrecip(pol): reciprocal polynomial of pol.
+
+
+  ***   at top-level: redimag()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: redimag(x) ===> qfbred(x)
+
+qfbred(x,{flag=0},{d},{isd},{sd}): reduction of the binary quadratic form x. 
+All other args. are optional. The arguments d, isd and sd, if present, supply 
+the values of the discriminant, floor(sqrt(d)) and sqrt(d) respectively. If 
+d<0, its value is not used and all references to Shanks's distance hereafter 
+are meaningless. flag can be any of 0: default, uses Shanks's distance function 
+d; 1: use d, do a single reduction step; 2: do not use d; 3: do not use d, 
+single reduction step.
+
+
+  ***   at top-level: redreal()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: redreal(x) ===> qfbred(x)
+
+qfbred(x,{flag=0},{d},{isd},{sd}): reduction of the binary quadratic form x. 
+All other args. are optional. The arguments d, isd and sd, if present, supply 
+the values of the discriminant, floor(sqrt(d)) and sqrt(d) respectively. If 
+d<0, its value is not used and all references to Shanks's distance hereafter 
+are meaningless. flag can be any of 0: default, uses Shanks's distance function 
+d; 1: use d, do a single reduction step; 2: do not use d; 3: do not use d, 
+single reduction step.
+
+
+  ***   at top-level: redrealnod()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: redrealnod(x,d) ===> qfbred(x,2,,d)
+
+qfbred(x,{flag=0},{d},{isd},{sd}): reduction of the binary quadratic form x. 
+All other args. are optional. The arguments d, isd and sd, if present, supply 
+the values of the discriminant, floor(sqrt(d)) and sqrt(d) respectively. If 
+d<0, its value is not used and all references to Shanks's distance hereafter 
+are meaningless. flag can be any of 0: default, uses Shanks's distance function 
+d; 1: use d, do a single reduction step; 2: do not use d; 3: do not use d, 
+single reduction step.
+
+
+  ***   at top-level: reduceddisc()
+  ***                 ^-------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: reduceddisc(f) ===> poldiscreduced(f)
+
+poldiscreduced(f): vector of elementary divisors of Z[a]/f'(a)Z[a], where a is 
+a root of the polynomial f.
+
+
+  ***   at top-level: regula()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: regula(x) ===> quadregulator(x)
+
+quadregulator(x): regulator of the real quadratic field of discriminant x.
+
+
+  ***   at top-level: reorder()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+This function no longer exists
+
+
+  ***   at top-level: resultant()
+  ***                 ^-----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: resultant(x,y) ===> polresultant(x,y)
+
+polresultant(x,y,{v},{flag=0}): resultant of the polynomials x and y, with 
+respect to the main variables of x and y if v is omitted, with respect to the 
+variable v otherwise. flag is optional, and can be 0: default, uses either the 
+subresultant algorithm, a modular algorithm or Sylvester's matrix, depending on 
+the inputs; 1 uses Sylvester's matrix (should always be slower than the 
+default).
+
+
+  ***   at top-level: resultant2()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: resultant2(x,y) ===> polresultant(x,y,1)
+
+polresultant(x,y,{v},{flag=0}): resultant of the polynomials x and y, with 
+respect to the main variables of x and y if v is omitted, with respect to the 
+variable v otherwise. flag is optional, and can be 0: default, uses either the 
+subresultant algorithm, a modular algorithm or Sylvester's matrix, depending on 
+the inputs; 1 uses Sylvester's matrix (should always be slower than the 
+default).
+
+
+  ***   at top-level: reverse()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: reverse(x) ===> serreverse(x)
+
+serreverse(s): reversion of the power series s.
+
+
+  ***   at top-level: rhoreal()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: rhoreal(x) ===> qfbred(x,1)
+
+qfbred(x,{flag=0},{d},{isd},{sd}): reduction of the binary quadratic form x. 
+All other args. are optional. The arguments d, isd and sd, if present, supply 
+the values of the discriminant, floor(sqrt(d)) and sqrt(d) respectively. If 
+d<0, its value is not used and all references to Shanks's distance hereafter 
+are meaningless. flag can be any of 0: default, uses Shanks's distance function 
+d; 1: use d, do a single reduction step; 2: do not use d; 3: do not use d, 
+single reduction step.
+
+
+  ***   at top-level: rhorealnod()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: rhorealnod(x,d) ===> qfbred(x,3,,d)
+
+qfbred(x,{flag=0},{d},{isd},{sd}): reduction of the binary quadratic form x. 
+All other args. are optional. The arguments d, isd and sd, if present, supply 
+the values of the discriminant, floor(sqrt(d)) and sqrt(d) respectively. If 
+d<0, its value is not used and all references to Shanks's distance hereafter 
+are meaningless. flag can be any of 0: default, uses Shanks's distance function 
+d; 1: use d, do a single reduction step; 2: do not use d; 3: do not use d, 
+single reduction step.
+
+
+  ***   at top-level: rndtoi()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: rndtoi(x) ===> round(x,&e)
+
+round(x,{&e}): take the nearest integer to all the coefficients of x. If e is 
+present, do not take into account loss of integer part precision, and set e = 
+error estimate in bits.
+
+
+  ***   at top-level: rnfdiscf()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: rnfdiscf(nf,pol) ===> rnfdisc(nf,pol)
+
+rnfdisc(nf,T): given a polynomial T with coefficients in nf, gives a 
+2-component vector [D,d], where D is the relative ideal discriminant, and d is 
+the relative discriminant in nf^*/nf*^2.
+
+
+  ***   at top-level: rnfequation2()
+  ***                 ^--------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: rnfequation2(nf,pol) ===> rnfequation(nf,pol,1)
+
+rnfequation(nf,pol,{flag=0}): given a pol with coefficients in nf, gives an 
+absolute equation z of the number field defined by pol. flag is optional, and 
+can be 0: default, or non-zero, gives [z,al,k], where z defines the absolute 
+equation L/Q as in the default behavior, al expresses as an element of L a root 
+of the polynomial defining the base field nf, and k is a small integer such 
+that t = b + k al is a root of z, for b a root of pol.
+
+
+  ***   at top-level: rnfhermitebasis()
+  ***                 ^-----------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: rnfhermitebasis(bnf,order) ===> rnfhnfbasis(bnf,order)
+
+rnfhnfbasis(bnf,x): given an order x as output by rnfpseudobasis, gives either 
+a true HNF basis of the order if it exists, zero otherwise.
+
+
+  ***   at top-level: rootmod()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: rootmod(x,p) ===> polrootsmod(x,p)
+
+polrootsmod(f,{D}): roots of the polynomial f over the finite field defined by 
+the domain D.
+
+
+  ***   at top-level: rootmod2()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: rootmod2(x,p) ===> polrootsmod(x,p)
+
+polrootsmod(f,{D}): roots of the polynomial f over the finite field defined by 
+the domain D.
+
+
+  ***   at top-level: rootpadic()
+  ***                 ^-----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: rootpadic(x,p,r) ===> polrootspadic(x,p,r)
+
+polrootspadic(x,p,r): p-adic roots of the polynomial x to precision r.
+
+
+  ***   at top-level: roots()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: roots(x) ===> polroots(x)
+
+polroots(T): complex roots of the polynomial T using Schonhage's method, as 
+modified by Gourdon.
+
+
+  ***   at top-level: rootsof1()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: rootsof1(nf) ===> nfrootsof1(nf)
+
+nfrootsof1(nf): number of roots of unity and primitive root of unity in the 
+number field nf.
+
+
+  ***   at top-level: rootsold()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+This function no longer exists
+
+
+  ***   at top-level: rounderror()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: rounderror(x) ===> round(x,&e)
+
+round(x,{&e}): take the nearest integer to all the coefficients of x. If e is 
+present, do not take into account loss of integer part precision, and set e = 
+error estimate in bits.
+
+
+  ***   at top-level: series()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: series(x,v) ===> Ser(x,v)
+
+Ser(s,{v='x},{d=seriesprecision}): convert s into a power series with variable 
+v and precision d, starting with the constant coefficient.
+
+
+  ***   at top-level: set()
+  ***                 ^-----
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: set(x) ===> Set(x)
+
+Set({x=[]}): convert x into a set, i.e. a row vector with strictly increasing 
+coefficients. Empty set if x is omitted.
+
+
+  ***   at top-level: sigmak()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: sigmak(k,x) ===> sigma(x,k)
+
+sigma(x,{k=1}): sum of the k-th powers of the divisors of x. k is optional and 
+if omitted is assumed to be equal to 1.
+
+
+  ***   at top-level: signat()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: signat(x) ===> qfsign(x)
+
+qfsign(x): signature of the symmetric matrix x.
+
+
+  ***   at top-level: signunit()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: signunit(bnf) ===> bnfsignunit(bnf)
+
+bnfsignunit(bnf): matrix of signs of the real embeddings of the system of 
+fundamental units found by bnfinit.
+
+
+  ***   at top-level: simplefactmod()
+  ***                 ^---------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: simplefactmod(x,p) ===> factormod(x,p,1)
+
+factormod(f,{D},{flag=0}): factors the polynomial f over the finite field 
+defined by the domain D; flag is optional, and can be 0: default or 1: only the 
+degrees of the irreducible factors are given.
+
+
+  ***   at top-level: size()
+  ***                 ^------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: size(x) ===> sizedigit(x)
+
+sizedigit(x): rough upper bound for the number of decimal digits of (the 
+components of) x. DEPRECATED.
+
+
+  ***   at top-level: smallbasis()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: smallbasis(x) ===> nfbasis(x,1)
+
+nfbasis(T): integral basis of the field Q[a], where a is a root of the 
+polynomial T, using the round 4 algorithm. An argument [T,listP] is possible, 
+where listP is a list of primes (to get an order which is maximal at certain 
+primes only) or a prime bound.
+
+
+  ***   at top-level: smallbuchinit()
+  ***                 ^---------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: smallbuchinit(x) ===> bnfcompress(x)
+
+bnfcompress(bnf): converts bnf to a much smaller sbnf, containing the same 
+information. Use bnfinit(sbnf) to recover a true bnf.
+
+
+  ***   at top-level: smalldiscf()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: smalldiscf(x) ===> nfdisc(x,1)
+
+nfdisc(T): discriminant of the number field defined by the polynomial T. An 
+argument [T,listP] is possible, where listP is a list of primes or a prime 
+bound.
+
+
+  ***   at top-level: smallfact()
+  ***                 ^-----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: smallfact(x) ===> factor(x,0)
+
+factor(x,{D}): factorization of x over domain D. If x and D are both integers, 
+return partial factorization, using primes < D.
+
+
+  ***   at top-level: smallinitell()
+  ***                 ^--------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: smallinitell(x) ===> ellinit(x,1)
+
+ellinit(x,{D=1}): let x be a vector [a1,a2,a3,a4,a6], or [a4,a6] if a1=a2=a3=0, 
+defining the curve Y^2 + a1.XY + a3.Y = X^3 + a2.X^2 + a4.X + a6; x can also be 
+a string, in which case the curve with matching name is retrieved from the 
+elldata database, if available. This function initializes an elliptic curve 
+over the domain D (inferred from coefficients if omitted).
+
+
+  ***   at top-level: smallpolred()
+  ***                 ^-------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: smallpolred(x) ===> polred(x,1)
+
+polred(T,{flag=0}): deprecated, use polredbest. Reduction of the polynomial T 
+(gives minimal polynomials only). The following binary digits of (optional) 
+flag are significant 1: partial reduction, 2: gives also elements.
+
+
+  ***   at top-level: smallpolred2()
+  ***                 ^--------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: smallpolred2(x) ===> polred(x,3)
+
+polred(T,{flag=0}): deprecated, use polredbest. Reduction of the polynomial T 
+(gives minimal polynomials only). The following binary digits of (optional) 
+flag are significant 1: partial reduction, 2: gives also elements.
+
+
+  ***   at top-level: smith()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: smith(x) ===> matsnf(x)
+
+matsnf(X,{flag=0}): Smith normal form (i.e. elementary divisors) of the matrix 
+X, expressed as a vector d. Binary digits of flag mean 1: returns [u,v,d] where 
+d=u*X*v, otherwise only the diagonal d is returned, 2: allow polynomial 
+entries, otherwise assume X is integral, 4: removes all information 
+corresponding to entries equal to 1 in d.
+
+
+  ***   at top-level: smith2()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: smith2(x) ===> matsnf(x,1)
+
+matsnf(X,{flag=0}): Smith normal form (i.e. elementary divisors) of the matrix 
+X, expressed as a vector d. Binary digits of flag mean 1: returns [u,v,d] where 
+d=u*X*v, otherwise only the diagonal d is returned, 2: allow polynomial 
+entries, otherwise assume X is integral, 4: removes all information 
+corresponding to entries equal to 1 in d.
+
+
+  ***   at top-level: smithclean()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: smithclean(x) ===> matsnf(x,4)
+
+matsnf(X,{flag=0}): Smith normal form (i.e. elementary divisors) of the matrix 
+X, expressed as a vector d. Binary digits of flag mean 1: returns [u,v,d] where 
+d=u*X*v, otherwise only the diagonal d is returned, 2: allow polynomial 
+entries, otherwise assume X is integral, 4: removes all information 
+corresponding to entries equal to 1 in d.
+
+
+  ***   at top-level: smithpol()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: smithpol(x) ===> matsnf(x,2)
+
+matsnf(X,{flag=0}): Smith normal form (i.e. elementary divisors) of the matrix 
+X, expressed as a vector d. Binary digits of flag mean 1: returns [u,v,d] where 
+d=u*X*v, otherwise only the diagonal d is returned, 2: allow polynomial 
+entries, otherwise assume X is integral, 4: removes all information 
+corresponding to entries equal to 1 in d.
+
+
+  ***   at top-level: sort()
+  ***                 ^------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: sort(x) ===> vecsort(x)
+
+vecsort(x,{cmpf},{flag=0}): sorts the vector of vectors (or matrix) x in 
+ascending order, according to the comparison function cmpf, if not omitted. (If 
+cmpf is an integer k, sort according to the value of the k-th component of each 
+entry.) Binary digits of flag (if present) mean: 1: indirect sorting, return 
+the permutation instead of the permuted vector, 4: use descending instead of 
+ascending order, 8: remove duplicate entries.
+
+
+  ***   at top-level: sqred()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: sqred(x) ===> qfgaussred(x)
+
+qfgaussred(q): square reduction of the (symmetric) matrix q (returns a square 
+matrix whose i-th diagonal term is the coefficient of the i-th square in which 
+the coefficient of the i-th variable is 1).
+
+
+  ***   at top-level: srgcd()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: srgcd(x,y) ===> gcd(x,y,2)
+
+gcd(x,{y}): greatest common divisor of x and y.
+
+
+  ***   at top-level: sturm()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: sturm(x) ===> polsturm(x)
+
+polsturm(T,{ab}): number of distinct real roots of the polynomial T (in the 
+interval ab = [a,b] if present).
+
+
+  ***   at top-level: sturmpart()
+  ***                 ^-----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: sturmpart(x,a,b) ===> polsturm(x,a,b)
+
+polsturm(T,{ab}): number of distinct real roots of the polynomial T (in the 
+interval ab = [a,b] if present).
+
+
+  ***   at top-level: subcyclo()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: subcyclo(p,d) ===> polsubcyclo(p,d)
+
+polsubcyclo(n,d,{v='x}): finds an equation (in variable v) for the d-th degree 
+subfields of Q(zeta_n). Output is a polynomial, or a vector of polynomials if 
+there are several such fields or none.
+
+
+  ***   at top-level: subell()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: subell(e,a,b) ===> ellsub(e,a,b)
+
+ellsub(E,z1,z2): difference of the points z1 and z2 on elliptic curve E.
+
+
+  ***   at top-level: sumalt2()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: sumalt2(X=a,expr) ===> sumalt(X=a,expr,1)
+
+sumalt(X=a,expr,{flag=0}): Cohen-Villegas-Zagier's acceleration of alternating 
+series expr, X starting at a. flag is optional, and can be 0: default, or 1: 
+uses a slightly different method using Zagier's polynomials.
+
+
+  ***   at top-level: sumpos2()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: sumpos2(X=a,expr) ===> sumpos(X=a,expr,1)
+
+sumpos(X=a,expr,{flag=0}): sum of positive (or negative) series expr, the 
+formal variable X starting at a. flag is optional, and can be 0: default, or 1: 
+uses a slightly different method using Zagier's polynomials.
+
+
+  ***   at top-level: supplement()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: supplement(x) ===> matsupplement(x)
+
+matsupplement(x): supplement the columns of the matrix x to an invertible 
+matrix.
+
+
+  ***   at top-level: sylvestermatrix()
+  ***                 ^-----------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: sylvestermatrix(x,y) ===> polsylvestermatrix(x,y)
+
+polsylvestermatrix(x,y): forms the sylvester matrix attached to the two 
+polynomials x and y. Warning: the polynomial coefficients are in columns, not 
+in rows.
+
+
+  ***   at top-level: taniyama()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: taniyama(e) ===> elltaniyama(e)
+
+elltaniyama(E, {d = seriesprecision}): modular parametrization of elliptic 
+curve E/Q.
+
+
+  ***   at top-level: tchebi()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: tchebi(n) ===> polchebyshev(n)
+
+polchebyshev(n,{flag=1},{a='x}): Chebychev polynomial of the first (flag = 1) 
+or second (flag = 2) kind, of degree n, evaluated at a.
+
+
+  ***   at top-level: teich()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: teich(x) ===> teichmuller(x)
+
+teichmuller(x,{tab}): teichmuller character of p-adic number x. If x = [p,n], 
+return the lifts of all teichmuller(i + O(p^n)) for i = 1, ..., p-1. Such a 
+vector can be fed back to teichmuller, as the optional argument tab, to speed 
+up later computations.
+
+
+  ***   at top-level: threetotwo()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+This function no longer exists
+
+
+  ***   at top-level: threetotwo2()
+  ***                 ^-------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+This function no longer exists
+
+
+  ***   at top-level: torsell()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: torsell(e) ===> elltors(e)
+
+elltors(E): torsion subgroup of elliptic curve E: order, structure, generators.
+
+
+  ***   at top-level: trans()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: trans(x) ===> mattranspose(x)
+
+mattranspose(x): x~ = transpose of x.
+
+
+  ***   at top-level: trunc()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: trunc(x) ===> truncate(x)
+
+truncate(x,{&e}): truncation of x; when x is a power series,take away the 
+O(X^). If e is present, do not take into account loss of integer part 
+precision, and set e = error estimate in bits.
+
+
+  ***   at top-level: tschirnhaus()
+  ***                 ^-------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: tschirnhaus(x) ===> poltschirnhaus(x)
+
+poltschirnhaus(x): random Tschirnhausen transformation of the polynomial x.
+
+
+  ***   at top-level: twototwo()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+This function no longer exists
+
+
+  ***   at top-level: unit()
+  ***                 ^------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: unit(x) ===> quadunit(x)
+
+quadunit(D,{v = 'w}): fundamental unit u of the quadratic field of discriminant 
+D where D must be positive. If v is given, the variable name is used to display 
+u, else 'w' is used.
+
+
+  ***   at top-level: vec()
+  ***                 ^-----
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: vec(x) ===> Vec(x)
+
+Vec(x, {n}): transforms the object x into a vector of dimension n.
+
+
+  ***   at top-level: vecindexsort()
+  ***                 ^--------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: vecindexsort(x) ===> vecsort(x,,1)
+
+vecsort(x,{cmpf},{flag=0}): sorts the vector of vectors (or matrix) x in 
+ascending order, according to the comparison function cmpf, if not omitted. (If 
+cmpf is an integer k, sort according to the value of the k-th component of each 
+entry.) Binary digits of flag (if present) mean: 1: indirect sorting, return 
+the permutation instead of the permuted vector, 4: use descending instead of 
+ascending order, 8: remove duplicate entries.
+
+
+  ***   at top-level: veclexsort()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: veclexsort(x) ===> vecsort(x,,2)
+
+vecsort(x,{cmpf},{flag=0}): sorts the vector of vectors (or matrix) x in 
+ascending order, according to the comparison function cmpf, if not omitted. (If 
+cmpf is an integer k, sort according to the value of the k-th component of each 
+entry.) Binary digits of flag (if present) mean: 1: indirect sorting, return 
+the permutation instead of the permuted vector, 4: use descending instead of 
+ascending order, 8: remove duplicate entries.
+
+
+  ***   at top-level: vvector()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: vvector(n,X,expr) ===> vectorv(n,X,expr)
+
+vectorv(n,{X},{expr=0}): column vector with n components of expression expr (X 
+ranges from 1 to n). By default, fill with 0s.
+
+
+  ***   at top-level: weipell()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: weipell(e) ===> ellwp(e)
+
+ellwp(w,{z='x},{flag=0}): computes the value at z of the Weierstrass P function 
+attached to the lattice w, as given by ellperiods. Optional flag means 0 
+(default), compute only P(z), 1 compute [P(z),P'(z)].
+
+
+  ***   at top-level: wf()
+  ***                 ^----
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: wf(x) ===> weber(x)
+
+weber(x,{flag=0}): one of Weber's f function of x. flag is optional, and can be 
+0: default, function f(x)=exp(-i*Pi/24)*eta((x+1)/2)/eta(x), 1: function 
+f1(x)=eta(x/2)/eta(x) 2: function f2(x)=sqrt(2)*eta(2*x)/eta(x). Note that j = 
+(f^24-16)^3/f^24 = (f1^24+16)^3/f1^24 = (f2^24+16)^3/f2^24.
+
+
+  ***   at top-level: wf2()
+  ***                 ^-----
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: wf2(x) ===> weber(x,2)
+
+weber(x,{flag=0}): one of Weber's f function of x. flag is optional, and can be 
+0: default, function f(x)=exp(-i*Pi/24)*eta((x+1)/2)/eta(x), 1: function 
+f1(x)=eta(x/2)/eta(x) 2: function f2(x)=sqrt(2)*eta(2*x)/eta(x). Note that j = 
+(f^24-16)^3/f^24 = (f1^24+16)^3/f1^24 = (f2^24+16)^3/f2^24.
+
+
+  ***   at top-level: zell()
+  ***                 ^------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: zell(e,P) ===> ellpointtoz(e,P)
+
+ellpointtoz(E,P): lattice point z corresponding to the point P on the elliptic 
+curve E.
+
+
+  ***   at top-level: zideallog()
+  ***                 ^-----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: zideallog(nf,x,bid) ===> ideallog(nf,x,bid)
+
+ideallog({nf},x,bid): if bid is a big ideal, as given by idealstar(nf,D,...), 
+gives the vector of exponents on the generators bid.gen (even if these 
+generators have not been explicitly computed).
+
+
+  ***   at top-level: zidealstar()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: zidealstar(nf,I) ===> idealstar(nf,I)
+
+idealstar({nf},N,{flag=1}): gives the structure of (Z_K/N)^*, where N is a 
+modulus (an ideal in any form or a vector [f0, foo], where f0 is an ideal and 
+foo is a {0,1}-vector with r1 components. flag is optional, and can be 0: 
+simply gives the structure as an abelian group, i.e. a 3-component vector 
+[h,d,g] where h is the order, d the orders of the cyclic factors and g the 
+generators; if flag=1 (default), gives a bid structure used in ideallog to 
+compute discrete logarithms; underlying generators are well-defined but not 
+explicitly computed, which saves time; if flag=2, same as with flag=1 except 
+that the generators are also given. If nf is omitted, N must be an integer and 
+we return the structure of (Z/NZ)^*.
+
+
+  ***   at top-level: zidealstarinit()
+  ***                 ^----------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: zidealstarinit(nf,id) ===> idealstar(nf,id,1)
+
+idealstar({nf},N,{flag=1}): gives the structure of (Z_K/N)^*, where N is a 
+modulus (an ideal in any form or a vector [f0, foo], where f0 is an ideal and 
+foo is a {0,1}-vector with r1 components. flag is optional, and can be 0: 
+simply gives the structure as an abelian group, i.e. a 3-component vector 
+[h,d,g] where h is the order, d the orders of the cyclic factors and g the 
+generators; if flag=1 (default), gives a bid structure used in ideallog to 
+compute discrete logarithms; underlying generators are well-defined but not 
+explicitly computed, which saves time; if flag=2, same as with flag=1 except 
+that the generators are also given. If nf is omitted, N must be an integer and 
+we return the structure of (Z/NZ)^*.
+
+
+  ***   at top-level: zidealstarinitgen()
+  ***                 ^-------------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: zidealstarinitgen(nf,id) ===> idealstar(nf,id,2)
+
+idealstar({nf},N,{flag=1}): gives the structure of (Z_K/N)^*, where N is a 
+modulus (an ideal in any form or a vector [f0, foo], where f0 is an ideal and 
+foo is a {0,1}-vector with r1 components. flag is optional, and can be 0: 
+simply gives the structure as an abelian group, i.e. a 3-component vector 
+[h,d,g] where h is the order, d the orders of the cyclic factors and g the 
+generators; if flag=1 (default), gives a bid structure used in ideallog to 
+compute discrete logarithms; underlying generators are well-defined but not 
+explicitly computed, which saves time; if flag=2, same as with flag=1 except 
+that the generators are also given. If nf is omitted, N must be an integer and 
+we return the structure of (Z/NZ)^*.
+
+
+  ***   at top-level: box()
+  ***                 ^-----
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: box(x,a) ===> plotbox(x,a)
+
+plotbox(w,x2,y2,{filled=0}): if the cursor is at position (x1,y1), draw a box 
+with diagonal (x1,y1) and (x2,y2) in rectwindow w (cursor does not move). If 
+filled=1, fill the box.
+
+
+  ***   at top-level: color()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: color(w,c) ===> plotcolor(w,c)
+
+plotcolor(w,c): in rectwindow w, set default color to c. Possible values for c 
+are [R,G,B] values, a color name or an index in the graphcolormap default: 
+factory settings are 1=black, 2=blue, 3=sienna, 4=red, 5=green, 6=grey, 
+7=gainsborough. Return [R,G,B] value attached to color.
+
+
+  ***   at top-level: cursor()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: cursor(w) ===> plotcursor(w)
+
+plotcursor(w): current position of cursor in rectwindow w.
+
+
+  ***   at top-level: draw()
+  ***                 ^------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: draw(list) ===> plotdraw(list)
+
+plotdraw(w, {flag=0}): draw rectwindow w. More generally, w can be of the form 
+[w1,x1,y1, w2,x2,y2,etc.]: draw rectwindows wi at given xi,yi positions. If 
+flag!=0, the xi,yi express fractions of the size of the current output device.
+
+
+  ***   at top-level: initrect()
+  ***                 ^----------
+  ***   not a function in function call
+  ***   at top-level: killrect()
+  ***                 ^----------
+  ***   not a function in function call
+  ***   at top-level: line()
+  ***                 ^------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: line(w,x2,y2) ===> plotlines(w,x2,y2)
+
+plotlines(w,X,Y,{flag=0}): draws an open polygon in rectwindow w where X and Y 
+contain the x (resp. y) coordinates of the vertices. If X and Y are both single 
+values (i.e not vectors), draw the corresponding line (and move cursor). If 
+(optional) flag is non-zero, close the polygon.
+
+
+  ***   at top-level: lines()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: lines(w,x2,y2) ===> plotlines(w,x2,y2)
+
+plotlines(w,X,Y,{flag=0}): draws an open polygon in rectwindow w where X and Y 
+contain the x (resp. y) coordinates of the vertices. If X and Y are both single 
+values (i.e not vectors), draw the corresponding line (and move cursor). If 
+(optional) flag is non-zero, close the polygon.
+
+
+  ***   at top-level: move()
+  ***                 ^------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: move(w,x,y) ===> plotmove(w,x,y)
+
+plotmove(w,x,y): move cursor to position x,y in rectwindow w.
+
+
+  ***   at top-level: ploth2()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: ploth2(X=a,b,expr) ===> ploth(X=a,b,expr,1)
+
+ploth(X=a,b,expr,{flags=0},{n=0}): plot of expression expr, X goes from a to b 
+in high resolution. Both flags and n are optional. Binary digits of flags mean: 
+1=Parametric, 2=Recursive, 4=no_Rescale, 8=no_X_axis, 16=no_Y_axis, 
+32=no_Frame, 64=no_Lines (do not join points), 128=Points_too (plot both lines 
+and points), 256=Splines (use cubic splines), 512=no_X_ticks, 1024= no_Y_ticks, 
+2048=Same_ticks (plot all ticks with the same length), 4096=Complex (the two 
+coordinates of each point are encoded as a complex number). n specifies number 
+of reference points on the graph (0=use default value). Returns a vector for 
+the bounding box.
+
+
+  ***   at top-level: plothmult()
+  ***                 ^-----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: plothmult(X=a,b,expr) ===> ploth(X=a,b,expr)
+
+ploth(X=a,b,expr,{flags=0},{n=0}): plot of expression expr, X goes from a to b 
+in high resolution. Both flags and n are optional. Binary digits of flags mean: 
+1=Parametric, 2=Recursive, 4=no_Rescale, 8=no_X_axis, 16=no_Y_axis, 
+32=no_Frame, 64=no_Lines (do not join points), 128=Points_too (plot both lines 
+and points), 256=Splines (use cubic splines), 512=no_X_ticks, 1024= no_Y_ticks, 
+2048=Same_ticks (plot all ticks with the same length), 4096=Complex (the two 
+coordinates of each point are encoded as a complex number). n specifies number 
+of reference points on the graph (0=use default value). Returns a vector for 
+the bounding box.
+
+
+  ***   at top-level: point()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: point(w,x,y) ===> plotpoints(w,x,y)
+
+plotpoints(w,X,Y): draws in rectwindow w the points whose x (resp y) 
+coordinates are in X (resp Y). If X and Y are both single values (i.e not 
+vectors), draw the corresponding point (and move cursor).
+
+
+  ***   at top-level: points()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: points(w,x,y) ===> plotpoints(w,x,y)
+
+plotpoints(w,X,Y): draws in rectwindow w the points whose x (resp y) 
+coordinates are in X (resp Y). If X and Y are both single values (i.e not 
+vectors), draw the corresponding point (and move cursor).
+
+
+  ***   at top-level: postdraw()
+  ***                 ^----------
+  ***   not a function in function call
+  ***   at top-level: postploth()
+  ***                 ^-----------
+  ***   not a function in function call
+  ***   at top-level: postploth2()
+  ***                 ^------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: postploth2(X=a,b,expr) ===> psploth(X=a,b,expr,1)
+
+psploth(X=a,b,expr,{flags=0},{n=0}): obsolete function.
+
+
+  ***   at top-level: postplothraw()
+  ***                 ^--------------
+  ***   not a function in function call
+  ***   at top-level: pprint()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+This function no longer exists
+
+
+  ***   at top-level: pprint1()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+This function no longer exists
+
+
+
+  ***   at top-level: rbox()
+  ***                 ^------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: rbox(w,dx,dy) ===> plotrbox(w,dx,dy)
+
+plotrbox(w,dx,dy,{filled}): if the cursor is at (x1,y1), draw a box with 
+diagonal (x1,y1)-(x1+dx,y1+dy) in rectwindow w (cursor does not move). If 
+filled=1, fill the box.
+
+
+  ***   at top-level: read()
+  ***                 ^------
+  *** read: You never gave me anything to read!.
+  ***   at top-level: rline()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: rline(w,dx,dy) ===> plotrline(w,dx,dy)
+
+plotrline(w,dx,dy): if the cursor is at (x1,y1), draw a line from (x1,y1) to 
+(x1+dx,y1+dy) (and move the cursor) in the rectwindow w.
+
+
+  ***   at top-level: rlines()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+  ***   at top-level: rlines()
+  ***                 ^--------
+  ***   bug in whatnow, please report.
+  ***   at top-level: rmove()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: rmove(w,dx,dy) ===> plotrmove(w,dx,dy)
+
+plotrmove(w,dx,dy): move cursor to position (dx,dy) relative to the present 
+position in the rectwindow w.
+
+
+  ***   at top-level: rpoint()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: rpoint(w,dx,dy) ===> plotrpoint(w,dx,dy)
+
+plotrpoint(w,dx,dy): draw a point (and move cursor) at position dx,dy relative 
+to present position of the cursor in rectwindow w.
+
+
+  ***   at top-level: rpoints()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+  ***   at top-level: rpoints()
+  ***                 ^---------
+  ***   bug in whatnow, please report.
+  ***   at top-level: scale()
+  ***                 ^-------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: scale(w,x1,x2,y1,y2) ===> plotscale(w,x1,x2,y1,y2)
+
+plotscale(w,x1,x2,y1,y2): scale the coordinates in rectwindow w so that x goes 
+from x1 to x2 and y from y1 to y2 (y2<y1 is allowed).
+
+
+  ***   at top-level: setprecision()
+  ***                 ^--------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: setprecision(n) ===> default(realprecision,n)
+
+default({key},{val}): returns the current value of the default key. If val is 
+present, set opt to val first. If no argument is given, print a list of all 
+defaults as well as their values.
+
+
+  ***   at top-level: setserieslength()
+  ***                 ^-----------------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: setserieslength(n) ===> default(seriesprecision,n)
+
+default({key},{val}): returns the current value of the default key. If val is 
+present, set opt to val first. If no argument is given, print a list of all 
+defaults as well as their values.
+
+
+  ***   at top-level: settype()
+  ***                 ^---------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: settype(x,t) ===> type(x,t)
+
+type(x): return the type of the GEN x.
+
+
+  ***   at top-level: string()
+  ***                 ^--------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: string(w,x) ===> plotstring(w,x)
+
+plotstring(w,x,{flags=0}): draw in rectwindow w the string corresponding to x. 
+Bits 1 and 2 of flag regulate horizontal alignment: left if 0, right if 2, 
+center if 1. Bits 4 and 8 regulate vertical alignment: bottom if 0, top if 8, 
+v-center if 4. Can insert additional gap between point and string: horizontal 
+if bit 16 is set, vertical if bit 32 is set.
+
+
+  ***   at top-level: texprint()
+  ***                 ^----------
+  ***   not a function in function call
+A function with that name existed in GP-1.39.15. Please update your script.
+
+New syntax: texprint(x) ===> printtex(x)
+
+printtex({str}*): outputs its string arguments in TeX format.
+
+
+Total time spent: 0

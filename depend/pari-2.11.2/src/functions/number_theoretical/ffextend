@@ -1,0 +1,30 @@
+Function: ffextend
+Section: number_theoretical
+C-Name: ffextend
+Prototype: GGDn
+Help: ffextend(a, P, {v}):
+ extend the field K of definition of a by a root of the polynomial P, assumed
+ to be irreducible over K.  Return [r, m] where r is a root of P in the
+ extension field L and m is a map from K to L, see \kbd{ffmap}. If v is given,
+ the variable name is used to display the generator of L, else the name of the
+ variable of P is used.
+Doc: extend the field $K$ of definition of $a$ by a root of the polynomial
+ $P\in K[X]$ assumed to be irreducible over $K$.  Return $[r, m]$ where $r$
+ is a root of $P$ in the extension field $L$ and $m$ is a map from $K$ to $L$,
+ see \kbd{ffmap}.
+ If $v$ is given, the variable name is used to display the generator of $L$,
+ else the name of the variable of $P$ is used.
+ A generator of $L$ can be recovered using $b=ffgen(r)$.
+ The image of $P$ in $L[X]$ can be recovered using $PL=ffmap(m,P)$.
+ \bprog
+ ? a = ffgen([3,5],'a);
+ ? P = x^2-a; polisirreducible(P)
+ %2 = 1
+ ? [r,m] = ffextend(a, P, 'b);
+ ? r
+ %3 = b^9+2*b^8+b^7+2*b^6+b^4+1
+ ? subst(ffmap(m, P), x, r)
+ %4 = 0
+ ? ffgen(r)
+ %5 = b
+ @eprog

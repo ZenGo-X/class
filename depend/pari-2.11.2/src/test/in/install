@@ -1,0 +1,9 @@
+install(addii,GG)
+type(addii)
+addii(1,2)
+?addii
+kill(addii)
+?addii
+install(addiu,"GD0,U,")
+addiu(2,3)
+type(addiu)

@@ -1,0 +1,13 @@
+Function: polsylvestermatrix
+Section: polynomials
+C-Name: sylvestermatrix
+Prototype: GG
+Help: polsylvestermatrix(x,y): forms the sylvester matrix attached to the
+ two polynomials x and y. Warning: the polynomial coefficients are in
+ columns, not in rows.
+Doc: forms the Sylvester matrix
+ corresponding to the two polynomials $x$ and $y$, where the coefficients of
+ the polynomials are put in the columns of the matrix (which is the natural
+ direction for solving equations afterwards). The use of this matrix can be
+ essential when dealing with polynomials with inexact entries, since
+ polynomial Euclidean division doesn't make much sense in this case.

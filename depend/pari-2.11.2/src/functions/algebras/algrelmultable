@@ -1,0 +1,31 @@
+Function: algrelmultable
+Section: algebras
+C-Name: algrelmultable
+Prototype: mG
+Help: algrelmultable(al): multiplication table of the central simple
+ algebra al over its center.
+Doc: Given a central simple algebra \var{al} output by \tet{alginit} defined by a multiplication table over its center (a number field), returns this multiplication table.
+ \bprog
+ ? nf = nfinit(y^3-5); a = y; b = y^2;
+ ? {m_i = [0,a,0,0;
+           1,0,0,0;
+           0,0,0,a;
+           0,0,1,0];}
+ ? {m_j = [0, 0,b, 0;
+           0, 0,0,-b;
+           1, 0,0, 0;
+           0,-1,0, 0];}
+ ? {m_k = [0, 0,0,-a*b;
+           0, 0,b,   0;
+           0,-a,0,   0;
+           1, 0,0,   0];}
+ ? mt = [matid(4), m_i, m_j, m_k];
+ ? A = alginit(nf,mt,'x);
+ ? M = algrelmultable(A);
+ ? M[2] == m_i
+ %8 = 1
+ ? M[3] == m_j
+ %9 = 1
+ ? M[4] == m_k
+ %10 = 1
+ @eprog

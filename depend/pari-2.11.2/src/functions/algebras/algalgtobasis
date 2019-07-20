@@ -1,0 +1,16 @@
+Function: algalgtobasis
+Section: algebras
+C-Name: algalgtobasis
+Prototype: GG
+Help: algalgtobasis(al,x): transforms the element x of the algebra al into a
+ column vector on the integral basis of al.
+Doc: Given an element \var{x} in the central simple algebra \var{al} output
+ by \tet{alginit}, transforms it to a column vector on the integral basis of
+ \var{al}. This is the inverse function of \tet{algbasistoalg}.
+ \bprog
+ ? A = alginit(nfinit(y^2-5),[2,y]);
+ ? algalgtobasis(A,[y,1]~)
+ %2 = [0, 2, 0, -1, 2, 0, 0, 0]~
+ ? algbasistoalg(A,algalgtobasis(A,[y,1]~))
+ %3 = [Mod(Mod(y, y^2 - 5), x^2 - 2), 1]~
+ @eprog

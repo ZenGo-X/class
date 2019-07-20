@@ -1,0 +1,103 @@
+3628800
+20993420690550
+3628800
+20993420690550
+3628800
+20993420690550
+3628800
+20993420690550
+0
+0
+7
+[7, 720]
+4
+15
+829440
+270
+15334088
+20993420690550
+57335533287534038504
+273823/64800
+1
+error("domain error in moebius: argument = 0")
+0
+[0, 1]
+error("domain error in omega: argument = 0")
+error("domain error in bigomega: argument = 0")
+2
+error("domain error in numdiv: argument = 0")
+error("domain error in sumdiv: argument = 0")
+error("domain error in sumdivk: argument = 0")
+error("domain error in sumdivk: argument = 0")
+error("domain error in sumdivk: argument = 0")
+1
+error("incorrect type in moebius (t_MAT).")
+0
+[0, 1]
+error("incorrect type in omega (t_MAT).")
+error("incorrect type in bigomega (t_MAT).")
+2
+error("incorrect type in numdiv (t_MAT).")
+error("incorrect type in sumdiv (t_MAT).")
+error("incorrect type in sumdivk (t_MAT).")
+error("incorrect type in sumdivk (t_MAT).")
+error("incorrect type in sumdivk (t_MAT).")
+0
+-1
+-2
+[-2, 1]
+1
+1
+1
+2
+3
+5
+9
+-3/2
+0
+-1
+-2
+[-2, 1]
+1
+1
+1
+2
+3
+5
+9
+-3/2
+1
+1
+1
+[1, 1]
+0
+0
+1
+1
+1
+1
+1
+1
+[1]
+1
+0
+[0, 1]
+  ***   at top-level: divisors(fa)
+  ***                 ^------------
+  *** divisors: domain error in divisors: argument = 0
+[30, 2]
+[1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 24, 30, 40, 60, 120]
+x^10 + 16*x^9 + 115*x^8 + 491*x^7 + 1387*x^6 + 2729*x^5 + 3822*x^4 + 3805*x^
+3 + 2616*x^2 + 1146*x + 252
+x^10 + 16*x^9 + 115*x^8 + 491*x^7 + 1387*x^6 + 2729*x^5 + 3822*x^4 + 3805*x^
+3 + 2616*x^2 + 1146*x + 252
+x^10 + 16*x^9 + 115*x^8 + 491*x^7 + 1387*x^6 + 2729*x^5 + 3822*x^4 + 3805*x^
+3 + 2616*x^2 + 1146*x + 252
+x^10 + 16*x^9 + 115*x^8 + 491*x^7 + 1387*x^6 + 2729*x^5 + 3822*x^4 + 3805*x^
+3 + 2616*x^2 + 1146*x + 252
+  ***   at top-level: divisors([1,2])
+  ***                 ^---------------
+  *** divisors: incorrect type in divisors (t_VEC).
+0
+762104756900678410271641
+Total time spent: 0

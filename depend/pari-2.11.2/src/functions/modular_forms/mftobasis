@@ -1,0 +1,64 @@
+Function: mftobasis
+Section: modular_forms
+C-Name: mftobasis
+Prototype: GGD0,L,
+Help: mftobasis(mf,F,{flag=0}): coefficients of the form F on the
+ basis given by the mfbasis(mf). A q-expansion or vector of
+ coefficients can also be given instead of F, but in this case an error
+ message may occur if the expansion is too short. An error message is also
+ given if F does not belong to the modular form space. If flag is set, instead
+ of error messages return an output as an affine space of solutions if
+ a q-expansion or vector of coefficients is given, or the empty column
+ otherwise.
+Doc: coefficients of the form $F$ on the basis given by \kbd{mfbasis(mf)}.
+ A $q$-expansion or vector of coefficients
+ can also be given instead of $F$, but in this case an error message may occur
+ if the expansion is too short. An error message is also given if $F$ does not
+ belong to the modular form space. If \kbd{flag} is set, instead of
+ error messages the output is an affine space of solutions if a $q$-expansion
+ or vector of coefficients is given, or the empty column otherwise.
+ \bprog
+ ? mf = mfinit([26,2],0); mfdim(mf)
+ %1 = 2
+ ? F = mflinear(mf,[a,b]); mftobasis(mf,F)
+ %2 = [a, b]~
+ @eprog
+ A $q$-expansion or vector of coefficients can also be given instead of $F$.
+ \bprog
+ ? Th = 1 + 2*sum(n=1, 8, q^(n^2), O(q^80));
+ ? mf = mfinit([4,5,Mod(3,4)]);
+ ? mftobasis(mf, Th^10)
+ %3 = [64/5, 4/5, 32/5]~
+ @eprog
+ If $F$ does not belong to the corresponding space, the result is incorrect
+ and simply matches the coefficients of $F$ up to some bound, and
+ the function may either return an empty column or an error message.
+ If \kbd{flag} is set, there are no error messages, and the result is
+ an empty column if $F$ is a modular form; if $F$ is supplied via a series
+ or vector of coefficients which does not contain enough information to force
+ a unique (potential) solution, the function returns $[v,K]$ where $v$ is a
+ solution and $K$ is a matrix of maximal rank describing the affine space of
+ potential solutions $v + K\cdot x$.
+ \bprog
+ ? mf = mfinit([4,12],1);
+ ? mftobasis(mf, q-24*q^2+O(q^3), 1)
+ %2 = [[43/64, -63/8, 800, 21/64]~, [1, 0; 24, 0; 2048, 768; -1, 0]]
+ ? mftobasis(mf, [0,1,-24,252], 1)
+ %3 = [[1, 0, 1472, 0]~, [0; 0; 768; 0]]
+ ? mftobasis(mf, [0,1,-24,252,-1472], 1)
+ %4 = [1, 0, 0, 0]~ \\ now uniquely determined
+ ? mftobasis(mf, [0,1,-24,252,-1472,0], 1)
+ %5 = [1, 0, 0, 0]~ \\ wrong result: no such form exists
+ ? mfcoefs(mflinear(mf,%), 5)  \\ double check
+ %6 = [0, 1, -24, 252, -1472, 4830]
+ ? mftobasis(mf, [0,1,-24,252,-1472,0])
+  ***   at top-level: mftobasis(mf,[0,1,
+  ***                 ^--------------------
+  *** mftobasis: domain error in mftobasis: form does not belong to space
+ ? mftobasis(mf, mfEk(10))
+  ***   at top-level: mftobasis(mf,mfEk(
+  ***                 ^--------------------
+  *** mftobasis: domain error in mftobasis: form does not belong to space
+ ? mftobasis(mf, mfEk(10), 1)
+ %7 = []~
+ @eprog

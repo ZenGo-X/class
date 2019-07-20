@@ -1,0 +1,8 @@
+Function: factorial
+Section: number_theoretical
+C-Name: mpfactr
+Prototype: Lp
+Help: factorial(x): factorial of x, the result being given as a real number.
+Doc: factorial of $x$. The expression $x!$ gives a result which is an integer,
+ while $\kbd{factorial}(x)$ gives a real number.
+Variant: \fun{GEN}{mpfact}{long x} returns $x!$ as a \typ{INT}.

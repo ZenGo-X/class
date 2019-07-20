@@ -1,0 +1,39 @@
+Function: prod
+Section: sums
+C-Name: produit
+Prototype: V=GGEDG
+Help: prod(X=a,b,expr,{x=1}): x times the product (X runs from a to b) of
+ expression.
+Doc: product of expression
+ \var{expr}, initialized at $x$, the formal parameter $X$ going from $a$ to
+ $b$. As for \kbd{sum}, the main purpose of the initialization parameter $x$
+ is to force the type of the operations being performed. For example if it is
+ set equal to the integer 1, operations will start being done exactly. If it
+ is set equal to the real $1.$, they will be done using real numbers having
+ the default precision. If it is set equal to the power series $1+O(X^k)$ for
+ a certain $k$, they will be done using power series of precision at most $k$.
+ These are the three most common initializations.
+
+ \noindent As an extreme example, compare
+
+ \bprog
+ ? prod(i=1, 100, 1 - X^i);  \\@com this has degree $5050$ !!
+ time = 128 ms.
+ ? prod(i=1, 100, 1 - X^i, 1 + O(X^101))
+ time = 8 ms.
+ %2 = 1 - X - X^2 + X^5 + X^7 - X^12 - X^15 + X^22 + X^26 - X^35 - X^40 + \
+ X^51 + X^57 - X^70 - X^77 + X^92 + X^100 + O(X^101)
+ @eprog\noindent
+ Of course, in  this specific case, it is faster to use \tet{eta},
+ which is computed using Euler's formula.
+ \bprog
+ ? prod(i=1, 1000, 1 - X^i, 1 + O(X^1001));
+ time = 589 ms.
+ ? \ps1000
+ seriesprecision = 1000 significant terms
+ ? eta(X) - %
+ time = 8ms.
+ %4 = O(X^1001)
+ @eprog
+
+ \synt{produit}{GEN a, GEN b, char *expr, GEN x}.

@@ -1,0 +1,62 @@
+Function: chareval
+Section: number_theoretical
+C-Name: chareval
+Prototype: GGGDG
+Help: chareval(G, chi, x, {z}): given an abelian group structure affording
+ a discrete logarithm method, e.g. G = znstar(N,1) or a bnr structure,
+ let x be an element of G and let chi be a character of G. This function
+ returns the value of chi at x, where the encoding depends on the optional
+ argument z; if z is omitted, we fix a canonical o-th root of 1, zeta_o,
+ where o is the character order and return the rational number c/o where
+ chi(x) = (zeta_o)^c.
+Doc:
+ Let $G$ be an abelian group structure affording a discrete logarithm
+ method, e.g $G = \kbd{znstar}(N, 1)$ for $(\Z/N\Z)^*$ or a \kbd{bnr}
+ structure, let $x$ be an element of $G$ and let \var{chi} be a character of
+ $G$ (see the note below for details). This function returns the value of
+ \var{chi} at $x$.
+
+ \misctitle{Note on characters}
+ Let $K$ be some field. If $G$ is an abelian group,
+ let $\chi: G \to K^*$ be a character of finite order and let $o$ be a
+ multiple of the character order such that $\chi(n) = \zeta^{c(n)}$ for some
+ fixed $\zeta\in K^*$ of multiplicative order $o$ and a unique morphism $c: G
+ \to (\Z/o\Z,+)$. Our usual convention is to write
+ $$G = (\Z/o_1\Z) g_1 \oplus \cdots \oplus (\Z/o_d\Z) g_d$$
+ for some generators $(g_i)$ of respective order $d_i$, where the group has
+ exponent $o := \text{lcm}_i o_i$. Since $\zeta^o = 1$, the vector $(c_i)$ in
+ $\prod (\Z/o_i\Z)$ defines a character $\chi$ on $G$ via $\chi(g_i) =
+ \zeta^{c_i (o/o_i)}$ for all $i$. Classical Dirichlet characters have values
+ in $K = \C$ and we can take $\zeta = \exp(2i\pi/o)$.
+
+ \misctitle{Note on Dirichlet characters}
+ In the special case where \var{bid} is attached to $G = (\Z/q\Z)^*$
+ (as per \kbd{G = znstar(q,1)}), the Dirichlet
+ character \var{chi} can be written in one of the usual 3 formats: a \typ{VEC}
+ in terms of \kbd{bid.gen} as above, a \typ{COL} in terms of the Conrey
+ generators, or a \typ{INT} (Conrey label);
+ see \secref{se:dirichletchar} or \kbd{??character}.
+
+ The character value is encoded as follows, depending on the optional
+ argument $z$:
+
+ \item If $z$ is omitted: return the rational number $c(x)/o$ for $x$ coprime
+ to $q$, where we normalize $0\leq c(x) < o$. If $x$ can not be mapped to the
+ group (e.g. $x$ is not coprime to the conductor of a Dirichlet or Hecke
+ character) we return the sentinel value $-1$.
+
+ \item If $z$ is an integer $o$, then we assume that $o$ is a multiple of the
+ character order and we return the integer $c(x)$ when $x$ belongs
+ to the group, and the sentinel value $-1$ otherwise.
+
+ \item $z$ can be of the form $[\var{zeta}, o]$, where \var{zeta}
+ is an $o$-th root of $1$ and $o$ is a multiple of the character order.
+ We return $\zeta^{c(x)}$ if $x$ belongs to the group, and the sentinel
+ value $0$ otherwise. (Note that this coincides  with the usual extension
+ of Dirichlet characters to $\Z$, or of Hecke characters to general ideals.)
+
+ \item Finally, $z$ can be of the form $[\var{vzeta}, o]$, where
+ \var{vzeta} is a vector of powers $\zeta^0, \dots, \zeta^{o-1}$
+ of some $o$-th root of $1$ and $o$ is a multiple of the character order.
+ As above, we return $\zeta^{c(x)}$ after a table lookup. Or the sentinel
+ value $0$.

@@ -1,0 +1,18 @@
+Function: elllseries
+Section: elliptic_curves
+C-Name: elllseries
+Prototype: GGDGp
+Help: elllseries(E,s,{A=1}): L-series at s of the elliptic curve E, where A
+ a cut-off point close to 1.
+Obsolete: 2016-08-08
+Doc:
+ This function is deprecated, use \kbd{lfun(E,s)} instead.
+
+ $E$ being an elliptic curve, given by an arbitrary model over $\Q$ as output
+ by \kbd{ellinit}, this function computes the value of the $L$-series of $E$ at
+ the (complex) point $s$. This function uses an $O(N^{1/2})$ algorithm, where
+ $N$ is the conductor.
+
+ The optional parameter $A$ fixes a cutoff point for the integral and is best
+ left omitted; the result must be independent of $A$, up to
+ \kbd{realprecision}, so this allows to check the function's accuracy.

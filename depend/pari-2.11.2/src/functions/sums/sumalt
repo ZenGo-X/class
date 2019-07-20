@@ -1,0 +1,71 @@
+Function: sumalt
+Section: sums
+C-Name: sumalt0
+Prototype: V=GED0,L,p
+Help: sumalt(X=a,expr,{flag=0}): Cohen-Villegas-Zagier's acceleration of
+ alternating series expr, X starting at a. flag is optional, and can be 0:
+ default, or 1: uses a slightly different method using Zagier's polynomials.
+Wrapper: (,G)
+Description:
+  (gen,gen,?0):gen:prec sumalt(${2 cookie}, ${2 wrapper}, $1, $prec)
+  (gen,gen,1):gen:prec sumalt2(${2 cookie}, ${2 wrapper}, $1, $prec)
+Doc: numerical summation of the series \var{expr}, which should be an
+ \idx{alternating series} $(-1)^k a_k$, the formal variable $X$ starting at
+ $a$. Use an algorithm of Cohen, Villegas and Zagier (\emph{Experiment. Math.}
+ {\bf 9} (2000), no.~1, 3--12).
+
+ If $\fl=0$, assuming that the $a_k$ are the moments of a positive
+ measure on $[0,1]$, the relative error is $O(3+\sqrt8)^{-n}$ after using
+ $a_k$ for $k\leq n$. If \kbd{realprecision} is $p$, we thus set
+ $n = \log(10)p/\log(3+\sqrt8)\approx 1.3 p$; besides the time needed to
+ compute the $a_k$, $k\leq n$, the algorithm overhead is negligible: time
+ $O(p^2)$ and space $O(p)$.
+
+ If $\fl=1$, use a variant with more complicated polynomials, see
+ \tet{polzagier}. If the $a_k$ are the moments of $w(x)dx$ where $w$
+ (or only $xw(x^2)$) is a smooth function extending analytically to the whole
+ complex plane, convergence is in $O(14.4^{-n})$. If $xw(x^2)$ extends
+ analytically to a smaller region, we still have exponential convergence,
+ with worse constants. Usually faster when the computation of $a_k$ is
+ expensive. If \kbd{realprecision} is $p$, we thus set
+ $n = \log(10)p/\log(14.4)\approx 0.86 p$; besides the time needed to
+ compute the $a_k$, $k\leq n$, the algorithm overhead is \emph{not}
+ negligible: time $O(p^3)$ and space $O(p^2)$. Thus, even if the analytic
+ conditions for rigorous use are met, this variant is only worthwile if the
+ $a_k$ are hard to compute, at least $O(p^2)$ individually on average:
+ otherwise we gain a small constant factor (1.5, say) in the number of
+ needed $a_k$ at the expense of a large overhead.
+
+ The conditions for rigorous use are hard to check but the routine is best used
+ heuristically: even divergent alternating series can sometimes be summed by
+ this method, as well as series which are not exactly alternating (see for
+ example \secref{se:user_defined}). It should be used to try and guess the
+ value of an infinite sum. (However, see the example at the end of
+ \secref{se:userfundef}.)
+
+ If the series already converges geometrically,
+ \tet{suminf} is often a better choice:
+ \bprog
+ ? \p28
+ ? sumalt(i = 1, -(-1)^i / i)  - log(2)
+ time = 0 ms.
+ %1 = -2.524354897 E-29
+ ? suminf(i = 1, -(-1)^i / i)   \\@com Had to hit \kbd{C-C}
+   ***   at top-level: suminf(i=1,-(-1)^i/i)
+   ***                                ^------
+   *** suminf: user interrupt after 10min, 20,100 ms.
+ ? \p1000
+ ? sumalt(i = 1, -(-1)^i / i)  - log(2)
+ time = 90 ms.
+ %2 = 4.459597722 E-1002
+
+ ? sumalt(i = 0, (-1)^i / i!) - exp(-1)
+ time = 670 ms.
+ %3 = -4.03698781490633483156497361352190615794353338591897830587 E-944
+ ? suminf(i = 0, (-1)^i / i!) - exp(-1)
+ time = 110 ms.
+ %4 = -8.39147638 E-1000   \\ @com faster and more accurate
+ @eprog
+
+ \synt{sumalt}{void *E, GEN (*eval)(void*,GEN),GEN a,long prec}. Also
+ available is \tet{sumalt2} with the same arguments ($\fl = 1$).

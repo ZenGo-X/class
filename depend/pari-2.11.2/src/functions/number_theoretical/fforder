@@ -1,0 +1,21 @@
+Function: fforder
+Section: number_theoretical
+C-Name: fforder
+Prototype: GDG
+Help: fforder(x,{o}): multiplicative order of the finite field element x.
+ Optional o represents a multiple of the order of the element.
+Doc: multiplicative order of the finite field element $x$.  If $o$ is
+ present, it represents a multiple of the order of the element,
+ see \secref{se:DLfun}; the preferred format for
+ this parameter is \kbd{[N, factor(N)]}, where \kbd{N} is the cardinality
+ of the multiplicative group of the underlying finite field.
+ \bprog
+ ? t = ffgen(ffinit(nextprime(10^8), 5));
+ ? g = ffprimroot(t, &o);  \\@com o will be useful!
+ ? fforder(g^1000000, o)
+ time = 0 ms.
+ %5 = 5000001750000245000017150000600250008403
+ ? fforder(g^1000000)
+ time = 16 ms. \\@com noticeably slower, same result of course
+ %6 = 5000001750000245000017150000600250008403
+ @eprog

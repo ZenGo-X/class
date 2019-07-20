@@ -1,0 +1,98 @@
+default(realprecision,38);
+zet=1;
+Z(a)=lfuncreate([(p,n)->1/(1-p^a*x),0,[-a],2*a+1,1,1,[[a+1,1/x+O(1)]]]);
+N=nfinit(x^10-2*x^8-9*x^6+57*x^4-69*x^2+47);
+G=galoisinit(N);
+E=ellinit([0,-1,1,-10,-20]); \\ 11a1
+VALL={
+[zet,
+lfuncreate([n->vector(n,i,kronecker(i,857)),0,[0],1,857,1]),
+lfunthetainit(zet),
+lfuninit(zet,[1,1,2],2),
+\\5
+lfuninit(x^3-x-1,[1,1,2],2),
+lfuninit(x^4-2,[1,1,2],2),
+lfuninit(x^6+108,[1,1,2],2),
+lfuninit(polsubcyclo(11,5),[1,1,2],2),
+x^3-x-1,
+\\10
+x^4-2,
+polsubcyclo(11,5),
+17,
+-4,
+857,
+\\15
+[znstar(5,1),2],
+E,
+ellinit([1,1]),
+ellinit([-7,3]),
+lfunetaquo([1,1;3,1;5,1;15,1]),
+\\20
+lfunmul(-4,-3),
+lfundiv(x^3-x-1,1),
+bnfinit(x^4+2*x^2+5),
+[bnrinit(bnfinit(x^3+x^2+2*x+1),4),[1]],
+Z(2),
+\\25
+lfunqf(matid(4)),
+lfunartin(N,G,[2,0,-y^3-y^2-1,y^3+y^2],5),
+lfunartin(N,G,[['a,0;0,'a^4],[0,1;1,0]],5),
+  if(1,my(E1=ellinit([0,0,1,-1,0]),E2=ellinit([0,1,1,-23,-50]));
+lfuncreate([n->lfunan(E1,n)+lfunan(E2,n),n->-lfunan(E1,n)+lfunan(E2,n),[0,1],2,37,1])),
+lfunqf(matdiagonal([1,2,3,4])),
+  if(1,my(K3=nfinit(a^2-a-9));
+ellinit([0,2,1,-19-8*a,28+11*a],K3)),
+  if(1,my(E=ellinit([0,-1,1,-10,-20])); \\11a1
+lfuncreate([n->my(V=ellan(E,n));vector(n,i,V[i]/sqrt(i)),0,[1/2,3/2],1,11,1])),
+lfuntwist(E, Mod(2,5)),
+lfunsympow(E,2),
+lfunsympow(E,3)
+];
+}
+
+chk(s,i,a,b) =
+{
+  my(e,eps);
+  round((a-b)/b,&e);
+  eps=10^(-precision(1.));
+  if(type(a)=="t_COMPLEX" && abs(imag(a))<eps, a = real(a));
+  if(e>-120,
+    error("bug in lfuntype:", s, ":", i, ":", e)
+   ,print(i," (",s,"): ",a));
+}
+
+{
+for(i=1,#VALL,
+  ldata=VALL[i];
+  L=lfuninit(ldata,[1,1,2],2);
+  a=lfun(L,2+2*I);
+  b=lfun(ldata,2+2*I);
+  chk("lfun(2+2*I)",i,a,b);
+  a=lfun(L,2);
+  b=lfun(ldata,2);
+  chk("lfun",i,a,b);
+  b=lfun(lfuncreate(ldata),2);
+  chk("lfuncreate",i,a,b);
+  a=lfun(L,2,2);
+  b=lfun(ldata,2,2);
+  chk("lfunderiv",i,a,b);
+  a=lfunlambda(L,2);
+  b=lfunlambda(ldata,2);
+  chk("lfunlambda",i,a,b);
+  a=lfunlambda(L,2,2);
+  b=lfunlambda(ldata,2,2);
+  chk("lfunderivlambda",i,a,b);
+  a=lfuncheckfeq(L);
+  b=lfuncheckfeq(ldata);
+  chk("lfuncheckfeq",i,a,b);
+  a=lfunhardy(L,2);
+  b=lfunhardy(ldata,2);
+  chk("lfunhardy",i,a,b);
+  print(i," (lfunorderzero): ",lfunorderzero(L));
+  L=lfunthetainit(ldata);
+  a=lfuntheta(L,2);
+  b=lfuntheta(ldata,2);
+  chk("lfuntheta",i,a,b);
+  print(i," (lfunan): ",lfunan(ldata,10));
+)
+}

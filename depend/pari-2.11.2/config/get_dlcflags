@@ -1,0 +1,18 @@
+_dl_list="DLCFLAGS"
+if test -n "$__gnuc__"; then
+  case $osname in
+    cygwin|mingw) DLCFLAGS=;;
+    darwin) DLCFLAGS=-fPIC
+      case $arch in
+        ppc|ppc64) DLCFLAGS="$DLCFLAGS -fno-common"
+      esac;;
+    *) DLCFLAGS=-fPIC;;
+  esac
+else #assume native compiler
+  case "$osname" in
+    hpux) DLCFLAGS=+z;;
+    solaris) DLCFLAGS=-KPIC;;
+  esac
+fi
+
+echo "C compiler is          $CC $CFLAGS $DLCFLAGS"

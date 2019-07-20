@@ -1,0 +1,14 @@
+Function: mfconductor
+Section: modular_forms
+C-Name: mfconductor
+Prototype: lGG
+Help: mfconductor(mf,F): mf being output by mfinit for the cuspidal space and
+ F a modular form, gives the smallest level on which F is defined.
+Doc: \kbd{mf} being output by \kbd{mfinit} for the cuspidal space and
+ $F$ a modular form, gives the smallest level on which $F$ is defined.
+ \bprog
+ ? mf=mfinit([96,6],1); vF = mfbasis(mf); mfdim(mf)
+ %1 = 72
+ ? vector(10,i, mfconductor(mf, vF[i]))
+ %2 = [3, 6, 12, 24, 48, 96, 4, 8, 12, 16]
+ @eprog

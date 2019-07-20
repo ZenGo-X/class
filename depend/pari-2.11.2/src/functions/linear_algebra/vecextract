@@ -1,0 +1,71 @@
+Function: vecextract
+Section: linear_algebra
+C-Name: extract0
+Prototype: GGDG
+Description:
+ (vec,gen,?gen):vec  extract0($1, $2, $3)
+Help: vecextract(x,y,{z}): extraction of the components of the matrix or
+ vector x according to y and z. If z is omitted, y represents columns, otherwise
+ y corresponds to rows and z to columns. y and z can be vectors (of indices),
+ strings (indicating ranges as in "1..10") or masks (integers whose binary
+ representation indicates the indices to extract, from left to right 1, 2, 4,
+ 8, etc.).
+Doc: extraction of components of the vector or matrix $x$ according to $y$.
+ In case $x$ is a matrix, its components are the \emph{columns} of $x$. The
+ parameter $y$ is a component specifier, which is either an integer, a string
+ describing a range, or a vector.
+
+ If $y$ is an integer, it is considered as a mask: the binary bits of $y$ are
+ read from right to left, but correspond to taking the components from left to
+ right. For example, if $y=13=(1101)_2$ then the components 1,3 and 4 are
+ extracted.
+
+ If $y$ is a vector (\typ{VEC}, \typ{COL} or \typ{VECSMALL}), which must have
+ integer entries, these entries correspond to the component numbers to be
+ extracted, in the order specified.
+
+ If $y$ is a string, it can be
+
+ \item a single (non-zero) index giving a component number (a negative
+ index means we start counting from the end).
+
+ \item a range of the form \kbd{"$a$..$b$"}, where $a$ and $b$ are
+ indexes as above. Any of $a$ and $b$ can be omitted; in this case, we take
+ as default values $a = 1$ and $b = -1$, i.e.~ the first and last components
+ respectively. We then extract all components in the interval $[a,b]$, in
+ reverse order if $b < a$.
+
+ In addition, if the first character in the string is \kbd{\pow}, the
+ complement of the given set of indices is taken.
+
+ If $z$ is not omitted, $x$ must be a matrix. $y$ is then the \emph{row}
+ specifier, and $z$ the \emph{column} specifier, where the component specifier
+ is as explained above.
+
+ \bprog
+ ? v = [a, b, c, d, e];
+ ? vecextract(v, 5)         \\@com mask
+ %1 = [a, c]
+ ? vecextract(v, [4, 2, 1]) \\@com component list
+ %2 = [d, b, a]
+ ? vecextract(v, "2..4")    \\@com interval
+ %3 = [b, c, d]
+ ? vecextract(v, "-1..-3")  \\@com interval + reverse order
+ %4 = [e, d, c]
+ ? vecextract(v, "^2")      \\@com complement
+ %5 = [a, c, d, e]
+ ? vecextract(matid(3), "2..", "..")
+ %6 =
+ [0 1 0]
+
+ [0 0 1]
+ @eprog
+ The range notations \kbd{v[i..j]} and \kbd{v[\pow i]} (for \typ{VEC} or
+ \typ{COL}) and \kbd{M[i..j, k..l]} and friends (for \typ{MAT}) implement a
+ subset of the above, in a simpler and \emph{faster} way, hence should be
+ preferred in most common situations. The following features are not
+ implemented in the range notation:
+
+ \item reverse order,
+
+ \item omitting either $a$ or $b$ in \kbd{$a$..$b$}.

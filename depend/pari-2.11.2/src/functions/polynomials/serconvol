@@ -1,0 +1,8 @@
+Function: serconvol
+Section: polynomials
+C-Name: convol
+Prototype: GG
+Help: serconvol(x,y): convolution (or Hadamard product) of two power series.
+Doc: convolution (or \idx{Hadamard product}) of the
+ two power series $x$ and $y$; in other words if $x=\sum a_k*X^k$ and $y=\sum
+ b_k*X^k$ then $\kbd{serconvol}(x,y)=\sum a_k*b_k*X^k$.

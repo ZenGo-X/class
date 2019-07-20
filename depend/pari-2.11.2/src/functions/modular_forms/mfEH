@@ -1,0 +1,22 @@
+Function: mfEH
+Section: modular_forms
+C-Name: mfEH
+Prototype: G
+Help: mfEH(k): k being in 1/2+Z, mf corresponding to the Cohen-Eisenstein
+ series H_k of weight k on G_0(4).
+Doc: $k$ being in $1/2+\Z$, returns the Cohen-Eisenstein series $H_k$ of
+ weight $k$ on $\Gamma_0(4)$.
+ \bprog
+ ? H = mfEH(13/2); mfcoefs(H,4)
+ %1 = [691/32760, -1/252, 0, 0, -2017/252]
+ @eprog The coefficients of $H$ are given by the Cohen-Hurwitz function
+ $H(k-1/2,N)$ and can be obtained for moderately large values of $N$ (the
+ algorithm uses $\tilde{O}(N)$ time):
+ \bprog
+ ? mfcoef(H,10^5+1)
+ time = 55 ms.
+ %2 = -12514802881532791504208348
+ ? mfcoef(H,10^7+1)
+ time = 6,044 ms.
+ %3 = -1251433416009877455212672599325104476
+ @eprog

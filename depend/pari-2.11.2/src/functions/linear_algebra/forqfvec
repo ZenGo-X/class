@@ -1,0 +1,23 @@
+Function: forqfvec
+Section: linear_algebra
+C-Name: forqfvec0
+Prototype: vVGDGI
+Help:forqfvec(v,q,b,expr): q being a square and symmetric integral matrix
+ representing an positive definite quadratic form, evaluate expr
+ for all vectors v such that q(v)<=b.
+Doc: $q$ being a square and symmetric integral matrix representing a positive
+ definite
+ quadratic form, evaluate \kbd{expr} for all vector $v$ such that $q(v)\leq b$.
+ The formal variable $v$ runs through all such vectors in turn.
+ \bprog
+ ? forqfvec(v, [3,2;2,3], 3, print(v))
+ [0, 1]~
+ [1, 0]~
+ [-1, 1]~
+ @eprog
+Variant: The following function is also available:
+ \fun{void}{forqfvec}{void *E, long (*fun)(void *, GEN, GEN, double), GEN q, GEN b}:
+ Evaluate \kbd{fun(E,w,v,m)} on all $v$ such that $q(v)<b$, where $v$ is a
+ \typ{VECSMALL} and $m=q(v)$ is a C double. The function \kbd{fun} must
+ return $0$, unless \kbd{forqfvec} should stop, in which case, it should
+ return $1$.

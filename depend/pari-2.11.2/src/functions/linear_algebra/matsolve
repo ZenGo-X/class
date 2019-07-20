@@ -1,0 +1,46 @@
+Function: matsolve
+Section: linear_algebra
+C-Name: gauss
+Prototype: GG
+Help: matsolve(M,B): solution of MX=B (M matrix, B column vector or matrix).
+Doc: Let $M$ be a left-invertible matrix and $B$ a column vector
+ such that there exists a solution $X$ to the system of linear equations
+ $MX = B$; return the (unique) solution $X$. This has the same effect as, but
+ is faster, than $M^{-1}*B$. Uses Dixon $p$-adic lifting method if $M$ and
+ $B$ are integral and Gaussian elimination otherwise. When there is no
+ solution, the function returns an $X$ such that $MX - B$ is non-zero
+ although it has at least $\#M$ zero entries:
+ \bprog
+ ? M = [1,2;3,4;5,6];
+ ? B = [4,6,8]~; X = matsolve(M, B)
+ %2 = [-2, 3]~
+ ? M*X == B
+ %3 = 1
+ ? B = [1,2,4]~; X = matsolve(M, [1,2,4]~)
+ %4 = [0, 1/2]~
+ ? M*X - B
+ %5 = [0, 0, -1]~
+ @eprog\noindent Raises an exception if $M$ is not left-invertible, even if
+ there is a solution:
+ \bprog
+ ? M = [1,1;1,1]; matsolve(M, [1,1]~)
+  ***   at top-level: matsolve(M,[1,1]~)
+  ***                 ^------------------
+  *** matsolve: impossible inverse in gauss: [1, 1; 1, 1].
+ @eprog\noindent The function also works when $B$ is a matrix and we return
+ the unique matrix solution $X$ provided it exists.
+
+Variant: For integral input, the function
+ \fun{GEN}{ZM_gauss}{GEN M,GEN B} is also available.
+
+Function: _ZM_inv_worker
+C-Name: ZM_inv_worker
+Prototype: GG
+Section: programming/internals
+Help: worker for ZM_inv
+
+Function: _ZabM_inv_worker
+C-Name: ZabM_inv_worker
+Prototype: GGG
+Section: programming/internals
+Help: worker for ZabM_inv

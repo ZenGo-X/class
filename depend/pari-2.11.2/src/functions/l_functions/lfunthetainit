@@ -1,0 +1,43 @@
+Function: lfunthetainit
+Section: l_functions
+C-Name: lfunthetainit
+Prototype: GDGD0,L,b
+Help: lfunthetainit(L,{tdom},{m=0}): precompute data for evaluating
+  the m-th derivative of theta functions with argument in domain tdom
+  (by default t is real >= 1).
+Doc: Initalization function for evaluating the $m$-th derivative of theta
+ functions with argument $t$ in domain \var{tdom}. By default (\var{tdom}
+ omitted), $t$ is real, $t \geq 1$. Otherwise, \var{tdom} may be
+
+ \item a positive real scalar $\rho$: $t$ is real, $t \geq \rho$.
+
+ \item a non-real complex number: compute at this particular $t$; this
+ allows to compute $\theta(z)$ for any complex $z$ satisfying $|z|\geq |t|$
+ and $|\arg z| \leq |\arg t|$; we must have $|2 \arg z / d| < \pi/2$, where
+ $d$ is the degree of the $\Gamma$ factor.
+
+ \item a pair $[\rho,\alpha]$: assume that $|t| \geq \rho$ and $|\arg t| \leq
+ \alpha$; we must have $|2\alpha / d| < \pi/2$, where $d$ is the degree of
+ the $\Gamma$ factor.
+
+ \bprog
+ ? \p500
+ ? L = lfuncreate(1); \\ Riemann zeta
+ ? t = 1+I/2;
+ ? lfuntheta(L, t); \\ direct computation
+ time = 30 ms.
+ ? T = lfunthetainit(L, 1+I/2);
+ time = 30 ms.
+ ? lfuntheta(T, t); \\ instantaneous
+ @eprog\noindent The $T$ structure would allow to quickly compute $\theta(z)$
+ for any $z$ in the cone delimited by $t$ as explained above. On the other hand
+ \bprog
+ ? lfuntheta(T,I)
+  ***   at top-level: lfuntheta(T,I)
+  ***                 ^--------------
+  *** lfuntheta: domain error in lfunthetaneed: arg t > 0.785398163397448
+ @eprog
+ The initialization is equivalent to
+ \bprog
+ ? lfunthetainit(L, [abs(t), arg(t)])
+ @eprog

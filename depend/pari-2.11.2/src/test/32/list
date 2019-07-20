@@ -1,0 +1,53 @@
+List([1, 2, 3, 3, 5])
+List([1, 1, 2, 3, 3])
+List([1, 2, 3, 3, 1, 2, 3, 3])
+List([1, 1, 2, 2, 3, 3, 3, 3])
+List([1, 2, 3])
+List([1, 2])
+List([2])
+List([[1, 2, 3], 2])
+3
+List([[3, 2, 3], 2])
+List([Vecsmall([1, 2, 3]), 2])
+3
+
+[List([0])]
+
+List([10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0])
+List([10, 9, 8, 7, 6, 5])
+List([])
+List([1, y + 1])
+List([y, x])
+List([y, y*x])
+128
+Mod(0, 1)
+Mod(1, 3)
+Mod(22, 30)
+List([0, 1])
+List([1, 2, 3])
+1
+2
+List([2, 2, 3])
+3
+List([3, 2, 3])
+  ***   variable name expected: listpop(1)
+  ***                                   ^--
+  ***   at top-level: L='L;listpop(L)
+  ***                      ^----------
+  *** listpop: incorrect type in listpop (t_POL).
+  ***   at top-level: listput(L,1)
+  ***                 ^------------
+  *** listput: incorrect type in listput (t_POL).
+  ***   at top-level: listinsert(L,1,1)
+  ***                 ^-----------------
+  *** listinsert: incorrect type in listinsert (t_POL).
+  ***   at top-level: L=Map();listpop(L)
+  ***                         ^----------
+  *** listpop: incorrect type in listpop (t_LIST).
+  ***   at top-level: listput(L,1)
+  ***                 ^------------
+  *** listput: incorrect type in listput (t_POL).
+  ***   at top-level: listinsert(L,1,1)
+  ***                 ^-----------------
+  *** listinsert: incorrect type in listinsert (t_POL).
+Total time spent: 8

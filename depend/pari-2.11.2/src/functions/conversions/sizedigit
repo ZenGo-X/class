@@ -1,0 +1,19 @@
+Function: sizedigit
+Section: conversions
+C-Name: sizedigit
+Prototype: lG
+Obsolete: 2015-01-13
+Help: sizedigit(x): rough upper bound for the number of decimal digits
+ of (the components of) x. DEPRECATED.
+Doc:
+ This function is DEPRECATED, essentially meaningless, and provided for
+ backwards compatibility only. Don't use it!
+
+ outputs a quick upper bound for the number of decimal digits of (the
+ components of) $x$, off by at most $1$. More precisely, for a positive
+ integer $x$, it computes (approximately) the ceiling of
+ $$\kbd{floor}(1 + \log_2 x) \log_{10}2,$$
+
+ To count the number of decimal digits of a positive integer $x$, use
+ \kbd{\#digits(x)}. To estimate (recursively) the size of $x$, use
+ \kbd{normlp(x)}.

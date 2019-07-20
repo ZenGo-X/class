@@ -1,0 +1,17 @@
+Function: addprimes
+Section: number_theoretical
+C-Name: addprimes
+Prototype: DG
+Help: addprimes({x=[]}): add primes in the vector x to the prime table to
+ be used in trial division. x may also be a single integer. Composite
+ "primes" are NOT allowed.
+Doc: adds the integers contained in the
+ vector $x$ (or the single integer $x$) to a special table of
+ ``user-defined primes'', and returns that table. Whenever \kbd{factor} is
+ subsequently called, it will trial divide by the elements in this table.
+ If $x$ is empty or omitted, just returns the current list of extra
+ primes.
+
+ The entries in $x$ must be primes: there is no internal check, even if
+ the \tet{factor_proven} default is set. To remove primes from the list use
+ \kbd{removeprimes}.

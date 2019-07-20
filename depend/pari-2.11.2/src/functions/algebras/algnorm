@@ -1,0 +1,27 @@
+Function: algnorm
+Section: algebras
+C-Name: algnorm
+Prototype: GGD0,L,
+Help: algnorm(al,x,{abs=0}): (reduced) norm of x.
+Doc: Given an element \var{x} in \var{al}, computes its norm. If \var{al} is
+ a table algebra output by \tet{algtableinit} or if $abs=1$, returns the
+ absolute norm of \var{x}, which is an element of $\F_p$ of~$\Q$; if \var{al} is
+ a central simple algebra output by \tet{alginit} and $abs=0$ (default), returns
+ the reduced norm of \var{x}, which is an element of the center of \var{al}.
+ \bprog
+ ? mt = [matid(3), [0,0,0; 1,1,0; 0,0,0], [0,0,1; 0,0,0; 1,0,1]];
+ ? A = algtableinit(mt,19);
+ ? algnorm(A,[0,-2,3]~)
+ %3 = 18
+ ? nf = nfinit(y^2-5);
+ ? B = alginit(nf,[-1,y]);
+ ? b = [x,1]~;
+ ? n = algnorm(B,b)
+ %7 = Mod(-y + 1, y^2 - 5)
+ ? algnorm(B,b,1)
+ %8 = 16
+ ? nfeltnorm(nf,n)^algdegree(B)
+ %9 = 16
+ @eprog
+
+ Also accepts a square matrix with coefficients in \var{al}.

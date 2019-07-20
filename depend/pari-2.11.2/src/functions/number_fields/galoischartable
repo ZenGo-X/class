@@ -1,0 +1,71 @@
+Function: galoischartable
+Section: number_fields
+C-Name: galoischartable
+Prototype: G
+Help: galoischartable(gal): return the character table of the underlying
+ group of gal.
+Doc: Compute the character table of~$G$, where~$G$ is the underlying group of
+ the \kbd{galoisinit} structure~\var{gal}. The input~\var{gal} is also allowed
+ to be a \typ{VEC} of permutations that is closed under products.
+ Let~$N$ be the number of conjugacy classes of~$G$.
+ Return a \typ{VEC}~$[M,\var{e}]$ where $e \geq 1$ is an integer
+ and $M$ is a square \typ{MAT} of size~$N$ giving the character table
+ of~$G$.
+
+ \item Each column corresponds to an irreducible character; the characters
+ are ordered by increasing dimension and the first column is the trivial
+ character (hence contains only $1$'s).
+
+ \item Each row corresponds to a conjugacy class; the conjugacy classes are
+ ordered as specified by \kbd{galoisconjclasses(gal)}, in particular the
+ first row corresponds to the identity and gives the dimension $\chi(1)$
+ of the irreducible representation attached to the successive characters
+ $\chi$.
+
+ The value $M[i,j]$ of the character $j$ at the conjugacy class $i$
+ is represented by a polynomial in \kbd{y} whose variable should be
+ interpreted as an $e$-th root of unity, i.e. as the lift of
+ \bprog
+   Mod(y, polcyclo(e,'y))
+ @eprog\noindent (Note that $M$ is the transpose of the usual orientation for
+ character tables.)
+
+ The integer $e$ divides the exponent of the group $G$ and is chosen as small
+ as posible; for instance $e = 1$ when the characters are all defined over
+ $\Q$, as is the case for $S_n$. Examples:
+ \bprog
+ ? K = nfsplitting(x^4+x+1);
+ ? gal = galoisinit(K);
+ ? [M,e] = galoischartable(gal);
+ ? M~  \\ take the transpose to get the usual orientation
+ %4 =
+ [1  1  1  1  1]
+
+ [1 -1 -1  1  1]
+
+ [2  0  0 -1  2]
+
+ [3 -1  1  0 -1]
+
+ [3  1 -1  0 -1]
+ ? e
+ %5 = 1
+ ? {G = [Vecsmall([1, 2, 3, 4, 5]), Vecsmall([1, 5, 4, 3, 2]),
+         Vecsmall([2, 1, 5, 4, 3]), Vecsmall([2, 3, 4, 5, 1]),
+         Vecsmall([3, 2, 1, 5, 4]), Vecsmall([3, 4, 5, 1, 2]),
+         Vecsmall([4, 3, 2, 1, 5]), Vecsmall([4, 5, 1, 2, 3]),
+         Vecsmall([5, 1, 2, 3, 4]), Vecsmall([5, 4, 3, 2, 1])];}
+   \\G = D10
+ ? [M,e] = galoischartable(G);
+ ? M~
+ %8 =
+ [1  1              1              1]
+
+ [1 -1              1              1]
+
+ [2  0 -y^3 - y^2 - 1      y^3 + y^2]
+
+ [2  0      y^3 + y^2 -y^3 - y^2 - 1]
+ ? e
+ %9 = 5
+ @eprog

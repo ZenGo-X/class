@@ -1,0 +1,23 @@
+Function: nfmodpr
+Section: number_fields
+C-Name: nfmodpr
+Prototype: GGG
+Help: nfmodpr(nf,x,pr): map x to the residue field mod pr.
+Doc: map $x$ to a \typ{FFELT} in the residue field modulo \var{pr}.
+ The argument \var{pr} is either a maximal ideal in \kbd{idealprimedec}
+ format or, preferably, a \var{modpr} structure from \tet{nfmodprinit}. The
+ function \tet{nfmodprlift} allows to lift back to $\Z_K$.
+
+ Note that the function applies to number field elements and not to
+ vector / matrices / polynomials of such. Use \kbd{apply} to convert
+ recursive structures.
+
+ \bprog
+ ? K = nfinit(y^3-250);
+ ? P = idealprimedec(K, 5)[2];
+ ? modP = nfmodprinit(K,P);
+ ? K.zk
+ %4 = [1, 1/5*y, 1/25*y^2]
+ ? apply(t->nfmodpr(K,t,modP), K.zk)
+ %5 = [1, y, 2*y + 1]
+ @eprog

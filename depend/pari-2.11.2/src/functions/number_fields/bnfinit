@@ -1,0 +1,101 @@
+Function: bnfinit
+Section: number_fields
+C-Name: bnfinit0
+Prototype: GD0,L,DGp
+Help: bnfinit(P,{flag=0},{tech=[]}): compute the necessary data for future
+ use in ideal and unit group computations, including fundamental units if
+ they are not too large. flag and tech are both optional. flag can be any of
+ 0: default, 1: insist on having fundamental units.
+ See manual for details about tech.
+Description:
+ (gen):bnf:prec           Buchall($1, 0, $prec)
+ (gen, 0):bnf:prec        Buchall($1, 0, $prec)
+ (gen, 1):bnf:prec        Buchall($1, nf_FORCE, $prec)
+ (gen, ?small, ?gen):bnf:prec        bnfinit0($1, $2, $3, $prec)
+Doc: initializes a
+ \kbd{bnf} structure. Used in programs such as \kbd{bnfisprincipal},
+ \kbd{bnfisunit} or \kbd{bnfnarrow}. By default, the results are conditional
+ on the GRH, see \ref{se:GRHbnf}. The result is a
+ 10-component vector \var{bnf}.
+
+ This implements \idx{Buchmann}'s sub-exponential algorithm for computing the
+ class group, the regulator and a system of \idx{fundamental units} of the
+ general algebraic number field $K$ defined by the irreducible polynomial $P$
+ with integer coefficients.
+
+ If the precision becomes insufficient, \kbd{gp} does not strive to compute
+ the units by default ($\fl=0$).
+
+ When $\fl=1$, we insist on finding the fundamental units exactly. Be
+ warned that this can take a very long time when the coefficients of the
+ fundamental units on the integral basis are very large. If the fundamental
+ units are simply too large to be represented in this form, an error message
+ is issued. They could be obtained using the so-called compact representation
+ of algebraic numbers as a formal product of algebraic integers. The latter is
+ implemented internally but not publicly accessible yet.
+
+ $\var{tech}$ is a technical vector (empty by default, see \ref{se:GRHbnf}).
+ Careful use of this parameter may speed up your computations,
+ but it is mostly obsolete and you should leave it alone.
+
+ \smallskip
+
+ The components of a \var{bnf} or \var{sbnf} are technical and never used by
+ the casual user. In fact: \emph{never access a component directly, always use
+ a proper member function.} However, for the sake of completeness and internal
+ documentation, their description is as follows. We use the notations
+ explained in the book by H. Cohen, \emph{A Course in Computational Algebraic
+ Number Theory}, Graduate Texts in Maths \key{138}, Springer-Verlag, 1993,
+ Section 6.5, and subsection 6.5.5 in particular.
+
+ $\var{bnf}[1]$ contains the matrix $W$, i.e.~the matrix in Hermite normal
+ form giving relations for the class group on prime ideal generators
+ $(\goth{p}_i)_{1\le i\le r}$.
+
+ $\var{bnf}[2]$ contains the matrix $B$, i.e.~the matrix containing the
+ expressions of the prime ideal factorbase in terms of the $\goth{p}_i$.
+ It is an $r\times c$ matrix.
+
+ $\var{bnf}[3]$ contains the complex logarithmic embeddings of the system of
+ fundamental units which has been found. It is an $(r_1+r_2)\times(r_1+r_2-1)$
+ matrix.
+
+ $\var{bnf}[4]$ contains the matrix $M''_C$ of Archimedean components of the
+ relations of the matrix $(W|B)$.
+
+ $\var{bnf}[5]$ contains the prime factor base, i.e.~the list of prime
+ ideals used in finding the relations.
+
+ $\var{bnf}[6]$ used to contain a permutation of the prime factor base, but
+ has been obsoleted. It contains a dummy $0$.
+
+ $\var{bnf}[7]$ or \kbd{\var{bnf}.nf} is equal to the number field data
+ $\var{nf}$ as would be given by \kbd{nfinit}.
+
+ $\var{bnf}[8]$ is a vector containing the classgroup \kbd{\var{bnf}.clgp}
+ as a finite abelian group, the regulator \kbd{\var{bnf}.reg}, a $1$ (used to
+ contain an obsolete ``check number''), the number of roots of unity and a
+ generator \kbd{\var{bnf}.tu}, the fundamental units \kbd{\var{bnf}.fu}.
+
+ $\var{bnf}[9]$ is a 3-element row vector used in \tet{bnfisprincipal} only
+ and obtained as follows. Let $D = U W V$ obtained by applying the
+ \idx{Smith normal form} algorithm to the matrix $W$ (= $\var{bnf}[1]$) and
+ let $U_r$ be the reduction of $U$ modulo $D$. The first elements of the
+ factorbase are given (in terms of \kbd{bnf.gen}) by the columns of $U_r$,
+ with Archimedean component $g_a$; let also $GD_a$ be the Archimedean
+ components of the generators of the (principal) ideals defined by the
+ \kbd{bnf.gen[i]\pow bnf.cyc[i]}. Then $\var{bnf}[9]=[U_r, g_a, GD_a]$.
+
+ $\var{bnf}[10]$ is by default unused and set equal to 0. This field is used
+ to store further information about the field as it becomes available, which
+ is rarely needed, hence would be too expensive to compute during the initial
+ \kbd{bnfinit} call. For instance, the generators of the principal ideals
+ \kbd{bnf.gen[i]\pow bnf.cyc[i]} (during a call to \tet{bnrisprincipal}), or
+ those corresponding to the relations in $W$ and $B$ (when the \kbd{bnf}
+ internal precision needs to be increased).
+Variant:
+ Also available is \fun{GEN}{Buchall}{GEN P, long flag, long prec},
+ corresponding to \kbd{tech = NULL}, where
+ \kbd{flag} is either $0$ (default) or \tet{nf_FORCE} (insist on finding
+ fundamental units). The function
+ \fun{GEN}{Buchall_param}{GEN P, double c1, double c2, long nrpid, long flag, long prec} gives direct access to the technical parameters.

@@ -1,0 +1,54 @@
+V=[2^256 + 1, 2^193 - 1];
+parapply(factor,V)
+my(V=[2^256 + 1, 2^193 - 1]); parvector(#V,i,factor(V[i]))
+fun(V)=pareval(vector(#V,i,()->factor(V[i])));
+fun(V)
+parfirst(fun,V)=parfor(i=1,#V,fun(V[i]),j,if(j,return([i,j])));
+parfirst(isprime, [2^600..2^600+1000])[1]
+parselect(isprime, [2^600..2^600+1000],1)
+parselect(isprime, [2^600..2^600+1000])
+isfermatprime(p)=Mod(2,p)^(p-1)==1;
+select(x->x==1,parapply(isfermatprime,[2^600..2^600+1000]),1)
+parselect(isfermatprime,[2^600..2^600+1000],1)
+select(isfermatprime,[2^600..2^600+1000])
+parfirst(isfermatprime,[2^600..2^600+1000])
+parselect(isfermatprime,[2^600..2^600+1000])
+
+/* Disable tests that depends on ellsea
+findp(E,n)=
+{
+  my(check(p) = my(c=ellcard(E,p)); if(isprime(c),c,0));
+  parforprime(p=2^n,,check(p),card,if(card,return([p,card])));
+}
+my(E=ellinit([1,3])); findp(E,80)
+*/
+
+parsum(i=1,10000,moebius(i))
+parsum(i=1,100,issquare(poldisc('x^36+i!+1)))
+
+inline(ell,ell2);
+ell(a,B,N)=my(E=ellinit([0,0,0,a,1]*Mod(1,N))); ellpow(E,[0,1]*Mod(1,N),B);
+ecm(N,t,B)=
+  iferr(parvector(t,a,ell(a,B,N)),err,gcd(lift(component(err,2)),N),errname(err)=="e_INV");
+ecm(2^101-1,500,600!)
+
+ell2(a,B,N)=iferr(ell(a,B,N),err,return(gcd(lift(component(err,2)),N)),errname(err)=="e_INV");0;
+ecm2(N,t,B)=my(z);parfirst(a->ell2(a,B,N),[1..t])[2];
+ecm2(2^101-1,500,600!)
+uninline();
+inline(chkell);
+chkell(n)=a->my(E=ellinit([1,0,0,0,ffgen(2^n)^a]),N=ellcard(E)/4);if(isprime(N),N);
+ellp(n)=parfirst(chkell(n),[1..10000]);
+ellp(128)
+uninline();
+
+my(N=1);until(type(A)=="t_ERROR",A=alarm(1,parfor(i=1,10,for(i=1,N,isprime(i))));N*=2);
+
+my(s,L=List());parfor(x=1,10,x!,f,s+=f);s
+my(s,L=List());parfor(x=1,oo,if(x<=10,x!),f,s+=f;if(x>=10,break));s
+my(s);parforprime(p=2,20,p!,f,s+=f);s
+my(s);parforvec(v=[[1,3],[1,3]],factorback(v),f,s+=f);s
+my(s);parforvec(v=[[1,4],[1,4]],factorback(v),f,s+=f,1);s
+my(s);parforvec(v=[[1,5],[1,5]],factorback(v),f,s+=f,2);s
+test(f)=my(f=f,CS);CS=vector(10,n,[n,n]);F=parapply(u->f(u[1],u[2])+f(u[2],u[1]),CS);
+for(i=1,100,test((x,y)->x+y));

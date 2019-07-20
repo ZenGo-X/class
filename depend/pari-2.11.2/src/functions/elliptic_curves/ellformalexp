@@ -1,0 +1,18 @@
+Function: ellformalexp
+Section: elliptic_curves
+C-Name: ellformalexp
+Prototype: GDPDn
+Help: ellformalexp(E, {n = seriesprecision}, {z = 'x}) : E elliptic curve,
+ returns n terms of the formal elliptic exponential on E as a series in z.
+Doc: The elliptic formal exponential \kbd{Exp} attached to $E$ is the
+ isomorphism from the formal additive law to the formal group of $E$. It is
+ normalized so as to be the inverse of the elliptic logarithm (see
+ \tet{ellformallog}): $\kbd{Exp} \circ L = \Id$. Return $n$ terms of this
+ power series:
+ \bprog
+ ? E=ellinit([-1,1/4]); Exp = ellformalexp(E,10,'z)
+ %1 = z + 2/5*z^5 - 3/28*z^7 + 2/15*z^9 + O(z^11)
+ ? L = ellformallog(E,10,'t);
+ ? subst(Exp,z,L)
+ %3 = t + O(t^11)
+ @eprog

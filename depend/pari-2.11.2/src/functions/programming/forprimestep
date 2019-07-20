@@ -1,0 +1,49 @@
+Function: _forprimestep_init
+Class: gp2c_internal
+Help: Initialize forprime_t.
+Description:
+ (forprime,int,?int,int):void             forprimestep_init(&$1,$2,$3,$4);
+
+Function: forprimestep
+Section: programming/control
+C-Name: forprimestep
+Prototype: vV=GDGGI
+Help: forprimestep(p=a,b,q,seq): the sequence is evaluated, p running over the
+ primes in an arithmetic progression of the form a + k*q and less than b.
+Iterator:
+ (*notype,small,small,gen)  (forprime, _forprimestep_init, _u_forprime_next)
+ (*notype,gen,gen,gen)      (forprime, _forprimestep_init, _forprime_next_)
+ (*small,gen,?gen,gen)      (forprime, _forprimestep_init, _u_forprime_next)
+ (*int,gen,?gen,gen)        (forprime, _forprimestep_init, _forprime_next_)
+ (gen,gen,?gen,gen)         (forprime, _forprimestep_init, _forprime_next_)
+Doc: evaluates \var{seq},
+ where the formal variable $p$ ranges over the prime numbers $p$
+ in an arithmetic progression in $[a,b]$: $q$ is either an integer
+ ($p \equiv a \pmod{q}$) or an intmod \kbd{Mod(c,N)} and we restrict
+ to that congruence class. Nothing is done if $a>b$.
+ \bprog
+ ? forprimestep(p = 4, 30, 5, print(p))
+ 19
+ 29
+ ? forprimestep(p = 4, 30, Mod(1,5), print(p))
+ 11
+ @eprog\noindent Setting $b$ to \kbd{+oo} means we will run through all primes
+ $\geq a$, starting an infinite loop; it is expected that the caller will break
+ out of the loop itself at some point, using \kbd{break} or \kbd{return}.
+
+ The current implementation restricts the modulus of the arithmetic
+ progression to an unsigned long (64 or 32 bits).
+ \bprog
+ ? forprimestep(p=2,oo,2^64,print(p))
+  ***   at top-level: forprimestep(p=2,oo,2^64,print(p))
+  ***                 ^----------------------------------
+  *** forprimestep: overflow in t_INT-->ulong assignment.
+ @eprog
+
+ Note that the value of $p$ cannot be modified within \var{seq}:
+ \bprog
+ ? forprimestep(p = 2, 10, 3, p = [])
+  ***   at top-level: forprimestep(p=2,10,3,p=[])
+  ***                                         ^---
+  ***   prime index read-only: was changed to [].
+ @eprog

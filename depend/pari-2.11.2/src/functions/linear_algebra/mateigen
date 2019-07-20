@@ -1,0 +1,41 @@
+Function: mateigen
+Section: linear_algebra
+C-Name: mateigen
+Prototype: GD0,L,p
+Help: mateigen(x,{flag=0}): complex eigenvectors of the matrix x given as
+ columns of a matrix H. If flag=1, return [L,H], where L contains the
+ eigenvalues and H the corresponding eigenvectors.
+Doc: returns the (complex) eigenvectors of $x$ as columns of a matrix.
+ If $\fl=1$, return $[L,H]$, where $L$ contains the
+ eigenvalues and $H$ the corresponding eigenvectors; multiple eigenvalues are
+ repeated according to the eigenspace dimension (which may be less
+ than the eigenvalue multiplicity in the characteristic polynomial).
+
+ This function first computes the characteristic polynomial of $x$ and
+ approximates its complex roots $(\lambda_i)$, then tries to compute the
+ eigenspaces as kernels of the $x - \lambda_i$. This algorithm is
+ ill-conditioned and is likely to miss kernel vectors if some roots of the
+ characteristic polynomial are close, in particular if it has multiple roots.
+ \bprog
+ ? A = [13,2; 10,14]; mateigen(A)
+ %1 =
+ [-1/2 2/5]
+
+ [   1   1]
+ ? [L,H] = mateigen(A, 1);
+ ? L
+ %3 = [9, 18]
+ ? H
+ %4 =
+ [-1/2 2/5]
+
+ [   1   1]
+ @eprog\noindent
+ For symmetric matrices, use \tet{qfjacobi} instead; for Hermitian matrices,
+ compute
+ \bprog
+  A = real(x);
+  B = imag(x);
+  y = matconcat([A, -B; B, A]);
+ @eprog\noindent and apply \kbd{qfjacobi} to $y$.
+Variant: Also available is \fun{GEN}{eigen}{GEN x, long prec} ($\fl = 0$)

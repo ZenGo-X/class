@@ -1,0 +1,27 @@
+Function: substpol
+Section: polynomials
+C-Name: gsubstpol
+Prototype: GGG
+Help: substpol(x,y,z): in expression x, replace the polynomial y by the
+ expression z, using remainder decomposition of x.
+Doc: replace the ``variable'' $y$ by the argument $z$ in the ``polynomial''
+ expression $x$. Every type is allowed for $x$, but the same behavior
+ as \kbd{subst} above apply.
+
+ The difference with \kbd{subst} is that $y$ is allowed to be any polynomial
+ here. The substitution is done moding out all components of $x$
+ (recursively) by $y - t$, where $t$ is a new free variable of lowest
+ priority. Then substituting $t$ by $z$ in the resulting expression. For
+ instance
+ \bprog
+ ? substpol(x^4 + x^2 + 1, x^2, y)
+ %1 = y^2 + y + 1
+ ? substpol(x^4 + x^2 + 1, x^3, y)
+ %2 = x^2 + y*x + 1
+ ? substpol(x^4 + x^2 + 1, (x+1)^2, y)
+ %3 = (-4*y - 6)*x + (y^2 + 3*y - 3)
+ @eprog
+Variant: Further, \fun{GEN}{gdeflate}{GEN T, long v, long d} attempts to
+ write $T(x)$ in the form $t(x^d)$, where $x=$\kbd{pol\_x}$(v)$, and returns
+ \kbd{NULL} if the substitution fails (for instance in the example \kbd{\%2}
+ above).

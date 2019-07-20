@@ -1,0 +1,8 @@
+Function: _.zk
+Help: _.zk
+Section: member_functions
+C-Name: member_zk
+Prototype: mG
+Description:
+ (nf):vec:copy         nf_get_zk($1)
+ (gen):vec:copy        member_zk($1)

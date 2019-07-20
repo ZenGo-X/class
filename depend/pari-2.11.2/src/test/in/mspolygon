@@ -1,0 +1,37 @@
+try(a, as, N)=
+{
+  my(as1 = Mat([as[,2],-as[,1]]));
+  my(g = a * as1^(-1));
+  if (matdet(g) != 1, error("not in Gamma0(N)"));
+  if (denominator(g) == 1 && g[2,1] % N == 0, return);
+  g = as1 * [0,-1;1,-1] * as1^(-1);
+  if (g[2,1] % N, error("not in Gamma0(N)"));
+}
+check(A, N)=
+{
+  my ([V,Ast] = A);
+  for (i = 1, #V,
+    my(d = Ast[i] - i);
+    if (d <= 0, next);
+    if (d == 1, try(V[i],V[i+1], N),
+        d == 2, try(V[i],V[i+2], N), error("d > 2")));
+}
+do(N) = check(mspolygon(N,1), N);
+
+for (N = 2, 40, do(N))
+do(49)
+do(217)
+do(247)
+
+M = msinit(12,2);
+mspolygon(M,1)
+mspolygon(M)
+mspolygon(1)
+
+testlattice(N, k) = mslattice(msinit(N,k));
+testlattice(11,2)
+testlattice(11,4)
+testlattice(30,4)
+
+M = msinit(8,4);
+mslattice(M, mseisenstein(M)[1])

@@ -1,0 +1,20 @@
+Function: hammingweight
+Section: combinatorics
+C-Name: hammingweight
+Prototype: lG
+Help: hammingweight(x): returns the Hamming weight of x.
+Doc:
+ If $x$ is a \typ{INT}, return the binary Hamming weight of $|x|$. Otherwise
+ $x$ must be of type \typ{POL}, \typ{VEC}, \typ{COL}, \typ{VECSMALL}, or
+ \typ{MAT} and the function returns the number of non-zero coefficients of
+ $x$.
+ \bprog
+ ? hammingweight(15)
+ %1 = 4
+ ? hammingweight(x^100 + 2*x + 1)
+ %2 = 3
+ ? hammingweight([Mod(1,2), 2, Mod(0,3)])
+ %3 = 2
+ ? hammingweight(matid(100))
+ %4 = 100
+ @eprog

@@ -1,0 +1,56 @@
+Function: call
+Section: programming/specific
+C-Name: call0
+Prototype: GG
+Help: call(f, A): A being a vector, evaluates f(A[1],...,A[#A]).
+Doc: $A=[a_1,\dots, a_n]$ being a vector and $f$ being a function, returns the
+ evaluation of $f(a_1,\dots,a_n)$.
+ $f$ can also be the name of a built-in GP function.
+ If $\# A =1$, \tet{call}($f,A$) = \tet{apply}($f,A$)[1].
+ If $f$ is variadic, the variadic arguments must grouped in a vector in
+ the last component of $A$.
+
+ This function is useful
+
+ \item when writing a variadic function, to call another one:
+ \bprog
+ fprintf(file,format,args[..]) = write(file,call(Strprintf,[format,args]))
+ @eprog
+
+ \item when dealing with function arguments with unspecified arity
+
+ The function below implements a global memoization interface:
+ \bprog
+ memo=Map();
+ memoize(f,A[..])=
+ {
+   my(res);
+   if(!mapisdefined(memo, [f,A], &res),
+     res = call(f,A);
+     mapput(memo,[f,A],res));
+  res;
+ }
+ @eprog
+ for example:
+ \bprog
+ ? memoize(factor,2^128+1)
+ %3 = [59649589127497217,1;5704689200685129054721,1]
+ ? ##
+   ***   last result computed in 76 ms.
+ ? memoize(factor,2^128+1)
+ %4 = [59649589127497217,1;5704689200685129054721,1]
+ ? ##
+   ***   last result computed in 0 ms.
+ ? memoize(ffinit,3,3)
+ %5 = Mod(1,3)*x^3+Mod(1,3)*x^2+Mod(1,3)*x+Mod(2,3)
+ ? fibo(n)=if(n==0,0,n==1,1,memoize(fibo,n-2)+memoize(fibo,n-1));
+ ? fibo(100)
+ %7 = 354224848179261915075
+ @eprog
+
+ \item to call operators through their internal names without using
+ \kbd{alias}
+ \bprog
+ matnbelts(M) = call("_*_",matsize(M))
+ @eprog
+

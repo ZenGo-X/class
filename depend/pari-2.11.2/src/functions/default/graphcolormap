@@ -1,0 +1,22 @@
+Function: _def_graphcolormap
+Class: default
+Section: default
+C-Name: sd_graphcolormap
+Prototype:
+Help:
+Doc: a vector of colors, to be used by hi-res graphing routines. Its length is
+ arbitrary, but it must contain at least 3 entries: the first 3 colors are
+ used for background, frame/ticks and axes respectively. All colors in the
+ colormap may be freely used in \tet{plotcolor} calls.
+
+ A color is either given as in the default by character strings or by an RGB
+ code. For valid color names, see the standard \kbd{rgb.txt} file in X11
+ distributions, where we restrict to lowercase letters and remove all
+ whitespace from color names. An RGB code is a vector with 3 integer entries
+ between 0 and 255 or a \kbd{\#} followed by 6 hexadecimal digits.
+ For instance \kbd{[250, 235, 215]}, \kbd{"\#faebd7"}  and
+ \kbd{"antiquewhite"} all represent the same color.
+
+ The default value is [\kbd{"white"}, \kbd{"black"}, \kbd{"blue"},
+ \kbd{"violetred"}, \kbd{"red"}, \kbd{"green"}, \kbd{"grey"},
+ \kbd{"gainsboro"}].

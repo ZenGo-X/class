@@ -1,0 +1,8 @@
+Function: !_
+Help: !a: boolean operator "not".
+Section: symbolic_operators
+C-Name: gnot
+Prototype: G
+Description:
+ (negbool):bool:parens                $1
+ (bool):negbool:parens                $1

@@ -1,0 +1,30 @@
+Function: elllog
+Section: elliptic_curves
+C-Name: elllog
+Prototype: GGGDG
+Help: elllog(E,P,G,{o}): return the discrete logarithm of the point P of
+ the elliptic curve E in base G. If present, o represents the order of G.
+ If not present, assume that G generates the curve.
+Doc: given two points $P$ and $G$ on the elliptic curve $E/\F_q$, returns the
+ discrete logarithm of $P$ in base $G$, i.e. the smallest non-negative
+ integer $n$ such that $P = [n]G$.
+ See \tet{znlog} for the limitations of the underlying discrete log algorithms.
+ If present, $o$ represents the order of $G$, see \secref{se:DLfun};
+ the preferred format for this parameter is \kbd{[N, factor(N)]}, where $N$
+ is  the order of $G$.
+
+ If no $o$ is given, assume that $G$ generates the curve.
+ The function also assumes that $P$ is a multiple of $G$.
+ \bprog
+ ? a = ffgen(ffinit(2,8),'a);
+ ? E = ellinit([a,1,0,0,1]);  \\ over F_{2^8}
+ ? x = a^3; y = ellordinate(E,x)[1];
+ ? P = [x,y]; G = ellmul(E, P, 113);
+ ? ord = [242, factor(242)]; \\ P generates a group of order 242. Initialize.
+ ? ellorder(E, G, ord)
+ %4 = 242
+ ? e = elllog(E, P, G, ord)
+ %5 = 15
+ ? ellmul(E,G,e) == P
+ %6 = 1
+ @eprog

@@ -1,0 +1,16 @@
+Function: algaut
+Section: algebras
+C-Name: algaut
+Prototype: mG
+Help: algaut(al): the stored automorphism of the splitting field of the
+ cyclic algebra al.
+Doc: Given a cyclic algebra $\var{al} = (L/K,\sigma,b)$ output by
+ \tet{alginit}, returns the automorphism $\sigma$.
+ \bprog
+ ? nf = nfinit(y);
+ ? p = idealprimedec(nf,7)[1];
+ ? p2 = idealprimedec(nf,11)[1];
+ ? A = alginit(nf,[3,[[p,p2],[1/3,2/3]],[0]]);
+ ? algaut(A)
+ %5 = -1/3*x^2 + 1/3*x + 26/3
+ @eprog

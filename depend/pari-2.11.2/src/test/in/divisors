@@ -1,0 +1,21 @@
+divisorslenstra(245784, 1, 65)
+divisorslenstra(245784, 19, 65)
+divisorslenstra(288288, 1, 71)
+divisorslenstra(288288, 28, 71)
+divisorslenstra(2841696, 2, 175)
+divisorslenstra(2841696, 23, 175)
+divisorslenstra(1680,1,13)
+divisorslenstra(4,1,2) \\ #1930
+divisorslenstra(2,1,2)
+
+divisors(1)
+divisors(12)
+divisors(1, 1)
+divisors(12, 1)
+{
+for (i=1,100,
+  d = divisors(i,1);
+  for(j=1,#d, if (factorback(d[j][2])!=d[j][1],error(i))));
+}
+
+fordivfactored(100, d, print(d))

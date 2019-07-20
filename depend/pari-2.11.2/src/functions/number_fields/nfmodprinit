@@ -1,0 +1,10 @@
+Function: nfmodprinit
+Section: number_fields
+C-Name: nfmodprinit
+Prototype: GG
+Help: nfmodprinit(nf,pr): transform the prime ideal pr into modpr format
+ necessary for all operations mod pr in the number field nf.
+Doc: transforms the prime ideal \var{pr} into \tet{modpr} format necessary
+ for all operations modulo \var{pr} in the number field \var{nf}.
+ The functions \tet{nfmodpr} and \tet{nfmodprlift} allow to project
+ to and lift from the residue field.

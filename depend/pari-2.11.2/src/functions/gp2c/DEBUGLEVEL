@@ -1,0 +1,6 @@
+Function: DEBUGLEVEL
+C-Name: DEBUGLEVEL
+Prototype: v
+Class: gp2c
+Description:
+ ():small                         DEBUGLEVEL

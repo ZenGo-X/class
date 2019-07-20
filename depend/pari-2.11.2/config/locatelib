@@ -1,0 +1,35 @@
+_pb= # to detect missing .so when .so.x is found
+for dir in $pth; do
+  base=$dir/lib$lib
+  case "$osname" in
+    os2)
+      try=`ls $base.a 2> /dev/null`;;
+    *)
+      ok=`(ls $base.* | ${head}1) 2> /dev/null`
+      if test -n "$ok"; then
+        _pb="$ok"
+        # so, sl, dylib, dll.a
+        try=`ls $base.s? $base.a $base.dylib $base.dll.a 2> /dev/null`
+      else
+        try=
+      fi;;
+  esac
+  if test -n "$try"; then
+    echo ..."Found lib$lib in $dir";
+    eval $lib=$dir;
+    break
+  fi
+done
+# not found? detect missing lib*.so (missing *-devel package)
+if test -z "$try"; then
+  if test "$osname" = linux -a  -n "$_pb"; then
+    case "$lib" in
+      X11) rpmlib="[XFree86|xorg-x11|libx11]"; devlib=libx11 ;;
+      *) rpmlib=$lib; devlib=lib$lib ;;
+    esac
+    echo "###"
+    echo "### lib$lib.so not found. Maybe install $lib development files?"
+    echo "### E.g.$rpmlib-devel (RPM) or $devlib-dev (Debian) packages"
+    echo "###"
+  fi
+fi

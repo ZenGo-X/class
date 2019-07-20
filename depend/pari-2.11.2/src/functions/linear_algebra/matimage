@@ -1,0 +1,17 @@
+Function: matimage
+Section: linear_algebra
+C-Name: matimage0
+Prototype: GD0,L,
+Help: matimage(x,{flag=0}): basis of the image of the matrix x. flag is
+ optional and can be set to 0 or 1, corresponding to two different algorithms.
+Description:
+ (gen, ?0):vec           image($1)
+ (gen, 1):vec            image2($1)
+ (gen, #small)           $"incorrect flag in matimage"
+ (gen, small):vec        matimage0($1, $2)
+Doc: gives a basis for the image of the
+ matrix $x$ as columns of a matrix. A priori the matrix can have entries of
+ any type. If $\fl=0$, use standard Gauss pivot. If $\fl=1$, use
+ \kbd{matsupplement} (much slower: keep the default flag!).
+
+Variant: Also available is \fun{GEN}{image}{GEN x} ($\fl=0$).

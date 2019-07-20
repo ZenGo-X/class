@@ -1,0 +1,7 @@
+Function: nfeltdiv
+Section: number_fields
+C-Name: nfdiv
+Prototype: GGG
+Help: nfeltdiv(nf,x,y): element x/y in nf.
+Doc: given two elements $x$ and $y$ in
+ \var{nf}, computes their quotient $x/y$ in the number field $\var{nf}$.

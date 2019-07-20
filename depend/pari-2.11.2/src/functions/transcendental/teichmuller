@@ -1,0 +1,57 @@
+Function: teichmuller
+Section: transcendental
+C-Name: teichmuller
+Prototype: GDG
+Help: teichmuller(x,{tab}): teichmuller character of p-adic number x. If
+ x = [p,n], return the lifts of all teichmuller(i + O(p^n)) for
+ i = 1, ..., p-1. Such a vector can be fed back to teichmuller, as the
+ optional argument tab, to speed up later computations.
+Doc: Teichm\"uller character of the $p$-adic number $x$, i.e. the unique
+ $(p-1)$-th root of unity congruent to $x / p^{v_p(x)}$ modulo $p$.
+ If $x$ is of the form $[p,n]$, for a prime $p$ and integer $n$,
+ return the lifts to $\Z$ of the images of $i + O(p^n)$ for
+ $i = 1, \dots, p-1$, i.e. all roots of $1$ ordered  by residue class modulo
+ $p$. Such a vector can be fed back to \kbd{teichmuller}, as the
+ optional argument \kbd{tab}, to speed up later computations.
+
+ \bprog
+ ? z = teichmuller(2 + O(101^5))
+ %1 = 2 + 83*101 + 18*101^2 + 69*101^3 + 62*101^4 + O(101^5)
+ ? z^100
+ %2 = 1 + O(101^5)
+ ? T = teichmuller([101, 5]);
+ ? teichmuller(2 + O(101^5), T)
+ %4 = 2 + 83*101 + 18*101^2 + 69*101^3 + 62*101^4 + O(101^5)
+ @eprog\noindent As a rule of thumb, if more than
+ $$p \,/\, 2(\log_2(p) + \kbd{hammingweight}(p))$$
+ values of \kbd{teichmuller} are to be computed, then it is worthwile to
+ initialize:
+ \bprog
+ ? p = 101; n = 100; T = teichmuller([p,n]); \\ instantaneous
+ ? for(i=1,10^3, vector(p-1, i, teichmuller(i+O(p^n), T)))
+ time = 60 ms.
+ ? for(i=1,10^3, vector(p-1, i, teichmuller(i+O(p^n))))
+ time = 1,293 ms.
+ ? 1 + 2*(log(p)/log(2) + hammingweight(p))
+ %8 = 22.316[...]
+ @eprog\noindent Here the precompuation induces a speedup by a factor
+ $1293/ 60 \approx 21.5$.
+
+ \misctitle{Caveat}
+ If the accuracy of \kbd{tab} (the argument $n$ above) is lower than the
+ precision of $x$, the \emph{former} is used, i.e. the cached value is not
+ refined to higher accuracy. It the accuracy of \kbd{tab} is larger, then
+ the precision of $x$ is used:
+ \bprog
+ ? Tlow = teichmuller([101, 2]); \\ lower accuracy !
+ ? teichmuller(2 + O(101^5), Tlow)
+ %10 = 2 + 83*101 + O(101^5)  \\ no longer a root of 1
+
+ ? Thigh = teichmuller([101, 10]); \\ higher accuracy
+ ? teichmuller(2 + O(101^5), Thigh)
+ %12 = 2 + 83*101 + 18*101^2 + 69*101^3 + 62*101^4 + O(101^5)
+ @eprog
+Variant:
+ Also available are the functions \fun{GEN}{teich}{GEN x} (\kbd{tab} is
+ \kbd{NULL}) as well as
+ \fun{GEN}{teichmullerinit}{long p, long n}.

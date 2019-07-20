@@ -1,0 +1,20 @@
+Function: ffcompomap
+Section: number_theoretical
+C-Name: ffcompomap
+Prototype: GG
+Help: ffcompomap(f, g): Let k, l, m be three finite fields and f a (partial) map
+ from l to m and g a partial map from k to l, return the (partial) map f o g
+ from k to m.
+Doc: Let $k$, $l$, $m$ be three finite fields and $f$ a (partial) map from $l$
+ to $m$ and $g$ a (partial) map from $k$ to $l$, return the (partial) map $f
+ \circ g$ from $k$ to $m$.
+ \bprog
+ a = ffgen([3,5],'a); b = ffgen([3,10],'b); c = ffgen([3,20],'c);
+ m = ffembed(a, b); n = ffembed(b, c);
+ rm = ffinvmap(m); rn = ffinvmap(n);
+ nm = ffcompomap(n,m);
+ ffmap(n,ffmap(m,a)) == ffmap(nm, a)
+ %5 = 1
+ ffcompomap(rm, rn) == ffinvmap(nm)
+ %6 = 1
+ @eprog

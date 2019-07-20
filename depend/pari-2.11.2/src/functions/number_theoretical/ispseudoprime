@@ -1,0 +1,35 @@
+Function: ispseudoprime
+Section: number_theoretical
+C-Name: gispseudoprime
+Prototype: GD0,L,
+Help: ispseudoprime(x,{flag}): true(1) if x is a strong pseudoprime, false(0)
+ if not. If flag is 0 or omitted, use BPSW test, otherwise use strong
+ Rabin-Miller test for flag randomly chosen bases.
+Description:
+ (int,?0):bool      BPSW_psp($1)
+ (int,#small):bool  millerrabin($1,$2)
+ (int,small):bool   ispseudoprime($1, $2)
+ (gen,?small):gen   gispseudoprime($1, $2)
+Doc: true (1) if $x$ is a strong pseudo
+ prime (see below), false (0) otherwise. If this function returns false, $x$
+ is not prime; if, on the other hand it returns true, it is only highly likely
+ that $x$ is a prime number. Use \tet{isprime} (which is of course much
+ slower) to prove that $x$ is indeed prime.
+ The function accepts vector/matrices arguments, and is then applied
+ componentwise.
+
+ If $\fl = 0$, checks whether $x$ has no small prime divisors (up to $101$
+ included) and is a Baillie-Pomerance-Selfridge-Wagstaff pseudo prime.
+ Such a pseudo prime passes a Rabin-Miller test for base $2$,
+ followed by a Lucas test for the sequence $(P,1)$, where $P \geq 3$
+ is the smallest odd integer such that $P^2 - 4$ is not a square mod $x$.
+ (Technically, we are using an ``almost extra strong Lucas test'' that
+ checks whether $V_n$ is $\pm 2$, without computing $U_n$.)
+
+ There are no known composite numbers passing the above test, although it is
+ expected that infinitely many such numbers exist. In particular, all
+ composites $\leq 2^{64}$ are correctly detected (checked using
+ \url{http://www.cecm.sfu.ca/Pseudoprimes/index-2-to-64.html}).
+
+ If $\fl > 0$, checks whether $x$ is a strong Miller-Rabin pseudo prime  for
+ $\fl$ randomly chosen bases (with end-matching to catch square roots of $-1$).

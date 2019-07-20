@@ -1,0 +1,29 @@
+Function: bnfsunit
+Section: number_fields
+C-Name: bnfsunit
+Prototype: GGp
+Help: bnfsunit(bnf,S): compute the fundamental S-units of the number field
+ bnf output by bnfinit, S being a list of prime ideals. res[1] contains the
+ S-units, res[5] the S-classgroup. See manual for details.
+Doc: computes the fundamental $S$-units of the
+ number field $\var{bnf}$ (output by \kbd{bnfinit}), where $S$ is a list of
+ prime ideals (output by \kbd{idealprimedec}). The output is a vector $v$ with
+ 6 components.
+
+ $v[1]$ gives a minimal system of (integral) generators of the $S$-unit group
+ modulo the unit group.
+
+ $v[2]$ contains technical data needed by \kbd{bnfissunit}.
+
+ $v[3]$ is an empty vector (used to give the logarithmic embeddings of the
+ generators in $v[1]$ in version 2.0.16).
+
+ $v[4]$ is the $S$-regulator (this is the product of the regulator, the
+ determinant of $v[2]$ and the natural logarithms of the norms of the ideals
+ in $S$).
+
+ $v[5]$ gives the $S$-class group structure, in the usual format
+ (a row vector whose three components give in order the $S$-class number,
+ the cyclic components and the generators).
+
+ $v[6]$ is a copy of $S$.

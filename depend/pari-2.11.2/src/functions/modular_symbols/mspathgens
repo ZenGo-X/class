@@ -1,0 +1,51 @@
+Function: mspathgens
+Section: modular_symbols
+C-Name: mspathgens
+Prototype: G
+Help: mspathgens(M): M being a full modular symbol space, as given by
+ msinit, return a set of Z[G]-generators for Div^0(P^1 Q). The output
+ is [g,R], where g is a minimal system of generators and R the vector of
+ Z[G]-relations between the given generators.
+Doc: Let $\Delta:=\text{Div}^0(\P^1(\Q))$.
+ Let $M$ being a full modular symbol space, as given by \kbd{msinit},
+ return a set of $\Z[G]$-generators for $\Delta$. The output
+ is $[g,R]$, where $g$ is a minimal system of generators and $R$
+ the vector of $\Z[G]$-relations between the given generators. A
+ relation is coded by a vector of pairs $[a_i,i]$ with $a_i\in \Z[G]$
+ and $i$ the index of a generator, so that $\sum_i a_i g[i] = 0$.
+
+ An element $[v]-[u]$ in $\Delta$ is coded by the ``path'' $[u,v]$,
+ where \kbd{oo} denotes the point at infinity $(1:0)$ on the projective
+ line.
+ An element of $\Z[G]$ is either an integer $n$ ($= n [\text{id}_2]$) or a
+ ``factorization matrix'': the first column contains distinct elements $g_i$
+ of $G$ and the second integers $n_i$ and the matrix codes $\sum n_i [g_i]$:
+ \bprog
+ ? M = msinit(11,8); \\ M_8(Gamma_0(11))
+ ? [g,R] = mspathgens(M);
+ ? g
+ %3 = [[+oo, 0], [0, 1/3], [1/3, 1/2]] \\ 3 paths
+ ? #R  \\ a single relation
+ %4 = 1
+ ? r = R[1]; #r \\ ...involving all 3 generators
+ %5 = 3
+ ? r[1]
+ %6 = [[1, 1; [1, 1; 0, 1], -1], 1]
+ ? r[2]
+ %7 = [[1, 1; [7, -2; 11, -3], -1], 2]
+ ? r[3]
+ %8 = [[1, 1; [8, -3; 11, -4], -1], 3]
+ @eprog\noindent
+ The given relation is of the form $\sum_i (1-\gamma_i) g_i = 0$, with
+ $\gamma_i\in \Gamma_0(11)$. There will always be a single relation involving
+ all generators (corresponding to a round trip along all cusps), then
+ relations involving a single generator (corresponding to $2$ and $3$-torsion
+ elements in the group:
+ \bprog
+ ? M = msinit(2,8); \\ M_8(Gamma_0(2))
+ ? [g,R] = mspathgens(M);
+ ? g
+ %3 = [[+oo, 0], [0, 1]]
+ @eprog\noindent
+ Note that the output depends only on the group $G$, not on the
+ representation $V$.

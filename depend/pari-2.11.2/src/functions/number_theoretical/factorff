@@ -1,0 +1,7 @@
+Function: factorff
+Section: number_theoretical
+C-Name: factorff
+Prototype: GDGDG
+Obsolete: 2018-03-11
+Help: factorff(x,{p},{a}): obsolete, use factormod.
+Doc: obsolete, kept for backward compatibility: use factormod.

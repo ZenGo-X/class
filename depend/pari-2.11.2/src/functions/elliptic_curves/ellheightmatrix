@@ -1,0 +1,15 @@
+Function: ellheightmatrix
+Section: elliptic_curves
+C-Name: ellheightmatrix
+Prototype: GGp
+Help: ellheightmatrix(E,x): gives the height matrix for vector of points x
+ on elliptic curve E.
+Doc: $x$ being a vector of points, this
+ function outputs the Gram matrix of $x$ with respect to the N\'eron-Tate
+ height, in other words, the $(i,j)$ component of the matrix is equal to
+ \kbd{ellbil($E$,x[$i$],x[$j$])}. The rank of this matrix, at least in some
+ approximate sense, gives the rank of the set of points, and if $x$ is a
+ basis of the \idx{Mordell-Weil group} of $E$, its determinant is equal to
+ the regulator of $E$. Note our height normalization follows Cremona's
+ \emph{Algorithms for modular elliptic curves}: this matrix should be divided
+ by 2 to be in accordance with, e.g., Silverman's normalizations.

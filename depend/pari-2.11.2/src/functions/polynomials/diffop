@@ -1,0 +1,48 @@
+Function: diffop
+Section: polynomials
+C-Name: diffop0
+Prototype: GGGD1,L,
+Description:
+ (gen,gen,gen,?1):gen    diffop($1, $2, $3)
+ (gen,gen,gen,small):gen diffop0($1, $2, $3, $4)
+Help: diffop(x,v,d,{n=1}): apply the differential operator D to x, where D is defined
+ by D(v[i])=d[i], where v is a vector of variable names. D is 0 for variables
+ outside of v unless they appear as modulus of a POLMOD. If the optional parameter n
+ is given, return D^n(x) instead.
+Doc:
+ Let $v$ be a vector of variables, and $d$ a vector of the same length,
+ return the image of $x$ by the $n$-power ($1$ if n is not given) of the differential
+ operator $D$ that assumes the value \kbd{d[i]} on the variable \kbd{v[i]}.
+ The value of $D$ on a scalar type is zero, and $D$ applies componentwise to a vector
+ or matrix. When applied to a \typ{POLMOD}, if no value is provided for the variable
+ of the modulus, such value is derived using the implicit function theorem.
+
+ Some examples:
+ This function can be used to differentiate formal expressions:
+ If $E=\exp(X^2)$ then we have $E'=2*X*E$. We can derivate $X*exp(X^2)$ as follow:
+ \bprog
+ ? diffop(E*X,[X,E],[1,2*X*E])
+ %1 = (2*X^2 + 1)*E
+ @eprog
+ Let \kbd{Sin} and \kbd{Cos} be two function such that $\kbd{Sin}^2+\kbd{Cos}^2=1$
+ and $\kbd{Cos}'=-\kbd{Sin}$. We can differentiate $\kbd{Sin}/\kbd{Cos}$ as follow,
+ PARI inferring the value of $\kbd{Sin}'$ from the equation:
+ \bprog
+ ? diffop(Mod('Sin/'Cos,'Sin^2+'Cos^2-1),['Cos],[-'Sin])
+ %1 = Mod(1/Cos^2, Sin^2 + (Cos^2 - 1))
+
+ @eprog
+ Compute the Bell polynomials (both complete and partial) via the Faa di Bruno formula:
+ \bprog
+ Bell(k,n=-1)=
+ {
+   my(var(i)=eval(Str("X",i)));
+   my(x,v,dv);
+   v=vector(k,i,if(i==1,'E,var(i-1)));
+   dv=vector(k,i,if(i==1,'X*var(1)*'E,var(i)));
+   x=diffop('E,v,dv,k)/'E;
+   if(n<0,subst(x,'X,1),polcoeff(x,n,'X))
+ }
+ @eprog
+Variant:
+ For $n=1$, the function \fun{GEN}{diffop}{GEN x, GEN v, GEN d} is also available.

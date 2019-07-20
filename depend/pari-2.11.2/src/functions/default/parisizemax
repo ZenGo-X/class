@@ -1,0 +1,25 @@
+Function: _def_parisizemax
+Class: default
+Section: default
+C-Name: sd_parisizemax
+Prototype:
+Help:
+Doc: \kbd{gp}, and in fact any program using the PARI library, needs a
+ \tev{stack} in which to do its computations.  If non-zero,  \tet{parisizemax}
+ is the maximum size the stack can grow to, in bytes.  If zero, the stack will
+ not automatically grow, and will be limited to the value of \kbd{parisize}.
+
+ When \kbd{parisizemax} is set, PARI tries to fit its
+ computations within about \kbd{parisize} bytes, but will increase the stack
+ size if needed, roughly doubling it each time (up to \kbd{parisizemax}
+ of course!) and printing a message such as \kbd{Warning: increasing stack size to}
+ \var{some value}. Once the memory intensive computation is over, PARI
+ will restore the stack size to the originally requested \kbd{parisize}
+ without printing further messages.
+
+ We \emph{strongly} recommend to set \tet{parisizemax} permanently to a large
+ non-zero value in your \tet{gprc}, about what you believe your machine can
+ stand. It is possible to increase or decrease \kbd{parisizemax} inside a
+ running \kbd{gp} session, just use \kbd{default} as usual.
+
+ The default value is $0$, for backward compatibility reasons.

@@ -1,0 +1,29 @@
+Function: algsplittingfield
+Section: algebras
+C-Name: algsplittingfield
+Prototype: mG
+Help: algsplittingfield(al): the stored splitting field of the central simple
+ algebra al.
+Doc: Given a central simple algebra \var{al} output by \tet{alginit}, returns
+ an \kbd{rnf} structure: the splitting field of \var{al} that is stored in
+ \var{al}, as a relative extension of the center.
+ \bprog
+ nf = nfinit(y^3-5);
+ a = y; b = y^2;
+ {m_i = [0,a,0,0;
+        1,0,0,0;
+        0,0,0,a;
+        0,0,1,0];}
+ {m_j = [0, 0,b, 0;
+        0, 0,0,-b;
+        1, 0,0, 0;
+        0,-1,0, 0];}
+ {m_k = [0, 0,0,-a*b;
+        0, 0,b,   0;
+        0,-a,0,   0;
+        1, 0,0,   0];}
+ mt = [matid(4), m_i, m_j, m_k];
+ A = alginit(nf,mt,'x);
+ algsplittingfield(A).pol
+ %8 = x^2 - y
+ @eprog

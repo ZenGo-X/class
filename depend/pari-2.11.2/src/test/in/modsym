@@ -1,0 +1,274 @@
+allocatemem(40*10^6)
+W2 = msinit(11,2,-1);
+W1 = msinit(11,2,1);
+W = msinit(11,2);
+msdim(W1)
+msdim(W2)
+msdim(W)
+msgetsign(W2)
+msgetsign(W1)
+msgetsign(W)
+msgetlevel(W)
+msgetweight(W)
+mshecke(W2, 2)
+mshecke(W1, 2)
+mshecke(W, 2)
+mshecke(W1, 11)
+
+M=msinit(1,12);
+msgetlevel(M)
+msgetweight(M)
+msgetsign(M)
+msatkinlehner(M,1)
+mscuspidal(M)
+msdim(M)
+mseisenstein(M)
+D = [0,1,0]~ \\ Delta
+mseval(M,D)
+mseval(M,D,[0,oo])
+msfromcusp(M,0)
+msfromhecke(M, [[2,-24]])
+mshecke(M,2)
+msissymbol(M,D)
+mslattice(M)
+msnew(M)
+mspathgens(M)
+mspathlog(M,[1/2,1/3])
+mspetersson(M,D)
+mspolygon(M)
+msqexpansion(M,D)
+msstar(M)
+M=msinit(1,32,1);
+mssplit(M)
+
+E = ellinit([1,2]);
+[W,xpm] = msfromell(E);
+mseval(W,xpm[1],[1/2,1/3])
+mseval(W,xpm[1],[1,1;2,3])
+mseval(W,xpm[1],[1]) \\ BUG
+E = ellinit([0,-1,1,-10,-20]);
+[W,xpm] = msfromell(E,1);
+mseval(W,xpm,[1/2,1/3])
+E=ellinit([1,-1,1,-1,-14]);
+[W,xpm] = msfromell(E,1);
+mseval(W,xpm)
+mseval(W,xpm,[0,1/3])
+
+check_twist(e) = msfromell(ellinit(e))[2];
+check_twist([0,1]) \\36a1
+check_twist([0,-1,1,-7,10]) \\121b1
+check_twist([1,-1,0,0,-5]) \\45a1
+check_twist([0,0,1,-3,-5]) \\99d1
+check_twist([0,0,1,0,-7])  \\27a1
+\\17a1-4
+vE=[[1,-1,1,-1,-14],[1,-1,1,-6,-4],[1,-1,1,-91,-310],[1,-1,1,-1,0]];
+msfromell([ellinit(e)|e<-vE])[2]
+
+W = msinit(227,2,1);
+Wnew = msnew(W);
+mssplit(W, Wnew)
+#mssplit(W, Wnew, 1)
+#mssplit(W, Wnew, 2)
+#mssplit(W, Wnew, 3)
+
+W=msinit(12,2,1); mssplit(W)
+
+W = msinit(11,6,1);
+mssplit(W)
+
+W = msinit(1000,2,1);
+matsize( msnew(W)[1] )
+W = msinit(2, 4);
+charpoly(mshecke(W, 2))
+
+W = msinit(3, 6);
+charpoly(mshecke(W, 2))
+
+W = msinit(4, 4);
+charpoly(mshecke(W, 3))
+
+W = msinit(11, 4);
+charpoly(mshecke(W, 2))
+
+W = msinit(2, 8);
+charpoly(mshecke(W, 2))
+[g,R]=mspathgens(W)
+mspathlog(W,g[1])
+mspathlog(W,g[2])
+mspathlog(W,[1/3,1/2])
+mseval(W,[0,0])
+s=msnew(W)[1][,1];
+mseval(W,s)
+mseval(W,s,[0,0])
+mseval(W,[;],[1/3,1/2])
+mseval(W,Mat([s,s]),[1/3,1/2])
+mseval(W,s,g[1])
+mseval(W,s,g[2])
+
+W = msinit(11, 2);
+T = mshecke(W, 3);
+[S,E] = mscuspidal(W, 1)
+msdim(S)
+msdim(E)
+E == mseisenstein(W)
+S == mscuspidal(W)
+msfromcusp(W,1)
+msfromcusp(W,oo)
+msfromcusp(W,1/2)
+msfromhecke(W, [[2,-2],[3,-1]])
+
+W = msinit(23,2, 1);
+V = mssplit(W);
+msqexpansion(W, V[1], 30)
+msqexpansion(W, V[1])
+
+M=msinit(603,2,1);;V=mssplit(M,,1);
+Set([v|v<-vector(#V,i,msqexpansion(M,V[i]))])
+
+W = msinit(6,4);
+m=msatkinlehner(W,1)
+matdet(m)
+m=msatkinlehner(W,2)
+matdet(m)
+m=msatkinlehner(W,3)
+matdet(m)
+m=msatkinlehner(W,6)
+matdet(m)
+msatkinlehner(W,4)
+msstar(W)
+
+N = msnew(W)[1];
+s = N[,1];
+msissymbol(W,s)
+msissymbol(W,N)
+S = mseval(W,s);
+msissymbol(W,S)
+T=S; T[3]++;
+msissymbol(W,T)
+
+M = msinit(7,8, 1);
+N = msnew(M)[1];
+s = N[,1];
+S = mseval(M,s);
+mseval(M,N)
+msissymbol(M, S)
+
+W=msinit(17,2);
+G=mspathgens(W)[1];
+vector(#G,i,mspathlog(W,G[i]))
+
+W=msinit(96,6,1);
+matsize(msnew(W)[1]) \\ used to be too slow
+
+check(N,k)=
+{
+  M=msinit(N,k,1);
+  S=mssplit(M);
+  for(i=1, #S,
+    f = msqexpansion(M,S[i],2)[1];
+    mod = if(type(f)=="t_INT", x, f.mod);
+    if(polsturm(mod)!=poldegree(mod), error([N,k,i],":",f,": not real"));
+    print(poldegree(mod));
+  );
+}
+check(49,4)
+check(49,6)
+check(64,4)
+check(64,6)
+
+M=msinit(14,2,1);
+S=mscuspidal(M);
+mshecke(M,2)
+mshecke(M,2,S)
+
+M = msinit(23,4);
+S = msfromhecke(M, [[5, x^4-14*x^3-244*x^2+4832*x-19904]]);
+charpoly(mshecke(M,5,S))
+
+[M,xpm] = msfromell(ellinit([0,-1,1,-10,-20]));
+mspetersson(M, xpm[1],xpm[2])
+
+[M,xpm] = msfromell(ellinit([1,1,0,-9825,-412250])); \\1225e1, #1906
+[content(xpm[1]), content(xpm[2])]
+
+M = msinit(11,4); n = msdim(M); A = matid(n);
+T=matrix(n,n,i,j,mspetersson(M,A[,i],A[,j]))
+mspetersson(M, A, A) == T
+mspetersson(M, A) == T
+mspetersson(M) == T
+
+M = msinit(12,4); n = msdim(M); A = matid(n);
+T=matrix(n,n,i,j,mspetersson(M,A[,i],A[,j]))
+mspetersson(M, A, A) == T
+mspetersson(M, A) == T
+mspetersson(M) == T
+
+M = msinit(11,4,1); mspetersson(M)
+M = msinit(11,4,-1); mspetersson(M)
+M = msinit(17,4); mspetersson(M)
+M = msinit(19,4); mspetersson(M)
+M = msinit(13,4); mspetersson(M)
+
+\\ mspadic from now on
+
+ellpadicmoments(e,p,n, D=1) =
+{
+  e = ellinit(e);
+  my(Wp, [M,xpm]=msfromell(e,sign(D)));
+  Wp = mspadicinit(M, p, n);
+  mspadicmoments(Wp, xpm, D)
+};
+msseries(e,p,n,i=0,D=1)={
+  my(M = ellpadicmoments(e,p,n,D));
+  mspadicseries(M,i)
+};
+
+/* good ordinary */
+M=ellpadicmoments([0,1,1,0,0],3,4) \\ 43a1
+mspadicseries(M)
+mspadicseries(M,1)
+M=ellpadicmoments([0,1,1,-9,-15],7,2) \\ 19a1
+mspadicseries(M)
+mspadicL(M,0)
+
+/* supersingular */
+M=ellpadicmoments([1,-1,1,-1,-14],3,5) \\ 17a1
+mspadicseries(M)
+mspadicseries(M,1)
+ellpadicmoments([1,-1,0,4,-3],3,5) \\ 73a1
+ellpadicmoments([1,-1,1,0,0],3,5) \\ 53a1 ,a_3=-3 rank 1
+ellpadicmoments([1,-1,1,-3,3],3,5) \\ 26b1 ,a_3=-3 rank 0
+
+E11a1=[0,-1,1,-10,-20];
+E15a1=[1,1,1,-10,-10];
+E17a1=[1,-1,1,-1,-14];
+E43a1=[0,1,1,0,0];
+E389a1=[0,1,1,-2,0];
+msseries(E11a1,3,1)
+msseries(E11a1,3,5)
+msseries(E11a1,3,5,1) \\ 1-teich component -> 0
+msseries(E11a1,3,5,2) \\ 2-teich component
+msseries(E15a1,11,7,7) \\ 2 real connected comp.
+msseries(E389a1,3,3) \\ 2 real connected comp.
+msseries(E11a1,11,7) \\ split -> trivial zero
+msseries(E43a1,3,4,0,-19) \\ twist
+msseries(E17a1,3,5) \\ supersingular
+
+M=msinit(3,6,-1); xpm=[-1]~;
+Wp = mspadicinit(M,5,10);
+oms = mspadicmoments(Wp, xpm, 1);
+vector(6,j,mspadicL(oms,j-1))
+
+testweil(E)=
+{ my([e,s]=ellweilcurve(ellinit(E)));
+  for(i=1,#e, print(e[i][1..5], ": ",s[i]));
+}
+testweil([1,-1,1,-2,0])
+testweil([1,-1,1,-96608,-11533373])
+testweil([1,0,1,4,-6])
+E=ellinit([1,0,1,4,-6]); [e,s]=ellweilcurve(E,&ms);
+s
+msdim(ms[1])
+ms[2]
+ellweilcurve(ellisomat(E)) == [e,s]
+ellweilcurve(ellisomat(E,,1)) == [e,s]

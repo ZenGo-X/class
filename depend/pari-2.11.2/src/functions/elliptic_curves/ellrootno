@@ -1,0 +1,17 @@
+Function: ellrootno
+Section: elliptic_curves
+C-Name: ellrootno
+Prototype: lGDG
+Help: ellrootno(E,{p}): root number for the L-function of the elliptic
+ curve E/Q at a prime p (including 0, for the infinite place); global root
+ number if p is omitted. If p is omitted, the curve can also be defined over
+ a number field.
+Doc: $E$ being an \kbd{ell} structure over $\Q$ as output by \kbd{ellinit},
+ this function computes the local root number of its $L$-series at the place
+ $p$ (at the infinite place if $p = 0$). If $p$ is omitted, return the global
+ root number and in this case the curve can also be defined over a number field.
+
+ Note that the global root number is the sign of the functional
+ equation and conjecturally is the parity of the rank of the
+ \idx{Mordell-Weil group}. The equation for $E$ needs not be minimal at $p$,
+ but if the model is already minimal the function will run faster.

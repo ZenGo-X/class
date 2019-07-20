@@ -1,0 +1,30 @@
+Function: bnrdisc
+Section: number_fields
+C-Name: bnrdisc0
+Prototype: GDGDGD0,L,
+Help: bnrdisc(A,{B},{C},{flag=0}): absolute or relative [N,R1,discf] of
+ the field defined by A,B,C. [A,{B},{C}] is of type [bnr],
+ [bnr,subgroup], [bnf, modulus] or [bnf,modulus,subgroup], where bnf is as
+ output by bnfinit, bnr by bnrinit, and
+ subgroup is the HNF matrix of a subgroup of the corresponding ray class
+ group (if omitted, the trivial subgroup). flag is optional whose binary
+ digits mean 1: give relative data; 2: return 0 if modulus is not the
+ conductor.
+Doc: $A$, $B$, $C$ defining a class field $L$ over a ground field $K$
+ (of type \kbd{[\var{bnr}]},
+ \kbd{[\var{bnr}, \var{subgroup}]},
+ \kbd{[\var{bnr}, \var{character}]},
+ \kbd{[\var{bnf}, \var{modulus}]} or
+ \kbd{[\var{bnf}, \var{modulus}, \var{subgroup}]},
+ \secref{se:CFT}), outputs data $[N,r_1,D]$ giving the discriminant and
+ signature of $L$, depending on the binary digits of \fl:
+
+ \item 1: if this bit is unset, output absolute data related to $L/\Q$:
+ $N$ is the absolute degree $[L:\Q]$, $r_1$ the number of real places of $L$,
+ and $D$ the discriminant of $L/\Q$. Otherwise, output relative data for $L/K$:
+ $N$ is the relative degree $[L:K]$, $r_1$ is the number of real places of $K$
+ unramified in $L$ (so that the number of real places of $L$ is equal to $r_1$
+ times $N$), and $D$ is the relative discriminant ideal of $L/K$.
+
+ \item 2: if this bit is set and if the modulus is not the conductor of $L$,
+ only return 0.

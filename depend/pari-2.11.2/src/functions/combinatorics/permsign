@@ -1,0 +1,13 @@
+Function: permsign
+Section: combinatorics
+C-Name: permsign
+Prototype: lG
+Help: permsign(x): signature of the permutation x.
+Doc: given a permutation $x$ on $n$ elements, return its signature.
+ \bprog
+ ? p = Vecsmall([3,1,4,2,5]);
+ ? permsign(p)
+ %2 = -1
+ ? permsign(p^2)
+ %3 = 1
+ @eprog

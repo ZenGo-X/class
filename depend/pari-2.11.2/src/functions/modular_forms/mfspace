@@ -1,0 +1,30 @@
+Function: mfspace
+Section: modular_forms
+C-Name: mfspace
+Prototype: lGDG
+Help: mfspace(mf,{f}): identify the modular space mf, resp. the modular form f
+ in mf. Returns 0 (newspace), 1 (cuspidal space), 2 (old space),
+ 3 (Eisenstein space) or 4 (full space). Return -1 when the form does not
+ belong to the space.
+Doc: identify the modular space \var{mf}, resp.~the modular form $f$ in
+ \var{mf} if present, as the flag given to \kbd{mfinit}.
+ Returns 0 (newspace), 1 (cuspidal space), 2 (old space),
+ 3 (Eisenstein space) or 4 (full space).
+ \bprog
+ ? mf = mfinit([1,12],1); mfspace(mf)
+ %1 = 1
+ ? mfspace(mf, mfDelta())
+ %2 = 0 \\ new space
+ @eprog\noindent This function returns $-1$ when the form $f$ is modular
+ but does not belong to the space.
+ \bprog
+ ? mf = mfinit([1,2]; mfspace(mf, mfEk(2))
+ %3 = -1
+ @eprog When $f$ is not modular and is for instance only quasi-modular, the
+ function returns nonsense:
+ \bprog
+ ? M6 = mfinit([1,6]);
+ ? dE4 = mfderiv(mfEk(4)); \\ not modular !
+ ? mfspace(M6,dE4)  \\ asserts (wrongly) that E4' belongs to new space
+ %3 = 0
+ @eprog

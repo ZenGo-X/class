@@ -1,0 +1,21 @@
+Function: ffmap
+Section: number_theoretical
+C-Name: ffmap
+Prototype: GG
+Help: ffmap(m, x): given a (partial) map m between two finite fields,
+ return the image of x by m. The function is applied recursively to the
+ component of vectors, matrices and polynomials. If m is a partial map that
+ is not defined at x, return []
+Doc: given a (partial) map $m$ between two finite fields, return the image of
+ $x$ by $m$. The function is applied recursively to the component of vectors,
+ matrices and polynomials. If $m$ is a partial map that is not defined at $x$,
+ return $[]$.
+ \bprog
+ ? a = ffgen([3,5],'a);
+ ? b = ffgen([3,10],'b);
+ ? m = ffembed(a, b);
+ ? P = x^2+a*x+1;
+ ? Q = ffmap(m,P);
+ ? ffmap(m,poldisc(P)) == poldisc(Q)
+ %6 = 1
+ @eprog

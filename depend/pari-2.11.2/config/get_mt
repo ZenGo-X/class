@@ -1,0 +1,31 @@
+file=$thread_engine.c
+MT_LIBS=
+case $thread_engine in
+single);;
+pthread)
+  MT_LIBS="-lpthread"
+  cmd="$CC $CFLAGS $extraflag -o $exe $file $MT_LIBS"
+  . log_cmd
+  if test -r $exe; then
+    . cleanup_exe
+    enable_tls="yes"
+  else
+    echo "### --mt=pthread requires the library pthread"
+    echo "### Please install it"
+    thread_engine=single;
+  fi;;
+mpi)
+  cmd="$CC $CFLAGS $extraflag -o $exe $file"
+  . log_cmd
+  if test -r $exe; then
+    . cleanup_exe
+  else
+    echo "### --mt=mpi requires to use mpicc"
+    echo "### Please use 'env CC=mpicc ./Configure --mt=mpi'"
+    exit 1;
+  fi;;
+*) echo "### invalid mt engine $thread_engine"
+   thread_engine=single;;
+esac
+
+echo "Using mt engine $thread_engine"

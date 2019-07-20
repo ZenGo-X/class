@@ -1,0 +1,49 @@
+Function: variable
+Section: conversions
+C-Name: gpolvar
+Prototype: DG
+Help: variable({x}): main variable of object x. Gives p for p-adic x, 0
+ if no variable can be attached to x. Returns the list of user variables if
+ x is omitted.
+Description:
+ (pol):var:parens:copy        $var:1
+ (gen):gen        gpolvar($1)
+Doc:
+ gives the main variable of the object $x$ (the variable with the highest
+ priority used in $x$), and $p$ if $x$ is a $p$-adic number. Return $0$ if
+ $x$ has no variable attached to it.
+ \bprog
+ ? variable(x^2 + y)
+ %1 = x
+ ? variable(1 + O(5^2))
+ %2 = 5
+ ? variable([x,y,z,t])
+ %3 = x
+ ? variable(1)
+ %4 = 0
+ @eprog\noindent The construction
+ \bprog
+    if (!variable(x),...)
+ @eprog\noindent can be used to test whether a variable is attached to $x$.
+
+ If $x$ is omitted, returns the list of user variables known to the
+ interpreter, by order of decreasing priority. (Highest priority is initially
+ $x$, which come first until \tet{varhigher} is used.) If \kbd{varhigher}
+ or \kbd{varlower} are used, it is quite possible to end up with different
+ variables (with different priorities) printed in the same way: they
+ will then appear multiple times in the output:
+ \bprog
+ ? varhigher("y");
+ ? varlower("y");
+ ? variable()
+ %4 = [y, x, y]
+ @eprog\noindent Using \kbd{v = variable()} then \kbd{v[1]}, \kbd{v[2]},
+ etc.~allows to recover and use existing variables.
+
+Variant: However, in library mode, this function should not be used for $x$
+ non-\kbd{NULL}, since \tet{gvar} is more appropriate. Instead, for
+ $x$ a $p$-adic (type \typ{PADIC}), $p$ is $gel(x,2)$; otherwise, use
+ \fun{long}{gvar}{GEN x} which returns the variable number of $x$ if
+ it exists, \kbd{NO\_VARIABLE} otherwise, which satisfies the property
+ $\kbd{varncmp}(\kbd{NO\_VARIABLE}, v) > 0$ for all valid variable number
+ $v$, i.e. it has lower priority than any variable.

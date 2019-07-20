@@ -1,0 +1,82 @@
+G=[15,5]; chi=[1,1];
+charker(G,chi)
+charconj(G,chi)
+charorder(G,chi)
+
+G=znstar(100,1); a=[1,0];
+A=znconreylog(G,a);
+m=znconreyexp(G,a);
+charker(G,a)
+charker(G,A)
+charker(G,m)
+charpow(G,a,0)
+charpow(G,A,0)
+charpow(G,m,0)
+charpow(G,a,-2)
+charpow(G,A,-2)
+charpow(G,m,-2)
+charpow(G,a,3)
+charpow(G,A,3)
+charpow(G,m,3)
+charconj(G,a)
+charconj(G,A)
+charconj(G,m)
+charorder(G,a)
+charorder(G,A)
+charorder(G,m)
+b=[12,1];
+B=znconreylog(G,b);
+n=znconreyexp(G,b);
+charmul(G,n,m)
+charmul(G,a,b)
+charmul(G,A,B)
+charmul(G,a,B)
+charmul(G,a,n)
+charmul(G,m,B)
+
+chardiv(G,n,m)
+chardiv(G,a,b)
+chardiv(G,A,B)
+chardiv(G,a,B)
+chardiv(G,a,n)
+chardiv(G,m,B)
+
+test(G)=
+{
+  my(N = G.mod,D);
+  print("* ",N);
+  for(i=1,N,
+    if(gcd(N,i)!=1,next);
+    D = znchartokronecker(G,i);if (!D,next);
+    D0 = znchartokronecker(G,i,1);
+    print(i,": ",[D,D0]); chi = znconreylog(G,i);
+    if (vector(N,j,kronecker(D,j)) != vector(N,j,chareval(G,chi,j,[-1,2])),
+      error(D))
+  );
+}
+test(G)
+test(znstar(8,1))
+test(znstar(5,1))
+test(znstar(1,1))
+
+test(D) =
+{ my([G,cyc]=znchar(D), C = znconreylog(G,cyc));
+ [cyc, C, znconreyexp(G,C), charorder(G,cyc)];
+}
+test(1)
+test(5)
+test(Mod(1,5))
+test(Mod(3,5))
+G = znstar(100,1);
+test([G,13])
+test([G,[0,19]~])
+test([G,[2, [1,1]]])
+
+\\ Errors
+znchar(0)
+znchar(2)
+znchar(3)
+znchar([]~)
+znchar([1,2,3])
+znchar([1,2])
+znchar([znstar(100,1), [1,2,3]])

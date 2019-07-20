@@ -1,0 +1,18 @@
+[package]
+name = "class_group"
+version = "0.1.0"
+authors = ["omershlo <omer.shlomovits@gmail.com>"]
+edition = "2018"
+links = "libpari"
+build = "build.rs"
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[build-dependencies]
+bindgen = "0.50"
+
+[dependencies]
+libc = "0.2.0"
+paillier = { git = "https://github.com/KZen-networks/rust-paillier"}
+
+[dependencies.curv]
+git = "https://github.com/KZen-networks/curv"
+

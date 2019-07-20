@@ -1,0 +1,24 @@
+Function: ellheegner
+Section: elliptic_curves
+C-Name: ellheegner
+Prototype: G
+Help: ellheegner(E): return a rational non-torsion point on the elliptic curve E
+ assumed to be of rank 1.
+Doc: Let $E$ be an elliptic curve over the rationals, assumed to be of
+ (analytic) rank $1$. This returns a non-torsion rational point on the curve,
+ whose canonical height is equal to the product of the elliptic regulator by the
+ analytic Sha.
+
+ This uses the Heegner point method, described in Cohen GTM 239; the complexity
+ is proportional to the product of the square root of the conductor and the
+ height of the point (thus, it is preferable to apply it to strong Weil curves).
+ \bprog
+ ? E = ellinit([-157^2,0]);
+ ? u = ellheegner(E); print(u[1], "\n", u[2])
+ 69648970982596494254458225/166136231668185267540804
+ 538962435089604615078004307258785218335/67716816556077455999228495435742408
+ ? ellheegner(ellinit([0,1]))         \\ E has rank 0 !
+  ***   at top-level: ellheegner(E=ellinit
+  ***                 ^--------------------
+  *** ellheegner: The curve has even analytic rank.
+ @eprog

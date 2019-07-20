@@ -1,0 +1,21 @@
+Function: conjvec
+Section: conversions
+C-Name: conjvec
+Prototype: Gp
+Help: conjvec(z): conjugate vector of the algebraic number z.
+Doc:
+ conjugate vector representation of $z$. If $z$ is a
+ polmod, equal to \kbd{Mod}$(a,T)$, this gives a vector of length
+ $\text{degree}(T)$ containing:
+
+ \item the complex embeddings of $z$ if $T$ has rational coefficients,
+ i.e.~the $a(r[i])$ where $r = \kbd{polroots}(T)$;
+
+ \item the conjugates of $z$ if $T$ has some intmod coefficients;
+
+ \noindent if $z$ is a finite field element, the result is the vector of
+ conjugates $[z,z^p,z^{p^2},\ldots,z^{p^{n-1}}]$ where $n=\text{degree}(T)$.
+
+ \noindent If $z$ is an integer or a rational number, the result is~$z$. If
+ $z$ is a (row or column) vector, the result is a matrix whose columns are
+ the conjugate vectors of the individual elements of $z$.

@@ -1,0 +1,40 @@
+Function: bitprecision
+Section: conversions
+C-Name: bitprecision0
+Prototype: GD0,L,
+Help: bitprecision(x,{n}): if n is present and positive, return x at precision
+ n bits. If n is omitted, return real precision of object x in bits.
+
+Doc: the function behaves differently according to whether $n$ is
+ present and positive or not. If $n$ is missing, the function returns the
+ (floating point) precision in bits of the PARI object $x$. If $x$ is an
+ exact object, the function returns \kbd{+oo}.
+ \bprog
+ ? bitprecision(exp(1e-100))
+ %1 = 512                 \\ 512 bits
+ ? bitprecision( [ exp(1e-100), 0.5 ] )
+ %2 = 128                 \\ minimal accuracy among components
+ ? bitprecision(2 + x)
+ %3 = +oo                  \\ exact object
+ @eprog
+
+ If $n$ is present and positive, the function creates a new object equal to $x$
+ with the new bit-precision roughly $n$. In fact, the smallest multiple of 64
+ (resp.~32 on a 32-bit machine) larger than or equal to $n$.
+
+ For $x$ a vector or a matrix, the operation is
+ done componentwise; for series and polynomials, the operation is done
+ coefficientwise. For real $x$, $n$ is the number of desired significant
+ \emph{bits}. If $n$ is smaller than the precision of $x$, $x$ is truncated,
+ otherwise $x$ is extended with zeros. For exact or non-floating point types,
+ no change.
+ \bprog
+ ? bitprecision(Pi, 10)    \\ actually 64 bits ~ 19 decimal digits
+ %1 = 3.141592653589793239
+ ? bitprecision(1, 10)
+ %2 = 1
+ ? bitprecision(1 + O(x), 10)
+ %3 = 1 + O(x)
+ ? bitprecision(2 + O(3^5), 10)
+ %4 = 2 + O(3^5)
+ @eprog\noindent

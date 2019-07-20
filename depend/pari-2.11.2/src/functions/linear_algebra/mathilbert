@@ -1,0 +1,8 @@
+Function: mathilbert
+Section: linear_algebra
+C-Name: mathilbert
+Prototype: L
+Help: mathilbert(n): Hilbert matrix of order n.
+Doc: $x$ being a \kbd{long}, creates the
+ \idx{Hilbert matrix}of order $x$, i.e.~the matrix whose coefficient
+ ($i$,$j$) is $1/ (i+j-1)$.

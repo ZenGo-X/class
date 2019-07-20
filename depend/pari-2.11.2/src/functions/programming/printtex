@@ -1,0 +1,21 @@
+Function: printtex
+Section: programming/specific
+C-Name: printtex
+Prototype: vs*
+Help: printtex({str}*): outputs its string arguments in TeX format.
+Doc: outputs its arguments in \TeX\ format. This output can then be
+ used in a \TeX\ manuscript. The arguments are converted to strings following
+ the rules in \secref{se:strings}.
+ The printing is done on the standard output. If you want to print it to a
+ file you should use \kbd{writetex} (see there).
+
+ Another possibility is to enable the \tet{log} default
+ (see~\secref{se:defaults}).
+ You could for instance do:\sidx{logfile}
+ %
+ \bprog
+ default(logfile, "new.tex");
+ default(log, 1);
+ printtex(result);
+ @eprog
+ %\syn{NO}

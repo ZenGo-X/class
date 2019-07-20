@@ -1,0 +1,7 @@
+Function: _.orders
+Help: _.orders
+Section: member_functions
+C-Name: member_orders
+Prototype: mG
+Description:
+ (gal):vecsmall:copy   gal_get_orders($1)

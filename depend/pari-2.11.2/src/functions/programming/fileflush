@@ -1,0 +1,26 @@
+Function: fileflush
+Section: programming/specific
+C-Name: gp_fileflush0
+Prototype: vDG
+Help: fileflush({n}): flush the file descriptor n (all descriptors to output
+ streams if n is omitted).
+Doc: flushes the file descriptor $n$, created via \kbd{fileopen} or
+ \kbd{fileextern}. On files opened for writing, this function forces a write
+ of all buffered data to the file system and completes all pending write
+ operations. This function is implicitly called by \kbd{fileclose} but you may
+ want to call it explicitly at synchronization points, for instance after
+ writing a large result to file and before printing diagnostics on screen.
+ (In order to be sure that the file contains the expected content on
+ inspection.)
+
+ If $n$ is omitted, flush all descriptors to output streams.
+
+ \bprog
+ ? n = fileopen("./here", "w");
+ ? for (i = 1, 10^5,      \
+     filewrite(n, i^2+1); \
+     if (i % 10000 == 0, fileflush(n)))
+ @eprog Until a \kbd{fileflush} or \kbd{fileclose}, there is no guarantee
+ that the file contains all the expected data from previous \kbd{filewrite}s.
+Variant: But the direct and more specific variant
+ \fun{void}{gp_fileflush}{long n} is also available.

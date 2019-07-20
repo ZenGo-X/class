@@ -1,0 +1,60 @@
+Function: algdep
+Section: linear_algebra
+C-Name: algdep0
+Prototype: GLD0,L,
+Help: algdep(z,k,{flag=0}): algebraic relations up to degree n of z, using
+ lindep([1,z,...,z^(k-1)], flag).
+Doc: \sidx{algebraic dependence}
+ $z$ being real/complex, or $p$-adic, finds a polynomial (in the variable
+ \kbd{'x}) of degree at most
+ $k$, with integer coefficients, having $z$ as approximate root. Note that the
+ polynomial which is obtained is not necessarily the ``correct'' one. In fact
+ it is not even guaranteed to be irreducible. One can check the closeness
+ either by a polynomial evaluation (use \tet{subst}), or by computing the
+ roots of the polynomial given by \kbd{algdep} (use \tet{polroots} or
+ \tet{polrootspadic}).
+
+ Internally, \tet{lindep}$([1,z,\ldots,z^k], \fl)$ is used. A non-zero value of
+ $\fl$ may improve on the default behavior if the input number is known to a
+ \emph{huge} accuracy, and you suspect the last bits are incorrect: if $\fl > 0$
+ the computation is done with an accuracy of $\fl$ decimal  digits; to get
+ meaningful results,  the parameter $\fl$ should be smaller than the number of
+ correct decimal digits in the input.
+ But default values are usually sufficient, so try without $\fl$ first:
+ \bprog
+ ? \p200
+ ? z = 2^(1/6)+3^(1/5);
+ ? algdep(z, 30);      \\ right in 280ms
+ ? algdep(z, 30, 100); \\ wrong in 169ms
+ ? algdep(z, 30, 170); \\ right in 288ms
+ ? algdep(z, 30, 200); \\ wrong in 320ms
+ ? \p250
+ ? z = 2^(1/6)+3^(1/5); \\ recompute to new, higher, accuracy !
+ ? algdep(z, 30);      \\ right in 329ms
+ ? algdep(z, 30, 200); \\ right in 324ms
+ ? \p500
+ ? algdep(2^(1/6)+3^(1/5), 30); \\ right in 677ms
+ ? \p1000
+ ? algdep(2^(1/6)+3^(1/5), 30); \\ right in 1.5s
+ @eprog\noindent
+ The changes in \kbd{realprecision} only affect the quality of the
+ initial approximation to $2^{1/6} + 3^{1/5}$, \kbd{algdep} itself uses
+ exact operations. The size of its operands depend on the accuracy of the
+ input of course: more accurate input means slower operations.
+
+ Proceeding by increments of 5 digits of accuracy, \kbd{algdep} with default
+ flag produces its first correct result at 195 digits, and from then on a
+ steady stream of correct results:
+ \bprog
+   \\ assume T contains the correct result, for comparison
+   forstep(d=100, 250, 5, localprec(d);\
+     print(d, " ", algdep(2^(1/6)+3^(1/5),30) == T))
+ @eprog
+
+ The above example is the test case studied in a 2000 paper by Borwein and
+ Lisonek: Applications of integer relation algorithms, \emph{Discrete Math.},
+ {\bf 217}, p.~65--82. The version of PARI tested there was 1.39, which
+ succeeded reliably from precision 265 on, in about 200 as much time as the
+ current version.
+
+Variant: Also available is \fun{GEN}{algdep}{GEN z, long k} ($\fl=0$).

@@ -1,0 +1,33 @@
+Function: whatnow
+Class: gp
+Section: programming/specific
+C-Name: whatnow0
+Prototype: vr
+Help: whatnow(key): if key was present in GP version 1.39.15, gives
+ the new function name.
+Description:
+ (str):void             whatnow($1, 0)
+Doc: if keyword \var{key} is the name of a function that was present in GP
+ version 1.39.15, outputs the new function name and syntax, if it
+ changed at all. Functions that where introduced since then, then modified
+ are also recognized.
+ \bprog
+ ? whatnow("mu")
+ New syntax: mu(n) ===> moebius(n)
+
+ moebius(x): Moebius function of x.
+
+ ? whatnow("sin")
+ This function did not change
+ @eprog When a function was removed and the underlying functionality
+ is not available under a compatible interface, no equivalent is mentioned:
+ \bprog
+ ? whatnow("buchfu")
+ This function no longer exists
+ @eprog\noindent (The closest equivalent would be to set \kbd{K = bnfinit(T)}
+ then access \kbd{K.fu}.)
+
+
+
+
+

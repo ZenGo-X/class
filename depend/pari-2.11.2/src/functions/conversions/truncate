@@ -1,0 +1,36 @@
+Function: truncate
+Section: conversions
+C-Name: trunc0
+Prototype: GD&
+Help: truncate(x,{&e}): truncation of x; when x is a power series,take away
+ the O(X^). If e is present, do not take into account loss of integer part
+ precision, and set e = error estimate in bits.
+Description:
+ (small):small:parens   $1
+ (int):int:copy:parens  $1
+ (real):int             truncr($1)
+ (mp):int               mptrunc($1)
+ (mp, &small):int       gcvtoi($1, &$2)
+ (mp, &int):int         trunc0($1, &$2)
+ (gen):gen              gtrunc($1)
+ (gen, &small):gen      gcvtoi($1, &$2)
+ (gen, &int):gen        trunc0($1, &$2)
+Doc: truncates $x$ and sets $e$ to the number of
+ error bits. When $x$ is in $\R$, this means that the part after the decimal
+ point is chopped away, $e$ is the binary exponent of the difference between
+ the original and the truncated value (the ``fractional part''). If the
+ exponent of $x$ is too large compared to its precision (i.e.~$e>0$), the
+ result is undefined and an error occurs if $e$ was not given. The function
+ applies componentwise on vector / matrices; $e$ is then the maximal number of
+ error bits. If $x$ is a rational function, the result is the ``integer part''
+ (Euclidean quotient of numerator by denominator) and $e$ is not set.
+
+ Note a very special use of \kbd{truncate}: when applied to a power series, it
+ transforms it into a polynomial or a rational function with denominator
+ a power of $X$, by chopping away the $O(X^k)$. Similarly, when applied to
+ a $p$-adic number, it transforms it into an integer or a rational number
+ by chopping away the $O(p^k)$.
+
+Variant: The following functions are also available: \fun{GEN}{gtrunc}{GEN x}
+ and \fun{GEN}{gcvtoi}{GEN x, long *e}.
+

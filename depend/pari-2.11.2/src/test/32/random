@@ -1,0 +1,37 @@
+324237808
+Mod(2, 3)
+a^2
+[[a, a + 1], 1]
+3223690774*a^2 + 2495927739*a + 1543932468
+[[222673296*a^2 + 832141822*a + 1993872865, 3473855231*a^2 + 2165401445*a + 
+1363496513], 1]
+4063307077606482163*a^2 + 2169871353760194456*a + 10598342506117936052
+[[2557945391375694509*a^2 + 5182580949942002905*a + 4115304207846177355, 808
+4599253441901006*a^2 + 17319169765369271807*a + 5394713598728073384], 1]
+0.56071855301363810851584520787407920871
+Mod(5, 7)*x^3 + Mod(2, 7)*x^2 + Mod(1, 7)*x + Mod(6, 7)
+  ***   at top-level: randomprime(2)
+  ***                 ^--------------
+  *** randomprime: domain error in randomprime: N <= 2
+  ***   at top-level: randomprime([0,1])
+  ***                 ^------------------
+  *** randomprime: domain error in randomprime: floor(b) - max(ceil(a),2) < 0
+  ***   at top-level: randomprime([2.5,2.4])
+  ***                 ^----------------------
+  *** randomprime: domain error in randomprime: b-a < 0
+  ***   at top-level: randomprime([2.4,2.5])
+  ***                 ^----------------------
+  *** randomprime: domain error in randomprime: floor(b) - max(ceil(a),2) < 0
+1051006573
+5
+1267650600228229401496703924683
+  ***   at top-level: random("")
+  ***                 ^----------
+  *** random: incorrect type in genrand (t_STR).
+  ***   at top-level: setrand(2^65)
+  ***                 ^-------------
+  *** setrand: domain error in setrand: n != getrand()
+  ***   at top-level: setrand(-1)
+  ***                 ^-----------
+  *** setrand: domain error in setrand: n <= 0
+Total time spent: 0

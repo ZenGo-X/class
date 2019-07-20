@@ -1,0 +1,8 @@
+Function: mathouseholder
+Section: linear_algebra
+C-Name: mathouseholder
+Prototype: GG
+Help: mathouseholder(Q,v): applies a sequence Q of Householder transforms
+ to the vector or matrix v.
+Doc: \sidx{Householder transform}applies a sequence $Q$ of Householder
+ transforms, as returned by \kbd{matqr}$(M,1)$ to the vector or matrix $v$.

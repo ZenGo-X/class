@@ -1,0 +1,103 @@
+Function: concat
+Section: linear_algebra
+C-Name: gconcat
+Prototype: GDG
+Help: concat(x,{y}): concatenation of x and y, which can be scalars, vectors
+ or matrices, or lists (in this last case, both x and y have to be lists). If
+ y is omitted, x has to be a list or row vector and its elements are
+ concatenated.
+Description:
+ (mp,mp):vec           gconcat($1, $2)
+ (vec,mp):vec          gconcat($1, $2)
+ (mp,vec):vec          gconcat($1, $2)
+ (vec,vec):vec         gconcat($1, $2)
+ (list,list):list      gconcat($1, $2)
+ (genstr,gen):genstr   gconcat($1, $2)
+ (gen,genstr):genstr   gconcat($1, $2)
+ (gen):gen             gconcat1($1)
+ (gen,):gen            gconcat1($1)
+ (gen,gen):gen         gconcat($1, $2)
+Doc: concatenation of $x$ and $y$. If $x$ or $y$ is
+ not a vector or matrix, it is considered as a one-dimensional vector. All
+ types are allowed for $x$ and $y$, but the sizes must be compatible. Note
+ that matrices are concatenated horizontally, i.e.~the number of rows stays
+ the same. Using transpositions, one can concatenate them vertically,
+ but it is often simpler to use \tet{matconcat}.
+ \bprog
+ ? x = matid(2); y = 2*matid(2);
+ ? concat(x,y)
+ %2 =
+ [1 0 2 0]
+
+ [0 1 0 2]
+ ? concat(x~,y~)~
+ %3 =
+ [1 0]
+
+ [0 1]
+
+ [2 0]
+
+ [0 2]
+ ? matconcat([x;y])
+ %4 =
+ [1 0]
+
+ [0 1]
+
+ [2 0]
+
+ [0 2]
+ @eprog\noindent
+ To concatenate vectors sideways (i.e.~to obtain a two-row or two-column
+ matrix), use \tet{Mat} instead, or \tet{matconcat}:
+ \bprog
+ ? x = [1,2];
+ ? y = [3,4];
+ ? concat(x,y)
+ %3 = [1, 2, 3, 4]
+
+ ? Mat([x,y]~)
+ %4 =
+ [1 2]
+
+ [3 4]
+ ? matconcat([x;y])
+ %5 =
+ [1 2]
+
+ [3 4]
+ @eprog
+ Concatenating a row vector to a matrix having the same number of columns will
+ add the row to the matrix (top row if the vector is $x$, i.e.~comes first, and
+ bottom row otherwise).
+
+ The empty matrix \kbd{[;]} is considered to have a number of rows compatible
+ with any operation, in particular concatenation. (Note that this is
+ \emph{not} the case for empty vectors \kbd{[~]} or \kbd{[~]\til}.)
+
+ If $y$ is omitted, $x$ has to be a row vector or a list, in which case its
+ elements are concatenated, from left to right, using the above rules.
+ \bprog
+ ? concat([1,2], [3,4])
+ %1 = [1, 2, 3, 4]
+ ? a = [[1,2]~, [3,4]~]; concat(a)
+ %2 =
+ [1 3]
+
+ [2 4]
+
+ ? concat([1,2; 3,4], [5,6]~)
+ %3 =
+ [1 2 5]
+
+ [3 4 6]
+ ? concat([%, [7,8]~, [1,2,3,4]])
+ %5 =
+ [1 2 5 7]
+
+ [3 4 6 8]
+
+ [1 2 3 4]
+ @eprog
+Variant: \fun{GEN}{gconcat1}{GEN x} is a shortcut for \kbd{gconcat(x,NULL)}.

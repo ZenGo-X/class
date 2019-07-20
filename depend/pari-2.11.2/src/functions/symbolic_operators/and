@@ -1,0 +1,7 @@
+Function: _&&_
+C-Name: andpari
+Prototype: GE
+Help: a&&b: boolean operator "and".
+Section: symbolic_operators
+Description:
+ (bool, bool):bool:parens               $(1) && $(2)

@@ -1,0 +1,363 @@
+.TH GP 1 "11 September 2017"
+.SH NAME
+gp \- The PARI calculator
+.SH SYNOPSIS
+.B gp
+.RB [ -s
+.IR stacksize ]
+.RB [ -p
+.IR primelimit ]
+.RB [ --emacs ]
+.RB [ -f | --fast ]
+.RB [ -q | --quiet ]
+.RB [ -D | --default
+.IR key=val ]
+.RB [ --help ]
+.RB [ --test ]
+.RB [ --texmacs ]
+.RB [ --version ]
+.RB [ --version-short ]
+[ file1 file2 ...]
+
+.SH DESCRIPTION
+Invokes the PARI-GP calculator
+\&\fBgp\fR; gp is an advanced programmable calculator, specializing in number
+theory, which computes symbolically as long as possible, numerically where
+needed, and contains a wealth of arithmetic functions: factorizations,
+elliptic curves, Galois theory, class field theory, modular forms, etc.
+Commands, written in the GP scripting language, are input interactively or
+loaded from files.
+
+If present at the end of the command line, files 'file1', 'file2', ...
+are loaded on startup; they must be written in the GP language.
+
+.SH OPTIONS
+Command line options are available in both short form (-f) and POSIX-like
+(--fast). Numeric arguments can be followed by a modifier
+.B k
+,
+.B M
+or
+.B G
+at the user's convenience; in that case the argument is multiplied by 10^3,
+10^6, or 10^9 respectively.
+
+.TP
+.B \-f, \--fast
+Fast start (or factory settings). Do not read
+.B .gprc
+(see below) upon startup.
+.TP
+.B \-p limit
+[DEPRECATED]
+Upon startup, gp computes a table of small primes used in
+number-theoretic applications. If
+.I primelimit
+is set, the table include primes up to that bound instead of the default
+(= 500000). It is now mostly useless to change this value.
+.TP
+.B \-q, \--quiet
+Quiet mode. Do not print headers or history numbers and do not say goodbye.
+
+.TP
+.B \-D, \--default key=val
+performs
+.BR default(key,
+.BR val) ";"
+on startup, overriding values from the
+.B gprc
+preferences file. 'val' must be a constant value and is not allowed to
+involve any computation (e.g. 1+1 is forbidden). Any number of such
+default-setting statements may appear on the command line. A key may be set
+multiple times, the last setting taking precedence
+
+.TP
+.B \-s limit
+Size of gp internal stack allocated on startup. When gp runs out of space, it
+interrupts the current computation and raises a
+.BI "stack overflow"
+exception. If this occurs frequently, start with a bigger stack. The stack
+size can also be
+increased from within gp, using
+.BR default(parisize, limit) ";"
+it may be convenient to set
+.B stacksize
+from your
+.B .gprc.
+Note that computations with a
+.B smaller
+stack may be more efficient due to better data locality. Most computations
+should need less than 20MB.
+
+.TP
+.B \--emacs
+gp can be run in an
+.I Emacs
+shell (see GP User's manual for details). This flag is then required for
+smooth interaction with the
+.I PariEmacs
+package (pari.el). It is set automatically by the pari.el package, and will
+produce display oddities if you set it outside of an
+.I Emacs
+session.
+.TP
+.B \--help
+print a summary of available command-line options.
+.TP
+.B \--test
+run gp in test mode: suppress printing of history numbers and wrap long
+output lines (to get readable diff output). For benches only.
+.TP
+.B \--texmacs
+gp can be run from a
+.I TeXmacs
+frontend. This flag is set by TeXmacs, to enable special purpose
+communication channels. Do not set it yourself.
+
+.TP
+.B \--version
+output version info (banner) then exit.
+
+.TP
+.B \--version-short
+output version number then exit.
+
+.SH USE
+.TP
+.B ?
+to get online help.
+.TP
+.B ??
+to get extended online help (more precisely, to call the external help
+program,
+.B gphelp
+by default)
+.TP
+.B quit
+(or \\q), or
+.B EOF
+(Ctrl-D) to quit
+.BR gp .
+.PP
+The following works only when gp was linked with GNU
+.IR readline
+library:
+.TP
+arrow keys
+for editing and viewing the input history.
+.TP
+.B TAB
+ for automatic completion
+
+.SH MANUALS
+The following material is included in the standard distribution (originally
+in TeX format) and can also be downloaded at
+.RS
+.I http://pari.math.u-bordeaux.fr/doc.html
+.RE
+
+.TP
+.I The User's Guide to PARI/GP
+(users.dvi)
+.TP
+.I The User's Guide to the PARI library
+(library.dvi)
+.TP
+.I The Developer's Guide to the PARI library
+(develop.dvi)
+.TP
+.I PARI/GP, a tutorial
+(tutorial.dvi)
+.TP
+.I PARI/GP reference cards
+(refcard*.dvi)
+
+.SH FILES
+.TP
+.I gp
+main executable
+.TP
+.I $HOME/.gprc
+(or $GPRC if set) user preference file, read at beginning of execution by
+each
+.B gp
+shell. A default gprc
+.I gprc.dft
+is provided with the distribution. If this file cannot be found,
+.I /etc/gprc
+is checked instead.
+
+.TP
+.I <logfile>
+a file used to log in all commands and results; default:
+.B pari.log
+(you need to set the
+.B log
+default in your gprc or interactively)
+
+.TP
+.I <psfile>
+a file used to dump PostScript drawings; default:
+.B pari.ps
+
+.TP
+.I <histfile>
+a file where gp will keep a history of all input commands (you need to set
+the
+.B histfile
+default in the gprc file)
+
+.TP
+.I gphelp
+default external help program (as above)
+.TP
+.I *.gp
+GP programs
+
+.SH ENVIRONMENT
+.TP
+.I $GPRC
+place to look for the user's preference file (gprc); if the file does not exist,
+we then check in $HOME/.gprc, /etc/gprc, and finally for a file named 'gprc'
+in PARI's
+.B datadir.
+
+.TP
+.I $GP_DATA_DIR
+directory containing data installed by optional PARI packages.
+For example, the Galois resolvents files in directory
+.I galdata/
+needed by the
+.B polgalois
+function, in degrees 8 to 11; or the modular polynomials in
+.I seadata/
+used by the
+.B ellap
+function for large base fields. This environment variable
+overrides PARI's 'datadir', defined at Configure time.
+
+.TP
+.I $GP_POSTSCRIPT_VIEWER
+an application able to display PostScript files, used by the
+.I plotps
+graphic engine. This engine is a fallback used to output hi-res plots even
+when no compatible graphical library was available on your platform at
+Configure time. (Dumps the graph to a temporary file, then open the file.)
+
+.TP
+.I $GP_SVG_VIEWER
+an application able to display SGV images files, used by the
+.I plotsvg
+graphic engine. This engine is a fallback used to output hi-res plots even
+when no compatible graphical library was available on your platform at
+Configure time. (Dumps the graph to a temporary file, then open the file.)
+
+.TP
+.I $GPHELP
+name of the external help program invoked by ?? and ??? shortcuts.
+
+.TP
+.I $GPTMPDIR
+name of the directory where temporary files will be generated.
+
+.SH HOME PAGE
+PARI's home page resides at
+.RS
+.I http://pari.math.u-bordeaux.fr/
+.RE
+
+.SH MAILING LISTS
+There are a number of mailing lists devoted to the PARI/GP package, and most
+feedback should be directed to those. See
+.RS
+.I http://pari.math.u-bordeaux.fr/lists-index.html
+.RE
+for details. The most important ones are:
+
+.PP
+-
+.B pari-announce
+(moderated): for us to announce major version changes.
+.PP
+-
+.B pari-dev:
+for everything related to the development of PARI, including
+suggestions, technical questions, bug reports or patch submissions.
+
+.PP
+-
+.B pari-users:
+for discuss about everything else, in particular ask for help.
+
+To subscribe, send empty messages with a Subject: containing the word
+"subscribe" respectively to
+
+.PP
+   pari-announce-request@pari.math.u-bordeaux.fr
+.PP
+   pari-users-request@pari.math.u-bordeaux.fr
+.PP
+   pari-dev-request@pari.math.u-bordeaux.fr
+
+.SH BUG REPORTS
+Bugs should be submitted online to our Bug Tracking System, available from
+PARI's home page, or directly from the URL
+.RS
+.I http://pari.math.u-bordeaux.fr/Bugs/
+.RE
+Further instructions can be found on that page.
+
+.SH TRIVIA
+Despite the leading G, GP has nothing to do with GNU. The first version was
+originally called GPC, for Great Programmable Calculator. For some reason,
+the trailing C was eventually dropped.
+
+PARI has nothing to do with the French capital. The name is a pun about the
+project's early stages when the authors started to implement a library for
+"Pascal ARIthmetic" in the PASCAL programming language. They quickly
+switched to C.
+
+For the benefit of non-native French speakers, here's a slightly expanded
+explanation:
+.B Blaise Pascal
+(1623-1662) was a famous French mathematician and philosopher who was one
+of the founders of probability and devised one of the first "arithmetic
+machines". He once proposed the following "proof" of the existence of God
+for the unbelievers: whether He exists or not I lose nothing by believing
+in Him, whereas if He does and I misbehave... This is the so-called "pari
+de Pascal" (Pascal's Wager).
+
+Note that PARI also means "fairy" in Persian.
+
+.SH AUTHORS
+PARI was originally written by Christian Batut, Dominique Bernardi, Henri
+Cohen, and Michel Olivier in Laboratoire A2X (Universite Bordeaux I, France),
+and was maintained by Henri Cohen up to version 1.39.15 (1995), and by Karim
+Belabas since then.
+
+A great number of people have contributed to the successive improvements
+which eventually resulted in the present version. See the AUTHORS file in
+the distribution.
+
+.SH SEE ALSO
+.IR gap (1),
+.IR gphelp (1),
+.IR perl (1),
+.IR readline (3),
+.IR sage (1),
+.IR tex (1),
+.IR texmacs (1),
+
+.SH COPYING
+
+This program is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program; if not, write to the Free Software Foundation, Inc., 675 Mass
+Ave, Cambridge, MA 02139, USA.

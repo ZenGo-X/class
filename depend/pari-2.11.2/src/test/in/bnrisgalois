@@ -1,0 +1,7 @@
+K=bnfinit(a^4-3*a^2+253009);B=bnrinit(K,9,1);G=galoisinit(K);
+S=vecsort(subgrouplist(B,3));
+map=Map();for(i=1,#S,mapput(map,S[i],i));
+[H|H<-S, bnrisgalois(B,G,H)]
+M=bnrgaloismatrix(B,G)
+[H|H<-S, bnrisgalois(B,M,H)]
+[[mapget(map,bnrgaloisapply(B,m,s))|s<-S]| m<-M]

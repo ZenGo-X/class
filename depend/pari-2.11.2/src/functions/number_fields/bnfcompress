@@ -1,0 +1,32 @@
+Function: bnfcompress
+Section: number_fields
+C-Name: bnfcompress
+Prototype: G
+Help: bnfcompress(bnf): converts bnf to a much smaller sbnf, containing the
+ same information. Use bnfinit(sbnf) to recover a true bnf.
+Doc: computes a compressed version of \var{bnf} (from \tet{bnfinit}), a
+ ``small Buchmann's number field'' (or \var{sbnf} for short) which contains
+ enough information to recover a full $\var{bnf}$ vector very rapidly, but
+ which is much smaller and hence easy to store and print. Calling
+ \kbd{bnfinit} on the result recovers a true \kbd{bnf}, in general different
+ from the original. Note that an \tev{snbf} is useless for almost all
+ purposes besides storage, and must be converted back to \tev{bnf} form
+ before use; for instance, no \kbd{nf*}, \kbd{bnf*} or member function
+ accepts them.
+
+ An \var{sbnf} is a 12 component vector $v$, as follows. Let \kbd{bnf} be
+ the result of a full \kbd{bnfinit}, complete with units. Then $v[1]$ is
+ \kbd{bnf.pol}, $v[2]$ is the number of real embeddings \kbd{bnf.sign[1]},
+ $v[3]$ is \kbd{bnf.disc}, $v[4]$ is \kbd{bnf.zk}, $v[5]$ is the list of roots
+ \kbd{bnf.roots}, $v[7]$ is the matrix $\kbd{W} = \kbd{bnf[1]}$,
+ $v[8]$ is the matrix $\kbd{matalpha}=\kbd{bnf[2]}$,
+ $v[9]$ is the prime ideal factor base \kbd{bnf[5]} coded in a compact way,
+ and ordered according to the permutation \kbd{bnf[6]}, $v[10]$ is the
+ 2-component vector giving the number of roots of unity and a generator,
+ expressed on the integral basis, $v[11]$ is the list of fundamental units,
+ expressed on the integral basis, $v[12]$ is a vector containing the algebraic
+ numbers alpha corresponding to the columns of the matrix \kbd{matalpha},
+ expressed on the integral basis.
+
+ All the components are exact (integral or rational), except for the roots in
+ $v[5]$.

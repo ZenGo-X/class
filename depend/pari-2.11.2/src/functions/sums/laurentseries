@@ -1,0 +1,51 @@
+Function: laurentseries
+Section: sums
+C-Name: laurentseries0
+Prototype: GDPDnp
+Help: laurentseries(f, {M = seriesprecision}, {x='x}): expand f around 0 as a
+ Laurent series in x to order M.
+Doc: Expand $f$ as a Laurent series around $x = 0$ to order $M$. This
+ function computes $f(x + O(x^n))$ until $n$ is large enough: it
+ must be possible to evaluate $f$ on a power series with $0$ constant term.
+ \bprog
+ ? laurentseries(t->sin(t)/(1-cos(t)), 5)
+ %1 = 2*x^-1 - 1/6*x - 1/360*x^3 - 1/15120*x^5 + O(x^6)
+ ? laurentseries(log)
+   ***   at top-level: laurentseries(log)
+   ***                 ^------------------
+   ***   in function laurentseries: log
+   ***                              ^---
+   *** log: domain error in log: series valuation != 0
+ @eprog
+
+ Note that individual Laurent coefficients of order $\leq M$
+ can be retrieved from $s = \kbd{laurentseries}(f,M)$ via \kbd{polcoeff(s,i)}
+ for any $i \leq M$. The series $s$ may occasionally be more precise that
+ the required $O(x^{M+1})$.
+
+ With respect to successive calls to \tet{derivnum},
+ \kbd{laurentseries} is both faster and more precise:
+ \bprog
+ ? laurentseries(t->log(3+t),1)
+ %1 = 1.0986122886681096913952452369225257047 + 1/3*x - 1/18*x^2 + O(x^3)
+ ? derivnum(t=0,log(3+t),1)
+ %2 = 0.33333333333333333333333333333333333333
+ ? derivnum(t=0,log(3+t),2)
+ %3 = -0.11111111111111111111111111111111111111
+
+ ? f = x->sin(exp(x));
+ ? polcoeff(laurentseries(x->f(x+2), 1), 1)
+ %5 = 3.3129294231043339804683687620360224365
+ ? exp(2) * cos(exp(2));
+ %6 = 3.3129294231043339804683687620360224365
+ ? derivnum(x = 2, f(x))
+ %7 = 3.3129294231043339804683687620360224364 \\ 1 ulp off
+
+ ? default(realprecision,115);
+ ? for(i=1,10^4, laurentseries(x->f(x+2),1))
+ time = 279 ms.
+ ? for(i=1,10^4, derivnum(x=2,f(x)))  \\ ... and slower
+ time = 1,134 ms.
+ @eprog
+
+ \synt{laurentseries}{void *E, GEN (*f)(void*,GEN,long), long M, long v, long prec}.

@@ -1,0 +1,3 @@
+Function: my
+Section: programming/specific
+Help: my(x,...,z): declare x,...,z as lexically-scoped local variables.

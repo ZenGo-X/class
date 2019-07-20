@@ -1,0 +1,34 @@
+Function: sumnumapinit
+Section: sums
+C-Name: sumnumapinit
+Prototype: DGp
+Help: sumnumapinit({asymp}): initialize tables for Abel-Plana
+ summation of a series.
+Doc: initialize tables for Abel--Plana summation of a series $\sum f(n)$,
+ where $f$ is holomorphic in a right half-plane.
+ If given, \kbd{asymp} is of the form $[\kbd{+oo}, \alpha]$,
+ as in \tet{intnum} and indicates the decrease rate at infinity of functions
+ to be summed. A positive
+ $\alpha > 0$ encodes an exponential decrease of type $\exp(-\alpha n)$ and
+ a negative $-2 < \alpha < -1$ encodes a slow polynomial decrease of type
+ $n^{\alpha}$.
+ \bprog
+ ? \p200
+ ? sumnumap(n=1, n^-2);
+ time = 163 ms.
+ ? tab = sumnumapinit();
+ time = 160 ms.
+ ? sumnum(n=1, n^-2, tab); \\ faster
+ time = 7 ms.
+
+ ? tab = sumnumapinit([+oo, log(2)]); \\ decrease like 2^-n
+ time = 164 ms.
+ ? sumnumap(n=1, 2^-n, tab) - 1
+ time = 36 ms.
+ %5 = 3.0127431466707723218 E-282
+
+ ? tab = sumnumapinit([+oo, -4/3]); \\ decrease like n^(-4/3)
+ time = 166 ms.
+ ? sumnumap(n=1, n^(-4/3), tab);
+ time = 181 ms.
+ @eprog

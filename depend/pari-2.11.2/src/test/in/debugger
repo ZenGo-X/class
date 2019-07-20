@@ -1,0 +1,48 @@
+\e
+default(breakloop,1)
+my(bound=100,step=20,halt=41); check(B)=
+{
+  my(bi=[B^2]);
+  for(i=1,bound,
+    my(p=i+step,N=p^2);
+    if(i==halt,error("check:",N)))
+}
+check(1000);
+[bound, step, halt, i, p, N, bi, B]
+break
+[bound, step, halt, i, p, N, bi, B]
+my(p=120);for(i=1,100,1/0)
+[p,i]
+dbg_err()
+break
+fun(N)=check(N^2+1);
+fun(20);
+N
+dbg_up(4)
+N
+break
+f(N,x)=my(z=x^2+1);breakpoint();gcd(N,z^2+1-z);
+f(221,3)
+z
+
+z
+
+iferrname("e_VAR",vector(10000,i,1/(i-100)),E,Vec(E))
+i
+break
+f()=1/0
+f();
+allocatemem(10^7)
+for(i=1,10,if(i==2,1/0));
+i
+N=5
+M=6;1/0
+break
+N
+M
+break
+F1(T) = 1/0;
+F1(2)
+dbg_up
+T
+break

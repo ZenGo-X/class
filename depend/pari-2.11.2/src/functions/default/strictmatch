@@ -1,0 +1,8 @@
+Function: _def_strictmatch
+Class: default
+Section: default
+C-Name: sd_strictmatch
+Prototype:
+Help:
+Obsolete: 2014-10-11
+Doc: Obsolete. This toggle is now a no-op.

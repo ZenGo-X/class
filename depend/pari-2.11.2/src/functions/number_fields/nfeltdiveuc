@@ -1,0 +1,9 @@
+Function: nfeltdiveuc
+Section: number_fields
+C-Name: nfdiveuc
+Prototype: GGG
+Help: nfeltdiveuc(nf,x,y): gives algebraic integer q such that x-qy is small.
+Doc: given two elements $x$ and $y$ in
+ \var{nf}, computes an algebraic integer $q$ in the number field $\var{nf}$
+ such that the components of $x-qy$ are reasonably small. In fact, this is
+ functionally identical to \kbd{round(nfdiv(\var{nf},x,y))}.

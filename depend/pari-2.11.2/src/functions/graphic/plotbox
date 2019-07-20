@@ -1,0 +1,12 @@
+Function: plotbox
+Section: graphic
+C-Name: plotbox
+Prototype: vLGGD0,L,
+Help: plotbox(w,x2,y2,{filled=0}): if the cursor is at position (x1,y1), draw a box
+ with diagonal (x1,y1) and (x2,y2) in rectwindow w (cursor does not move).
+ If filled=1, fill the box.
+Doc: let $(x1,y1)$ be the current position of the virtual cursor. Draw in the
+ rectwindow $w$ the outline of the rectangle which is such that the points
+ $(x1,y1)$ and $(x2,y2)$ are opposite corners. Only the part of the rectangle
+ which is in $w$ is drawn. The virtual cursor does \emph{not} move.
+ If $\var{filled}=1$, fill the box.

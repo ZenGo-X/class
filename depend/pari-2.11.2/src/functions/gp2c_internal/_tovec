@@ -1,0 +1,22 @@
+Function: _tovec
+Class: gp2c_internal
+Help: Create a vector holding the arguments (shallow)
+Description:
+ ():vec                      cgetg(1, t_VEC)
+ (gen):vec                   mkvec($1)
+ (gen,gen):vec               mkvec2($1, $2)
+ (gen,gen,gen):vec           mkvec3($1, $2, $3)
+ (gen,gen,gen,gen):vec       mkvec4($1, $2, $3, $4)
+ (gen,gen,gen,gen,gen):vec   mkvec5($1, $2, $3, $4, $5)
+ (gen,...):vec               mkvecn($#, $2)
+
+Function: _tovecprec
+Class: gp2c_internal
+Help: Create a vector holding the arguments and prec (shallow)
+Description:
+ ():vec:prec                mkvecs($prec)
+ (gen):vec:prec             mkvec2($1, stoi($prec))
+ (gen,gen):vec:prec         mkvec3($1, $2, stoi($prec))
+ (gen,gen,gen):vec:prec     mkvec4($1, $2, $3, stoi($prec))
+ (gen,gen,gen,gen):vec:prec mkvec5($1, $2, $3, $4, stoi($prec))
+ (gen,...):vec:prec         mkvecn(${nbarg 1 add}, $2, stoi($prec))

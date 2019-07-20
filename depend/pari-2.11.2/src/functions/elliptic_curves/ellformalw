@@ -1,0 +1,17 @@
+Function: ellformalw
+Section: elliptic_curves
+C-Name: ellformalw
+Prototype: GDPDn
+Help:ellformalw(E, {n = seriesprecision}, {t = 'x}): E elliptic curve,
+ n integer; returns n terms of the formal expansion of w = -1/y in the formal
+ parameter t = -x/y.
+Doc:Return the formal power series $w$ attached to the elliptic curve $E$,
+ in the variable $t$:
+ $$ w(t) = t^3 + a_1 t^4 + (a_2 + a_1^2) t^5 + \cdots + O(t^{n+3}),$$
+ which is the formal expansion of $-1/y$ in the formal parameter $t := -x/y$
+ at $\infty$ (take $n = \tet{seriesprecision}$ if $n$ is omitted). The
+ coefficients of $w$ belong to $\Z[a_1,a_2,a_3,a_4,a_6]$.
+ \bprog
+ ? E=ellinit([3,2,-4,-2,5]); ellformalw(E, 5, 't)
+ %1 = t^3 + 3*t^4 + 11*t^5 + 35*t^6 + 101*t^7 + O(t^8)
+ @eprog

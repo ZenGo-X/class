@@ -1,0 +1,13 @@
+Function: mfnumcusps
+Section: modular_forms
+C-Name: mfnumcusps
+Prototype: G
+Help: mfnumcusps(N): number of cusps of Gamma_0(N)
+Doc: number of cusps of $\Gamma_0(N)$
+ \bprog
+ ? mfnumcusps(24)
+ %1 = 8
+ ? mfcusps(24)
+ %1 = [0, 1/2, 1/3, 1/4, 1/6, 1/8, 1/12, 1/24]
+ @eprog
+

@@ -1,0 +1,47 @@
+Function: sqrtn
+Section: transcendental
+C-Name: gsqrtn
+Prototype: GGD&p
+Help: sqrtn(x,n,{&z}): nth-root of x, n must be integer. If present, z is
+ set to a suitable root of unity to recover all solutions. If it was not
+ possible, z is set to zero.
+Doc: principal branch of the $n$th root of $x$,
+ i.e.~such that $\text{Arg}(\text{sqrtn}(x))\in{} ]-\pi/n, \pi/n]$. Intmod
+ a prime and $p$-adics are allowed as arguments.
+
+ If $z$ is present, it is set to a suitable root of unity allowing to
+ recover all the other roots. If it was not possible, z is
+ set to zero. In the case this argument is present and no $n$th root exist,
+ $0$ is returned instead of raising an error.
+ \bprog
+ ? sqrtn(Mod(2,7), 2)
+ %1 = Mod(3, 7)
+ ? sqrtn(Mod(2,7), 2, &z); z
+ %2 = Mod(6, 7)
+ ? sqrtn(Mod(2,7), 3)
+   ***   at top-level: sqrtn(Mod(2,7),3)
+   ***                 ^-----------------
+   *** sqrtn: nth-root does not exist in gsqrtn.
+ ? sqrtn(Mod(2,7), 3,  &z)
+ %2 = 0
+ ? z
+ %3 = 0
+ @eprog
+
+ The following script computes all roots in all possible cases:
+ \bprog
+ sqrtnall(x,n)=
+ { my(V,r,z,r2);
+   r = sqrtn(x,n, &z);
+   if (!z, error("Impossible case in sqrtn"));
+   if (type(x) == "t_INTMOD" || type(x)=="t_PADIC",
+     r2 = r*z; n = 1;
+     while (r2!=r, r2*=z;n++));
+   V = vector(n); V[1] = r;
+   for(i=2, n, V[i] = V[i-1]*z);
+   V
+ }
+ addhelp(sqrtnall,"sqrtnall(x,n):compute the vector of nth-roots of x");
+ @eprog\noindent
+Variant: If $x$ is a \typ{PADIC}, the function
+ \fun{GEN}{Qp_sqrtn}{GEN x, GEN n, GEN *z} is also available.

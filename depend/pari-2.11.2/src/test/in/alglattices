@@ -1,0 +1,316 @@
+default(realprecision,38);
+default(parisize,100M);
+
+\\Tests for lattices, orders and makeintegral in algebras
+
+Sn(n) = [Vecsmall(numtoperm(n,i)) | i <- [0..n!-1]];
+D2n(n)=
+{
+  [[vectorsmall(2*n,i,if(i==n,1,i==2*n,n+1,i+1)),
+    vectorsmall(2*n,i,if(i==1,n+1,i==n+1,1,2*n+2-i))],Vecsmall([n,2])];
+}
+firstprime1mod(n) =
+{
+  p = 2;
+  while(p%n!=1, p=nextprime(p+1));
+  p;
+}
+
+al = alginit(nfinit(y^2+7), [-1,-1]);
+a = [1,1,-1/2,1,1/3,-1,1,1]~;
+mt = algtomatrix(al,a,1);
+lat = alglathnf(al,mt);
+print(type(lat)=="t_VEC");
+print(#lat == 2);
+print(type(lat[1])=="t_MAT");
+print(type(lat[2])=="t_FRAC");
+print(type(lat[1][1,1])=="t_INT");
+print(lat[1][2,1]==0);
+c = [1,1,-1,1,0,-1,1,1]~;
+mt = algtomatrix(al,c,1);
+lat = alglathnf(al,mt);
+print(lat[2]==1);
+print(lat == alglathnf(al,c))
+lat = alglathnf(al,matid(8)*2);
+print(lat[2]==2);
+b = [1,0,-1,1,0,-1,2,1]~;
+mtb = algtomatrix(al,b,1);
+lat = alglathnf(al,matconcat([mt,mtb]));
+print(lat==[1,1]);
+print(lat == alglathnf(al,[mt,mtb]));
+lat = alglathnf(al,matconcat([7*mt/2,7*mtb/2]),21/2);
+print(lat==[1,7/2]);
+lat1 = alglathnf(al,a);
+lat2 = alglathnf(al,c);
+N = algdim(al,1);
+lat3 = [11*matid(N),1];
+lat4 = [3*matid(N),1];
+print(alglatinter(al,lat3,lat4) == [matid(N),33]);
+print(alglatadd(al,lat3,lat4) == [matid(N),1]);
+print(alglatadd(al,lat1,alglatadd(al,lat2,lat3)) ==
+  alglatadd(al,alglatadd(al,lat1,lat2),lat3));
+print(alglatinter(al,lat1,alglatinter(al,lat2,lat3)) ==
+  alglatinter(al,alglatinter(al,lat1,lat2),lat3));
+{print(alglatinter(al, alglatadd(al,lat1,lat2), lat3) == alglatadd(al,
+  alglatinter(al,lat1,lat3),alglatinter(al,lat2,lat3)));}
+inter1 = alglatinter(al,lat1,lat2,&sum1);
+sum2 = alglatadd(al,lat1,lat2,&inter2);
+print(inter1==inter2);
+print(sum1==sum2);
+print(sum1[2]==1/6);
+print(inter1[2]==1);
+print(alglatindex(al,lat1,lat2));
+print(alglatmul(al,lat1,lat2));
+print(alglatmul(al,b,lat1));
+print(alglatmul(al,lat2,b));
+print(alglatmul(al,b/10,lat1));
+print(alglatmul(al,lat2,b/10));
+print(alglatlefttransporter(al,lat1,lat2));
+print(alglatrighttransporter(al,lat1,lat2));
+setrand(88);
+aa = algrandom(al,10);
+print(alglathnf(al,aa/10,matdet(algtomatrix(al,aa,1))/10)==alglathnf(al,aa/10));
+print(alglatcontains(al,lat1,a));
+col = [3,6,-5,1,23,2,0,1]~;
+print(alglatelement(al,lat1,col));
+testlataddinter()=
+{
+  my(lat=[0,0,0],int12,int23,sum12,index,elt1,
+  elt2,tr12L,tr23R,col1,col2);
+  my(lat=[0,0,0],int12,int23,sum12,index,elt,tr12L,tr23R);
+  elt1=algrandom(al,5)/random([1,8]);
+  elt2=algrandom(al,5)/random([1,8]);
+  elt=algrandom(al,5);
+  for(i=1,3,lat[i]=alglathnf(al,algrandom(al,2)/random([1,8])));
+  sum12 = alglatadd(al,lat[1],lat[2],&int12);
+  if(alglatadd(al,lat[1],alglatadd(al,lat[2],lat[3],&int23))
+    != alglatadd(al,sum12,lat[3]),
+    print("error (add)",lat);
+    return(0)
+  );
+  if(alglatinter(al,lat[1],int23) != alglatinter(al,int12,lat[3]),
+    print("error (inter)",lat);
+    return(0)
+  );
+  if(!alglatsubset(al,lat[1],sum12,&index) ||
+      (index!=alglatindex(al,lat[1],sum12)),
+    print("error (subset/index)",lat);
+    return(0)
+  );
+  if(alglatsubset(al,lat[1],lat[2]) != (lat[2]==sum12),
+    print("error (subset)",lat);
+    return(0)
+  );
+  if(alglatindex(al,lat[2],lat[3])*alglatindex(al,lat[3],lat[2])!=1,
+    print("error (index)", lat);
+    return(0)
+  );
+  if(alglatmul(al,lat[1],alglatmul(al,lat[2],lat[3])) !=
+    alglatmul(al,alglatmul(al,lat[1],lat[2]),lat[3]),
+    print("error (latmul)", lat);
+    return(0)
+  );
+  if((alglatmul(al,elt1,alglatmul(al,elt2,lat1)) !=
+      alglatmul(al,algmul(al,elt1,elt2),lat1)) ||
+     (alglatmul(al,alglatmul(al,lat2,elt1),elt2) !=
+      alglatmul(al,lat2,algmul(al,elt1,elt2))),
+    print("error (latmul elt)", lat, elt1, elt2);
+    return(0)
+  );
+  tr12L = alglatlefttransporter(al,lat[1],lat[2]);
+  tr12L = tr12L[1]*tr12L[2];
+  for(i=1,8,
+    if(!alglatsubset(al,alglatmul(al,tr12L[,i],lat[1]),lat[2]),
+      print("error (left transporter)", lat, i);
+      return(0)
+    )
+  );
+  tr23R = alglatrighttransporter(al,lat[2],lat[3]);
+  tr23R = tr23R[1]*tr23R[2];
+  for(i=1,8,
+    if(!alglatsubset(al,alglatmul(al,lat[2],tr23R[,i]),lat[3]),
+      print("error (right transporter)", lat, i);
+      return(0)
+    )
+  );
+  for(i=1,5,
+    col1 = [random([-10,10]) | j <- [1..8]]~;
+    if(!alglatcontains(al,lat1,alglatelement(al,lat1,col1),&col2) || col1!=col2,
+      print("error (latelement)", lat, col1);
+      return(0)
+    );
+    if(alglatcontains(al,lat1,col1,&col2) && col1!=alglatelement(al,lat1,col2),
+      print("error (latcontains)", lat, col1);
+      return(0)
+    )
+  );
+  1
+};
+setrand(1);
+nb = 250;
+for(i=1,nb,if(!testlataddinter(),print(i);break()));
+
+print("make integral");
+mt = [matid(2),[0,-1/4;1,0]];
+mt2 = algmakeintegral(mt);
+algisassociative(mt2)
+al = algtableinit(mt2);
+algissimple(al)
+{mt = [matid(4), [0,-1,0,0;1,0,0,0;0,0,0,-3;0,0,1/3,0],
+[0,0,2/9,0;0,0,0,-2/3;1,0,0,0;0,-1/3,0,0],
+[0,0,0,2;0,0,2/3,0;0,3,0,0;1,0,0,0]];}
+mt2 = algmakeintegral(mt);
+algisassociative(mt2)
+al = algtableinit(mt2);
+algissimple(al)
+mt = algmultable(alginit(nfinit(y),[-3,7]));
+mt == algmakeintegral(mt)
+
+print("integral subalg");
+m = matcompanion(x^4+1);
+mt = [m^i | i <- [0..3]];
+al = algtableinit(mt);
+B = [1,0;0,0;0,1/2;0,0]
+al2 = algsubalg(al,B);
+algisassociative(al2[1])
+al2[2]
+
+print("bug in subalg when first vector is not 1");
+mt = [matid(3), [0,0,0; 1,1,0; 0,0,0], [0,0,1; 0,0,0; 1,0,1]];
+A = algtableinit(mt,2);
+B = algsubalg(A,[0,1; 0,0; 1,0]);
+algissimple(B[1])
+
+print("image of lifts in algsimpledec");
+testidem(al)={
+  dec = algsimpledec(al,1)[2];
+  Le = [d[3][,1] | d <- dec];
+  for(i=1,#Le,
+    ei = Le[i];
+    if(algsqr(al,ei)!=ei, print(0); return;);
+    for(j=i+1,#Le,
+      ej = Le[j];
+      if(algmul(al,ei,ej)!=0, print(0); return;);
+    );
+  );
+  print(1);
+}
+{for(n=2,4,
+  al = alggroup(Sn(n),7);
+  testidem(al);
+);}
+{for(n=2,5,
+  al = alggroupcenter(Sn(n),11);
+  testidem(al);
+);}
+{for(n=2,4,
+  p = firstprime1mod(2*n);
+  al = alggroup(D2n(n),p);
+  testidem(al);
+);}
+{for(n=2,5,
+  al = alggroupcenter(Sn(n),11);
+  testidem(al);
+);}
+/* \\needs galpol package
+{for(i=1,267,
+  print("i=",i);
+  [pol,den] = galoisgetpol(64,i,1);
+  gal = galoisinit(pol,den);
+  al = alggroupcenter(gal,193);
+  testidem(al);
+);}*/
+
+print("lattices in al_CSA");
+setrand(1);
+nf = nfinit(y^2-7);
+a = y;
+b = y+1;
+ab = lift(Mod(a*b,nf.pol));
+mti = [0,a,0,0;1,0,0,0;0,0,0,a;0,0,1,0];
+mtj = [0,0,b,0;0,0,0,-b;1,0,0,0;0,-1,0,0];
+mtk = [0,0,0,-ab;0,0,b,0;0,-a,0,0;1,0,0,0];
+mt = [matid(4),mti,mtj,mtk];
+al = alginit(nf,mt);
+x1 = [0,2/7,7,-1,0,0,1/5,-5]~;
+x2 = [-1/7-3*y,y+3/5,y,20+y]~;
+lat1 = alglathnf(al,x1);
+lat2 = alglathnf(al,x2);
+lat3 = alglathnf(al,concat([8/5*matid(8),[1,0,0,1,0,1,1,1]~]));
+alglatsubset(al,alglatmul(al,alglatlefttransporter(al,lat1,lat3),lat1),lat3)
+alglatadd(al,lat1,alglatadd(al,lat2,lat3))==alglatadd(al,alglatadd(al,lat1,lat2),lat3)
+{alglatinter(al,lat1,alglatinter(al,lat2,lat3)) ==
+  alglatinter(al,alglatinter(al,lat1,lat2),lat3)}
+
+print("examples from docu")
+al = alginit(nfinit(y^2+7), [-1,-1]);
+lat1 = alglathnf(al,[1,1,0,0,0,0,0,0]~);
+lat2 = alglathnf(al,[1,0,1,0,0,0,0,0]~);
+latsum = alglatadd(al,lat1,lat2,&latinter);
+matdet(latsum[1])
+matdet(latinter[1])
+latinter = alglatinter(al,lat1,lat2,&latsum);
+matdet(latsum[1])
+matdet(latinter[1])
+alglatsubset(al,lat1,lat2)
+alglatsubset(al,lat1,latsum,&index)
+index
+alglatindex(al,lat1,lat2)
+lat1==lat2
+a1 = [1,-1,0,1,2,0,1,2]~;
+a2 = [0,1,2,-1,0,0,3,1]~;
+lat1 = alglathnf(al,a1);
+alglatcontains(al,lat1,a1,&c)
+c
+c = [1..8]~;
+elt = alglatelement(al,lat1,c);
+alglatcontains(al,lat1,elt,&c2)
+c==c2
+lat2 = alglathnf(al,a2);
+lat3 = alglatmul(al,lat1,lat2);
+matdet(lat3[1])
+lat3 == alglathnf(al, algmul(al,a1,a2))
+lat3 == alglatmul(al, lat1, a2)
+lat3 == alglatmul(al, a1, lat2)
+lat1 = alglathnf(al,[1,-1,0,1,2,0,5,2]~);
+lat2 = alglathnf(al,[0,1,-2,-1,0,0,3,1]~);
+tr = alglatlefttransporter(al,lat1,lat2);
+alglatsubset(al,alglatmul(al,tr[1][,7]*tr[2],lat1),lat2)
+alglatsubset(al,alglatmul(al,lat1,tr[1][,7]*tr[2]),lat2)
+lat1 = alglathnf(al,matdiagonal([1,3,7,1,2,8,5,2]));
+lat2 = alglathnf(al,matdiagonal([5,3,8,1,9,8,7,1]));
+tr = alglatrighttransporter(al,lat1,lat2);
+alglatsubset(al,alglatmul(al,lat1,tr[1][,8]*tr[2]),lat2)
+alglatsubset(al,alglatmul(al,tr[1][,8]*tr[2],lat1),lat2)
+\\end examples
+
+print("bad inputs");
+al = alginit(nfinit(y^2+7), [-1,-1]);
+alglathnf(al,0);
+alglathnf(al,Mat([0,0,0,0,0,0,0,0]));
+alglathnf(al,[0;0;0;0;0;0;0;0]);
+fakemat = matid(8);
+fakemat[5,6] = []
+alglathnf(al,fakemat);
+alglathnf(al,matid(8)*0);
+fakemat = matid(8);
+fakemat[1,1] = 0;
+alglathnf(al,fakemat);
+lat = alglathnf(al,matconcat([mt*0,mt*0]));
+a = [[0,0]~,[0,0]~;[0,0]~,[0,0]~];
+lat1 = alglathnf(al,a);
+lat2 = alglathnf(al,c);
+col = [3,6,-5,1,23,2,0,1]~;
+print(alglatelement(al,lat1,col~));
+a = [1,1,-1/2,1,1/3,-1,1,1]~;
+b = [1,0,-1,1,0,-1,2,1]~;
+alglatmul(al,a,b);
+mt = [matid(2),[0,-1/4;1/2,0]];
+algmakeintegral(mt);
+mt = [[1,0;-1,1],[0,-1/4;1,0]];
+algmakeintegral(mt);
+algmakeintegral('x,1);
+alglatmul(al,lat1,[matdiagonal([1,1,0,1,1,1,1,1]),1]);
+\\end bad inputs
+
+

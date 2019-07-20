@@ -1,0 +1,55 @@
+Function: idealtwoelt
+Section: number_fields
+C-Name: idealtwoelt0
+Prototype: GGDG
+Help: idealtwoelt(nf,x,{a}): two-element representation of an ideal x in the
+ number field nf. If (optional) a is non-zero, first element will be equal to a.
+Doc: computes a two-element representation of the ideal $x$ in the number
+ field $\var{nf}$, combining a random search and an approximation theorem; $x$
+ is an ideal in any form (possibly an extended ideal, whose principal part is
+ ignored)
+
+ \item When called as \kbd{idealtwoelt(nf,x)}, the result is a row vector
+ $[a,\alpha]$ with two components such that $x=a\Z_K+\alpha\Z_K$ and $a$ is
+ chosen to be the positive generator of $x\cap\Z$, unless $x$ was given as a
+ principal ideal in which case we may choose $a = 0$. The algorithm
+ uses a fast lazy factorization of $x\cap \Z$ and runs in randomized
+ polynomial time.
+
+ \bprog
+ ? K = nfinit(t^5-23);
+ ? x = idealhnf(K, t^2*(t+1), t^3*(t+1))
+ %2 =  \\ some random ideal of norm 552*23
+ [552 23 23 529 23]
+
+ [  0 23  0   0  0]
+
+ [  0  0  1   0  0]
+
+ [  0  0  0   1  0]
+
+ [  0  0  0   0  1]
+
+ ? [a,alpha] = idealtwoelt(K, x)
+ %3 = [552, [23, 0, 1, 0, 0]~]
+ ? nfbasistoalg(K, alpha)
+ %4 = Mod(t^2 + 23, t^5 - 23)
+ @eprog
+
+ \item When called as \kbd{idealtwoelt(nf,x,a)} with an explicit non-zero $a$
+ supplied as third argument, the function assumes that $a \in x$ and returns
+ $\alpha\in x$ such that $x = a\Z_K + \alpha\Z_K$. Note that we must factor
+ $a$ in this case, and the algorithm is generally slower than the
+ default variant and gives larger generators:
+ \bprog
+ ? alpha2 = idealtwoelt(K, x, 552)
+ %5 = [-161, -161, -183, -207, 0]~
+ ? idealhnf(K, 552, alpha2) == x
+ %6 = 1
+ @eprog\noindent Note that, in both cases, the return value is \emph{not}
+ recognized as an ideal by GP functions; one must use \kbd{idealhnf} as
+ above to recover a valid ideal structure from the two-element representation.
+
+Variant: Also available are
+ \fun{GEN}{idealtwoelt}{GEN nf, GEN x} and
+ \fun{GEN}{idealtwoelt2}{GEN nf, GEN x, GEN a}.

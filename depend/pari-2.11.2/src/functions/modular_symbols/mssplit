@@ -1,0 +1,33 @@
+Function: mssplit
+Section: modular_symbols
+C-Name: mssplit
+Prototype: GDGD0,L,
+Help: mssplit(M,{H},{dimlim}): M being a full modular symbol space, as given by
+ msinit, and H being a subspace (the new subspace if omitted), split H into
+ Hecke-simple subspaces. If dimlim is present and positive, restrict to
+ dim <= dimlim.
+Doc:
+ Let $M$ denote a full modular symbol space, as given by \kbd{msinit}$(N,k,1)$
+ or $\kbd{msinit}(N,k,-1)$ and let $H$ be a Hecke-stable subspace of
+ \kbd{msnew}$(M)$ (the full new subspace if $H$ is omitted). This function
+ splits $H$ into Hecke-simple subspaces. If \kbd{dimlim} is present and
+ positive, restrict to subspaces of dimension $\leq \kbd{dimlim}$. A subspace
+ is given by a structure allowing quick projection and restriction of linear
+ operators; its first component is a matrix with integer coefficients whose
+ columns form a $\Q$-basis of the subspace.
+
+ \bprog
+ ? M = msinit(11,8, 1); \\ M_8(Gamma_0(11))^+
+ ? L = mssplit(M); \\ split msnew(M)
+ ? #L
+ %3 = 2
+ ? f = msqexpansion(M,L[1],5); f[1].mod
+ %4 = x^2 + 8*x - 44
+ ? lift(f)
+ %5 = [1, x, -6*x - 27, -8*x - 84, 20*x - 155]
+ ? g = msqexpansion(M,L[2],5); g[1].mod
+ %6 = x^4 - 558*x^2 + 140*x + 51744
+ @eprog\noindent To a Hecke-simple subspace corresponds an orbit of
+ (normalized) newforms, defined over a number field. In the above example,
+ we printed the polynomials defining the said fields, as well as the first
+ 5 Fourier coefficients (at the infinite cusp) of one such form.

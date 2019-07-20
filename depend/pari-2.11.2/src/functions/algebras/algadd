@@ -1,0 +1,14 @@
+Function: algadd
+Section: algebras
+C-Name: algadd
+Prototype: GGG
+Help: algadd(al,x,y): element x+y in al.
+Doc: Given two elements $x$ and $y$ in \var{al}, computes their sum $x+y$ in
+ the algebra~\var{al}.
+ \bprog
+ ? A = alginit(nfinit(y),[-1,1]);
+ ? algadd(A,[1,0]~,[1,2]~)
+ %2 = [2, 2]~
+ @eprog
+
+ Also accepts matrices with coefficients in \var{al}.

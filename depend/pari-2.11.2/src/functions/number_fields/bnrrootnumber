@@ -1,0 +1,31 @@
+Function: bnrrootnumber
+Section: number_fields
+C-Name: bnrrootnumber
+Prototype: GGD0,L,p
+Help: bnrrootnumber(bnr,chi,{flag=0}): returns the so-called Artin Root
+ Number, i.e. the constant W appearing in the functional equation of the
+ Hecke L-function attached to chi. Set flag = 1 if the character is known
+ to be primitive.
+Doc: if $\chi=\var{chi}$ is a
+ \idx{character} over \var{bnr}, not necessarily primitive, let
+ $L(s,\chi) = \sum_{id} \chi(id) N(id)^{-s}$ be the attached
+ \idx{Artin L-function}. Returns the so-called \idx{Artin root number}, i.e.~the
+ complex number $W(\chi)$ of modulus 1 such that
+ %
+ $$\Lambda(1-s,\chi) = W(\chi) \Lambda(s,\overline{\chi})$$
+ %
+ \noindent where $\Lambda(s,\chi) = A(\chi)^{s/2}\gamma_\chi(s) L(s,\chi)$ is
+ the enlarged L-function attached to $L$.
+
+ You can set $\fl=1$ if the character is known to be primitive. Example:
+ \bprog
+ bnf = bnfinit(x^2 - x - 57);
+ bnr = bnrinit(bnf, [7,[1,1]]);
+ bnrrootnumber(bnr, [2,1])
+ @eprog\noindent
+ returns the root number of the character $\chi$ of
+ $\Cl_{7\infty_1\infty_2}(\Q(\sqrt{229}))$ defined by $\chi(g_1^ag_2^b)
+ = \zeta_1^{2a}\zeta_2^b$. Here $g_1, g_2$ are the generators of the
+ ray-class group given by \kbd{bnr.gen} and $\zeta_1 = e^{2i\pi/N_1},
+ \zeta_2 = e^{2i\pi/N_2}$ where $N_1, N_2$ are the orders of $g_1$ and
+ $g_2$ respectively ($N_1=6$ and $N_2=3$ as \kbd{bnr.cyc} readily tells us).

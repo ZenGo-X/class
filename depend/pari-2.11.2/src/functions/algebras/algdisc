@@ -1,0 +1,21 @@
+Function: algdisc
+Section: algebras
+C-Name: algdisc
+Prototype: G
+Help: algdisc(al): discriminant of the stored order of the algebra al.
+Doc: Given a central simple algebra \var{al} output by \tet{alginit}, computes
+ the discriminant of the order ${\cal O}_0$ stored in \var{al}, that is the
+ determinant of the trace form $\rm{Tr} : {\cal O}_0\times {\cal O}_0 \to \Z$.
+ \bprog
+ ? nf = nfinit(y^2-5);
+ ? A = alginit(nf, [-3,1-y]);
+ ? [PR,h] = alghassef(A)
+ %3 = [[[2, [2, 0]~, 1, 2, 1], [3, [3, 0]~, 1, 2, 1]], Vecsmall([0, 1])]
+ ? n = algdegree(A);
+ ? D = algdim(A,1);
+ ? h = vector(#h, i, n - gcd(n,h[i]));
+ ? n^D * nf.disc^(n^2) * idealnorm(nf, idealfactorback(nf,PR,h))^n
+ %4 = 12960000
+ ? algdisc(A)
+ %5 = 12960000
+ @eprog

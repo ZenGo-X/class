@@ -1,0 +1,79 @@
+# Looking in libc for some functions.
+exe=$osname-$arch-tmp$$$exe_suff
+_has_list=
+echo Looking in C lib for some symbols...
+extra_flags=-lm
+
+if test "$arch" = "x86_64" && test "$sizeof_long" = "8"; then
+  list=sse2; . ./look
+fi
+list=exp2; . ./look
+list=log2; . ./look
+extra_flags=
+list=strftime; . ./look
+if test "$timing_fun" = "clock_gettime"; then
+  list=clock_gettime; . ./look
+  if test "$has_clock_gettime" = no; then
+    echo "Try again, with -lrt this time..."
+    extra_flags=-lrt
+    list=clock_gettime; . ./look
+    extra_flags=
+    if test "$has_clock_gettime" = yes; then
+      RT_LIBS=-lrt
+    fi
+  fi
+else
+  if test -n "$timing_fun"; then
+    list=$timing_fun
+  else
+    case "$osname" in
+      *cygwin*) list='times';; # getrusage based timer always returns 0
+      *) list='getrusage times';;
+    esac;
+  fi; . ./look
+fi
+if test "$has_clock_gettime" = yes -o "$has_ftime" = yes; then
+  :
+else
+  list='gettimeofday ftime'; . ./look
+  if test "$has_ftime" = yes; then
+    has_ftimeforwalltime=yes
+    unset has_ftime
+  fi
+fi
+list=sigaction; . ./look
+list=TIOCGWINSZ; . ./look
+list=getrlimit; . ./look
+list='stat opendir'; . ./look
+list=vsnprintf; . ./look
+if test "$enable_mmap" = "no"; then
+  has_mmap=no
+else
+  list=mmap; . ./look
+fi
+list=waitpid; . ./look
+list=setsid; . ./look
+list=getenv; . ./look
+list=isatty; . ./look
+list=alarm; . ./look
+list=system; . ./look
+
+# For install(). Do we need libdl.so?
+# on irix and osf1 -ldl not needed
+extra_flags=
+DL_LIBS=
+list=dlopen; . ./look
+if test "$has_dlopen" = no; then
+  echo "Try again, with -ldl this time..."
+  extra_flags=-ldl; . ./look
+  if test "$has_dlopen" = yes; then
+    DL_LIBS=-ldl
+  fi
+fi
+if test "$has_dlopen" = no; then
+  case "$osname" in
+    os2|darwin)
+      echo "Will use builtin dlopen() support for $osname..."
+      has_dlopen=builtin
+  esac
+fi

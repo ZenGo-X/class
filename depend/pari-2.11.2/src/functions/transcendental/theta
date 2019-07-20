@@ -1,0 +1,7 @@
+Function: theta
+Section: transcendental
+C-Name: theta
+Prototype: GGp
+Help: theta(q,z): Jacobi sine theta-function.
+Doc: Jacobi sine theta-function
+ $$ \theta_1(z, q) = 2q^{1/4} \sum_{n\geq 0} (-1)^n q^{n(n+1)} \sin((2n+1)z).$$

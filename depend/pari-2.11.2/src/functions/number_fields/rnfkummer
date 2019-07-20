@@ -1,0 +1,24 @@
+Function: rnfkummer
+Section: number_fields
+C-Name: rnfkummer
+Prototype: GDGD0,L,p
+Help: rnfkummer(bnr,{subgp},{d=0}): bnr being as output by bnrinit,
+ finds a relative equation for the class field corresponding to the module in
+ bnr and the given congruence subgroup (the ray class field if subgp is
+ omitted). d can be zero (default), or positive, and in this case the
+ output is the list of all relative equations of degree d for the given bnr,
+ with the same conductor as (bnr, subgp).
+Doc: \var{bnr}
+ being as output by \kbd{bnrinit}, finds a relative equation for the
+ class field corresponding to the module in \var{bnr} and the given
+ congruence subgroup (the full ray class field if \var{subgp} is omitted).
+ If $d$ is positive, outputs the list of all relative equations of
+ degree $d$ contained in the ray class field defined by \var{bnr}, with
+ the \emph{same} conductor as $(\var{bnr}, \var{subgp})$.
+
+ \misctitle{Warning} This routine only works for subgroups of prime index. It
+ uses Kummer theory, adjoining necessary roots of unity (it needs to compute a
+ tough \kbd{bnfinit} here), and finds a generator via Hecke's characterization
+ of ramification in Kummer extensions of prime degree. If your extension does
+ not have prime degree, for the time being, you have to split it by hand as a
+ tower / compositum of such extensions.

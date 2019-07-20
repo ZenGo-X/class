@@ -1,0 +1,22 @@
+Function: sum
+Section: sums
+C-Name: somme
+Prototype: V=GGEDG
+Help: sum(X=a,b,expr,{x=0}): x plus the sum (X goes from a to b) of
+ expression expr.
+Doc: sum of expression \var{expr},
+ initialized at $x$, the formal parameter going from $a$ to $b$. As for
+ \kbd{prod}, the initialization parameter $x$ may be given to force the type
+ of the operations being performed.
+
+ \noindent As an extreme example, compare
+
+ \bprog
+ ? sum(i=1, 10^4, 1/i); \\@com rational number: denominator has $4345$ digits.
+ time = 236 ms.
+ ? sum(i=1, 5000, 1/i, 0.)
+ time = 8 ms.
+ %2 = 9.787606036044382264178477904
+ @eprog
+
+ % \syn{NO}

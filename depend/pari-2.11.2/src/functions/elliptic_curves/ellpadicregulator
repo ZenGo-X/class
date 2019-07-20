@@ -1,0 +1,41 @@
+Function: ellpadicregulator
+Section: elliptic_curves
+C-Name: ellpadicregulator
+Prototype: GGLG
+Help:ellpadicregulator(E,p,n,S): E elliptic curve/Q, S a vector of
+ points in E(Q), p prime, n an integer; returns the p-adic
+ cyclotomic regulator of the points of S at precision p^n.
+Doc: Let $E/\Q$ be an elliptic curve. Return the determinant of the Gram
+ matrix of the vector of points $S=(S_1,\cdots, S_r)$  with respect to the
+ ``canonical'' cyclotomic $p$-adic height on $E$, given to $n$ ($p$-adic)
+ digits.
+
+ When $E$ has ordinary reduction at $p$, this is the expected Gram
+ deteterminant in $\Q_p$.
+
+ In the case of supersingular reduction of $E$ at $p$, the definition
+ requires care: the regulator $R$ is an element of
+ $D := H^1_{dR}(E) \otimes_\Q \Q_p$, which is a two-dimensional
+ $\Q_p$-vector space spanned by $\omega$ and $\eta = x \omega$
+ (which are defined over $\Q$) or equivalently but now over $\Q_p$
+ by $\omega$ and $F\omega$ where $F$ is the Frobenius endomorphism on $D$
+ as defined in \kbd{ellpadicfrobenius}. On $D$ we
+ define the cyclotomic height $h_E = f \omega + g \eta$
+ (see \tet{ellpadicheight}) and a canonical alternating bilinear form
+ $[.,.]_D$ such that $[\omega, \eta]_D = 1$.
+
+ For any $\nu \in D$, we can define a height $h_\nu := [ h_E, \nu ]_D$
+ from $E(\Q)$ to $\Q_p$ and $\langle \cdot, \cdot \rangle_\nu$ the attached
+ bilinear form. In particular, if $h_E = f \omega + g\eta$, then
+ $h_\eta = [ h_E, \eta ]_D$ = f and $h_\omega = [ h_E, \omega ]_D = - g$
+ hence $h_E = h_\eta \omega - h_\omega \eta$.
+ Then, $R$ is the unique element of $D$ such that
+ $$[\omega,\nu]_D^{r-1} [R, \nu]_D = \det(\langle S_i, S_j \rangle_{\nu})$$
+ for all $\nu \in D$ not in $\Q_p \omega$. The \kbd{ellpadicregulator}
+ function returns $R$ in the basis $(\omega, F\omega)$, which was chosen
+ so that $p$-adic BSD conjectures are easy to state, see \kbd{ellpadicbsd}.
+
+ Note that by definition
+ $$[R, \eta]_D = \det(\langle S_i, S_j \rangle_{\eta})$$
+ and
+ $$[R, \omega+\eta]_D =\det(\langle S_i, S_j \rangle_{\omega+\eta}).$$

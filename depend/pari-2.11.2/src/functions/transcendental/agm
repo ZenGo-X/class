@@ -1,0 +1,11 @@
+Function: agm
+Section: transcendental
+C-Name: agm
+Prototype: GGp
+Help: agm(x,y): arithmetic-geometric mean of x and y.
+Doc: arithmetic-geometric mean of $x$ and $y$. In the
+ case of complex or negative numbers, the optimal AGM is returned
+ (the largest in absolute value over all choices of the signs of the square
+ roots).  $p$-adic or power series arguments are also allowed. Note that
+ a $p$-adic agm exists only if $x/y$ is congruent to 1 modulo $p$ (modulo
+ 16 for $p=2$). $x$ and $y$ cannot both be vectors or matrices.

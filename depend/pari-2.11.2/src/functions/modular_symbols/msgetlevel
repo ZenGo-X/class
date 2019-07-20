@@ -1,0 +1,7 @@
+Function: msgetlevel
+Section: modular_symbols
+C-Name: msgetlevel
+Prototype: lG
+Help: msgetlevel(M): M being a full modular symbol space, as given by msinit, return its level N.
+Doc: $M$ being a full modular symbol space, as given by \kbd{msinit}, return
+ its level $N$.

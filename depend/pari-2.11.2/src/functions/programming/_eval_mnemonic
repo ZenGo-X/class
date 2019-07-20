@@ -1,0 +1,5 @@
+Function: _eval_mnemonic
+C-Name: eval_mnemonic
+Section: programming/internals
+Prototype: lGs
+Help: Convert a mnemonic string to a flag.

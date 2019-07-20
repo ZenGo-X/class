@@ -1,0 +1,25 @@
+Function: rnfconductor
+Section: number_fields
+C-Name: rnfconductor
+Prototype: GG
+Help: rnfconductor(bnf,T): conductor of the Abelian extension
+ of bnf defined by T. The result is [conductor,bnr,subgroup],
+ where conductor is the conductor itself, bnr the attached bnr
+ structure, and subgroup the HNF defining the norm
+ group (Artin or Takagi group) on the given generators bnr.gen.
+Doc: given a \var{bnf} structure attached to a number field $K$, as produced
+ by \kbd{bnfinit}, and $T$ a monic irreducible polynomial in $K[x]$
+ defining an \idx{Abelian extension} $L = K[x]/(T)$, computes the class field
+ theory conductor of this Abelian extension. The result is a 3-component vector
+ $[\var{conductor},\var{bnr},\var{subgroup}]$, where \var{conductor} is
+ the conductor of the extension given as a 2-component row vector
+ $[f_0,f_\infty]$, \var{bnr} is the attached \kbd{bnr} structure
+ and \var{subgroup} is a matrix in HNF defining the subgroup of the ray class
+ group on the ray class group generators \kbd{bnr.gen}.
+
+ \misctitle{Huge discriminants, helping rnfdisc} the format $[T,B]$ is
+ also accepted instead of $T$ and computes the conductor of the extension
+ provided it factors completely over prime divisors of rational primes $p < B$,
+ see \kbd{??rnfinit}: the valuation of $f_0$ is then correct at all prime
+ ideals $\goth{p}$ above a rational prime $p < B$ but may be incorrect at other
+ primes.

@@ -1,0 +1,17 @@
+Function: primes
+Section: number_theoretical
+C-Name: primes0
+Prototype: G
+Help: primes(n): returns the vector of the first n primes (integer), or the
+ primes in interval n = [a,b].
+Doc: creates a row vector whose components are the first $n$ prime numbers.
+ (Returns the empty vector for $n \leq 0$.) A \typ{VEC} $n = [a,b]$ is also
+ allowed, in which case the primes in $[a,b]$ are returned
+ \bprog
+ ? primes(10)     \\ the first 10 primes
+ %1 = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
+ ? primes([0,29])  \\ the primes up to 29
+ %2 = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
+ ? primes([15,30])
+ %3 = [17, 19, 23, 29]
+ @eprog

@@ -1,0 +1,31 @@
+Function: ispower
+Section: number_theoretical
+C-Name: ispower
+Prototype: lGDGD&
+Help: ispower(x,{k},{&n}): if k > 0 is given, return true (1) if x is a k-th
+ power, false (0) if not. If k is omitted, return the maximal k >= 2 such
+ that x = n^k is a perfect power, or 0 if no such k exist.
+ If n is present, and the function returns a non-zero result, set n to the
+ k-th root of x.
+Description:
+ (int):small       Z_isanypower($1, NULL)
+ (int, &int):small Z_isanypower($1, &$2)
+Doc: if $k$ is given, returns true (1) if $x$ is a $k$-th power, false
+ (0) if not. What it means to be a $k$-th power depends on the type of
+ $x$; see \tet{issquare} for details.
+
+ If $k$ is omitted, only integers and fractions are allowed for $x$ and the
+ function returns the maximal $k \geq 2$ such that $x = n^k$ is a perfect
+ power, or 0 if no such $k$ exist; in particular \kbd{ispower(-1)},
+ \kbd{ispower(0)}, and \kbd{ispower(1)} all return $0$.
+
+ If a third argument $\&n$ is given and $x$ is indeed a $k$-th power, sets
+ $n$ to a $k$-th root of $x$.
+
+ \noindent For a \typ{FFELT} \kbd{x}, instead of omitting \kbd{k} (which is
+ not allowed for this type), it may be natural to set
+ \bprog
+ k = (x.p ^ x.f - 1) / fforder(x)
+ @eprog
+Variant: Also available is
+ \fun{long}{gisanypower}{GEN x, GEN *pty} ($k$ omitted).

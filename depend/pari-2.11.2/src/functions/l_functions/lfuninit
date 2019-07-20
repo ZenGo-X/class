@@ -1,0 +1,39 @@
+Function: lfuninit
+Section: l_functions
+C-Name: lfuninit0
+Prototype: GGD0,L,b
+Help: lfuninit(L,sdom,{der=0}): precompute data
+ for evaluating the L-function given by 'L' (and its derivatives
+ of order der, if set) in rectangular domain sdom = [center,w,h]
+ centered on the real axis, |Re(s)-center| <= w, |Im(s)| <= h,
+ where all three components of sdom are real and w,h are non-negative.
+ The subdomain [k/2, 0, h] on the critical line can be encoded as [h] for
+ brevity.
+Doc: initalization function for all functions linked to the
+ computation of the $L$-function $L(s)$ encoded by \kbd{L}, where
+ $s$ belongs to the rectangular domain $\kbd{sdom} = [\var{center},w,h]$
+ centered on the real axis, $|\Re(s)-\var{center}| \leq w$, $|\Im(s)| \leq h$,
+ where all three components of \kbd{sdom} are real and $w$, $h$ are
+ non-negative. \kbd{der} is the maximum order of derivation that will be used.
+ The subdomain $[k/2, 0, h]$ on the critical line (up to height $h$)
+ can be encoded as $[h]$ for brevity. The subdomain $[k/2, w, h]$
+ centered on the critical line can be encoded as $[w, h]$ for brevity.
+
+ The argument \kbd{L} is an \kbd{Lmath}, an \kbd{Ldata} or an \kbd{Linit}. See
+ \kbd{??Ldata} and \kbd{??lfuncreate} for how to create it.
+
+ The height $h$ of the domain is a \emph{crucial} parameter: if you only
+ need $L(s)$ for real $s$, set $h$ to~0.
+ The running time is roughly proportional to
+ $$(B / d+\pi h/4)^{d/2+3}N^{1/2},$$
+ where $B$ is the default bit accuracy, $d$ is the degree of the
+ $L$-function, and $N$ is the conductor (the exponent $d/2+3$ is reduced
+ to $d/2+2$ when $d=1$ and $d=2$). There is also a dependency on $w$,
+ which is less crucial, but make sure to use the smallest rectangular
+ domain that you need.
+ \bprog
+ ? L0 = lfuncreate(1); \\ Riemann zeta
+ ? L = lfuninit(L0, [1/2, 0, 100]); \\ for zeta(1/2+it), |t| < 100
+ ? lfun(L, 1/2 + I)
+ ? L = lfuninit(L0, [100]); \\ same as above !
+ @eprog

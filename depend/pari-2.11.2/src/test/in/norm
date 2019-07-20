@@ -1,0 +1,25 @@
+norml2(-1/2)
+norml2(quadgen(5))
+norml2(quadgen(-3))
+normlp(-1, 1)
+normlp(-1/2, 1)
+normlp(I, 1)
+
+default(realprecision,38);
+F = [x->normlp(x,1), x->normlp(x,2), x->normlp(x,2.5), normlp];
+{
+  for(i=1, #F,
+    my(f = F[i]);
+    print(f);
+    print(f([1,-2,3]));
+    print(f([1,-2;-3,4]));
+    print(f([[1,2],[3,4],5,6]));
+    print(f((1+I) + I*x^2));
+    print(f(-quadgen(5)));
+    print(f(3+4*I));
+  )
+}
+normlp([95800,217519,414560], 4)
+normlp(-1,oo)
+normlp(-1,-oo)
+

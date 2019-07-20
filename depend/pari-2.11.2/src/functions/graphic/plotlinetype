@@ -1,0 +1,12 @@
+Function: plotlinetype
+Section: graphic
+C-Name: plotlinetype
+Prototype: vLL
+Obsolete: 2007-05-11
+Help: plotlinetype(w,type): this function is obsolete; no graphing engine
+ implement this functionality.
+Doc: This function is obsolete and currently a no-op.
+
+ Change the type of lines subsequently plotted in rectwindow $w$.
+ \var{type} $-2$ corresponds to frames, $-1$ to axes, larger values may
+ correspond to something else. $w = -1$ changes highlevel plotting.

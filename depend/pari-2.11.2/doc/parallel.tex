@@ -1,0 +1,411 @@
+\def\TITLE{Introduction to parallel GP programming}
+\input parimacro.tex
+
+% START TYPESET
+\begintitle
+\vskip 2.5truecm
+\centerline{\mine Introduction}
+\vskip 1.truecm
+\centerline{\mine to}
+\vskip 1.truecm
+\centerline{\mine parallel GP}
+\vskip 1.truecm
+\centerline{\sectiontitlebf (version \vers)}
+\vskip 1.truecm
+\authors
+\endtitle
+
+\copyrightpage
+\tableofcontents
+\openin\std=parallel.aux
+\ifeof\std
+\else
+  \input parallel.aux
+\fi
+\chapno=0
+
+\chapter{Parallel GP interface}
+
+\section{Configuration}
+
+This draft documents the (experimental) parallel GP interface.
+Two multithread interfaces are supported:
+
+\item POSIX threads
+
+\item Message passing interface (MPI)
+
+As a rule, POSIX threads are well-suited for single systems, while MPI is
+used by most clusters. However the parallel GP interface does not depend on
+the multithread interface: a properly written GP program will work
+identically with both.
+
+\subsec{POSIX threads}
+
+POSIX threads are selected by passing the flag \kbd{--mt=pthread} to
+\kbd{Configure}. The required library and header files are installed by
+default on most Linux system. Unfortunately this option implies
+\kbd{--enable-tls} which makes the dynamically linked \kbd{gp-dyn} binary
+about $25\%$ slower. Since \kbd{gp-sta} is only $5\%$ slower, you will
+definitely want to use the latter binary.
+
+It is sometimes useful to pass the flag \kbd{--time=ftime} to Configure
+so that \kbd{gettime} and the GP timer report real time instead of cumulated
+CPU time. An alternative is to use \kbd{getwalltime}.
+
+You can test parallel GP support with
+
+\bprog
+make test-parallel
+@eprog
+
+\subsec{Message Passing Interface}
+
+Configuring MPI is somewhat more difficult, but your MPI installation should
+include a script \kbd{mpicc} that takes care of the necessary configuration.
+If you have a choice between several MPI implementation, choose OpenMPI.
+
+To configure for MPI, use
+\bprog
+env CC=mpicc ./Configure --mt=mpi
+@eprog
+
+To run the program \kbd{fun.gp} on $10$ nodes, you can then use
+\bprog
+  mpirun -np 10 gp fun.gp
+@eprog\noindent (or \kbd{mpiexec} instead of \kbd{mpirun} if such is
+the name used in your MPI implementation).
+
+PARI requires at least $3$ MPI nodes to work properly.
+
+Note that \kbd{mpirun} is not suited for interactive use because it
+does not provide tty emulation. Also currently it is not possible to
+interrupt parallel tasks.
+
+You can test parallel GP support (here using 3 nodes) with
+
+\bprog
+make test-parallel RUNTEST="mpirun -np 3"
+@eprog
+
+\section{Concept}
+
+GP provides functions that allows parallel execution of GP code, subject to
+the following limitations: the parallel code
+
+\item must not access global variables or local variables declared with
+  \kbd{local()},
+
+\item must be free of side effect.
+
+Due to the overhead of parallelism, we recommend to split the computation so
+that each parallel computation requires at least a few seconds. On the other
+hand, it is generally more efficient to split the computation in small chunks
+rather than large chunks.
+
+\subsec{Resources}
+
+The number of secondary threads to use is controlled by
+\kbd{default(nbthreads)}. The default value of nbthreads is:
+
+\item POSIX threads: the number of CPU threads (i.e. the number of CPU cores
+multiplied by the hyperthreading factor).
+The default can be freely modified.
+
+\item MPI: the number of available process slots minus $1$ (one slot is used by
+the master thread), as configured with \kbd{mpirun} (or \kbd{mpiexec}). E.g
+\kbd{nbthreads} is $9$ after \kbd{mpirun -np 10 gp}.
+It is possible to change the default to a lower value, but increasing it will
+not work (MPI does not allow to span new threads at run time).
+
+PARI requires at least $3$ nodes to work properly.
+
+
+The PARI stack size in secondary threads is controlled by
+\kbd{default(threadsize)}, so the total memory allocated is equal to
+$\kbd{parisize}+\kbd{nbthreads}\times\kbd{threadsize}$.  By default,
+$\kbd{threadsize}=\kbd{parisize}$.
+
+\subsec{GP functions}
+
+GP provides the following functions for parallel operations:
+
+\item \tet{parvector}: parallel version of \kbd{vector}
+
+\item \tet{parapply}:  parallel version of \kbd{apply}
+
+\item \tet{parsum}:    parallel version of \kbd{sum}
+
+\item \tet{pareval}:   evaluate a vector of closures in parallel
+
+\item \tet{parfor}:    parallel version of \kbd{for}
+
+\item \tet{parforprime}:   parallel version of \kbd{forprime}
+
+\item \tet{parforvec}: parallel version of \kbd{forvec}
+
+Please see the documentation of each function for details.
+
+\subsec{PARI functions}
+The low-level \kbd{libpari} interface for parallelism is documented
+in the \emph{Developer's guide to the PARI library}.
+
+\chapter{Writing code suitable for parallel execution}
+
+\section{Avoiding global variables}
+
+When parallel execution encounters a global variable \kbd{var},
+the following error is reported:
+\bprog
+  *** parapply: mt: global variable not supported: var.
+@eprog
+
+From a user perspective, global variables fall in three categories:
+data, functions, and polynomial variables. We give some examples.
+
+\subsec{Example 1: data}
+\bprog
+? V=[2^256 + 1, 2^193 - 1];
+? parvector(#V,i,factor(V[i]))
+  *** parvector: mt: global variable not supported: V.
+@eprog\noindent
+fails because \kbd{V} is a global variable in the expression
+\kbd{factor(V[i])}; the variable \kbd{V} must first be converted to a local
+variable. There are several ways to achieve this:
+
+\item use \kbd{parapply} instead of \kbd{parvector}:
+\bprog
+? V=[2^256 + 1, 2^193 - 1];
+? parapply(factor,V)
+@eprog
+
+Here \kbd{V} is not part of the parallel section of the code.
+
+\item use a wrapper function, and pass data as function arguments:
+\bprog
+? V=[2^256 + 1, 2^193 - 1];
+? fun(z)=parvector(#z,i,factor(z[i]));
+? fun(V)
+@eprog
+
+\item define \kbd{V} as a local variable:
+\bprog
+? my(V=[2^256 + 1, 2^193 - 1]); parvector(#V,i,factor(V[i]))
+@eprog
+
+\item redefine \kbd{V} as a local variable:
+\bprog
+? V=[2^256 + 1, 2^193 - 1];
+? my(V=V); parvector(#V,i,factor(V[i]))
+@eprog
+
+\item use \kbd{inline}, that replaces later occurences of that variable name
+  by the variable content (inlining):
+\bprog
+? inline(V);
+? V=[2^256 + 1, 2^193 - 1];
+? parvector(#V,i,factor(V[i]))
+@eprog
+
+Here \kbd{V} is inlined inside the function \kbd{i->factor(V[i])}.
+
+\subsec{Example 2: polynomial variable}
+
+\bprog
+? fun(n)=bnfinit(x^n-2).no;
+? parapply(fun,[1..50])
+  *** parapply: mt: global variable not supported: x.
+@eprog
+
+The function \kbd{fun} should use the polynomial indeterminate \kbd{'x}
+instead the global variable \kbd{x} (whose value is \kbd{'x} on startup, but
+may or may no longer be \kbd{'x} at this point):
+
+\bprog
+? fun(n)=bnfinit('x^n-2).no;
+@eprog
+
+or alternatively
+
+\bprog
+? fun(n)=my(x='x);bnfinit(x^n-2).no;
+@eprog
+which is more readable if the same polynomial variable is used several times.
+
+\subsec{Example 3: function}
+\bprog
+f(a) = bnfinit('x^8-a).no;
+g(a,b) = parsum(i=a,b,f(i));
+? g(37,48)
+  *** parsum: mt: global variable not supported: f.
+@eprog\noindent
+fails because the function \kbd{f} is a global variable (whose value is a
+function).  This is identical to the first example, and all solutions given
+there apply here:
+
+\item use \kbd{inline}
+\bprog
+inline(f);
+f(a) = bnfinit('x^8-a).no;
+g(a,b) = parsum(i=a,b,f(i));
+? g(37,48)
+@eprog
+
+\item make \kbd{f} a parameter of \kbd{g}:
+\bprog
+f(a) = bnfinit('x^8-a).no;
+g(a,b,f) = parsum(i=a,b,f(i));
+? g(37,48,f)
+@eprog
+
+\item define \kbd{f} as a local variable:
+
+\bprog
+{
+  my(f(a) = bnfinit('x^8-a).no);
+  g(a,b) = parsum(i=a,b,f(i));
+}
+? g(37,48)
+@eprog
+
+\item redefine \kbd{f} as a local variable:
+\bprog
+? f(a) = bnfinit('x^8-a).no;
+? my(f=f); g(a,b) = parsum(i=a,b,f(i));
+? g(37,48)
+@eprog
+
+\subsec{Example 4: recursive function}
+\bprog
+? inline(fact);
+? fact(n)=if(n==0,1,n*fact(n-1))
+? parapply(fact,[1..10])
+@eprog
+is not valid because the actual value of \kbd{fact} which is inlined inside
+\kbd{fact} is $0$.  To avoid this problem, you can use the function
+\kbd{self()}:
+\bprog
+? inline(fact);
+? fact(n)=if(n==0,1,n*self()(n-1))
+? parapply(fact,[1..10])
+@eprog
+
+\section{Input and output}
+If your parallel code needs to write data to files, we recommend to split
+the output in as many files as the number of parallel computations, to avoid
+concurrent writes to the same file.
+
+For example a parallel version of
+\bprog
+? f(a) = write("bnf",bnfinit('x^8-a));
+? apply(f,[37..48])
+@eprog\noindent could be
+\bprog
+? f(a) = write(Str("bnf/bnf-",a), bnfinit('x^8-a).no); 0
+? parapply(f,[37..48])
+@eprog\noindent which creates the files \kbd{bnf/bnf-37} to \kbd{bnf/bnf-48}.
+
+\section{Using \kbd{parfor} and \kbd{parforprime}}
+\kbd{parfor} and \kbd{parforprime} are the most powerful of all parallel GP
+functions but since they have a different interface than \kbd{for} and
+\kbd{forprime}, the code needs to be adapted. Consider the example
+\bprog
+for(i=a,b,
+  my(c = f(i));
+  g(i,c));
+@eprog\noindent
+
+where \kbd{f} is a function without side-effects.  This can be run in parallel
+as follows:
+\bprog
+parfor(i=a, b,
+  f(i),
+  c,     /*@Ccom the value of \kbd{f(i)} is assigned to \kbd{c} */
+  g(i,c));
+@eprog\noindent For each $i$, $a \leq i \leq b$, in random order,
+this construction assigns \kbd{f(i)} to (local, as per \kbd{my}) variable
+$c$, then calls \kbd{g}$(i,c)$. Only the function \kbd{f} is evaluated
+in parallel, the function \kbd{g} is evaluated sequentially.
+
+The following function finds the index of the first component of a vector
+satisfying a predicate, and $0$ if none satisfies:
+\bprog
+parfirst(pred,V)=
+{
+  parfor(i=1, #V,
+    pred(V[i]),
+    cond,
+    if(cond, return(i));
+  0
+}
+@eprog
+
+The following function is similar to \kbd{parsum}:
+\bprog
+myparsum(a,b,expr)=
+{
+  my(s = 0);
+  parfor(i=a, b,
+    expr(i),
+    val,
+    s += val);
+  val
+}
+@eprog
+
+\section{Sizing parallel tasks}
+
+Dispatching tasks to parallel threads takes time. To limit overhead, we
+recommend to split the computation in tasks so that each parallel task
+requires at least a few seconds. Consider the following example:
+\bprog
+  thuemorse(n)= my(V=binary(n)); (-1)^n*sum(i=1,#V,V[i]);
+  sum(n=1,2*10^6, thuemorse(n)/n*1.)
+@eprog\noindent
+It is natural to try
+\bprog
+  inline(thuemorse);
+  thuemorse(n)= my(V=binary(n)); (-1)^n*sum(i=1,#V,V[i]);
+  parsum(n=1,2*10^6, thuemorse(n)/n*1.)
+@eprog\noindent
+However, due to the overhead, this will not be much faster than the
+sequential version. To limit overhead, we group the summation by blocks:
+\bprog
+  parsum(N=1,20, sum(n=1+(N-1)*10^5, N*10^5, thuemorse(n)/n*1.))
+@eprog\noindent
+Try to create at least as many groups as the number of available threads,
+to take full advantage of parallelism.
+
+\section{Load balancing}
+
+If the parallel tasks require varying time to complete, it is preferable to
+perform the slower ones first, when there are more tasks than available
+parallel threads. Instead of
+\bprog
+  parvector(36,i,bnfinit('x^i-2).no)
+@eprog\noindent doing
+\bprog
+  parvector(36,i,bnfinit('x^(37-i)-2).no)
+@eprog\noindent will be faster if you have fewer than $36$ threads.
+
+Indeed, \kbd{parvector} schedules tasks by increasing $i$ values, and the
+computation time increases steeply with $i$. With $18$ threads, say:
+
+\item in the first form, thread~1 handles both $i = 1$ and $i = 19$,
+  while thread~18 will likely handle $i = 18$ and $i = 36$. In fact, it is
+  likely that the first batch of tasks $i\leq 18$ runs relatively quickly,
+  but that none of the threads  handling a value $i > 18$ (second task) will
+  have time to complete before $i = 18$. When that thread finishes
+  $i = 18$, it will pick the remaining task $i = 36$.
+
+\item in the second form, thread~1 will likely handle
+only $i = 36$: tasks $i = 36, 35, \dots 19$ go to the available
+18 threads, and $i = 36$ is likely to finish last, when
+$i = 18,\dots, 2$ are already assigned to the other 17 threads.
+Since the small values of $i$ will finish almost instantly, $i = 1$ will have
+been allocated before the initial thread handling $i = 36$ becomes ready again.
+
+Load distribution is clearly more favorable in the second form.
+
+\vfill\eject
+\input index\end

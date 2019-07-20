@@ -1,0 +1,922 @@
+* [1, 1]
+1
+1
+0
+1
+[1, 0]~
+* [1, 2]
+3/4
+0
+3
+1
+[0, 3]~
+* [1, 3]
+0.96774193548387096774193548387096774194
+0
+3
+1
+[0, 3]~
+* [1, 4]
+6
+6
+0
+6
+[6, 0]~
+* [1, 5]
+3/(x^2 + 1)
+0
+3
+0
+[0, 3]~
+* [1, 6]
+Mod(-3*x, x^2 + 1)
+error("forbidden division t_INT \\ t_POLMOD.")
+error("forbidden division t_INT % t_POLMOD.")
+error("forbidden division t_INT \\ t_POLMOD.")
+error("forbidden division t_INT \\ t_POLMOD.")
+* [1, 7]
+0
+error("forbidden division t_INT \\ t_FFELT.")
+error("forbidden division t_INT % t_FFELT.")
+error("forbidden division t_INT \\ t_FFELT.")
+error("forbidden division t_INT \\ t_FFELT.")
+* [1, 8]
+-3 + 3*w
+error("forbidden division t_INT \\ t_QUAD.")
+error("forbidden division t_INT % t_QUAD.")
+error("forbidden division t_INT \\ t_QUAD.")
+error("forbidden division t_INT \\ t_QUAD.")
+* [1, 9]
+2*3 + 3^2 + 3^3 + O(3^4)
+error("forbidden division t_INT \\ t_PADIC.")
+error("forbidden division t_INT % t_PADIC.")
+error("forbidden division t_INT \\ t_PADIC.")
+error("forbidden division t_INT \\ t_PADIC.")
+* [1, 10]
+Mod(0, 3)
+error("forbidden division t_INT \\ t_INTMOD.")
+error("forbidden division t_INT % t_INTMOD.")
+error("forbidden division t_INT \\ t_INTMOD.")
+error("forbidden division t_INT \\ t_INTMOD.")
+* [1, 11]
+3/18446744073709551617
+0
+3
+0
+[0, 3]~
+* [2, 1]
+4/3
+1
+1
+1
+[1, 1]~
+* [2, 2]
+1
+1
+0
+1
+[1, 0]~
+* [2, 3]
+1.2903225806451612903225806451612903226
+1
+0.90000000000000000000000000000000000000
+1
+[1, 0.90000000000000000000000000000000000000]~
+* [2, 4]
+8
+8
+0
+8
+[8, 0]~
+* [2, 5]
+4/(x^2 + 1)
+0
+4
+0
+[0, 4]~
+* [2, 6]
+Mod(-4*x, x^2 + 1)
+error("forbidden division t_INT \\ t_POLMOD.")
+error("forbidden division t_INT % t_POLMOD.")
+error("forbidden division t_INT \\ t_POLMOD.")
+error("forbidden division t_INT \\ t_POLMOD.")
+* [2, 7]
+2*t^4 + 2*t^3 + t^2
+error("forbidden division t_INT \\ t_FFELT.")
+error("forbidden division t_INT % t_FFELT.")
+error("forbidden division t_INT \\ t_FFELT.")
+error("forbidden division t_INT \\ t_FFELT.")
+* [2, 8]
+-4 + 4*w
+error("forbidden division t_INT \\ t_QUAD.")
+error("forbidden division t_INT % t_QUAD.")
+error("forbidden division t_INT \\ t_QUAD.")
+error("forbidden division t_INT \\ t_QUAD.")
+* [2, 9]
+2 + O(3^3)
+error("forbidden division t_INT \\ t_PADIC.")
+error("forbidden division t_INT % t_PADIC.")
+error("forbidden division t_INT \\ t_PADIC.")
+error("forbidden division t_INT \\ t_PADIC.")
+* [2, 10]
+Mod(2, 3)
+error("forbidden division t_INT \\ t_INTMOD.")
+error("forbidden division t_INT % t_INTMOD.")
+error("forbidden division t_INT \\ t_INTMOD.")
+error("forbidden division t_INT \\ t_INTMOD.")
+* [2, 11]
+4/18446744073709551617
+0
+4
+0
+[0, 4]~
+* [3, 1]
+1.0333333333333333333333333333333333333
+1
+0.099999999999999999999999999999999999995
+1
+[1, 0.099999999999999999999999999999999999995]~
+* [3, 2]
+0.77500000000000000000000000000000000000
+0
+3.1000000000000000000000000000000000000
+1
+[0, 3.1000000000000000000000000000000000000]~
+* [3, 3]
+1.0000000000000000000000000000000000000
+1
+0.E-37
+1
+[1, 0.E-37]~
+* [3, 4]
+6.2000000000000000000000000000000000000
+6
+0.099999999999999999999999999999999999995
+6
+[6, 0.099999999999999999999999999999999999995]~
+* [3, 5]
+3.1000000000000000000000000000000000000/(x^2 + 1)
+0
+3.1000000000000000000000000000000000000
+0
+[0, 3.1000000000000000000000000000000000000]~
+* [3, 6]
+Mod(-3.1000000000000000000000000000000000000*x, x^2 + 1)
+error("forbidden division t_REAL \\ t_POLMOD.")
+error("forbidden division t_REAL % t_POLMOD.")
+error("forbidden division t_REAL \\ t_POLMOD.")
+error("forbidden division t_REAL \\ t_POLMOD.")
+* [3, 7]
+error("forbidden division t_REAL / t_FFELT.")
+error("forbidden division t_REAL \\ t_FFELT.")
+error("forbidden division t_REAL % t_FFELT.")
+error("forbidden division t_REAL \\ t_FFELT.")
+error("forbidden division t_REAL \\ t_FFELT.")
+* [3, 8]
+1.9159053651246740294342191865334781649
+error("forbidden division t_REAL \\ t_QUAD.")
+error("forbidden division t_REAL % t_QUAD.")
+error("forbidden division t_REAL \\ t_QUAD.")
+error("forbidden division t_REAL \\ t_QUAD.")
+* [3, 9]
+error("forbidden division t_REAL / t_PADIC.")
+error("forbidden division t_REAL \\ t_PADIC.")
+error("forbidden division t_REAL % t_PADIC.")
+error("forbidden division t_REAL \\ t_PADIC.")
+error("forbidden division t_REAL \\ t_PADIC.")
+* [3, 10]
+error("forbidden division t_REAL / t_INTMOD.")
+error("forbidden division t_REAL \\ t_INTMOD.")
+error("forbidden division t_REAL % t_INTMOD.")
+error("forbidden division t_REAL \\ t_INTMOD.")
+error("forbidden division t_REAL \\ t_INTMOD.")
+* [3, 11]
+1.6805133673525318726204510291596823708 E-19
+0
+3.1000000000000000000000000000000000000
+0
+[0, 3.1000000000000000000000000000000000000]~
+* [4, 1]
+1/6
+0
+2
+0
+[0, 1/2]~
+* [4, 2]
+1/8
+0
+error("impossible inverse in Fl_inv: Mod(2, 4).")
+0
+[0, 1/2]~
+* [4, 3]
+0.16129032258064516129032258064516129032
+0
+1/2
+0
+[0, 1/2]~
+* [4, 4]
+1
+1
+0
+1
+[1, 0]~
+* [4, 5]
+1/(2*x^2 + 2)
+0
+1/2
+0
+[0, 1/2]~
+* [4, 6]
+Mod(-1/2*x, x^2 + 1)
+error("forbidden division t_FRAC \\ t_POLMOD.")
+error("forbidden division t_FRAC % t_POLMOD.")
+error("forbidden division t_FRAC \\ t_POLMOD.")
+error("forbidden division t_FRAC \\ t_POLMOD.")
+* [4, 7]
+t^4 + t^3 + 2*t^2
+error("forbidden division t_FRAC \\ t_FFELT.")
+error("forbidden division t_FRAC % t_FFELT.")
+error("forbidden division t_FRAC \\ t_FFELT.")
+error("forbidden division t_FRAC \\ t_FFELT.")
+* [4, 8]
+-1/2 + 1/2*w
+error("forbidden division t_FRAC \\ t_QUAD.")
+error("forbidden division t_FRAC % t_QUAD.")
+error("forbidden division t_FRAC \\ t_QUAD.")
+error("forbidden division t_FRAC \\ t_QUAD.")
+* [4, 9]
+1 + 2*3 + O(3^3)
+error("forbidden division t_FRAC \\ t_PADIC.")
+error("forbidden division t_FRAC % t_PADIC.")
+error("forbidden division t_FRAC \\ t_PADIC.")
+error("forbidden division t_FRAC \\ t_PADIC.")
+* [4, 10]
+Mod(1, 3)
+error("forbidden division t_FRAC \\ t_INTMOD.")
+error("forbidden division t_FRAC % t_INTMOD.")
+error("forbidden division t_FRAC \\ t_INTMOD.")
+error("forbidden division t_FRAC \\ t_INTMOD.")
+* [4, 11]
+1/36893488147419103234
+0
+9223372036854775809
+0
+[0, 1/2]~
+* [5, 1]
+1/3*x^2 + 1/3
+1/3*x^2 + 1/3
+0
+1/3*x^2 + 1/3
+[1/3*x^2 + 1/3, 0]~
+* [5, 2]
+1/4*x^2 + 1/4
+1/4*x^2 + 1/4
+0
+1/4*x^2 + 1/4
+[1/4*x^2 + 1/4, 0]~
+* [5, 3]
+0.32258064516129032258064516129032258065*x^2 + 0.322580645161290322580645161
+29032258065
+0.32258064516129032258064516129032258065*x^2 + 0.322580645161290322580645161
+29032258065
+0
+0.32258064516129032258064516129032258065*x^2 + 0.322580645161290322580645161
+29032258065
+[0.32258064516129032258064516129032258065*x^2 + 0.32258064516129032258064516
+129032258065, 0]~
+* [5, 4]
+2*x^2 + 2
+2*x^2 + 2
+0
+2*x^2 + 2
+[2*x^2 + 2, 0]~
+* [5, 5]
+1
+1
+0
+1
+[1, 0]~
+* [5, 6]
+Mod(0, x^2 + 1)
+error("forbidden euclidean division t_POL , t_POLMOD.")
+error("forbidden euclidean division t_POL , t_POLMOD.")
+error("forbidden euclidean division t_POL , t_POLMOD.")
+error("forbidden euclidean division t_POL , t_POLMOD.")
+* [5, 7]
+(2*t^4 + 2*t^3 + t^2)*x^2 + (2*t^4 + 2*t^3 + t^2)
+(2*t^4 + 2*t^3 + t^2)*x^2 + (2*t^4 + 2*t^3 + t^2)
+0
+(2*t^4 + 2*t^3 + t^2)*x^2 + (2*t^4 + 2*t^3 + t^2)
+[(2*t^4 + 2*t^3 + t^2)*x^2 + (2*t^4 + 2*t^3 + t^2), 0]~
+* [5, 8]
+(-1 + w)*x^2 + (-1 + w)
+(-1 + w)*x^2 + (-1 + w)
+0
+(-1 + w)*x^2 + (-1 + w)
+[(-1 + w)*x^2 + (-1 + w), 0]~
+* [5, 9]
+(2 + 3 + 3^2 + O(3^3))*x^2 + (2 + 3 + 3^2 + O(3^3))
+(2 + 3 + 3^2 + O(3^3))*x^2 + (2 + 3 + 3^2 + O(3^3))
+0
+(2 + 3 + 3^2 + O(3^3))*x^2 + (2 + 3 + 3^2 + O(3^3))
+[(2 + 3 + 3^2 + O(3^3))*x^2 + (2 + 3 + 3^2 + O(3^3)), 0]~
+* [5, 10]
+Mod(2, 3)*x^2 + Mod(2, 3)
+Mod(2, 3)*x^2 + Mod(2, 3)
+Mod(0, 3)
+Mod(2, 3)*x^2 + Mod(2, 3)
+[Mod(2, 3)*x^2 + Mod(2, 3), Mod(0, 3)]~
+* [5, 11]
+1/18446744073709551617*x^2 + 1/18446744073709551617
+1/18446744073709551617*x^2 + 1/18446744073709551617
+0
+1/18446744073709551617*x^2 + 1/18446744073709551617
+[1/18446744073709551617*x^2 + 1/18446744073709551617, 0]~
+* [6, 1]
+Mod(1/3*x, x^2 + 1)
+error("forbidden division t_POLMOD \\ t_INT.")
+Mod(0, x^2 + 1)
+error("forbidden division t_POLMOD \\ t_INT.")
+error("forbidden division t_POLMOD \\ t_INT.")
+* [6, 2]
+Mod(1/4*x, x^2 + 1)
+error("forbidden division t_POLMOD \\ t_INT.")
+Mod(0, x^2 + 1)
+error("forbidden division t_POLMOD \\ t_INT.")
+error("forbidden division t_POLMOD \\ t_INT.")
+* [6, 3]
+Mod(0.32258064516129032258064516129032258065*x, x^2 + 1)
+error("incorrect type in gfloor (t_POLMOD).")
+error("forbidden division t_POLMOD % t_REAL.")
+error("incorrect type in gfloor (t_POLMOD).")
+error("incorrect type in gfloor (t_POLMOD).")
+* [6, 4]
+Mod(2*x, x^2 + 1)
+error("incorrect type in gfloor (t_POLMOD).")
+error("forbidden division t_POLMOD % t_FRAC.")
+error("incorrect type in gfloor (t_POLMOD).")
+error("incorrect type in gfloor (t_POLMOD).")
+* [6, 5]
+error("impossible inverse in Flx_divrem: Vecsmall([0]).")
+error("forbidden euclidean division t_POLMOD , t_POL.")
+Mod(x, x^2 + 1)
+error("forbidden euclidean division t_POLMOD , t_POL.")
+error("forbidden euclidean division t_POLMOD , t_POL.")
+* [6, 6]
+Mod(1, x^2 + 1)
+error("forbidden division t_POLMOD \\ t_POLMOD.")
+error("forbidden division t_POLMOD % t_POLMOD.")
+error("forbidden division t_POLMOD \\ t_POLMOD.")
+error("forbidden division t_POLMOD \\ t_POLMOD.")
+* [6, 7]
+Mod((2*t^4 + 2*t^3 + t^2)*x, x^2 + 1)
+error("forbidden division t_POLMOD \\ t_FFELT.")
+error("forbidden division t_POLMOD % t_FFELT.")
+error("forbidden division t_POLMOD \\ t_FFELT.")
+error("forbidden division t_POLMOD \\ t_FFELT.")
+* [6, 8]
+Mod((-1 + w)*x, x^2 + 1)
+error("forbidden division t_POLMOD \\ t_QUAD.")
+error("forbidden division t_POLMOD % t_QUAD.")
+error("forbidden division t_POLMOD \\ t_QUAD.")
+error("forbidden division t_POLMOD \\ t_QUAD.")
+* [6, 9]
+Mod((2 + 3 + 3^2 + O(3^3))*x, x^2 + 1)
+error("forbidden division t_POLMOD \\ t_PADIC.")
+error("forbidden division t_POLMOD % t_PADIC.")
+error("forbidden division t_POLMOD \\ t_PADIC.")
+error("forbidden division t_POLMOD \\ t_PADIC.")
+* [6, 10]
+Mod(Mod(2, 3)*x, x^2 + 1)
+error("forbidden division t_POLMOD \\ t_INTMOD.")
+error("forbidden division t_POLMOD % t_INTMOD.")
+error("forbidden division t_POLMOD \\ t_INTMOD.")
+error("forbidden division t_POLMOD \\ t_INTMOD.")
+* [6, 11]
+Mod(1/18446744073709551617*x, x^2 + 1)
+error("forbidden division t_POLMOD \\ t_INT.")
+error("forbidden division t_POLMOD % t_INT.")
+error("forbidden division t_POLMOD \\ t_INT.")
+error("forbidden division t_POLMOD \\ t_INT.")
+* [7, 1]
+error("impossible inverse in Fl_inv: Mod(0, 3).")
+error("forbidden division t_FFELT \\ t_INT.")
+error("forbidden division t_FFELT % t_INT.")
+error("forbidden division t_FFELT \\ t_INT.")
+error("forbidden division t_FFELT \\ t_INT.")
+* [7, 2]
+t
+error("forbidden division t_FFELT \\ t_INT.")
+error("forbidden division t_FFELT % t_INT.")
+error("forbidden division t_FFELT \\ t_INT.")
+error("forbidden division t_FFELT \\ t_INT.")
+* [7, 3]
+error("forbidden division t_FFELT / t_REAL.")
+error("forbidden division t_FFELT / t_REAL.")
+error("forbidden division t_FFELT % t_REAL.")
+error("forbidden division t_FFELT / t_REAL.")
+error("forbidden division t_FFELT / t_REAL.")
+* [7, 4]
+2*t
+error("incorrect type in gfloor (t_FFELT).")
+error("forbidden division t_FFELT % t_FRAC.")
+error("incorrect type in gfloor (t_FFELT).")
+error("incorrect type in gfloor (t_FFELT).")
+* [7, 5]
+t/(x^2 + 1)
+0
+t
+0
+[0, t]~
+* [7, 6]
+Mod(2*t*x, x^2 + 1)
+error("forbidden division t_FFELT \\ t_POLMOD.")
+error("forbidden division t_FFELT % t_POLMOD.")
+error("forbidden division t_FFELT \\ t_POLMOD.")
+error("forbidden division t_FFELT \\ t_POLMOD.")
+* [7, 7]
+1
+error("forbidden division t_FFELT \\ t_FFELT.")
+error("forbidden division t_FFELT % t_FFELT.")
+error("forbidden division t_FFELT \\ t_FFELT.")
+error("forbidden division t_FFELT \\ t_FFELT.")
+* [7, 8]
+error("forbidden division t_FFELT / t_QUAD.")
+error("forbidden division t_FFELT \\ t_QUAD.")
+error("forbidden division t_FFELT % t_QUAD.")
+error("forbidden division t_FFELT \\ t_QUAD.")
+error("forbidden division t_FFELT \\ t_QUAD.")
+* [7, 9]
+error("forbidden division t_FFELT / t_PADIC.")
+error("forbidden division t_FFELT \\ t_PADIC.")
+error("forbidden division t_FFELT % t_PADIC.")
+error("forbidden division t_FFELT \\ t_PADIC.")
+error("forbidden division t_FFELT \\ t_PADIC.")
+* [7, 10]
+2*t
+error("forbidden division t_FFELT \\ t_INTMOD.")
+error("forbidden division t_FFELT % t_INTMOD.")
+error("forbidden division t_FFELT \\ t_INTMOD.")
+error("forbidden division t_FFELT \\ t_INTMOD.")
+* [7, 11]
+2*t
+error("forbidden division t_FFELT \\ t_INT.")
+error("forbidden division t_FFELT % t_INT.")
+error("forbidden division t_FFELT \\ t_INT.")
+error("forbidden division t_FFELT \\ t_INT.")
+* [8, 1]
+1/3*w
+error("forbidden division t_QUAD \\ t_INT.")
+w
+error("forbidden division t_QUAD \\ t_INT.")
+error("forbidden division t_QUAD \\ t_INT.")
+* [8, 2]
+1/4*w
+error("forbidden division t_QUAD \\ t_INT.")
+w
+error("forbidden division t_QUAD \\ t_INT.")
+error("forbidden division t_QUAD \\ t_INT.")
+* [8, 3]
+0.52194644798383704780793123689214132830
+0
+error("forbidden division t_QUAD % t_REAL.")
+0
+[0, w]~
+* [8, 4]
+2*w
+error("incorrect type in gfloor (t_QUAD).")
+error("forbidden division t_QUAD % t_FRAC.")
+error("incorrect type in gfloor (t_QUAD).")
+error("incorrect type in gfloor (t_QUAD).")
+* [8, 5]
+w/(x^2 + 1)
+0
+w
+0
+[0, w]~
+* [8, 6]
+Mod(-w*x, x^2 + 1)
+error("forbidden division t_QUAD \\ t_POLMOD.")
+error("forbidden division t_QUAD % t_POLMOD.")
+error("forbidden division t_QUAD \\ t_POLMOD.")
+error("forbidden division t_QUAD \\ t_POLMOD.")
+* [8, 7]
+error("forbidden division t_QUAD / t_FFELT.")
+error("forbidden division t_QUAD \\ t_FFELT.")
+error("forbidden division t_QUAD % t_FFELT.")
+error("forbidden division t_QUAD \\ t_FFELT.")
+error("forbidden division t_QUAD \\ t_FFELT.")
+* [8, 8]
+1
+error("forbidden division t_QUAD \\ t_QUAD.")
+error("forbidden division t_QUAD % t_QUAD.")
+error("forbidden division t_QUAD \\ t_QUAD.")
+error("forbidden division t_QUAD \\ t_QUAD.")
+* [8, 9]
+error("not an n-th power residue in Qp_sqrt: 5.")
+error("forbidden division t_QUAD \\ t_PADIC.")
+error("forbidden division t_QUAD % t_PADIC.")
+error("forbidden division t_QUAD \\ t_PADIC.")
+error("forbidden division t_QUAD \\ t_PADIC.")
+* [8, 10]
+Mod(0, 3) + Mod(2, 3)*w
+error("forbidden division t_QUAD \\ t_INTMOD.")
+error("forbidden division t_QUAD % t_INTMOD.")
+error("forbidden division t_QUAD \\ t_INTMOD.")
+error("forbidden division t_QUAD \\ t_INTMOD.")
+* [8, 11]
+1/18446744073709551617*w
+error("forbidden division t_QUAD \\ t_INT.")
+w
+error("forbidden division t_QUAD \\ t_INT.")
+error("forbidden division t_QUAD \\ t_INT.")
+* [9, 1]
+2*3^-1 + O(3^2)
+error("forbidden division t_PADIC \\ t_INT.")
+2
+error("forbidden division t_PADIC \\ t_INT.")
+error("forbidden division t_PADIC \\ t_INT.")
+* [9, 2]
+2 + 3 + 3^2 + O(3^3)
+error("forbidden division t_PADIC \\ t_INT.")
+error("inconsistent  t_PADIC , t_INTMOD.")
+error("forbidden division t_PADIC \\ t_INT.")
+error("forbidden division t_PADIC \\ t_INT.")
+* [9, 3]
+error("forbidden division t_PADIC / t_REAL.")
+error("forbidden division t_PADIC / t_REAL.")
+error("forbidden division t_PADIC % t_REAL.")
+error("forbidden division t_PADIC / t_REAL.")
+error("forbidden division t_PADIC / t_REAL.")
+* [9, 4]
+1 + 3 + O(3^3)
+error("incorrect type in gfloor (t_PADIC).")
+error("forbidden division t_PADIC % t_FRAC.")
+error("incorrect type in gfloor (t_PADIC).")
+error("incorrect type in gfloor (t_PADIC).")
+* [9, 5]
+(2 + O(3^3))/(x^2 + 1)
+0
+2 + O(3^3)
+0
+[0, 2 + O(3^3)]~
+* [9, 6]
+Mod((1 + 2*3 + 2*3^2 + O(3^3))*x, x^2 + 1)
+error("forbidden division t_PADIC \\ t_POLMOD.")
+error("forbidden division t_PADIC % t_POLMOD.")
+error("forbidden division t_PADIC \\ t_POLMOD.")
+error("forbidden division t_PADIC \\ t_POLMOD.")
+* [9, 7]
+error("forbidden division t_PADIC / t_FFELT.")
+error("forbidden division t_PADIC \\ t_FFELT.")
+error("forbidden division t_PADIC % t_FFELT.")
+error("forbidden division t_PADIC \\ t_FFELT.")
+error("forbidden division t_PADIC \\ t_FFELT.")
+* [9, 8]
+1 + 2*3 + 2*3^2 + O(3^3) + (2 + O(3^3))*w
+error("forbidden division t_PADIC \\ t_QUAD.")
+error("forbidden division t_PADIC % t_QUAD.")
+error("forbidden division t_PADIC \\ t_QUAD.")
+error("forbidden division t_PADIC \\ t_QUAD.")
+* [9, 9]
+1 + O(3^3)
+error("forbidden division t_PADIC \\ t_PADIC.")
+error("forbidden division t_PADIC % t_PADIC.")
+error("forbidden division t_PADIC \\ t_PADIC.")
+error("forbidden division t_PADIC \\ t_PADIC.")
+* [9, 10]
+Mod(1, 3)
+error("forbidden division t_PADIC \\ t_INTMOD.")
+error("forbidden division t_PADIC % t_INTMOD.")
+error("forbidden division t_PADIC \\ t_INTMOD.")
+error("forbidden division t_PADIC \\ t_INTMOD.")
+* [9, 11]
+1 + 2*3 + 2*3^2 + O(3^3)
+error("forbidden division t_PADIC \\ t_INT.")
+error("inconsistent  t_PADIC , t_INTMOD.")
+error("forbidden division t_PADIC \\ t_INT.")
+error("forbidden division t_PADIC \\ t_INT.")
+* [10, 1]
+error("impossible inverse in Fl_inv: Mod(0, 3).")
+error("forbidden division t_INTMOD \\ t_INT.")
+Mod(2, 3)
+error("forbidden division t_INTMOD \\ t_INT.")
+error("forbidden division t_INTMOD \\ t_INT.")
+* [10, 2]
+Mod(2, 3)
+error("forbidden division t_INTMOD \\ t_INT.")
+Mod(0, 1)
+error("forbidden division t_INTMOD \\ t_INT.")
+error("forbidden division t_INTMOD \\ t_INT.")
+* [10, 3]
+error("forbidden division t_INTMOD / t_REAL.")
+error("forbidden division t_INTMOD / t_REAL.")
+error("forbidden division t_INTMOD % t_REAL.")
+error("forbidden division t_INTMOD / t_REAL.")
+error("forbidden division t_INTMOD / t_REAL.")
+* [10, 4]
+Mod(1, 3)
+error("incorrect type in gfloor (t_INTMOD).")
+error("forbidden division t_INTMOD % t_FRAC.")
+error("incorrect type in gfloor (t_INTMOD).")
+error("incorrect type in gfloor (t_INTMOD).")
+* [10, 5]
+Mod(2, 3)/(x^2 + 1)
+0
+Mod(2, 3)
+0
+[0, Mod(2, 3)]~
+* [10, 6]
+Mod(Mod(1, 3)*x, x^2 + 1)
+error("forbidden division t_INTMOD \\ t_POLMOD.")
+error("forbidden division t_INTMOD % t_POLMOD.")
+error("forbidden division t_INTMOD \\ t_POLMOD.")
+error("forbidden division t_INTMOD \\ t_POLMOD.")
+* [10, 7]
+t^4 + t^3 + 2*t^2
+error("forbidden division t_INTMOD \\ t_FFELT.")
+error("forbidden division t_INTMOD % t_FFELT.")
+error("forbidden division t_INTMOD \\ t_FFELT.")
+error("forbidden division t_INTMOD \\ t_FFELT.")
+* [10, 8]
+Mod(1, 3) + Mod(2, 3)*w
+error("forbidden division t_INTMOD \\ t_QUAD.")
+error("forbidden division t_INTMOD % t_QUAD.")
+error("forbidden division t_INTMOD \\ t_QUAD.")
+error("forbidden division t_INTMOD \\ t_QUAD.")
+* [10, 9]
+Mod(1, 3)
+error("forbidden division t_INTMOD \\ t_PADIC.")
+error("forbidden division t_INTMOD % t_PADIC.")
+error("forbidden division t_INTMOD \\ t_PADIC.")
+error("forbidden division t_INTMOD \\ t_PADIC.")
+* [10, 10]
+Mod(1, 3)
+error("forbidden division t_INTMOD \\ t_INTMOD.")
+error("forbidden division t_INTMOD % t_INTMOD.")
+error("forbidden division t_INTMOD \\ t_INTMOD.")
+error("forbidden division t_INTMOD \\ t_INTMOD.")
+* [10, 11]
+Mod(1, 3)
+error("forbidden division t_INTMOD \\ t_INT.")
+Mod(0, 1)
+error("forbidden division t_INTMOD \\ t_INT.")
+error("forbidden division t_INTMOD \\ t_INT.")
+* [11, 1]
+18446744073709551617/3
+6148914691236517205
+2
+6148914691236517206
+[6148914691236517205, 2]~
+* [11, 2]
+18446744073709551617/4
+4611686018427387904
+1
+4611686018427387904
+[4611686018427387904, 1]~
+* [11, 3]
+5950562604422436005.4838709677419354839
+5950562604422436005
+1.5000000000000000001
+5950562604422436005
+[5950562604422436005, 1.5000000000000000001]~
+* [11, 4]
+36893488147419103234
+36893488147419103234
+0
+36893488147419103234
+[36893488147419103234, 0]~
+* [11, 5]
+18446744073709551617/(x^2 + 1)
+0
+18446744073709551617
+0
+[0, 18446744073709551617]~
+* [11, 6]
+Mod(-18446744073709551617*x, x^2 + 1)
+error("forbidden division t_INT \\ t_POLMOD.")
+error("forbidden division t_INT % t_POLMOD.")
+error("forbidden division t_INT \\ t_POLMOD.")
+error("forbidden division t_INT \\ t_POLMOD.")
+* [11, 7]
+t^4 + t^3 + 2*t^2
+error("forbidden division t_INT \\ t_FFELT.")
+error("forbidden division t_INT % t_FFELT.")
+error("forbidden division t_INT \\ t_FFELT.")
+error("forbidden division t_INT \\ t_FFELT.")
+* [11, 8]
+-18446744073709551617 + 18446744073709551617*w
+error("forbidden division t_INT \\ t_QUAD.")
+error("forbidden division t_INT % t_QUAD.")
+error("forbidden division t_INT \\ t_QUAD.")
+error("forbidden division t_INT \\ t_QUAD.")
+* [11, 9]
+1 + 3 + 3^2 + O(3^3)
+error("forbidden division t_INT \\ t_PADIC.")
+error("forbidden division t_INT % t_PADIC.")
+error("forbidden division t_INT \\ t_PADIC.")
+error("forbidden division t_INT \\ t_PADIC.")
+* [11, 10]
+Mod(1, 3)
+error("forbidden division t_INT \\ t_INTMOD.")
+error("forbidden division t_INT % t_INTMOD.")
+error("forbidden division t_INT \\ t_INTMOD.")
+error("forbidden division t_INT \\ t_INTMOD.")
+* [11, 11]
+1
+1
+0
+1
+[1, 0]~
+* [1, 1]
+1/3*x + O(x^2)
+error("forbidden division t_SER \\ t_INT.")
+error("forbidden division t_SER % t_INT.")
+error("forbidden division t_SER \\ t_INT.")
+* [1, 2]
+1/4*x + O(x^2)
+error("forbidden division t_SER \\ t_INT.")
+error("forbidden division t_SER % t_INT.")
+error("forbidden division t_SER \\ t_INT.")
+* [1, 3]
+0.32258064516129032258064516129032258065*x + O(x^2)
+error("incorrect type in gfloor (t_SER).")
+error("forbidden division t_SER % t_REAL.")
+error("incorrect type in gfloor (t_SER).")
+* [1, 4]
+2*x + O(x^2)
+error("incorrect type in gfloor (t_SER).")
+error("forbidden division t_SER % t_FRAC.")
+error("incorrect type in gfloor (t_SER).")
+* [1, 5]
+x + O(x^2)
+error("forbidden euclidean division t_SER , t_POL.")
+error("forbidden division t_SER % t_POL.")
+error("forbidden euclidean division t_SER , t_POL.")
+* [1, 6]
+error("forbidden division t_SER % t_POL.")
+error("forbidden division t_SER \\ t_POLMOD.")
+error("forbidden division t_SER % t_POLMOD.")
+error("forbidden division t_SER \\ t_POLMOD.")
+* [1, 7]
+(2*t^4 + 2*t^3 + t^2)*x + O(x^2)
+error("forbidden division t_SER \\ t_FFELT.")
+error("forbidden division t_SER % t_FFELT.")
+error("forbidden division t_SER \\ t_FFELT.")
+* [1, 8]
+(-1 + w)*x + O(x^2)
+error("forbidden division t_SER \\ t_QUAD.")
+error("forbidden division t_SER % t_QUAD.")
+error("forbidden division t_SER \\ t_QUAD.")
+* [1, 9]
+(2 + 3 + 3^2 + O(3^3))*x + O(x^2)
+error("forbidden division t_SER \\ t_PADIC.")
+error("forbidden division t_SER % t_PADIC.")
+error("forbidden division t_SER \\ t_PADIC.")
+* [1, 10]
+Mod(2, 3)*x + O(x^2)
+error("forbidden division t_SER \\ t_INTMOD.")
+error("forbidden division t_SER % t_INTMOD.")
+error("forbidden division t_SER \\ t_INTMOD.")
+* [1, 11]
+1/18446744073709551617*x + O(x^2)
+error("forbidden division t_SER \\ t_INT.")
+error("forbidden division t_SER % t_INT.")
+error("forbidden division t_SER \\ t_INT.")
+* [2, 1]
+[2/3, 1]
+[0, 1]
+[2, 0]
+[1, 1]
+* [2, 2]
+[1/2, 3/4]
+[0, 0]
+[2, 3]
+[1, 1]
+* [2, 3]
+[0.64516129032258064516129032258064516129, 0.9677419354838709677419354838709
+6774194]
+[0, 0]
+[2, 3]
+[1, 1]
+* [2, 4]
+[4, 6]
+[4, 6]
+[0, 0]
+[4, 6]
+* [2, 5]
+[2/(x^2 + 1), 3/(x^2 + 1)]
+[0, 0]
+[2, 3]
+[0, 0]
+* [2, 6]
+[Mod(-2*x, x^2 + 1), Mod(-3*x, x^2 + 1)]
+error("forbidden division t_INT \\ t_POLMOD.")
+error("forbidden division t_INT % t_POLMOD.")
+error("forbidden division t_INT \\ t_POLMOD.")
+* [2, 7]
+[t^4 + t^3 + 2*t^2, 0]
+error("forbidden division t_INT \\ t_FFELT.")
+error("forbidden division t_INT % t_FFELT.")
+error("forbidden division t_INT \\ t_FFELT.")
+* [2, 8]
+[-2 + 2*w, -3 + 3*w]
+error("forbidden division t_INT \\ t_QUAD.")
+error("forbidden division t_INT % t_QUAD.")
+error("forbidden division t_INT \\ t_QUAD.")
+* [2, 9]
+[1 + O(3^3), 2*3 + 3^2 + 3^3 + O(3^4)]
+error("forbidden division t_INT \\ t_PADIC.")
+error("forbidden division t_INT % t_PADIC.")
+error("forbidden division t_INT \\ t_PADIC.")
+* [2, 10]
+[Mod(1, 3), Mod(0, 3)]
+error("forbidden division t_INT \\ t_INTMOD.")
+error("forbidden division t_INT % t_INTMOD.")
+error("forbidden division t_INT \\ t_INTMOD.")
+* [2, 11]
+[2/18446744073709551617, 3/18446744073709551617]
+[0, 0]
+[2, 3]
+[0, 0]
+* [3, 1]
+Mat(2/3)
+Mat(0)
+Mat(2)
+Mat(1)
+* [3, 2]
+Mat(1/2)
+Mat(0)
+Mat(2)
+Mat(1)
+* [3, 3]
+Mat(0.64516129032258064516129032258064516129)
+Mat(0)
+Mat(2)
+Mat(1)
+* [3, 4]
+Mat(4)
+Mat(4)
+Mat(0)
+Mat(4)
+* [3, 5]
+Mat(2/(x^2 + 1))
+Mat(0)
+Mat(2)
+Mat(0)
+* [3, 6]
+Mat(Mod(-2*x, x^2 + 1))
+error("forbidden division t_INT \\ t_POLMOD.")
+error("forbidden division t_INT % t_POLMOD.")
+error("forbidden division t_INT \\ t_POLMOD.")
+* [3, 7]
+Mat(t^4 + t^3 + 2*t^2)
+error("forbidden division t_INT \\ t_FFELT.")
+error("forbidden division t_INT % t_FFELT.")
+error("forbidden division t_INT \\ t_FFELT.")
+* [3, 8]
+Mat(-2 + 2*w)
+error("forbidden division t_INT \\ t_QUAD.")
+error("forbidden division t_INT % t_QUAD.")
+error("forbidden division t_INT \\ t_QUAD.")
+* [3, 9]
+Mat(1 + O(3^3))
+error("forbidden division t_INT \\ t_PADIC.")
+error("forbidden division t_INT % t_PADIC.")
+error("forbidden division t_INT \\ t_PADIC.")
+* [3, 10]
+Mat(Mod(1, 3))
+error("forbidden division t_INT \\ t_INTMOD.")
+error("forbidden division t_INT % t_INTMOD.")
+error("forbidden division t_INT \\ t_INTMOD.")
+* [3, 11]
+Mat(2/18446744073709551617)
+Mat(0)
+Mat(2)
+Mat(0)
+[0, 1]
+Mat(0)
+[1, 1]
+Mat(1)
+[-x + y, x^2 + x]~
+[[1, 1]~, [2, 1]~]
+[0, 1]~
+[1, 0]~
+  ***   at top-level: divrem(1,"a")
+  ***                 ^-------------
+  *** divrem: forbidden division t_INT \ t_STR.
+2
+x
+[]
+[]~
+[;]
+  ***   at top-level: [1]/0
+  ***                    ^--
+  *** _/_: impossible inverse in gdiv: 0.
+Mod(Mod(2, 3)*a + Mod(1, 3), Mod(1, 3)*a^3 + Mod(1, 3)*a^2 + Mod(1, 3)*a + M
+od(2, 3))*x^4 + Mod(Mod(2, 3)*a^2 + Mod(2, 3), Mod(1, 3)*a^3 + Mod(1, 3)*a^2
+ + Mod(1, 3)*a + Mod(2, 3))*x^3 + Mod(Mod(2, 3)*a, Mod(1, 3)*a^3 + Mod(1, 3)
+*a^2 + Mod(1, 3)*a + Mod(2, 3))*x^2 + Mod(Mod(1, 3)*a^2 + Mod(2, 3), Mod(1, 
+3)*a^3 + Mod(1, 3)*a^2 + Mod(1, 3)*a + Mod(2, 3))*x + Mod(Mod(1, 3)*a, Mod(1
+, 3)*a^3 + Mod(1, 3)*a^2 + Mod(1, 3)*a + Mod(2, 3))
+Total time spent: 0

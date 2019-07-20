@@ -1,0 +1,30 @@
+Function: forstep
+Section: programming/control
+C-Name: forstep
+Prototype: vV=GGGI
+Help: forstep(X=a,b,s,seq): the sequence is evaluated, X going from a to b
+ in steps of s (can be a vector of steps). If b is set to +oo the loop will
+ not stop.
+Doc: evaluates \var{seq}, where the formal variable $X$ goes from $a$ to $b$
+ in increments of $s$. Nothing is done if $s>0$ and $a>b$ or if $s<0$
+ and $a<b$. $s$ must be in $\R^*$ or an intmod \kbd{Mod(c,N)} (restrict to
+ the corresponding arithmetic progression) or a vector of steps
+ $[s_1,\dots,s_n]$ (the successive steps in $\R^*$ are used in the order they
+ appear in $s$).
+
+ \bprog
+ ? forstep(x=5, 10, 2, print(x))
+ 5
+ 7
+ 9
+ ? forstep(x=5, 10, Mod(1,3), print(x))
+ 7
+ 10
+ ? forstep(x=5, 10, [1,2], print(x))
+ 5
+ 6
+ 8
+ 9
+ @eprog\noindent Setting $b$ to \kbd{+oo} will start an infinite loop; it is
+ expected that the caller will break out of the loop itself at some point,
+ using \kbd{break} or \kbd{return}.

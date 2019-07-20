@@ -1,0 +1,13 @@
+Function: matimagecompl
+Section: linear_algebra
+C-Name: imagecompl
+Prototype: G
+Description:
+ (gen):vecsmall                imagecompl($1)
+Help: matimagecompl(x): vector of column indices not corresponding to the
+ indices given by the function matimage.
+Doc: gives the vector of the column indices which
+ are not extracted by the function \kbd{matimage}, as a permutation
+ (\typ{VECSMALL}). Hence the number of
+ components of \kbd{matimagecompl(x)} plus the number of columns of
+ \kbd{matimage(x)} is equal to the number of columns of the matrix $x$.

@@ -1,0 +1,14 @@
+Function: qfbprimeform
+Section: number_theoretical
+C-Name: primeform
+Prototype: GGp
+Help: qfbprimeform(x,p): returns the prime form of discriminant x, whose
+ first coefficient is p.
+Doc: prime binary quadratic form of discriminant
+ $x$ whose first coefficient is $p$, where $|p|$ is a prime number.
+ By abuse of notation,
+ $p = \pm 1$ is also valid and returns the unit form. Returns an
+ error if $x$ is not a quadratic residue mod $p$, or if $x < 0$ and $p < 0$.
+ (Negative definite \typ{QFI} are not implemented.) In the case where $x>0$,
+ the ``distance'' component of the form is set equal to zero according to the
+ current precision.

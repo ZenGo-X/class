@@ -1,0 +1,10 @@
+Function: algdivl
+Section: algebras
+C-Name: algdivl
+Prototype: GGG
+Help: algdivl(al,x,y): element x\y in al.
+Doc: Given two elements $x$ and $y$ in \var{al}, computes their left quotient
+ $x\backslash y$ in the algebra \var{al}: an element $z$ such that $xz=y$ (such
+ an element is not unique when $x$ is a zerodivisor). If~$x$ is invertible, this
+ is the same as $x^{-1}y$. Assumes that $y$ is left divisible by $x$ (i.e. that
+ $z$ exists). Also accepts matrices with coefficients in~\var{al}.

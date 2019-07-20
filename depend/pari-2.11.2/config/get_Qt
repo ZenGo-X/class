@@ -1,0 +1,70 @@
+if test -z "$with_qt"; then
+  with_qt=yes
+fi
+QTLIBS="-lQtCore -lQtGui -lstdc++"
+QTMOC=
+QTLIB=
+QTINC=
+
+if test -n "$with_qt_lib"; then
+  QTLIB="-L$with_qt_lib"
+fi
+if test -n "$with_qt_include"; then
+  QTINC="-I$with_qt_include"
+fi
+
+case "$with_qt" in
+yes)
+   pth=`echo $PATH | tr ':' ' '`;
+   QTMOC=`./locate moc '' $pth`
+   if ! test -n "$QTMOC"; then
+     case "$sizeof_long" in
+       4) addlib="/usr/local/lib32 /lib32 /usr/lib32";;
+       8) addlib="/usr/local/lib64 /lib64 /usr/lib64";;
+     esac
+     pth="$addlib /usr/local/lib /usr/local/share /usr/lib /lib /usr/share"
+     QTMOC=`./locate qt4/bin/moc '' $pth`
+     if ! test -n "$QTMOC"; then
+       QTMOC=`./locate qt/bin/moc '' $pth`
+     fi
+   fi;;
+*) if test ! -d "$with_qt"; then
+     echo "### Qt binary '$with_qt/moc' not found"
+   else
+     QTMOC=$with_qt/moc
+     which_graphic_lib=Qt4
+   fi;;
+esac
+
+if test -n "$QTMOC"; then
+  if test -z "$QTINC"; then
+    QTDIR=`dirname $QTMOC`
+    if test -d "$QTDIR/include"; then
+      QTINC="-I$QTDIR/include"
+    else
+      QTINC="-I/usr/include/qt4"
+    fi
+  fi
+  if test -z "$QTLIB"; then
+    lib=QtCore; . ./locatelib
+    if test -n "$QtCore"; then
+      QTLIB="-L$QtCore"
+    fi
+  fi
+fi
+if test -n "$QTMOC"; then
+  exe=$osname-$arch-Qt4$$$exe_suff
+  cmd="g++ $CFLAGS $extraflag $QTLIB $QTLIBS $QTINC -o $exe has_Qt4.c"
+  . log_cmd;
+  if test ! -r $exe; then
+    QTMOC=
+  fi
+fi
+
+if test -n "$QTMOC"; then
+  echo "Using Qt library, QTMOC = $QTMOC, QTLIB = $QTLIB, QTINC = $QTINC"
+  which_graphic_lib=Qt4
+else
+  which_graphic_lib=none
+  echo "### Qt not found. Building without Qt support"
+fi

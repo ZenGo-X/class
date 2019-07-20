@@ -1,0 +1,134 @@
+default(realprecision,38);
+allocatemem(40 * 10^6);
+check(a,b)=my(c=abs(a-b)); if(!c,oo, ceil(log(c)/log(10)));
+check(sumnummonien(n=1,1/n^2), Pi^2/6)
+check(sumnummonien(n=1,log(1+1/n)/n), sumpos(n=1,log(1+1/n)/n))
+tab=sumnummonieninit(,1);
+check(sumnummonien(n=1, 1/n^2, tab), -zeta'(2))
+sumnummonien(n=0,1/(n+1)^2)
+sumnummonien(n=2,1/(n+1)^2)
+tab=sumnummonieninit(1,,0);
+sumnummonien(n=0,1/(n+1)^2,tab)
+
+tab=sumnummonieninit([3,0]); check(sumnummonien(n=1,n^-3,tab), zeta(3))
+
+tab=sumnummonieninit([1,1/2],,0);
+sumnummonien(n=0,1/(n+1)^(3/2),tab)
+
+tab=sumnummonieninit([1/2,1],n->1);
+sumnummonien(n=1,1/n^(3/2),tab)
+tab=sumnummonieninit([1/2,1],n->1,2);
+sumnummonien(n=2,1/n^(3/2),tab)
+
+TEST=[n->1/(n^2+1), n->log(1+1/n)/n, n->lngamma(1+1/n)/n, n->sin(1/sqrt(n))/n^(3/2)];
+FUN=[f->sumnum(n=1,f(n)), f->sumnummonien(n=1,f(n)), f->sumnumap(n=1,f(n))];
+
+localprec(57); V=[sumnummonien(n=1,f(n)) | f<-TEST];
+
+{
+  for (i = 1, #TEST,
+    my (f = TEST[i]);
+    print(f);
+    for (j = 1, #FUN,
+      my (SUM = FUN[j]);
+      my (t = check(SUM(f), V[i]));
+      print(t);
+    )
+  )
+}
+
+sumnum(n = [1, -3/2], sin(1/sqrt(n))/n)
+sumnumap(n = [1, -3/2], sin(1/sqrt(n))/n)
+
+tab=sumnummonieninit(,n->log(n)^2);
+check(sumnummonien(n=1, 1/n^2, tab), zeta''(2))
+
+tab=sumnummonieninit(,n->log(n),2);
+check(sumnummonien(n=2,1/n^2,tab), -zeta'(2))
+sumnummonien(n=1,1/n^2,tab) \\error
+
+tab=sumnummonieninit([1,2]);
+check(sumnummonien(n=1, 1/n^3, tab), zeta(3))
+
+tab=sumnummonieninit([1,1/2]);
+check(sumnummonien(n=1, 1/n^(3/2), tab), zeta(3/2))
+
+localprec(57); V = sumnum(n=[1,-3/2], sin(1/sqrt(n))/n);
+
+tmon=sumnummonieninit([1/2,1]);
+check(sumnummonien(n=1, sin(1/sqrt(n))/n, tmon), V)
+check(sumnum(n=[1,-3/2], sin(1/sqrt(n))/n), V)
+T=sumnumapinit([oo,-3/2]);
+check(sumnumap(n=[1,-3/2], sin(1/sqrt(n))/n, T), V)
+
+{
+ localprec(77);
+ tmon=sumnummonieninit([1/2,1]);
+ check(sumnummonien(n=1,n^(-3/2), tmon), zeta(3/2))
+}
+
+\p115
+z2 = zeta(2);
+z3 = zeta(3);
+z32 = zeta(3/2);
+z73 = zeta(7/3);
+check(sumnumlagrange(n=1,n^-2),z2)
+check(sumnumlagrange(n=2,n^-2),z2-1)
+tab=sumnumlagrangeinit([1,0]);
+check(sumnumlagrange(n=1,n^-2,tab),z2)
+check(sumnumlagrange(n=2,n^-2,tab),z2-1)
+tab=sumnumlagrangeinit([2,0]);
+check(sumnumlagrange(n=1,n^-3,tab),z3)
+check(sumnumlagrange(n=2,n^-3,tab),z3-1)
+tab=sumnumlagrangeinit([1/2,0]);
+check(sumnumlagrange(n=1,n^(-3/2),tab),z32)
+check(sumnumlagrange(n=2,n^(-3/2),tab),z32-1)
+tab=sumnumlagrangeinit([1/3,0]);
+check(sumnumlagrange(n=1,n^(-7/3),tab),z73)
+check(sumnumlagrange(n=2,n^(-7/3),tab),z73-1)
+tab=sumnumlagrangeinit(1/3);
+check(sumnumlagrange(n=1,n^(-7/3),tab),z73)
+check(sumnumlagrange(n=2,n^(-7/3),tab),z73-1)
+
+\p 308
+a = sumpos(n=1, 1/(n^3+n+1));
+b = sumpos(n=1, 1/(n^3+n+1), 1);
+check(a, b)
+tab = sumnuminit();
+b = sumnum(n=1, 1/(n^3+n+1), tab);
+check(a, b)
+a = sumpos(n=1,1/(n^2+1));
+b = sumpos(n=1,1/(n^2+1), 1);
+check(a, b)
+b = sumnum(n=1,1/(n^2+1), tab);
+check(a, b)
+check(sumnum(n=[1,-4/3],n^(-4/3)), zeta(4/3))
+tab = sumnuminit([+oo,-3/2]);
+check(sumnum(n=1,1/(n*sqrt(n)),tab), zeta(3/2))
+\\
+check(suminf(n=1, 2^(-n)), 1)
+check(suminf(n=1, [2^(-n),3^(-n)]), [1,1/2])
+check(sumpos(n=1, 2^(-n)), 1)
+check(sumnum(n=[1, 1],2^(-n)), 1)
+check(sumnumap(n=[1, 1],2^(-n)), 1)
+
+\p38
+f(x) = -log(cos(x));
+F = truncate( f(t + O(t^16)) );
+g(x) = if (x > 1e-2, f(x), subst(F,t,x));
+sumpos(n=1,g(1/n))
+sumpos(n=0,0)
+
+\\#1729
+\p19
+sumpos(n=1,1/n^2)
+
+\\ ERRORS: keep them at end of file
+sumnum(n=1,1/n^2,"bug");
+sumnumap(n=1,1/n^2,"bug");
+intnumapinit(x,y)
+sumnummonieninit([-1,1]);
+sumnummonieninit([1,-1]);
+sumnummonieninit(,[n->2^-n,oo]);
+sumnumlagrangeinit([1/5,0])
+sumnumlagrangeinit(x)

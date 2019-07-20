@@ -1,0 +1,22 @@
+Function: algprimesubalg
+Section: algebras
+C-Name: algprimesubalg
+Prototype: G
+Help: algprimesubalg(al): prime subalgebra of the positive characteristic,
+ semisimple algebra al.
+Doc: \var{al} being the output of \tet{algtableinit} representing a semisimple
+ algebra of positive characteristic, returns a basis of the prime subalgebra
+ of~\var{al}. The prime subalgebra of~\var{al} is the subalgebra fixed by the
+ Frobenius automorphism of the center of \var{al}. It is abstractly isomorphic
+ to a product of copies of $\F_p$.
+ \bprog
+ ? mt = [matid(3), [0,0,0; 1,1,0; 0,0,0], [0,0,1; 0,0,0; 1,0,1]];
+ ? A = algtableinit(mt,2);
+ ? algprimesubalg(A)
+ %3 =
+ [1 0]
+
+ [0 1]
+
+ [0 0]
+ @eprog

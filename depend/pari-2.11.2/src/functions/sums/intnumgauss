@@ -1,0 +1,37 @@
+Function: intnumgauss
+Section: sums
+C-Name: intnumgauss0
+Prototype: V=GGEDGp
+Help: intnumgauss(X=a,b,expr,{tab}): numerical integration of expr from
+ a to b, a compact interval, with respect to X using Gauss-Legendre
+ quadrature. tab is either omitted (and will be recomputed) or
+ precomputed with intnumgaussinit.
+Wrapper: (,,G)
+Description:
+  (gen,gen,gen,?gen):gen:prec intnumgauss(${3 cookie}, ${3 wrapper}, $1, $2, $4, $prec)
+Doc: numerical integration of \var{expr} on the compact interval $[a,b]$ with
+ respect to $X$ using Gauss-Legendre quadrature; \kbd{tab} is either omitted
+ or precomputed with \kbd{intnumgaussinit}. As a convenience, it can be an
+ integer $n$ in which case we call
+ \kbd{intnumgaussinit}$(n)$ and use $n$-point quadrature.
+ \bprog
+ ? test(n, b = 1) = T=intnumgaussinit(n);\
+     intnumgauss(x=-b,b, 1/(1+x^2),T) - 2*atan(b);
+ ? test(0) \\ default
+ %1 = -9.490148553624725335 E-22
+ ? test(40)
+ %2 = -6.186629001816965717 E-31
+ ? test(50)
+ %3 = -1.1754943508222875080 E-38
+ ? test(50, 2) \\ double interval length
+ %4 = -4.891779568527713636 E-21
+ ? test(90, 2) \\ n must almost be doubled as well!
+ %5 = -9.403954806578300064 E-38
+ @eprog\noindent On the other hand, we recommend to split the integral
+ and change variables rather than increasing $n$ too much:
+ \bprog
+ ? f(x) = 1/(1+x^2);
+ ? b = 100;
+ ? intnumgauss(x=0,1, f(x)) + intnumgauss(x=1,1/b, f(1/x)*(-1/x^2)) - atan(b)
+ %3 = -1.0579449157400587572 E-37
+ @eprog

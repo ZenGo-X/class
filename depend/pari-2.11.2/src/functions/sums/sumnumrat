@@ -1,0 +1,23 @@
+Function: sumnumrat
+Section: sums
+C-Name: sumnumrat
+Prototype: GGp
+Help: sumnumrat(F,a): sum from n = a to infinity of F(n), where F
+ is a rational function of degree less than or equal to -2.
+Doc: $\sum_{n\geq a}F(n)$, where $F$ is a rational function of degree less
+ than or equal to $-2$ and where poles of $F$ at integers $\geq a$ are
+ omitted from the summation. The argument $a$ must be a \typ{INT}
+ or \kbd{-oo}.
+ \bprog
+ ? sumnumrat(1/(x^2+1)^2,0)
+ %1 = 1.3068369754229086939178621382829073480
+ ? sumnumrat(1/x^2, -oo) \\ value at x=0 is discarded
+ %2 = 3.2898681336964528729448303332920503784
+ ? 2*zeta(2)
+ %3 = 3.2898681336964528729448303332920503784
+ @eprog\noindent When $\deg F = -1$, we define
+ $$\sum_{-\infty}^{\infty} F(n) := \sum_{n\geq 0} (F(n) + F(-1-n)):$$
+ \bprog
+ ? sumnumrat(1/x, -oo)
+ %4 = 0.E-38
+ @eprog

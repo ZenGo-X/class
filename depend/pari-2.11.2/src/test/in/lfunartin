@@ -1,0 +1,32 @@
+\\ package: galpol
+testartin(P)=
+{
+  N = nfinit(P);
+  G = galoisinit(N);
+  [T, o] = galoischartable(G);
+  for(i=1,#T,
+    L = lfunartin(N,G,T[,i],o);
+    if(lfuncheckfeq(L)>-40,print(["error:",galoisidentify(G),i])));
+}
+checkartin(m)=
+{
+  for(n=1,m,
+    for(i=1,galoisgetpol(n),
+      testartin(galoisgetpol(n,i)[1])));
+}
+localbitprec(64);checkartin(15)
+
+\\ Old interface
+
+testold(P,R,o)=
+{
+  N = nfinit(P);
+  G = galoisinit(N);
+  for(i=1,#T,
+    L = lfunartin(N,G,R,o);
+    if(lfuncheckfeq(L)>-40,print(["error:",galoisidentify(G),i])));
+}
+
+P = x^10-2*x^9-20*x^8+2*x^7+69*x^6-x^5-69*x^4+2*x^3+20*x^2-2*x-1;
+R = [[a^3-a^2+a-1,0;0,-a],[0,1;1,0]];
+localbitprec(64);testold(P,R,10)

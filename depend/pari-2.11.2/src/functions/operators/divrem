@@ -1,0 +1,30 @@
+Function: divrem
+Section: operators
+C-Name: divrem
+Prototype: GGDn
+Help: divrem(x,y,{v}): euclidean division of x by y giving as a
+ 2-dimensional column vector the quotient and the remainder, with respect to
+ v (to main variable if v is omitted).
+Doc: creates a column vector with two components, the first being the Euclidean
+ quotient (\kbd{$x$ \bs\ $y$}), the second the Euclidean remainder
+ (\kbd{$x$ - ($x$\bs$y$)*$y$}), of the division of $x$ by $y$. This avoids the
+ need to do two divisions if one needs both the quotient and the remainder.
+ If $v$ is present, and $x$, $y$ are multivariate
+ polynomials, divide with respect to the variable $v$.
+
+ Beware that \kbd{divrem($x$,$y$)[2]} is in general not the same as
+ \kbd{$x$ \% $y$}; no GP operator corresponds to it:
+ \bprog
+ ? divrem(1/2, 3)[2]
+ %1 = 1/2
+ ? (1/2) % 3
+ %2 = 2
+ ? divrem(Mod(2,9), 3)[2]
+  ***   at top-level: divrem(Mod(2,9),3)[2
+  ***                 ^--------------------
+  ***   forbidden division t_INTMOD \ t_INT.
+ ? Mod(2,9) % 6
+ %3 = Mod(2,3)
+ @eprog
+Variant: Also available is \fun{GEN}{gdiventres}{GEN x, GEN y} when $v$ is
+ not needed.

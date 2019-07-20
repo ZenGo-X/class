@@ -1,0 +1,118 @@
+Function: ploth
+Section: graphic
+C-Name: ploth0
+Wrapper: (,,G)
+Description:
+  (gen,gen,gen,?0,?0):gen:prec ploth(${3 cookie}, ${3 wrapper}, $1, $2, $4, $5, $prec)
+Prototype: V=GGED0,M,D0,L,p\nParametric|1; Recursive|2; no_Rescale|4; no_X_axis|8; no_Y_axis|16; no_Frame|32; no_Lines|64; Points_too|128; Splines|256; no_X_ticks|512; no_Y_ticks|1024; Same_ticks|2048; Complex|4096
+Help: ploth(X=a,b,expr,{flags=0},{n=0}): plot of expression expr, X goes
+ from a to b in high resolution. Both flags and n are optional. Binary digits
+ of flags mean: 1=Parametric, 2=Recursive, 4=no_Rescale, 8=no_X_axis,
+ 16=no_Y_axis, 32=no_Frame, 64=no_Lines (do not join points), 128=Points_too
+ (plot both lines and points), 256=Splines (use cubic splines),
+ 512=no_X_ticks, 1024= no_Y_ticks, 2048=Same_ticks (plot all ticks with the
+ same length), 4096=Complex (the two coordinates of each point are encoded
+ as a complex number). n specifies number of reference points on the graph
+ (0=use default value). Returns a vector for the bounding box.
+Doc: high precision plot of the function $y=f(x)$ represented by the expression
+ \var{expr}, $x$ going from $a$ to $b$. This opens a specific window (which is
+ killed whenever you click on it), and returns a four-component vector giving
+ the coordinates of the bounding box in the form
+ $[\var{xmin},\var{xmax},\var{ymin},\var{ymax}]$.
+
+ \misctitle{Important note} \kbd{ploth} may evaluate \kbd{expr} thousands of
+ times; given the relatively low resolution of plotting devices, few
+ significant digits of the result will be meaningful. Hence you should keep
+ the current precision to a minimum (e.g.~9) before calling this function.
+
+ $n$ specifies the number of reference point on the graph, where a value of 0
+ means we use the hardwired default values (1000 for general plot, 1500 for
+ parametric plot, and 8 for recursive plot).
+
+ If no $\fl$ is given, \var{expr} is either a scalar expression $f(X)$, in which
+ case the plane curve $y=f(X)$ will be drawn, or a vector
+ $[f_1(X),\dots,f_k(X)]$, and then all the curves $y=f_i(X)$ will be drawn in
+ the same window.
+
+ \noindent The binary digits of $\fl$ mean:
+
+ \item $1 = \kbd{Parametric}$: \tev{parametric plot}. Here \var{expr} must
+ be a vector with an even number of components. Successive pairs are then
+ understood as the parametric coordinates of a plane curve. Each of these are
+ then drawn.
+
+ For instance:
+ \bprog
+ ploth(X=0,2*Pi,[sin(X),cos(X)], "Parametric")
+ ploth(X=0,2*Pi,[sin(X),cos(X)])
+ ploth(X=0,2*Pi,[X,X,sin(X),cos(X)], "Parametric")
+ @eprog\noindent draw successively a circle, two entwined sinusoidal curves
+ and a circle cut by the line $y=x$.
+
+ \item $2 = \kbd{Recursive}$: \tev{recursive plot}. If this flag is set,
+ only \emph{one} curve can be drawn at a time, i.e.~\var{expr} must be either a
+ two-component vector (for a single parametric curve, and the parametric flag
+ \emph{has} to be set), or a scalar function. The idea is to choose pairs of
+ successive reference points, and if their middle point is not too far away
+ from the segment joining them, draw this as a local approximation to the
+ curve. Otherwise, add the middle point to the reference points. This is
+ fast, and usually more precise than usual plot. Compare the results of
+ \bprog
+ ploth(X=-1,1, sin(1/X), "Recursive")
+ ploth(X=-1,1, sin(1/X))
+ @eprog\noindent
+ for instance. But beware that if you are extremely unlucky, or choose too few
+ reference points, you may draw some nice polygon bearing little resemblance
+ to the original curve. For instance you should \emph{never} plot recursively
+ an odd function in a symmetric interval around 0. Try
+ \bprog
+ ploth(x = -20, 20, sin(x), "Recursive")
+ @eprog\noindent
+ to see why. Hence, it's usually a good idea to try and plot the same curve
+ with slightly different parameters.
+
+ The other values toggle various display options:
+
+ \item $4 = \kbd{no\_Rescale}$: do not rescale plot according to the
+ computed extrema. This is used in conjunction with \tet{plotscale} when
+ graphing multiple functions on a rectwindow (as a \tet{plotrecth} call):
+ \bprog
+   s = plothsizes();
+   plotinit(0, s[2]-1, s[2]-1);
+   plotscale(0, -1,1, -1,1);
+   plotrecth(0, t=0,2*Pi, [cos(t),sin(t)], "Parametric|no_Rescale")
+   plotdraw([0, -1,1]);
+ @eprog\noindent
+ This way we get a proper circle instead of the distorted ellipse produced by
+ \bprog
+   ploth(t=0,2*Pi, [cos(t),sin(t)], "Parametric")
+ @eprog
+
+ \item $8 = \kbd{no\_X\_axis}$: do not print the $x$-axis.
+
+ \item $16 = \kbd{no\_Y\_axis}$: do not print the $y$-axis.
+
+ \item $32 = \kbd{no\_Frame}$: do not print frame.
+
+ \item $64 = \kbd{no\_Lines}$: only plot reference points, do not join them.
+
+ \item $128 = \kbd{Points\_too}$: plot both lines and points.
+
+ \item $256 = \kbd{Splines}$: use splines to interpolate the points.
+
+ \item $512 = \kbd{no\_X\_ticks}$: plot no $x$-ticks.
+
+ \item $1024 = \kbd{no\_Y\_ticks}$: plot no $y$-ticks.
+
+ \item $2048 = \kbd{Same\_ticks}$: plot all ticks with the same length.
+
+ \item $4096 = \kbd{Complex}$: is a parametric plot but where each member of
+ \kbd{expr} is considered a complex number encoding the two coordinates of a
+ point. For instance:
+ \bprog
+ ploth(X=0,2*Pi,exp(I*X), "Complex")
+ ploth(X=0,2*Pi,[(1+I)*X,exp(I*X)], "Complex")
+ @eprog\noindent will draw respectively a circle and a circle cut by the line
+ $y=x$.
+
+ \synt{ploth}{void *E, GEN (*eval)(void*, GEN), GEN a, GEN b, long flags, long n, long prec},

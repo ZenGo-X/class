@@ -1,0 +1,16 @@
+Function: msstar
+Section: modular_symbols
+C-Name: msstar
+Prototype: GDG
+Help: msstar(M,{H}): M being a full modular symbol space,
+ as given by msinit, return the matrix of the * involution, induced by
+ complex conjugation, acting on the (stable) subspace H (M if omitted).
+Doc: $M$ being a full modular symbol space, as given by \kbd{msinit},
+ return the matrix of the \kbd{*} involution, induced by complex conjugation,
+ acting on the (stable) subspace $H$ ($M$ if omitted).
+ \bprog
+ ? M = msinit(11,2); \\ M_2(Gamma_0(11))
+ ? w = msstar(M);
+ ? w^2 == 1
+ %3 = 1
+ @eprog

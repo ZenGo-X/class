@@ -1,0 +1,82 @@
+Function: varlower
+Section: conversions
+C-Name: varlower
+Prototype: sDn
+Help: varlower(name,{v}): return a variable 'name' whose priority is lower
+ than the priority of v (of all existing variables if v is omitted.
+Doc: return a variable \emph{name} whose priority is lower
+ than the priority of $v$ (of all existing variables if $v$ is omitted).
+ This is a counterpart to \tet{varhigher}.
+
+ New GP variables directly created by the interpreter always
+ have lower priority than existing GP variables, but it is not easy
+ to check whether an identifier is currently unused, so that the
+ corresponding variable has the expected priority when it's created!
+ Thus, depending on the session history, the same command may fail or succeed:
+ \bprog
+ ? t; z;  \\ now t > z
+ ? rnfequation(t^2+1,z^2-t)
+  ***   at top-level: rnfequation(t^2+1,z^
+  ***                 ^--------------------
+  *** rnfequation: incorrect priority in rnfequation: variable t >= t
+ @eprog\noindent Restart and retry:
+ \bprog
+ ? z; t;  \\ now z > t
+ ? rnfequation(t^2+1,z^2-t)
+ %2 = z^4 + 1
+ @eprog\noindent It is quite annoying for package authors, when trying to
+ define a base ring, to notice that the package may fail for some users
+ depending on their session history. The safe way to do this is as follows:
+ \bprog
+ ? z; t;  \\ In new session: now z > t
+ ...
+ ? t = varlower("t", 'z);
+ ? rnfequation(t^2+1,z^2-2)
+ %2 = z^4 - 2*z^2 + 9
+ ? variable()
+ %3 = [x, y, z, t]
+ @eprog
+ \bprog
+ ? t; z;  \\ In new session: now t > z
+ ...
+ ? t = varlower("t", 'z); \\ create a new variable, still printed "t"
+ ? rnfequation(t^2+1,z^2-2)
+ %2 = z^4 - 2*z^2 + 9
+ ? variable()
+ %3 = [x, y, t, z, t]
+ @eprog\noindent Now both constructions succeed. Note that in the
+ first case, \kbd{varlower} is essentially a no-op, the existing variable $t$
+ has correct priority. While in the second case, two different variables are
+ displayed as \kbd{t}, one with higher priority than $z$ (created in the first
+  line) and another one with lower priority (created by \kbd{varlower}).
+
+ \misctitle{Caution 1}
+ The \emph{name} is an arbitrary character string, only used for display
+ purposes and need not be related to the GP variable holding the result, nor
+ to be a valid variable name. In particular the \emph{name} can
+ not be used to retrieve the variable, it is not even present in the parser's
+ hash tables.
+ \bprog
+ ? x = varlower("#");
+ ? x^2
+ %2 = #^2
+ @eprog
+ \misctitle{Caution 2} There are a limited number of variables and if no
+ existing variable with the given display name has the requested
+ priority, the call to \kbd{varlower} uses up one such slot. Do not create
+ new variables in this way unless it's absolutely necessary,
+ reuse existing names instead and choose sensible priority requirements:
+ if you only need a variable with higher priority than $x$, state so
+ rather than creating a new variable with highest priority.
+ \bprog
+ \\ quickly use up all variables
+ ? n = 0; while(1,varlower("x"); n++)
+  ***   at top-level: n=0;while(1,varlower("x");n++)
+  ***                             ^-------------------
+  *** varlower: no more variables available.
+  ***   Break loop: type 'break' to go back to GP prompt
+ break> n
+ 65510
+ \\ infinite loop: here we reuse the same 'tmp'
+ ? n = 0; while(1,varlower("tmp", x); n++)
+ @eprog

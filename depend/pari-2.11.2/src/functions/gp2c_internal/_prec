@@ -1,0 +1,9 @@
+Function: _ndec2prec
+Class: gp2c_internal
+Description:
+ (small):small      ndec2prec($1)
+
+Function: _ndec2nbits
+Class: gp2c_internal
+Description:
+ (small):small      ndec2nbits($1)

@@ -1,0 +1,101 @@
+_gmp_list="gmp GMPLIBS GMPINCLUDE"
+gmp=
+case "$with_gmp" in
+  yes|"");;
+  *)
+  if test -z "$with_gmp_lib"; then
+    with_gmp_lib="$with_gmp/lib"
+  fi
+  if test -z "$with_gmp_include"; then
+    with_gmp_include="$with_gmp/include"
+  fi;;
+esac
+
+pth="$with_gmp_include"
+x=`./locate 'gmp.h' '' $pth`
+case $x in
+ ?:/*|/*) gmp_include=`dirname $x`
+   echo ..."Found gmp header in $gmp_include"
+   GMPINCLUDE="-I$gmp_include"
+   ;;
+esac
+
+try() { GMPLIBS=$1; cmd="$cmd0 $1"; . log_cmd; }
+
+exe=$osname-$arch-gmp$$$exe_suff
+cmd0="$CC $CFLAGS $extraflag $GMPINCLUDE -o $exe gmp_version.c"
+
+if test -n "$with_gmp_lib"; then
+  gmp=$with_gmp_lib
+  try "-L$gmp -lgmp"
+fi
+if test ! -r $exe; then
+  try "-lgmp"
+fi
+if test ! -r $exe; then
+  lib=gmp; . ./locatelib
+  if test -n "$gmp"; then
+    try "-L$gmp -lgmp"
+  fi
+fi
+
+if test -r $exe; then
+  gmp_version=`env LD_LIBRARY_PATH="$LD_LIBRARY_PATH$dir_sep$gmp" $RUNTEST $exe`;
+fi
+case "$gmp_version" in
+  unsupported) gmp=
+    echo "### Your GMP library ABI is unsupported.";;
+  "") gmp=
+    cmd="$CC $CFLAGS $extraflag $GMPINCLUDE -o $exe ansi.c $GMPLIBS"
+    . log_cmd
+    if test -r $exe; then
+      echo "### Your version of GMP is too old for PARI. Please upgrade"
+    else
+      echo "### Your GMP library is incompatible with the compiler settings."
+    fi;;
+  *) if test -z "$gmp"; then gmp=yes; fi;;
+esac
+
+if test -n "$gmp"; then
+  cmd="$CC $CFLAGS $extraflag $GMPINCLUDE -o $exe gmp_mismatch.c $GMPLIBS"
+  . log_cmd
+  if test ! -r $exe; then
+    gmp=
+    echo "### GMP headers mismatch: try both --with-gmp-lib and --with-gmp-include"
+  fi
+fi
+
+. cleanup_exe
+
+if test -z "$gmp"; then
+  echo "### Building without GNU MP support"
+else
+  if test "$fastread" = yes; then
+    echo "Using GNU MP, version $gmp_version"
+  else
+    cat << EOM
+==========================================================================
+GNU MP library can be used as an alternate multiprecision kernel, which
+is faster than PARI's native one as soon as integers larger than 10^100
+are considered. Unfortunately, with GNU MP, libpari is binary incompatible
+with the native one. Despite this, you should only answer 'no' to the
+following question if you plan to use libpari (not only the gp shell)
+and have stringent backward compatibility requirements.
+EOM
+    echo $n "Do you want to use GNU MP library instead of the native kernel? $c"
+    if test "$with_gmp" = yes; then dflt=y; else dflt=n; fi
+    rep='y n'; . ./myread
+    case $ans in
+      n) gmp=;;
+    esac
+  fi
+fi
+
+if test -n "$gmp"; then
+  kernlvl1=gmp
+else
+  kernlvl1=none
+  GMPINCLUDE=
+  GMPLIBS=
+fi
+. get_pretty

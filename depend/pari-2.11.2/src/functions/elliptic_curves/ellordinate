@@ -1,0 +1,10 @@
+Function: ellordinate
+Section: elliptic_curves
+C-Name: ellordinate
+Prototype: GGp
+Help: ellordinate(E,x): y-coordinates corresponding to x-ordinate x on
+ elliptic curve E.
+Doc:
+ gives a 0, 1 or 2-component vector containing
+ the $y$-coordinates of the points of the curve $E$ having $x$ as
+ $x$-coordinate.

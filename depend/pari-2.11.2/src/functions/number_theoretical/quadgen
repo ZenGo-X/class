@@ -1,0 +1,25 @@
+Function: quadgen
+Section: number_theoretical
+C-Name: quadgen0
+Prototype: GDn
+Help: quadgen(D,{v = 'w}): standard generator g of quadratic order of
+ discriminant D. If v is given, the variable name is used to display g,
+ else 'w' is used.
+Doc: creates the quadratic number\sidx{omega} $\omega=(a+\sqrt{D})/2$ where
+ $a=0$ if $D\equiv0\mod4$,
+ $a=1$ if $D\equiv1\mod4$, so that $(1,\omega)$ is an integral basis for the
+ quadratic order of discriminant $D$. $D$ must be an integer congruent to 0 or
+ 1 modulo 4, which is not a square.
+ If \var{v} is given, the variable name is used to display $g$ else 'w' is used.
+
+ \bprog
+ ? w = quadgen(5, 'w); w^2 - w - 1
+ %1 = 0
+ ? w = quadgen(0, 'w)
+  ***   at top-level: w=quadgen(0)
+  ***                   ^----------
+  *** quadgen: domain error in quadpoly: issquare(disc) = 1
+ @eprog
+Variant:
+ When \var{v} does not matter, the function
+ \fun{GEN}{quadgen}{GEN D} is also available.

@@ -1,0 +1,53 @@
+\\ package: galpol
+
+inn(len, c1, c2, f) = simplify(lift(sum(i=1,#len,len[i]*c1[i]*subst(c2[i],y,1/y))*Mod(1,f)));
+
+testchar(G, n = poldegree(G.pol))=
+{
+  my(cl = galoisconjclasses(G));
+  my(len = apply(length, cl));
+  my([ct,e] = galoischartable(G));
+  my(dim = simplify(ct[1,]));
+  my(one = vector(#dim,k,1));
+  my(f = polcyclo(e,y));
+  if (#len!=#dim, error("dim1"));
+  if (sum(i=1,#dim,dim[i]^2)!=n,error("dim2"));
+  if (sum(i=1,#len,len[i])!=n,error("dim3"));
+  M=matrix(#len,#dim,i,j,inn(len,ct[,i],ct[,j],f));
+  if(M!=n*matid(#len),error("columns"));
+  M=matrix(#len,#dim,i,j,inn(one,ct[i,],ct[j,],f));
+  if(!matisdiagonal(M),error("lines"));
+  for(i=1,#len,if(M[i,i]<0,error("diag")));
+}
+
+{
+ for(i=1,16,
+   for(j=1,galoisgetpol(i),
+     [pol,den] = galoisgetpol(i,j,1);
+     gal = galoisinit(pol,den);
+     testchar(gal);
+   ));
+}
+
+\\#1931
+G=galoisinit(x^24-24*x^22+253*x^20-1540*x^18+5984*x^16-15488*x^14+27026*x^12-31448*x^10+23540*x^8-10528*x^6+2416*x^4-192*x^2+1);
+setrand(211); testchar(G)
+
+dopol(G)=
+{
+  my([T,o]=galoischartable(G));
+  for(i=1,#T,printsep(":", T[,i], galoischardet(G,T[,i],o),
+                                  galoischarpoly(G,T[,i],o)));
+}
+G=galoisinit(x^10-2*x^9-20*x^8+2*x^7+69*x^6-x^5-69*x^4+2*x^3+20*x^2-2*x-1);
+dopol(G)
+
+{G = [Vecsmall([1, 2, 3, 4, 5]), Vecsmall([1, 5, 4, 3, 2]),
+           Vecsmall([2, 1, 5, 4, 3]), Vecsmall([2, 3, 4, 5, 1]),
+           Vecsmall([3, 2, 1, 5, 4]), Vecsmall([3, 4, 5, 1, 2]),
+           Vecsmall([4, 3, 2, 1, 5]), Vecsmall([4, 5, 1, 2, 3]),
+           Vecsmall([5, 1, 2, 3, 4]), Vecsmall([5, 4, 3, 2, 1])];}
+dopol(G)
+
+G=[[Vecsmall([28,40,13,30,4,19,22,7,8,32,25,38,33,16,29,18,14,24,21,9,3,1,11,5,36,23,35,10,34,20,2,37,27,6,12,41,31,42,15,17,39,26]),Vecsmall([3,38,1,42,21,8,12,6,11,29,9,7,17,23,30,34,13,35,31,33,5,41,14,36,37,28,32,26,10,15,19,27,20,16,18,24,25,2,40,39,22,4])],Vecsmall([21,2])];
+testchar(G, 42);

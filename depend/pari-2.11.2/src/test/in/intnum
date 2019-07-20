@@ -1,0 +1,136 @@
+default(echo,1);
+allocatemem(20 * 10^6);
+check(a,b) = my(t = abs((a-b)/b)); if (t, ceil(log(t)/log(10)), -oo);
+\p96
+check(intcirc(s=1, 0.5, zeta(s)), 1)
+
+f(s) = gamma(s)^3;  \\ f(c+it) decrease as exp(-3Pi|t|/2)
+c = 2; \\ arbitrary
+A = [-oo,3*Pi/2];
+B = [+oo,3*Pi/2];
+F(z) =
+{ my (a = -log(z));
+  intnum(t=A,B, exp(a*I*t), T)*exp(a*c) / (2*Pi);
+}
+T = intfuncinit(t=A,B, f(c + I*t));
+ref=F(4);
+\p38
+T = intfuncinit(t=A,B, f(c + I*t));
+check(F(4), ref)
+
+\p96
+f(x) = 1/(exp(x)-1) - exp(-x)/x;
+F = truncate( f(t + O(t^7)) );
+g(x) = if (x > 1e-18, f(x), subst(F,t,x));
+check(intnum(x = 0, [oo,1],  f(x)), Euler)
+check(intnum(x = 0, [oo,1],  g(x)), Euler)
+check(intnum(x = 0, 1,  1/sqrt(x)), 2)
+check(intnum(x = [0,-1/2], 1,  1/sqrt(x)), 2)
+check(intnum(x = 100000, oo, 1/(1+x^2)), atan(1/100000))
+check(intnum(x=0,1,x*cos(Pi*x)), -2/Pi^2)
+check(intnum(x=0,1,x*cos(Pi*x),2), -2/Pi^2)
+
+check(intnum(x = [0,-1/2], [oo,-3/2],  1/(sqrt(x)+x^(3/2))), Pi)
+check(intnum(x = [-oo,-3/2], [oo,-3/2],  1/(1+abs(x)^(3/2))), 8*Pi/sqrt(27))
+check(intnum(x = -oo, oo, 1/(1+x^2)), Pi)
+
+f(x)=if (x<0,1/(1+(-x)^(3/2)), 1/(1+x^(5/2)));
+a=4*Pi/sqrt(27) + 2*(Pi/5)/sin(2*Pi/5);
+check(intnum(x = [-oo,-3/2], [oo,-5/2], f(x)),a)
+f(x)=if (x<0,1/(1+(-x)^(3/2)), exp(-x));
+check(intnum(x = [-oo,-3/2], [oo,1], f(x)), 4*Pi/sqrt(27)+1)
+f(x)=if (x<0,1/(1+(-x)^(3/2)), sinc(x));
+check(intnum(x = [-oo,-3/2], [oo,-I], f(x)), 4*Pi/sqrt(27)+Pi/2)
+
+f(x)=if (x<0,exp(2*x), 1/(1+x^(3/2)));
+check(intnum(x = [-oo,2], [oo,-3/2], f(x)), 1/2+4*Pi/sqrt(27))
+f(x)=if (x<0,exp(2*x), 1/(1+x^(5/2)));
+check(intnum(x = [-oo,2], [oo,-5/2], f(x)), 1/2+2*(Pi/5)/sin(2*Pi/5))
+f(x)=if (x<0,exp(2*x), exp(-x));
+check(intnum(x = [-oo,2], [oo,1], f(x)), 3/2)
+f(x)=if (x<0,exp(2*x), sinc(x));
+check(intnum(x = [-oo,2], [oo,-I], f(x)), 1/2+Pi/2)
+
+f(x)=if (x<0,2*sinc(2*x), 1/(1+x^(3/2)));
+check(intnum(x = [-oo,-2*I], [oo,-3/2], f(x)), Pi/2+4*Pi/sqrt(27))
+f(x)=if (x<0,2*sinc(2*x), 1/(1+x^(5/2)));
+check(intnum(x = [-oo,-2*I], [oo,-5/2], f(x)), Pi/2+2*(Pi/5)/sin(2*Pi/5))
+f(x)=if (x<0,2*sinc(2*x), exp(-x));
+check(intnum(x = [-oo,-2*I], [oo,1], f(x)), Pi/2+1)
+f(x)=if (x<0,2*sinc(2*x), sinc(x));
+check(intnum(x = [-oo,-2*I], [oo,-I], f(x)), Pi)
+
+f(x)=cos((3+tanh(x))*x)/sqrt(1+x^2);
+a = intnum(x = [-oo,2*I], [oo,4*I], f(x), 1);
+check(intnum(x = [-oo,2*I], [oo,4*I], f(x)), a)
+
+check(intnum(x=[0,-1/2],[1,-1/3], x^(-1/2) + (1-x)^(-1/3)), 7/2)
+T=intnuminit([0,-1/2],[1,-1/3]);
+check(intnum(x=[0,-1/2],[1,-1/3], x^(-1/2) + (1-x)^(-1/3), T), 7/2)
+
+check(intnum(x = 0, [oo,1], sinc(x)), Pi/2)
+check(intnum(x = 0, [oo,-I], sinc(x)), Pi/2)
+check(intnum(x = 0, [oo,-2*I], 2*sinc(2*x)), Pi/2)
+A=intnum(x=0,1,sinc(x/2)^2/2)+intnum(x=1,oo,1/x^2)-intnum(x=1,[oo,I],cos(x)/x^2);
+check(A, Pi/2)
+check(intnum(x = 0, [oo, 1], sin(x)^3*exp(-x)), 3/10)
+check(intnum(x = 0, [oo,-I], sin(x)^3*exp(-x)), 3/10)
+tab = intnuminit(0,[oo,-I], 1);
+check(intnum(x = 0, oo, sin(x)^3*exp(-x), tab), 3/10)
+check(intnum(x = 0, [oo, -I], x^2*sin(x)), -2)
+tab = intnuminit(-1,1);
+check(intnum(x=-1,1, intnum(y=-sqrt(1-x^2),sqrt(1-x^2),x^2+y^2,tab),tab), Pi/2)
+\p96
+check(intnumgauss(x=0,1,sin(x)), 1-cos(1))
+T=intnumgaussinit();
+check(intnumgauss(x=0,1,1/(x+1),T), log(2))
+check(intnumgauss(x=0,1,1/(x+1)^(4/3),T), 3-3/2^(1/3))
+check(intnumgauss(x=2,1,x,T),-3/2)
+check(intnumgauss(x=-1,1,1/(1+x^2), 20), Pi/2)
+T=intnumgaussinit(100);
+check(intnumgauss(x=-2,2,1/(1+x^2), T), 2*atan(2))
+check(intnumgauss(t=1,2,t,1),3/2)
+
+\\ Power series
+checkps(a,b) = my(t = norml2(Vec(b-a))); if (t, ceil(log(t)/log(10)), -oo);
+
+checkps(intnum(t=0,x,exp(t)),exp(x)-1)
+checkps(intnum(t=-x,0,exp(t)),1-exp(-x))
+checkps(intnum(t=-x,x,exp(t)),exp(x)-exp(-x))
+tab = intnuminit(1-x,1+y);
+norml2(apply(Vec,Vec(intnum(t=-x,y,exp(t),tab)-(exp(y)-exp(-x)))))
+checkps(intnum(t=[0,-1/2],x^2,1/sqrt(t)),2*x)
+checkps(intnum(t=1-x^2,[1,-1/2],1/sqrt(1-t)),2*x)
+checkps(intnum(t=[x^2,-1/2],1,1/sqrt(t)),2-2*x)
+checkps(intnum(t=0,[1-x^2,-1/2],1/sqrt(1-t)),2-2*x)
+f(t)=(t^2*(1-t))^(1/3);
+checkps(intnum(t=[x^3,-1/3],[1-x^3,-2/3],(2/3*t-t^2)/(t^2*(1-t))^(2/3)),f(1-x^3)-f(x^3))
+
+\p38
+intnum(x=-oo,[0,-1/2],1/sqrt(-x*(x^4+1)))
+
+\pb20
+intnumromb(x=0,1,sin(x))
+intnumromb(x=0,1,sin(x), 1)
+intnumromb(x=1,100,exp(-x^2), 2)
+intnumromb(x=0,1,sinc(x), 3)
+\\ wrong result at this accuracy
+intnumromb(x=0,110,x, 1)
+\\ wrong result at this accuracy
+intnumromb(x=2,110,x, 1)
+\\ wrong result
+abs(intnumromb(x=-110,90,x, 1)+1998.3) < 1e-1
+intnumromb(x=2,1,x, 1)
+intnuminit(-oo,oo,1);
+
+\\ Errors
+intnuminit([x,-1/2],x)
+intnum(t=[x^2,-1/2],1,1/sqrt(t),intnuminit([0,-1/2],1))
+intnumgauss(t=1,2,1,"")
+intnuminit([oo,1+I],[oo,""])
+intnuminit([oo,1+I,2],[oo,1])
+intnum(x=oo,oo,1)
+intnum(x=-oo,-oo,1)
+intnuminit(x=-oo,oo,-1);
+intfuncinit(t=0,1,s);
+intfuncinit(t=[-oo,I],[oo,I],s);

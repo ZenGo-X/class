@@ -1,0 +1,36 @@
+test(N)=
+{
+  default(primelimit, N);
+  for (b=10, 20, print1(prime(2^b), " "));
+  for (b=10, 26, print1(primepi(2^b), " "));
+}
+
+test(10^6);
+test(10^8);
+primepi(2^32)
+precprime(1)
+primepi(2750160) \\ #1855
+
+primes(50)
+primes([-5,5])
+primes([10,20])
+primes([2^32-100,2^32+100])
+primes([2^64-100,2^64+100])
+#primes([2^50,2^50+200000])
+#primes([10^7, 10^7+10^6])
+#primes([2^1023+5000, 2^1023+7000])
+
+nextprime(2^32-1)
+nextprime(2^64-1)
+nextprime(2.5)
+precprime(2.5)
+
+
+\\ Errors, keep at end of file
+\\#1668
+primes([1,Pol(2)]);
+nextprime(x)
+precprime(x)
+\\#2113 Cannot test: the test would not finish before end of universe.
+\\\p520
+\\primepi(Pi*10^100)

@@ -1,0 +1,56 @@
+Function: ideallist
+Section: number_fields
+C-Name: ideallist0
+Prototype: GLD4,L,
+Help: ideallist(nf,bound,{flag=4}): vector of vectors L of all idealstar of
+ all ideals of norm<=bound. If (optional) flag is present, its binary digits
+ are toggles meaning 1: give generators; 2: add units; 4: give only the
+ ideals and not the bid.
+Doc: computes the list
+ of all ideals of norm less or equal to \var{bound} in the number field
+ \var{nf}. The result is a row vector with exactly \var{bound} components.
+ Each component is itself a row vector containing the information about
+ ideals of a given norm, in no specific order, depending on the value of
+ $\fl$:
+
+ The possible values of $\fl$ are:
+
+ \quad 0: give the \var{bid} attached to the ideals, without generators.
+
+ \quad 1: as 0, but include the generators in the \var{bid}.
+
+ \quad 2: in this case, \var{nf} must be a \var{bnf} with units. Each
+ component is of the form $[\var{bid},U]$, where \var{bid} is as case 0
+ and $U$ is a vector of discrete logarithms of the units. More precisely, it
+ gives the \kbd{ideallog}s with respect to \var{bid} of \kbd{bnf.tufu}.
+ This structure is technical, and only meant to be used in conjunction with
+ \tet{bnrclassnolist} or \tet{bnrdisclist}.
+
+ \quad 3: as 2, but include the generators in the \var{bid}.
+
+ \quad 4: give only the HNF of the ideal.
+
+ \bprog
+ ? nf = nfinit(x^2+1);
+ ? L = ideallist(nf, 100);
+ ? L[1]
+ %3 = [[1, 0; 0, 1]]  \\@com A single ideal of norm 1
+ ? #L[65]
+ %4 = 4               \\@com There are 4 ideals of norm 4 in $\Z[i]$
+ @eprog
+ If one wants more information, one could do instead:
+ \bprog
+ ? nf = nfinit(x^2+1);
+ ? L = ideallist(nf, 100, 0);
+ ? l = L[25]; vector(#l, i, l[i].clgp)
+ %3 = [[20, [20]], [16, [4, 4]], [20, [20]]]
+ ? l[1].mod
+ %4 = [[25, 18; 0, 1], []]
+ ? l[2].mod
+ %5 = [[5, 0; 0, 5], []]
+ ? l[3].mod
+ %6 = [[25, 7; 0, 1], []]
+ @eprog\noindent where we ask for the structures of the $(\Z[i]/I)^*$ for all
+ three ideals of norm $25$. In fact, for all moduli with finite part of norm
+ $25$ and trivial Archimedean part, as the last 3 commands show. See
+ \tet{ideallistarch} to treat general moduli.

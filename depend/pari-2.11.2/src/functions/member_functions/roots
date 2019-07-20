@@ -1,0 +1,9 @@
+Function: _.roots
+Section: member_functions
+C-Name: member_roots
+Prototype: mG
+Help: _.roots
+Description:
+ (gal):vec:copy                 gal_get_roots($1)
+ (nf):vec:copy                  nf_get_roots($1)
+ (gen):vec:copy                 member_roots($1)

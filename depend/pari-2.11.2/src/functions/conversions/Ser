@@ -1,0 +1,59 @@
+Function: Ser
+Section: conversions
+C-Name: Ser0
+Prototype: GDnDGDP
+Help: Ser(s,{v='x},{d=seriesprecision}): convert s into a power series with
+ variable v and precision d, starting with the constant coefficient.
+Doc: transforms the object $s$ into a power series with main variable $v$
+ ($x$ by default) and precision (number of significant terms) equal to
+ $d \geq 0$ ($d = \kbd{seriesprecision}$ by default). If $s$ is a
+ scalar, this gives a constant power series in $v$ with precision \kbd{d}.
+ If $s$ is a polynomial, the polynomial is truncated to $d$ terms if needed
+ \bprog
+ ? \ps
+   seriesprecision = 16 significant terms
+ ? Ser(1)  \\ 16 terms by default
+ %1 = 1 + O(x^16)
+ ? Ser(1, 'y, 5)
+ %2 = 1 + O(y^5)
+ ? Ser(x^2,, 5)
+ %3 = x^2 + O(x^7)
+ ? T = polcyclo(100)
+ %4 = x^40 - x^30 + x^20 - x^10 + 1
+ ? Ser(T, 'x, 11)
+ %5 = 1 - x^10 + O(x^11)
+ @eprog\noindent The function is more or less equivalent with multiplication by
+ $1 + O(v^d)$ in theses cases, only faster.
+
+ For the remaining types, vectors and power series, we first explain what
+ occurs if $d$ is omitted. In this case, the function uses exactly the amount
+ of information given in the input:
+
+ \item If $s$ is already a power series in $v$, we return it verbatim;
+
+ \item If $s$ is a vector, the coefficients of the vector are
+ understood to be the coefficients of the power series starting from the
+ constant term (as in \tet{Polrev}$(x)$); in other words we convert
+ \typ{VEC} / \typ{COL} to the power series whose significant terms are exactly
+ given by the vector entries.
+
+ On the other hand, if $d$ is explicitly given, we abide by its value
+ and return a series, truncated or extended with zeros as needed, with
+ $d$ significant terms.
+
+ \bprog
+ ? v = [1,2,3];
+ ? Ser(v, t) \\ 3 terms: seriesprecision is ignored!
+ %7 = 1 + 2*t + 3*t^2 + O(t^3)
+ ? Ser(v, t, 7)  \\ 7 terms as explicitly requested
+ %8 = 1 + 2*t + 3*t^2 + O(t^7)
+ ? s = 1+x+O(x^2);
+ ? Ser(s)
+ %10 = 1 + x + O(x^2)  \\ 2 terms: seriesprecision is ignored
+ ? Ser(s, x, 7)  \\ extend to 7 terms
+ %11 = 1 + x + O(x^7)
+ ? Ser(s, x, 1)  \\ truncate to 1 term
+ %12 = 1 + O(x)
+ @eprog\noindent
+ The warning given for \kbd{Pol} also applies here: this is not a substitution
+ function.

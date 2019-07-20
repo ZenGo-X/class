@@ -1,0 +1,234 @@
+% Copyright (c) 2015 Karim Belabas.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU General Public License
+
+% TeX macros for gp's reference card. Based on Stephen Gildea's multicolumn
+% macro package, modified from his GNU emacs reference card. Based on an
+% earlier version by Joseph H. Silverman who kindly let me use his original
+% file.
+
+\def\versionnumber{2.35}% Version of these reference cards
+\def\PARIversion{2.11.0}% Version of PARI described on these reference cards
+\def\year{2018}
+\def\month{July}
+
+\special{papersize=29.7cm,21cm}
+
+% ignore parimacro.tex's \magnification setting
+\let\oldmagnification\magnification
+\catcode`@=11
+\def\magnification{\count@}%
+\catcode`@=12
+\input parimacro.tex
+\let\magnification\oldmagnification
+\ifPDF
+  \pdfpagewidth=11.69in
+  \pdfpageheight=8.26in
+\fi
+
+\newcount\columnsperpage
+% The final reference card has six columns, three on each side.
+% This file can be used to produce it in any of three ways:
+% 1 column per page
+%    produces six separate pages, each of which needs to be reduced to 80%.
+%    This gives the best resolution.
+% 2 columns per page
+%    produces three already-reduced pages.
+%    You will still need to cut and paste.
+% 3 columns per page
+%    produces two pages which must be printed sideways to make a
+%    ready-to-use 8.5 x 11 inch reference card.
+%    For this you need a dvi device driver that can print sideways.
+% [For 2 or 3 columns, you'll need 6 and 8 point fonts.]
+% Which mode to use is controlled by setting \columnsperpage below:
+\columnsperpage=3
+
+% You shouldn't need to modify anything below this line.
+
+\def\version{\month\ \year\ v\versionnumber}
+
+\def\shortcopyrightnotice{\vskip .5ex plus 2 fill
+  \centerline{\small \copyright\ \year\ Karim Belabas.
+  Permissions on back.  v\versionnumber}}
+
+\def\<#1>{$\langle${#1}$\rangle$}
+\def\copyrightnotice{\vskip 1ex plus 2 fill
+\begingroup\small
+\centerline{Based on an earlier version by Joseph H. Silverman}
+\centerline{\version. Copyright \copyright\ \year\ K. Belabas}
+
+Permission is granted to make and distribute copies of this card provided the
+copyright and this permission notice are preserved on all copies.
+
+Send comments and corrections to \<Karim.Belabas@math.u-bordeaux.fr>
+\endgroup}
+
+% make \bye not \outer so that the \def\bye in the \else clause below
+% can be scanned without complaint.
+\def\bye{\par\vfill\supereject\end}
+
+\newdimen\intercolumnskip
+\newbox\columna
+\newbox\columnb
+
+\def\ncolumns{\the\columnsperpage}
+
+\message{[\ncolumns\space
+  column\if 1\ncolumns\else s\fi\space per page]}
+
+\def\scaledmag#1{ scaled \magstep #1}
+
+% This multi-way format was designed by Stephen Gildea
+% October 1986.
+\if 1\ncolumns
+  \hsize 4in
+  \vsize 10in
+  \voffset -.7in
+  \font\titlefont=\fontname\tenbf \scaledmag3
+  \font\headingfont=\fontname\tenbf \scaledmag2
+  \font\smallfont=\fontname\sevenrm
+  \font\smallsy=\fontname\sevensy
+
+  \footline{\hss\folio}
+  \def\makefootline{\baselineskip10pt\hsize6.5in\line{\the\footline}}
+\else
+  \hsize 3.4in
+  \vsize 7.90in
+  \hoffset -.75in
+  \voffset -.815in
+  \font\titlefont=cmbx10 \scaledmag2
+  \font\headingfont=cmbx10 %\scaledmag1
+  \font\smallfont=cmr6
+  \font\smallsy=cmsy6
+  \font\eightrm=cmr8
+  \font\eightbf=cmbx8
+  \font\eightit=cmti8
+  \font\eighttt=cmtt8
+  \font\eightsy=cmsy8
+  \font\eightsl=cmsl8
+  \font\eighti=cmmi8
+  \font\eightex=cmex10 at 8pt
+  \textfont0=\eightrm
+  \textfont1=\eighti
+  \textfont2=\eightsy
+  \textfont3=\eightex
+  \def\rm{\fam0 \eightrm}
+  \def\bf{\eightbf}
+  \def\it{\eightit}
+  \def\tt{\eighttt}
+  \normalbaselineskip=.8\normalbaselineskip
+  \normallineskip=.8\normallineskip
+  \normallineskiplimit=.8\normallineskiplimit
+  \normalbaselines\rm %make definitions take effect
+
+  \if 2\ncolumns
+    \let\maxcolumn=b
+    \footline{\hss\rm\folio\hss}
+    \def\makefootline{\vskip 2in \hsize=6.86in\line{\the\footline}}
+  \else \if 3\ncolumns
+    \let\maxcolumn=c
+    \nopagenumbers
+  \else
+    \errhelp{You must set \columnsperpage equal to 1, 2, or 3.}
+    \errmessage{Illegal number of columns per page}
+  \fi\fi
+
+  \intercolumnskip=.45in
+  \def\abc{a}
+  \output={%
+      % This next line is useful when designing the layout.
+      %\immediate\write16{Column \folio\abc\space starts with \firstmark}
+      \if \maxcolumn\abc \multicolumnformat \global\def\abc{a}
+      \else\if a\abc
+        \global\setbox\columna\columnbox \global\def\abc{b}
+        %% in case we never use \columnb (two-column mode)
+        \global\setbox\columnb\hbox to -\intercolumnskip{}
+      \else
+        \global\setbox\columnb\columnbox \global\def\abc{c}\fi\fi}
+  \def\multicolumnformat{\shipout\vbox{\makeheadline
+      \hbox{\box\columna\hskip\intercolumnskip
+        \box\columnb\hskip\intercolumnskip\columnbox}
+      \makefootline}\advancepageno}
+  \def\columnbox{\leftline{\pagebody}}
+
+  \def\bye{\par\vfill\supereject
+    \if a\abc \else\null\vfill\eject\fi
+    \if a\abc \else\null\vfill\eject\fi
+    \end}
+\fi
+
+% we won't be using math mode much, so redefine some of the characters
+% we might want to talk about
+%\catcode`\^=12
+%\catcode`\_=12
+%\catcode`\~=12
+
+\chardef\\=`\\
+\chardef\{=`\{
+\chardef\}=`\}
+
+\hyphenation{}
+
+\parindent 0pt
+\parskip 0pt
+
+\def\small{\smallfont\textfont2=\smallsy\baselineskip=.8\baselineskip}
+
+\outer\def\newcolumn{\vfill\eject}
+
+\outer\def\title#1{{\titlefont\centerline{#1}}}
+
+\outer\def\section#1{\par\filbreak
+  \vskip 1ex plus .4ex minus .5ex
+  {\headingfont #1}\mark{#1}%
+  \vskip .5ex plus .3ex minus .5ex
+}
+
+\outer\def\subsec#1{\filbreak
+  \vskip 0.07ex plus 0.05ex
+  {\bf #1}
+  \vskip 0.03ex plus 0.05ex
+}
+
+\newdimen\keyindent
+\def\beginindentedkeys{\keyindent=1em}
+\def\endindentedkeys{\keyindent=0em}
+\endindentedkeys
+
+\def\kbd#1{{\tt#1}\null} %\null so not an abbrev even if period follows
+
+\newbox\libox
+\setbox\libox\hbox{\kbd{M-x }}
+\newdimen\liwidth
+\liwidth=\wd\libox
+
+\def\li#1#2{\leavevmode\hbox to \hsize{\hbox to .75\hsize
+  {\hskip\keyindent\relax#1\hfil}%
+  \hskip -\liwidth minus 1fil
+  \kbd{#2}\hfil}}
+
+\def\threecol#1#2#3{\hskip\keyindent\relax#1\hfil&\kbd{#2}\quad
+  &\kbd{#3}\quad\cr}
+
+\def\mod{\;\hbox{\rm mod}\;}
+\def\expr{\hbox{\it expr}}
+\def\seq{\hbox{\it seq}}
+\def\args{\hbox{\it args}}
+\def\file{\hbox{\it file}}
+\def\QQ{\hbox{\bf Q}}
+\def\MM{\hbox{\bf M}}
+\def\ZZ{\hbox{\bf Z}}
+\def\PP{\hbox{\bf P}}
+\def\RR{\hbox{\bf R}}
+\def\FF{\hbox{\bf F}}
+\def\CC{\hbox{\bf C}}
+\def\deg{\mathop{\rm deg}}
+\def\bs{\char'134}
+\def\pow{\^{}\hskip0pt}
+\def\til{\raise-0.3em\hbox{\~{}}}
+\def\typ#1{\kbd{t\_#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{\TITLE}
+\centerline{(PARI-GP version \PARIversion)}

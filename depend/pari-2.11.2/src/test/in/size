@@ -1,0 +1,17 @@
+default(realprecision,38)
+long_is_64 = (#(2^32) == 1);
+#0.
+#1
+#1. == if (long_is_64==1, 2, 4)
+length([x])
+length(List())
+length(List([1,2,3]))
+length("abc")
+matsize([1,2,3])
+matsize([1,2,3]~)
+matsize(matrix(2,3))
+matsize(1)
+
+sizebyte(0) == if (long_is_64, 16, 8)
+sizebyte(x+1) == if (long_is_64, 80, 40)
+sizebyte([x,y]) == if (long_is_64, 136, 68)

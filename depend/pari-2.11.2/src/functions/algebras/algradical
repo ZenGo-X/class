@@ -1,0 +1,34 @@
+Function: algradical
+Section: algebras
+C-Name: algradical
+Prototype: G
+Help: algradical(al): Jacobson radical of the algebra al.
+Doc: \var{al} being a table algebra output by \tet{algtableinit}, returns a
+ basis of the Jacobson radical of the algebra \var{al} over its prime field
+ ($\Q$ or $\F_p$).
+
+ Here is an example with $A = \Q[x]/(x^2)$, with the basis~$(1,x)$:
+ \bprog
+ ? mt = [matid(2),[0,0;1,0]];
+ ? A = algtableinit(mt);
+ ? algradical(A) \\ = (x)
+ %3 =
+ [0]
+
+ [1]
+ @eprog
+
+ Another one with $2\times 2$ upper triangular matrices over $\Q$, with basis
+ $I_2$, $a = \kbd{[0,1;0,0]}$ and $b = \kbd{[0,0;0,1]}$, such that $a^2 =
+ 0$, $ab = a$, $ba = 0$, $b^2 = b$:
+ \bprog
+ ? mt = [matid(3),[0,0,0;1,0,1;0,0,0],[0,0,0;0,0,0;1,0,1]];
+ ? A = algtableinit(mt);
+ ? algradical(A) \\ = (a)
+ %6 =
+ [0]
+
+ [1]
+
+ [0]
+ @eprog

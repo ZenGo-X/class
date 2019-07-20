@@ -1,0 +1,12 @@
+Function: lfundiv
+Section: l_functions
+C-Name: lfundiv
+Prototype: GGb
+Help: lfundiv(L1,L2): creates the Ldata structure (without
+  initialization) corresponding to the quotient of the Dirichlet series
+  given by L1 and L2.
+Doc: creates the \kbd{Ldata} structure (without initialization) corresponding
+  to the quotient of the Dirichlet series $L_1$ and $L_2$ given by
+ \kbd{L1} and \kbd{L2}. Assume that $v_z(L_1) \geq v_z(L_2)$ at all
+ complex numbers $z$: the construction may not create new poles, nor increase
+ the order of existing ones.

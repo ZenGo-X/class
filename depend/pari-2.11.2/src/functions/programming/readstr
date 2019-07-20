@@ -1,0 +1,10 @@
+Function: readstr
+Section: programming/specific
+C-Name: readstr
+Prototype: D"",s,
+Help: readstr({filename}): returns the vector of GP strings containing
+ the lines in filename.
+
+Doc: Reads in the file \var{filename} and return a vector of GP strings,
+ each component containing one line from the file. If \var{filename} is
+ omitted, re-reads the last file that was fed into \kbd{gp}.

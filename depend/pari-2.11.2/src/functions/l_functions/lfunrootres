@@ -1,0 +1,38 @@
+Function: lfunrootres
+Section: l_functions
+C-Name: lfunrootres
+Prototype: Gb
+Help: lfunrootres(data): given the Ldata attached to an L-function (or the
+ output of lfunthetainit), compute the root number and the
+ residues. In the present implementation, if the polar part is not already
+ known completely, at most a single pole is allowed.
+ The output is a 3-component vector
+  [[[a_1, r_1],...,[a_n, r_n],[[b_1, R_1],...[b_m,R_m]], w], where r_i is the
+  polar part of L(s) at a_i, R_i is is the polar part of Lambda(s) at b_i,
+  or [0,0,r] if there is no pole, and w is the root number.
+Doc: Given the \kbd{Ldata} attached to an $L$-function (or the output of
+ \kbd{lfunthetainit}), compute the root number and the residues.
+
+ The output is a 3-component vector
+ $[[[a_1,r_1],\cdots,[a_n, r_n], [[b_1, R_1],\cdots,[b_m, R_m]], w]$,
+ where $r_i$ is the
+ polar part of $L(s)$ at $a_i$, $R_i$ is is the polar part of $\Lambda(s)$ at
+ $b_i$ or $[0,0,r]$ if there is no pole,
+ and $w$ is the root number. In the present implementation,
+
+ \item either the polar part must be completely known (and is then arbitrary):
+ the function determines the root number,
+
+ \bprog
+ ? L = lfunmul(1,1); \\ zeta^2
+ ? [r,R,w] = lfunrootres(L);
+ ? r  \\ single pole at 1, double
+ %3 = [[1, 1.[...]*x^-2 + 1.1544[...]*x^-1 + O(x^0)]]
+ ? w
+ %4 = 1
+ ? R \\ double pole at 0 and 1
+ %5 = [[1,[...]], [0,[...]]
+ @eprog
+
+ \item or at most a single pole is allowed: the function computes both
+ the root number and the residue ($0$ if no pole).

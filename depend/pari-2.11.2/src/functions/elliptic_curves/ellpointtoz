@@ -1,0 +1,72 @@
+Function: ellpointtoz
+Section: elliptic_curves
+C-Name: zell
+Prototype: GGp
+Help: ellpointtoz(E,P): lattice point z corresponding to the point P on the
+ elliptic curve E.
+Doc:
+ if $E/\C \simeq \C/\Lambda$ is a complex elliptic curve ($\Lambda =
+ \kbd{E.omega}$), computes a complex number $z$, well-defined modulo the
+ lattice $\Lambda$, corresponding to the point $P$; i.e.~such that
+ $P = [\wp_\Lambda(z),\wp'_\Lambda(z)]$ satisfies the equation
+ $$y^2 = 4x^3 - g_2 x - g_3,$$
+ where $g_2$, $g_3$ are the elliptic invariants.
+
+ If $E$ is defined over $\R$ and $P\in E(\R)$, we have more precisely, $0 \leq
+ \Re(t) < w1$ and $0 \leq \Im(t) < \Im(w2)$, where $(w1,w2)$ are the real and
+ complex periods of $E$.
+ \bprog
+ ? E = ellinit([0,1]); P = [2,3];
+ ? z = ellpointtoz(E, P)
+ %2 = 3.5054552633136356529375476976257353387
+ ? ellwp(E, z)
+ %3 = 2.0000000000000000000000000000000000000
+ ? ellztopoint(E, z) - P
+ %4 = [2.548947057811923643 E-57, 7.646841173435770930 E-57]
+ ? ellpointtoz(E, [0]) \\ the point at infinity
+ %5 = 0
+ @eprog
+
+ If $E$ is defined over a general number field, the function returns the
+ values corresponding to the various complex embeddings of the curve
+ and of the point, in the same order as \kbd{E.nf.roots}:
+ \bprog
+ ? E=ellinit([-22032-15552*x,0], nfinit(x^2-2));
+ ? P=[-72*x-108,0];
+ ? ellisoncurve(E,P)
+ %3 = 1
+ ? ellpointtoz(E,P)
+ %4 = [-0.52751724240790530394437835702346995884*I,
+       -0.090507650025885335533571758708283389896*I]
+ ? E.nf.roots
+ %5 = [-1.4142135623730950488016887242096980786, \\ x-> -sqrt(2)
+        1.4142135623730950488016887242096980786] \\ x->  sqrt(2)
+ @eprog
+
+ If $E/\Q_p$ has multiplicative reduction, then $E/\bar{\Q_p}$ is analytically
+ isomorphic to $\bar{\Q}_p^*/q^\Z$ (Tate curve) for some $p$-adic integer $q$.
+ The behavior is then as follows:
+
+ \item If the reduction is split ($E.\kbd{tate[2]}$ is a \typ{PADIC}), we have
+ an isomorphism $\phi: E(\Q_p) \simeq \Q_p^*/q^\Z$ and the function returns
+ $\phi(P)\in \Q_p$.
+
+ \item If the reduction is \emph{not} split ($E.\kbd{tate[2]}$ is a
+ \typ{POLMOD}), we only have an isomorphism $\phi: E(K) \simeq K^*/q^\Z$ over
+ the unramified quadratic extension $K/\Q_p$. In this case, the output
+ $\phi(P)\in K$ is a \typ{POLMOD}.
+ \bprog
+ ? E = ellinit([0,-1,1,0,0], O(11^5)); P = [0,0];
+ ? [u2,u,q] = E.tate; type(u) \\ split multiplicative reduction
+ %2 = "t_PADIC"
+ ? ellmul(E, P, 5)  \\ P has order 5
+ %3 = [0]
+ ? z = ellpointtoz(E, [0,0])
+ %4 = 3 + 11^2 + 2*11^3 + 3*11^4 + 6*11^5 + 10*11^6 + 8*11^7 + O(11^8)
+ ? z^5
+ %5 = 1 + O(11^9)
+ ? E = ellinit(ellfromj(1/4), O(2^6)); x=1/2; y=ellordinate(E,x)[1];
+ ? z = ellpointtoz(E,[x,y]); \\ t_POLMOD of t_POL with t_PADIC coeffs
+ ? liftint(z) \\ lift all p-adics
+ %8 = Mod(8*u + 7, u^2 + 437)
+ @eprog

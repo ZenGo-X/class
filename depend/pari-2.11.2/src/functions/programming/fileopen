@@ -1,0 +1,39 @@
+Function: fileopen
+Section: programming/specific
+C-Name: gp_fileopen
+Prototype: lsD"r",s,
+Help: fileopen(path, mode): open the file pointed to by 'path' and return a
+ file descriptor which can be used with other file functions.
+ The mode is "r" (default, read), "w" (write, truncate), "a" (write, append).
+Doc: open the file pointed to by 'path' and return a file descriptor which
+ can be used with other file functions.
+
+ The mode can be
+
+ \item \kbd{"r"} (default): open for reading; allow \kbd{fileread} and
+ \kbd{filereadstr}.
+
+ \item \kbd{"w"}: open for writing, discarding existing content; allow
+ \kbd{filewrite}, \kbd{filewrite1}.
+
+ \item \kbd{"a"}: open for writing, appending to existing content; same
+ operations allowed as \kbd{"w"}.
+
+ Eventually, the file should be closed and the descriptor recycled using
+ \kbd{fileclose}.
+
+ \bprog
+ ? n = fileopen("./here");  \\ "r" by default
+ ? while (l = filereadstr(n), print(l))  \\ print successive lines
+ ? fileclose(n) \\ done
+ @eprog\noindent In \emph{read} mode, raise an exception if the file does not
+ exist or the user does not have read permission. In \emph{write} mode, raise
+ an exception if the file cannot be written to. Trying to read or write to a
+ file that was not opend with the right mode raises an exception.
+ \bprog
+ ? n = fileopen("./read", "r");
+ ? filewrite(n, "test")      \\ not open for writing
+  ***   at top-level: filewrite(n,"test")
+  ***                 ^-------------------
+  *** filewrite: invalid file descriptor 0
+ @eprog

@@ -1,0 +1,10 @@
+Function: _.no
+Help: _.no
+Section: member_functions
+C-Name: member_no
+Prototype: mG
+Description:
+ (bnr):int:copy                 bnr_get_no($1)
+ (bnf):int:copy                 bnf_get_no($1)
+ (clgp):int:copy                gel($1, 1)
+ (gen):int:copy                 member_no($1)

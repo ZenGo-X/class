@@ -1,0 +1,116 @@
+Function: nfbasis
+Section: number_fields
+C-Name: nfbasis_gp
+Prototype: G
+Help: nfbasis(T): integral basis of the field Q[a], where a is
+ a root of the polynomial T, using the round 4 algorithm. An argument
+ [T,listP] is possible, where listP is a list of primes (to get an
+ order which is maximal at certain primes only) or a prime bound.
+Doc:
+ Let $T(X)$ be an irreducible polynomial with integral coefficients. This
+ function returns an \idx{integral basis} of the number field defined by $T$,
+ that is a $\Z$-basis of its maximal order. The basis elements are given as
+ elements in $\Q[X]/(T)$:
+ \bprog
+ ? nfbasis(x^2 + 1)
+ %1 = [1, x]
+ @eprog
+ This function uses a modified version of the \idx{round 4} algorithm,
+ due to David \idx{Ford}, Sebastian \idx{Pauli} and Xavier \idx{Roblot}.
+
+ \misctitle{Local basis, orders maximal at certain primes}
+
+ Obtaining the maximal order is hard: it requires factoring the discriminant
+ $D$ of $T$. Obtaining an order which is maximal at a finite explicit set of
+ primes is easy, but it may then be a strict suborder of the maximal order. To
+ specify that we are interested in a given set of places only, we can replace
+ the argument $T$ by an argument $[T,\var{listP}]$, where \var{listP} encodes
+ the primes we are interested in: it must be a factorization matrix, a vector
+ of integers or a single integer.
+
+ \item Vector: we assume that it contains distinct \emph{prime} numbers.
+
+ \item Matrix: we assume that it is a two-column matrix of a
+ (partial) factorization of $D$; namely the first column contains
+ distinct \emph{primes} and the second one the valuation of $D$ at each of
+ these primes.
+
+ \item Integer $B$: this is replaced by the vector of primes up to $B$. Note
+ that the function will use at least $O(B)$ time: a small value, about
+ $10^5$, should be enough for most applications. Values larger than $2^{32}$
+ are not supported.
+
+ In all these cases, the primes may or may not divide the discriminant $D$
+ of $T$. The function then returns a $\Z$-basis of an order whose index is
+ not divisible by any of these prime numbers. The result is actually a global
+ integral basis if all prime divisors of the \emph{field} discriminant are
+ included! Note that \kbd{nfinit} has built-in support for such
+ a check:
+ \bprog
+ ? K = nfinit([T, listP]);
+ ? nfcertify(K)   \\ we computed an actual maximal order
+ %2 = [];
+ @eprog\noindent The first line initializes a number field structure
+ incorporating \kbd{nfbasis([T, listP]} in place of a proven integral basis.
+ The second line certifies that the resulting structure is correct. This
+ allows to create an \kbd{nf} structure attached to the number field $K =
+ \Q[X]/(T)$, when the discriminant of $T$ cannot be factored completely,
+ whereas the prime divisors of $\disc K$ are known.
+
+ Of course, if \var{listP} contains a single prime number $p$,
+ the function returns a local integral basis for $\Z_p[X]/(T)$:
+ \bprog
+ ? nfbasis(x^2+x-1001)
+ %1 = [1, 1/3*x - 1/3]
+ ? nfbasis( [x^2+x-1001, [2]] )
+ %2 = [1, x]
+ @eprog
+
+ \misctitle{The Buchmann-Lenstra algorithm}
+
+ We now complicate the picture: it is in fact allowed to include
+ \emph{composite} numbers instead of primes
+ in \kbd{listP} (Vector or Matrix case), provided they are pairwise coprime.
+ The result will still be a correct integral basis \emph{if}
+ the field discriminant factors completely over the actual primes in the list.
+ Adding a composite $C$ such that $C^2$ \emph{divides} $D$ may help because
+ when we consider $C$ as a prime and run the algorithm, two good things can
+ happen: either we
+ succeed in proving that no prime dividing $C$ can divide the index
+ (without actually needing to find those primes), or the computation
+ exhibits a non-trivial zero divisor, thereby factoring $C$ and
+ we go on with the refined factorization. (Note that including a $C$
+ such that $C^2$ does not divide $D$ is useless.) If neither happen, then the
+ computed basis need not generate the maximal order. Here is an example:
+ \bprog
+ ? B = 10^5;
+ ? P = factor(poldisc(T), B)[,1]; \\ primes <= B dividing D + cofactor
+ ? basis = nfbasis([T, listP])
+ ? disc = nfdisc([T, listP])
+ @eprog\noindent We obtain the maximal order and its discriminant if the
+ field discriminant factors
+ completely over the primes less than $B$ (together with the primes
+ contained in the \tet{addprimes} table). This can be tested as follows:
+ \bprog
+   check = factor(disc, B);
+   lastp = check[-1..-1,1];
+   if (lastp > B && !setsearch(addprimes(), lastp),
+     warning("nf may be incorrect!"))
+ @eprog\noindent
+ This is a sufficient but not a necessary condition, hence the warning,
+ instead of an error. N.B. \kbd{lastp} is the last entry
+ in the first column of the \kbd{check} matrix, i.e. the largest prime
+ dividing \kbd{nf.disc} if $\leq B$ or if it belongs to the prime table.
+
+ The function \tet{nfcertify} speeds up and automates the above process:
+ \bprog
+ ? B = 10^5;
+ ? nf = nfinit([T, B]);
+ ? nfcertify(nf)
+ %3 = []      \\ nf is unconditionally correct
+ ? basis = nf.zk;
+ ? disc = nf.disc;
+ @eprog
+
+ \synt{nfbasis}{GEN T, GEN *d, GEN listP = NULL}, which returns the order
+ basis, and where \kbd{*d} receives the order discriminant.

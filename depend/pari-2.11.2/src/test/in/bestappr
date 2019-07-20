@@ -1,0 +1,22 @@
+bestappr(-1./7, 7)
+bestappr(-1./7, 6)
+bestappr(Mod(-1/7,100))
+bestappr(Mod(-1/7,100), 6)
+bestappr(Mod(-1/7,100), 7)
+bestappr(-1/7 + O(5^10))
+bestappr(-1/7 + O(5^10), 6)
+type( bestappr(1+0.*I) )
+bestappr(Mod(10,307), 40)
+bestappr(-1/48.)
+
+bestapprPade((x^3+1)/(x^10+2))
+bestapprPade((x^3+1)/(x^10+2), 4)
+bestapprPade(1/(1+x+O(x^10)))
+bestapprPade(1/(1+x+O(x^10)), 5)
+bestapprPade(1/(1+x^6+O(x^13)), 5)
+bestapprPade(1/(1+x^6+O(x^13)))
+bestapprPade(Mod(x^3+x^2+x+1, x^5-2))
+bestapprPade(x^2+x^3+x^4+O(x^5))
+bestapprPade(x^-4+x^-3+x^-2+O(x^-1))
+bestapprPade(x^10/(1-x)^11+O(x^22)) \\#1945
+bestapprPade(Mod((x^5+x+2)/(1-x)^11,x^20),12) \\#1946

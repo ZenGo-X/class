@@ -1,0 +1,50 @@
+Function: mfsearch
+Section: modular_forms
+C-Name: mfsearch
+Prototype: GGD4,L,
+Help: mfsearch(NK,V,{space}): NK being of the form [N,k] with k possibly
+ half-integral, search for a modular form with rational coefficients, of weight
+ k and level N, whose initial coefficients a(0),... are equal to V; space
+ specifies the modular form spaces in which to search. The output is a list
+ of matching forms with that given level and weight. Note that the character
+ is of the form (D/.), where D is a (positive or negative) fundamental
+ discriminant dividing N.
+
+ N can be replaced by a vector of allowed levels, in which case the list of
+ forms is sorted by increasing level, then increasing |D|. If a form is found
+ at level N, any multiple of N with the same D is not considered
+
+ Note that this is very different from mfeigensearch, which only searches for
+ rational eigenforms.
+Doc: \kbd{NK} being of the form \kbd{[N,k]} with $k$ possibly half-integral,
+ search for a modular form with rational coefficients, of weight $k$ and
+ level $N$, whose initial coefficients $a(0)$,... are equal to $V$;
+ \kbd{space} specifies the modular form spaces in which to search, in
+ \kbd{mfinit} or \kbd{mfdim} notation. The output is a list of matching forms
+ with that given level and weight. Note that the character is of the form
+ $(D/.)$, where $D$ is a (positive or negative) fundamental discriminant
+ dividing $N$. The forms are sorted by increasing $|D|$.
+
+ The parameter $N$ can be replaced by a vector of allowed levels, in which
+ case the list of forms is sorted by increasing level, then increasing $|D|$.
+ If a form is found at level $N$, any multiple of $N$ with the same $D$ is not
+ considered. Some useful possibilities are
+
+ \item \kbd{[$N_1$..$N_2$]}: all levels between $N_1$ and $N_2$,
+ endpoints included;
+
+ \item \kbd{$F$ * [$N_1$..$N_2$]}: same but levels divisible by $F$;
+
+ \item \kbd{divisors}$(N_0)$: all levels dividing $N_0$.
+
+ Note that this is different from \kbd{mfeigensearch}, which only searches
+ for rational eigenforms.
+
+ \bprog
+ ? F = mfsearch([[1..40], 2], [0,1,2,3,4], 1); #F
+ %1 = 3
+ ? [ mfparams(f) | f <- F ]
+ %2 = [[38, 2, 1, y], [40, 2, 8, y], [40, 2, 40, y]]
+ ? mfcoefs(F[1],10)
+ %3 = [0, 1, 2, 3, 4, -5, -8, 1, -7, -5, 7]
+ @eprog

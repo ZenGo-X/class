@@ -1,0 +1,22 @@
+Function: elltaniyama
+Section: elliptic_curves
+C-Name: elltaniyama
+Prototype: GDP
+Help: elltaniyama(E, {d = seriesprecision}): modular parametrization of
+ elliptic curve E/Q.
+Doc:
+ computes the modular parametrization of the elliptic curve $E/\Q$,
+ where $E$ is an \kbd{ell} structure as output by \kbd{ellinit}. This returns
+ a two-component vector $[u,v]$ of power series, given to $d$ significant
+ terms (\tet{seriesprecision} by default), characterized by the following two
+ properties. First the point $(u,v)$ satisfies the equation of the elliptic
+ curve. Second, let $N$ be the conductor of $E$ and $\Phi: X_0(N)\to E$
+ be a modular parametrization; the pullback by $\Phi$ of the
+ N\'eron differential $du/(2v+a_1u+a_3)$ is equal to $2i\pi
+ f(z)dz$, a holomorphic differential form. The variable used in the power
+ series for $u$ and $v$ is $x$, which is implicitly understood to be equal to
+ $\exp(2i\pi z)$.
+
+ The algorithm assumes that $E$ is a \emph{strong} \idx{Weil curve}
+ and that the Manin constant is equal to 1: in fact, $f(x) = \sum_{n > 0}
+ \kbd{ellan}(E, n) x^n$.

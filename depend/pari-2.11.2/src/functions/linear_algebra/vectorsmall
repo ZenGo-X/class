@@ -1,0 +1,12 @@
+Function: vectorsmall
+Section: linear_algebra
+C-Name: vecteursmall
+Prototype: GDVDE
+Help: vectorsmall(n,{X},{expr=0}): VECSMALL with n components of expression
+ expr (X ranges from 1 to n) which must be small integers. By default, fill
+ with 0s.
+Doc: creates a row vector of small integers (type
+ \typ{VECSMALL}) with $n$ components whose components are the expression
+ \var{expr} evaluated at the integer points between 1 and $n$. If one of the
+ last two arguments is omitted, fill the vector with zeroes.
+ %\syn{NO}

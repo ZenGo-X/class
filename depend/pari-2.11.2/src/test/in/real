@@ -1,0 +1,51 @@
+{
+if (sizebyte(0)==16,
+\\ #1322
+  default(realprecision,2);
+  print(1. << 2^60);
+  print(1. >> 2^60);
+,
+\\ can't be tested on 32-bit kernel: fake answer
+  print("5.9 E347063955532709820");
+  print("1.7 E-347063955532709821");
+);
+}
+1. << 2^64
+1. >> 2^64
+
+1+0e1
+0e1==1
+0e1==1.
+0e1<1
+0e1<1.
+0e1<=1
+0e1<=1.
+0e1>1
+0e1>1.
+0e1>=1
+0e1>=1.
+
+0e-1==1
+0e-1==1.
+0e-1<1
+0e-1<1.
+0e-1<=1
+0e-1<=1.
+0e-1>1
+0e-1>1.
+0e-1>=1
+0e-1>=1.
+
+exponent(0)
+exponent(-1)
+exponent(1/2)
+exponent(2.0)
+exponent([-10,5,11])
+exponent([-10,5;11,16.0])
+exponent(2.*x - 1.)
+exponent(2.*x - 1. + O(x^2))
+exponent(quadgen(-15))
+
+v=[1,1/2,2+3*quadgen(-3),2+3*I, (2+3*I)/(x+1)];
+real(v)
+imag(v)

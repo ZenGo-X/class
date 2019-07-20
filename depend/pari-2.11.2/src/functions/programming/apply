@@ -1,0 +1,55 @@
+Function: apply
+Section: programming/specific
+C-Name: apply0
+Prototype: GG
+Help: apply(f, A): apply function f to each entry in A.
+Wrapper: (G)
+Description:
+  (closure,gen):gen    genapply(${1 cookie}, ${1 wrapper}, $2)
+Doc: Apply the \typ{CLOSURE} \kbd{f} to the entries of \kbd{A}. If \kbd{A}
+ is a scalar, return \kbd{f(A)}. If \kbd{A} is a polynomial or power series,
+ apply \kbd{f} on all coefficients. If \kbd{A} is a vector or list, return
+ the elements $f(x)$ where $x$ runs through \kbd{A}. If \kbd{A} is a matrix,
+ return the matrix whose entries are the $f(\kbd{A[i,j]})$.
+ \bprog
+ ? apply(x->x^2, [1,2,3,4])
+ %1 = [1, 4, 9, 16]
+ ? apply(x->x^2, [1,2;3,4])
+ %2 =
+ [1 4]
+
+ [9 16]
+ ? apply(x->x^2, 4*x^2 + 3*x+ 2)
+ %3 = 16*x^2 + 9*x + 4
+ @eprog\noindent Note that many functions already act componentwise on
+ vectors or matrices, but they almost never act on lists; in this
+ case, \kbd{apply} is a good solution:
+ \bprog
+ ? L = List([Mod(1,3), Mod(2,4)]);
+ ? lift(L)
+   ***   at top-level: lift(L)
+   ***                 ^-------
+   *** lift: incorrect type in lift.
+ ? apply(lift, L);
+ %2 = List([1, 2])
+ @eprog
+ \misctitle{Remark} For $v$ a \typ{VEC}, \typ{COL}, \typ{LIST} or \typ{MAT},
+ the alternative set-notations
+ \bprog
+ [g(x) | x <- v, f(x)]
+ [x | x <- v, f(x)]
+ [g(x) | x <- v]
+ @eprog\noindent
+ are available as shortcuts for
+ \bprog
+ apply(g, select(f, Vec(v)))
+ select(f, Vec(v))
+ apply(g, Vec(v))
+ @eprog\noindent respectively:
+ \bprog
+ ? L = List([Mod(1,3), Mod(2,4)]);
+ ? [ lift(x) | x<-L ]
+ %2 = [1, 2]
+ @eprog
+
+ \synt{genapply}{void *E, GEN (*fun)(void*,GEN), GEN a}.

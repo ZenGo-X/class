@@ -1,0 +1,19 @@
+Function: bigomega
+Section: number_theoretical
+C-Name: bigomega
+Prototype: lG
+Help: bigomega(x): number of prime divisors of x, counted with multiplicity.
+Doc: number of prime divisors of the integer $|x|$ counted with
+ multiplicity:
+ \bprog
+ ? factor(392)
+ %1 =
+ [2 3]
+
+ [7 2]
+
+ ? bigomega(392)
+ %2 = 5;  \\ = 3+2
+ ? omega(392)
+ %3 = 2;  \\ without multiplicity
+ @eprog

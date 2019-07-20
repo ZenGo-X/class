@@ -1,0 +1,22 @@
+Function: lfunorderzero
+Section: l_functions
+C-Name: lfunorderzero
+Prototype: lGD-1,L,b
+Help: lfunorderzero(L, {m = -1}): computes the order of the possible zero
+ of the L-function at the center k/2 of the critical strip. If m is
+ given and has a non-negative value, assumes the order is at most m.
+Doc: Computes the order of the possible zero of the $L$-function at the
+ center $k/2$ of the critical strip; return $0$ if $L(k/2)$ does not vanish.
+
+ If $m$ is given and has a non-negative value, assumes the order is at most $m$.
+ Otherwise, the algorithm chooses a sensible default:
+
+ \item if the $L$ argument is an \kbd{Linit}, assume that a multiple zero at
+ $s = k / 2$ has order less than or equal to the maximal allowed derivation
+ order.
+
+ \item else assume the order is less than $4$.
+
+ You may explicitly increase this value using optional argument~$m$; this
+ overrides the default value above. (Possibly forcing a recomputation
+ of the \kbd{Linit}.)

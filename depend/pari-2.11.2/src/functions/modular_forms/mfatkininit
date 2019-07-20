@@ -1,0 +1,62 @@
+Function: mfatkininit
+Section: modular_forms
+C-Name: mfatkininit
+Prototype: GLp
+Help: mfatkininit(mf,Q): initializes data necessary for working
+ with Atkin--Lehner operators W_Q, for now only the function mfatkin.
+ The result is a 4-component vector [mfB, CM, C, mf] where mfB is either
+ 0 or the possibly different modular form space to which F|W_Q will belong
+ (this does not depend on F in mf); CM is the matrix of W_Q on the basis of mf
+ multiplied by a normalizing constant C.
+Doc: given a modular form space with parameters $N,k,\chi$ and a
+ primitive divisor $Q$ of the level $N$, initializes data necessary for
+ working with the Atkin--Lehner operator $W_Q$, for now only the function
+ \kbd{mfatkin}. We write $\chi \sim \chi_Q \chi_{N/Q}$ where
+ the two characters are primitive with (coprime) conductors dividing
+ $Q$ and $N/Q$ respectively. For $F\in M_k(\Gamma_0(N),\chi)$,
+ the form $F | W_Q$ still has level $N$ and weight $k$ but its
+ Nebentypus may no longer be $\chi$: it becomes $\overline{\chi_Q} \chi_{N/Q})$
+ if $k$ is integral and $\overline{\chi_Q} \chi_{N/Q})(4Q/\cdot)$ if not.
+
+ The result is a technical 4-component vector \kbd{[mfB, CM, C, mf]}, where
+
+ \item \kbd{mfB} encodes the modular form space to which
+ $F|W_Q$ belongs when $F \in M_k(\Gamma_0(N), \chi)$: an \kbd{mfinit}
+ corresponding to a new Nebentypus or the integer $0$ when the character does
+ not change. This does not depend on $F$.
+
+ \item \kbd{CM} is the matrix of $W_Q$ on the bases of \kbd{mf} and \kbd{mfB}
+ multiplied by a normalizing constant $C(k,\chi,Q)$. This matrix has polmod
+ coefficients in $\Q(\chi)$.
+
+ \item \kbd{C} is the complex constant $C(k,\chi,Q)$. For $k$
+ integral, let $A(k,\chi, Q) = Q^{\varepsilon}/g(\chi_Q)$, where
+ $\varepsilon = 0$ for $k$ even and $1/2$ for $k$ odd and
+ where $g(\chi_Q)$ is the Gauss sum attached to $\chi_Q$). (A similar, more
+ complicated, definition holds in half-integral weight depending on the parity
+ of $k - 1/2$.)  Then if $M$ denotes the matrix of $W_Q$ on the bases
+ of \kbd{mf} and \kbd{mfB}, $A \cdot M$ has coefficients in $\Q(\chi)$.
+ If $A$ is rational, we let $C = 1$ and $C = A$ as a floating point complex
+ number otherwise, and finally $\kbd{MC} := M \cdot C$.
+
+ \bprog
+ ? mf=mfinit([32,4],0); [mfB,MC,C]=mfatkininit(mf,32); MC
+ %1 =
+ [5/16 11/2  55/8]
+
+ [ 1/8    0  -5/4]
+
+ [1/32 -1/4 11/16]
+
+ ? C
+ %2 = 1
+ ? mf=mfinit([32,4,8],0); [mfB,MC,C]=mfatkininit(mf,32); MC
+ %3 =
+ [  1/8 -7/4]
+
+ [-1/16 -1/8]
+ ? C
+ %4 = 0.35355339059327376220042218105242451964
+ ? algdep(C,2)   \\ C = 1/sqrt(8)
+ %5 = 8*x^2 - 1
+ @eprog

@@ -1,0 +1,33 @@
+Function: znchardecompose
+Section: number_theoretical
+C-Name: znchardecompose
+Prototype: GGG
+Help: znchardecompose(G, chi, Q): given a znstar G = (Z/NZ)^* and
+ a Dirichlet character chi, return the product of local characters chi_p
+ for p | (N,Q).
+Doc: Let $N = \prod_p p^{e_p}$ and a Dirichlet character $\chi$,
+ we have a decomposition $\chi = \prod_p \chi_p$ into character modulo $N$
+ where the conductor of $\chi_p$ divides $p^{e_p}$; it equals $p^{e_p}$ for
+ all $p$ if and only if $\chi$ is primitive.
+
+ Given a \var{znstar} G describing a group $(\Z/N\Z)^*$, a Dirichlet
+ character \kbd{chi} and an integer $Q$, return $\prod_{p \mid (Q,N)} \chi_p$.
+ For instance, if $Q = p$ is a prime divisor of $N$, the function returns
+ $\chi_p$ (as a character modulo $N$), given as a Conrey character (\typ{COL}).
+
+ \bprog
+ ? G = znstar(40, 1);
+ ? G.cyc
+ %2 = [4, 2, 2]
+ ? chi = [2, 1, 1];
+ ? chi2 = znchardecompose(G, chi, 2)
+ %4 = [1, 1, 0]~
+ ? chi5 = znchardecompose(G, chi, 5)
+ %5 = [0, 0, 2]~
+ ? znchardecompose(G, chi, 3)
+ %6 = [0, 0, 0]~
+ ? c = charmul(G, chi2, chi5)
+ %7 = [1, 1, 2]~  \\ t_COL: in terms of Conrey generators !
+ ? znconreychar(G,c)
+ %8 = [2, 1, 1]   \\ t_VEC: in terms of SNF generators
+ @eprog

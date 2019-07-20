@@ -1,0 +1,111 @@
+/* SAMPLE GP INIT FILE.
+ *
+ * Customize (by uncommenting and modifying the relevant lines) and put in
+ * $HOME/.gprc (or $GPRC) or /etc/gprc. Syntax is explained at the end. */
+
+\\ Read ~/.gprc.gp (GP script) before gp prompts you for commands.
+\\ read "~/.gprc.gp"
+
+/* Critical options */
+
+\\ Limit PARI stack size to 400 Mbytes = 4*10^8 bytes
+\\ parisizemax = 400M
+
+\\ Set PARI typical stack size to 40 Mbytes = 4*10^7 bytes (will grow as
+\\ needed, up to parisizemax)
+\\ parisize = 40M
+
+/* Parallelism */
+
+\\ number of threads: (0: use all available CPU threads)
+\\ nbthreads = 0
+
+\\ Limit PARI threads stack size to 100 Mbytes = 10^8 bytes
+\\ threadsizemax = 100M
+
+\\ Set PARI typical threads stack size to 10 Mbytes = 10^7 bytes (will grow as
+\\ needed, up to threadsizemax). Beware that the memory usage is multiplied
+\\ by the number of threads.
+\\ threadsize = 10M
+
+/* Important options */
+
+\\ Save a history of all input commands in this file, and load it in each
+\\ new session's history
+\\ histfile = ~/.gp_history
+
+\\ Limit output of results to 40 lines
+\\ lines = 40
+
+\\ Colors:
+\\ clear background:
+\\   #ifnot EMACS colors = "lightbg"
+\\ dark background:
+\\   #ifnot EMACS colors = "darkbg"
+
+\\ Set gp prompt. % is used for macros related to the time of day [back to
+\\ the shell prompt, try "man strftime"]. Example: %H:%M = time of day in the
+\\ form HH:MM. Characters can be escaped UNIX-style using '\', e.g \e = <ESC>
+\\
+\\ prompt = "(%H:%M) \e[1mgp\e[m > "
+\\ #if READL prompt = "(%H:%M) \e[1mgp\e[m > "
+\\ #if EMACS prompt = "? "
+
+\\ Set timer on
+\\ timer = 1
+
+\\ Path: directories where gp will look for scripts
+\\ path = ".:~:~/gp"
+
+\\ Use an alternate prettyprinter
+\\ prettyprinter = "/usr/local/bin/tex2mail -TeX -noindent -ragged -by_par"
+
+\\ Extended help options (does not interact well with emacs):
+\\ Don't use TeX + xdvi, but outputs formatted help in GP window:
+\\   #ifnot EMACS help = "gphelp -detex"
+\\ Same, using colors:
+\\   #ifnot EMACS help = "gphelp -detex -ch 4 -cb 0 -cu 2"
+
+/* Some less important options */
+
+\\ Biggest precomputed prime (= precprime(10^6))
+\\ primelimit = 1M
+
+\\ Set logfile name and enable logging.
+\\ Uncommenting the next two lines produces a different logfile each day:
+\\ logfile = "~/tmp/pari-%d.%m"
+\\ log = 1
+
+\\ Output for postscript-producing gp commands.
+\\ psfile = "~/tmp/pari.ps"
+
+\\ secure = 1
+\\ Disable commands system() and extern() which allow scripts to execute
+\\ arbitrary Unix commands
+
+\\********************** FORMAT OF THIS FILE :    ***************************
+\\  Lines starting with '\\' and between '/*' '*/' pairs are comments
+\\  Blank lines are ignored
+\\  Line starting with #if BOOLEAN is read iff BOOLEAN is TRUE
+\\  Currently recognized booleans:
+\\    EMACS  are we running under Emacs?
+\\    READL  is readline available?
+\\    VERSION {<,>,<=,>=} a.b.c  does version number satisfy the inequality?
+\\
+\\  This file should be put in $HOME/.gprc or /etc/gprc and contains:
+\\  * references to gp scripts that are to be run BEFORE the first gp prompt.
+\\
+\\    Syntax: read "filename"  (quotes mandatory; ~ syntax for homedir allowed)
+\\
+\\  * options settings
+\\
+\\    Syntax: option_name = value
+\\
+\\  Options which are not set here assume default values in gp. The command
+\\  default() under GP lists available options and their default values.
+\\
+\\  Options settings are overriden by command line switches. For instance
+\\    gp --default parisizemax=1G
+\\  sets parisize to 1 GByte, regardless of what is in .gprc
+\\  They can also be changed under GP using default(), e.g.
+\\    default(parisize,"10M") 

@@ -1,0 +1,12 @@
+Function: matbasistoalg
+Section: number_fields
+C-Name: matbasistoalg
+Prototype: GG
+Obsolete: 2016-08-08
+Help: matbasistoalg(nf,x): nfbasistoalg applied to every element of the
+ matrix or vector x.
+Doc: This function is deprecated, use \kbd{apply}.
+
+ $\var{nf}$ being a number field in \kbd{nfinit} format, and $x$ a
+ (row or column) vector or matrix, apply \tet{nfbasistoalg} to each entry
+ of $x$.

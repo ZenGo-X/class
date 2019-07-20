@@ -1,0 +1,402 @@
+default("parisize","32M");
+default("realprecision",38);
+
+zetaan(n)=vector(n,i,1);
+K=bnfinit('x^3+'x^2-3*'x-1);
+L148=lfuncreate(K);
+lfuncost(L148, [20])
+lfunthetacost(L148)
+for(i=1,10,print(i,":",lfun(L148,-i)))
+L117=lfundiv(nfinit('x^4-'x^3-'x^2+'x+1),1);
+for(i=1,10,print(i,":",lfun(L117,i)))
+e121=ellinit([1,1,1,-30,-76]);  \\ 121a1
+L121=lfuninit(e121,[100],2);
+lfuncost(L121)
+lfun(L121,1+100*I)
+lfun(L121,1+x+O(x^3))
+
+lfun(1,1+x+O(x^4),1)
+lfun(1,1+x+O(x^4),2)
+lfun(1,2+x^2+O(x^6),1)
+lfun(1,2+x^2+O(x^6),2)
+\p36
+lfun(x^4-2,x+O(x^6),1)
+lfun(x^4-2,x+O(x^6),2)
+\p38
+
+lfun(polcyclo(12),2)
+
+lfun(lfunmul(1,1),1)
+lfun(lfunmul(x^2+1,x^2+1),1)
+lfun(lfundiv(x^2+1,-4),1)
+pol=x^6-3*x^5+5*x^4-5*x^3+5*x^2-3*x+1;
+real(lfun(lfundiv(pol,[bnrinit(bnfinit(x^2+23),1),[1]]),1))
+
+\\ check for loss in accuracy in lfunthetaspec
+nf24217=nfinit(x^5-5*x^3-x^2+3*x+1);
+L2=lfuncreate(nf24217);
+lfunhardy(L2,5)
+
+/* higher precision */
+default("realprecision",54)
+/* Riemann */
+lzeta = lfuncreate(1);
+lfun(lzeta,1)
+lfun(lzeta,1/2+200*I)
+lfun(lzeta,.5+200*I)
+lfun(lzeta,0,1)
+lfun(lzeta,x)
+lfunzeros(lzeta,14.14)
+lfunzeros(lzeta,[14,14.5])
+lfunzeros(lzeta,30)
+lzeta[6]=0; lfun(lzeta,2)
+lfuntheta(lzeta,1e50)
+lfuntheta(lzeta,1e50+I)
+/* odd Dirichlet char */
+lfun(Mod(8,13), 1)
+/* EC */
+e = ellinit([0, 0, 1, -7, 6]);
+lfunzeros(e,20)
+lfunzeros(e,[0,3])
+/* Ramanujan */
+ltau=lfunetaquo(Mat([1,24]));
+lfunmfspec(ltau)
+
+/* other functions */
+t = 4+I/5;
+t^2*lfuntheta(L121,t)
+lfuntheta(L121,1/t)
+vv=lfunthetainit(L121,1/t);
+lfuntheta(vv,1/t)
+lfunthetacost(vv)
+
+vv=lfunthetainit(L117,[1,2/5]);
+lfuntheta(vv,1)
+my(x = 2*I/5); e=exp(x/2)*lfuntheta(vv, exp(x)); /* should be real */
+[real(e),round(imag(e)*10^55)]
+
+M=msinit(11,4,1); F=mssplit(M,msnew(M))[1];
+L=lfuncreate([n->subst(lift(msqexpansion(M,F,n)),'x,1+sqrt(3)),0,[0,1],[4,3/2],11,1]);
+default("realprecision",115);
+lfun(L,2)
+default("realprecision",54);
+
+Z101=znstar(101,1);
+L=lfuncreate([Z101,[1]]);
+L=lfuninit(L,[1,1,1]);
+lfuncheckfeq(L)
+L=lfuninit(L,[1,1,1]);
+lfuncheckfeq(L)
+lfuncheckfeq(L,11/10)
+lfuncheckfeq(L,9/10)
+lfun(L,1)
+lfun(L,2)
+{
+  my(V=lfunan(L,100));
+  my(q=exp(2*I*Pi/101),S=sum(i=1,100,V[i]*q^i)/sqrt(-101));
+  my(z=lfuntheta(L,1),eps=abs(S-z/conj(z)));
+  if(eps>10^-55,error("charinit(101): ",eps));
+}
+lfunzeros(L,20)
+
+L=lfuncreate([Z101,[1]]);
+L=lfuninit(L,[1,0,0]);
+lfuncheckfeq(L)
+lfun(L,1)
+
+K=bnfinit('x^2+23);B=bnrinit(K,1,1);
+L=lfuncreate([B,[1]]);
+lfuncheckfeq(L)
+algdep(exp(lfun(L,0,1)),3)
+
+/* GENUS 2 curve */
+print("Curve y^2+(x^3+x^2+1)*y = x^2+x");
+L=lfungenus2([x^2+x,x^3+x^2+1]);
+default("realprecision",19);
+lfuncheckfeq(L)
+print("Curve y^2+(x^3+1)*y = x^2+x");
+L=lfungenus2([x^2+x,x^3+1]);
+for(i=1,20,lfunan(L,i))
+
+print("Curve y^2+(x^2+x)*y = x^6+3*x^5+6*x^4+7*x^3+6*x^2+3*x+1");
+L=lfungenus2([x^6+3*x^5+6*x^4+7*x^3+6*x^2+3*x+1,x^2+x]);
+L[5]*=4;
+lfuncheckfeq(L)
+
+print("Curve y^2=",x^5+x);
+fun(p, d)= \\ if (d == 2), only 1 + trace term is needed
+{
+  my(p16=p%16, p8=p16%8);
+  if (d == 2 && p8 != 1, return (1));
+  if (p8 == 5 || p8 == 7, return((1+p*x^2)^-2));
+  my([u,v] = qfbsolve(Qfb(1,0,2),p));
+  if (p8 == 3, return (1 / (1 + (-4*u^2 + 2*p)*x^2 + p^2*x^4)));
+  if (u%4 != 1, u=-u);
+  if(p16==1,(1-2*x*u+p*x^2)^-2, (1+2*x*u+p*x^2)^-2);
+}
+L=lfuncreate([[(p,d)->fun(p, d),[[2, 1]]], 0, [0,0,1,1], 2, 2^16, -1]);
+default("realprecision",38)
+lfuncheckfeq(L)
+lfunrootres(L)
+lfun(L,1,1)
+
+print("Curve y^2=",x^5+1);
+B=bnfinit(polcyclo(5));
+fun2(p, d)= \\ if (d == 2), only 1 + trace term is needed
+{
+  my(p10 = p%10);
+  if (p10 != 1,
+    if (d == 2, return (1));
+    return (if (p10==9, 1 / (1+2*p*x^2+p^2*x^4), 1 / (1 + p^2*x^4)));
+  );
+  my (u = nfbasistoalg(B, bnfisprincipal(B,idealprimedec(B,p)[1])[2]));
+  my (a = subst(liftpol(u),x,x^2) * u);
+  for (i = 0, 9,
+    my (b = (-x)^i * a);
+    my (t = nfelttrace(B, b), t10 = t % 10);
+    if (t10 == 4, return(if (d == 2, 1 + t*x, 1 / polrecip(minpoly(b)))));
+  );
+}
+
+L=lfuncreate([[(p,d)->fun2(p,d),[[2,1],[5, 1]]], 0, [0,0,1,1], 2, 5^4*2^4, 1]);
+lfuncheckfeq(L)
+lfunrootres(L)
+lfun(L,1)
+
+lfungenus2(x^5+3^5) \\#2047
+
+print("Elliptic curves over number fields");
+K=nfinit(a^2+1);
+E1=ellinit([1+a,0,1,0,0],K);
+lfuncheckfeq(E1)
+lfunlambda(E1,1)
+
+E2=ellinit([a,0,a,0,0],K);
+lfuncheckfeq(E2)
+lfunlambda(E2,1)
+
+E3=ellinit([1,a-1,a+1,-a-1,0],K);
+lfuncheckfeq(E3)
+lfunlambda(E3,1)
+
+E4=ellinit([0,1-a,a,-a,0],K);
+lfuncheckfeq(E4)
+lfunlambda(E4,2)
+
+K2=nfinit(a^2-a+5);
+E5=ellinit([a,1-a,1,-1,0],K2);
+lfuncheckfeq(E5)
+lfunlambda(E5,1)
+
+K=bnfinit(subst(x^3-x^2-3*x+1,x,a));
+E=ellinit([a^2-a-2,-a^2+2*a+3,a^2-1,-a^2+a+4,-a^2+2],K);
+localbitprec(4); lfuncheckfeq(E)
+localbitprec(32);lfuncheckfeq(E)
+
+print("Grossencharacter");
+K=bnfinit(polcyclo(5));
+id5=idealprimedec(K,5)[1];
+B=bnrinit(K,id5,1);
+F(p,d)=
+{
+  my(pr=idealprimedec(K, p, d-1));
+  1 / simplify(lift(prod(k=1,#pr, 1 - G(pr[k])*X^pr[k].f)));
+}
+G(pr)=
+{
+  if(idealval(K,B.mod,pr),0,
+    my([e,al] = bnrisprincipal(B,pr));
+    my(al1=nfbasistoalg(K,al));
+    my(al2=nfbasistoalg(K,nfgaloisapply(K,x^2,al)));
+    my(al3=nfbasistoalg(K,nfgaloisapply(K,x^3,al)));
+    al1^3*al2^2*al3^1);
+}
+L=lfuncreate([(p,d)->F(p,d),0,[-1,0,0,1],4,625,0]);
+lfuncheckfeq(L)
+lfun(L,2)/(Pi/5^(15/4)*gamma(1/5)^(7/2)*gamma(3/5)^(1/2)/(gamma(4/5)^(7/2)*gamma(2/5)^(1/2)))
+
+print("tensor product")
+E=ellinit([0,-1,1,-10,-20]);
+F=ellinit([1,0,1,4,-6]);
+L=lfuncreate([[(p,e)->my(ta=ellap(E,p),tb=ellap(F,p));1/(p^4*x^4-tb*ta*p^2*x^3+(-2*p^2+(ta^2+tb^2)*p)*x^2-tb*ta*x+1),[[2,1/(2*x^2-2*x+1)],[7,1/(7*x^2+2*x+1)],[11,1/(11*x^2+1)]]],1,[-1,0,0,1],3,23716,0]);
+\pb64
+lfuncheckfeq(L)
+lfun(L,3/2)
+
+print("check all formats");
+default("realprecision",54)
+e = ellinit([0, 0, 1, -1, 0]);
+le2 = lfuncreate([ n->ellan(e,n), 0, [0,1], 2, 37, -1]);
+le3 = lfuncreate([ ellan(e,1000), 0, [0,1], 2, 37, -1]);
+le4 = lfuncreate([ (p,d)->1/(1-ellap(e,p)*'x+if(p!=37,p*'x^2)), 0, [0,1], 2, 37, -1]);
+le41 = lfuncreate([ [(p,d)->1/(1-ellap(e,p)*'x+p*'x^2), [[37,1/(1+'x)]]], 0, [0,1], 2, 37, -1]);
+lfuncheckfeq(le2)
+lfuncheckfeq(le3)
+lfuncheckfeq(le4)
+lfuncheckfeq(le41)
+lfunan(le41,10)
+lfunan(2^63+5,10)
+lfunan(2^64+5,10)
+
+\\ zeta(s)*zeta(s-(k-1)), single pole at k if k even >= 4
+f(k) = lfuncreate([n->vector(n,i,sigma(i,k-1)),0,[0,1],k,1,I^k,zeta(k)]);
+lfun(f(4),5)-zeta(5)*zeta(2)
+\\ bernfrac(2*k) / (4*k)
+forstep(k=4,18,2,print(bestappr(-lfun(f(k),0),10000000)))
+
+L = lfuninit(x^2+1, [1,2,2]);
+lfun(L,2)/(Pi^2/6*Catalan)
+lfunhardy(L,2)
+lfun(lfunetaquo([1,1;3,1;5,1;15,1]),2)
+lfun(lfunetaquo(Mat([1,24])),2)
+lfun(lfunetaquo([5,2;7,2]),2)
+lfun(ellinit([1,1,1,-10,-10]),2)  \\ 15a1
+
+\\ residue 2*Pi/sqrt(23) at 1
+L=lfunqf([2,1;1,12]);
+L=lfuninit(L,[1/2,20],1);
+newton(L,z,N)=for(i=1,N,z-=lfun(L,z)/lfun(L,z,1));z;
+z=newton(L,1/2+16*I,10)
+abs(lfun(L,z))>1e-50
+
+localprec(100);
+L=lfunmul(1,1);
+lfun(L,2)/(Pi^4/36)
+lfuncheckfeq(L)
+
+localbitprec(300);L=lfunmul(L,1);
+lfun(L,3)/(zeta(3)^3)
+lfuncheckfeq(L)
+
+print("zeta(s-a)");
+
+Z(a)=lfuncreate([(p,n)->1/(1-p^a*x),0,[-a],2*a+1,1,1,[[a+1,0]]]);
+lfuncheckfeq(Z(1))
+lfun(Z(1),2)
+lfun(Z(1),3)
+lfuncheckfeq(Z(2))
+lfun(Z(2),2)
+lfun(Z(2),3)
+
+print("zeta(s)*zeta(s-a)");
+
+L(a)=lfuncreate([(p,n)->1/((1-p^a*x)*(1-x)),0,[-a,0],a+1,1,1,[[a+1,lfun(1,a+1+x+O(x^2))*(1/x+Euler+O(x))],[1,lfun(1,1-a+x+O(x^3))*(1/x+Euler+O(x))]]]);
+lfuncheckfeq(L(1))
+lfun(L(1),2)
+lfun(L(1),3)
+lfuncheckfeq(L(2))
+lfun(L(2),2)
+lfun(L(2),3)
+
+lf=[1,-7,-3,25,3,21,-9,-63,6,-21,-4,-75,-3,63,-9,169,37,-42,-75,75,27,28,10,189,-76,21,-90,-225,212,63,-6,-623,12,-259,-27,150,-88,525,9,-189,-3,-189,547,-100,18,-70,-147,-507,25,532,-111,-75,-108,630,-12,567,225,-1484,-45,-225,145,42,-54,2233,-9,-84,-632,925,-30,189,-650,-378,859,616,228,-1875,36,-63,-978,507,-234,21,931,675,111,-3829,-636,252,-571,-126,27,250,18,1029,-225,1869,453,-175,-24,-1900,830,777,1246,189,81,756,707,-2250,-378,84,264,-1521,-225,-1575,30,5300,-18,315,-333,567,-1722,-1015,9,-150,-108,378,1607,-6111,-1641,63,-1399,300,675,4424,-270,-2331,-861,210,1938,-675,441,4550,12,1014,636,-6013,-75,-2200,157,-1596,2356,4725,222,-252,-18,225,-414,6846,324,-1869,-90,1638,-11,-75,36,-6517,-1852,-1701,-1460,-777,-450,13675,-2021,4452,684,-676,135,3997,1444,450,442,-189,-435,-630,-264,-126,-148,-3675,810,1575,-366,-6699,-2790,-3171,27,625,-815,168,-2753,4788,1896,-5810,-1908,-2775,-9,-8722,60,-507,300,-567,-3519,-2700,1950,-4949,1641,5670,54,2646,-2577,-300,-111,-1848,100,5607,-456,1575,-2302,5625,-813,-210,-108,-13356,-1136,126,-441,-1125,2934,2331,5251,-1521,5366,12054,2673,3625,75,-63,225,378,-2793,756,4478,-1350,-40,-11249,-333,13257,-1794,11487,792,-225,1272,9793,4270,-756,-324,-4725,1713,-15800,7959,1890,-2409,6253,-81,6027,304,-750,1592,-13566,-36,1701,7566,-3087,-737,-16250,675,-84,27,-3738,-6553,-4452,-1359,21475,-6777,525,-135,5544,360,-1099,-30,5700,-4923,-16492,-2490,-12675,435,-1554,1350,900,-3738,126,4001,-567,2685,2898,-162,-24450,7560,-2268,-848,6699,-2121,630,-2775,-5850,228,77,1134,189,1323,-252,-6732,23275,-528,12964,-1896,4563,-5228,10220,675,2775,24,3150,-2808,-34461,-90,14147,2829,-15900,4999,-4788,270,2492,-18397,-945,-1950,-14275,999,-10108,3871,-1134,-1861,-3094,5166,675,2577,3045,3171,1690,-18,1848,972,450,-6977,1036,324,9261,-636,-5670,8517,-5625,-4821,2562,5665,18333,108,19530,3282,11325,-194,-189,370,-1575,4197,5705,-2934,-600,-1484,19271,-2025,-12844,-2484,-13272,18,20750,-702,13356,352,6993,-12944,63,2583,31150,405,-420,2793,1869,-5814,-2100,-1919,2025,21564,24633,-882,6804,-2812,-13650,-1305,17675,-36,-11487,-1559,-15210,-4556,-378,-1908,-9450,-750,18039,-4476,756,150,777,7725,6600,-1713,-700,-471,-20097,-8444,3192,12,-5625,-7068,16114,81,-14175,-2673,5691,-3330,750,-5217,756,-2666,35828,54,7952,-672,-450,5688,3087,1242,2835,-2188,-20538,5700,-8325,-648,-36757,-1129,5607,264,-37562,270,-43050,1359,-18711,467,-9135,33,-525,-4973,225,7844,-1575,-72,-1014,5850,19551,-3859,-2700,5556,-31346,4091,3402,2490,280,4380,40175,10085,2331,-7731,-31311,6750,12558,3738,-41025,588,-5544,6063,567,-2290,-8904,11663,-34975,-2052,-29890,-222,2028,-13838,2268,-270,16875,9,-11991,2121,39816,-4332,-55713,-100,-6750,16984,16863,-1326,-23051,-1134,567,-6079,-21525,870,-2128,-15900,1890,8802,-11144,792,48450,-28136,252,-1641,-4563,444,-52962,591,11025,-675,5159,2106,40950,-13725,-4725,16866,300,1098,-189,-760,13398,21984,45871,8370,15900,-8379,9513,432,-54117,-54,47439,3770,-1875,450,945,2445,-14872,16344,-2520,-999,3925,8259,210];
+L=lfuncreate([lf,0,[-1,0,0,1],4,61,1]);
+localprec(38);lfunconductor(L,100)
+
+K=bnfinit(y^2+47);
+rel=x^5+2*x^4+2*x^3+x^2-1;
+T=rnfequation(K.pol, rel);
+L=lfunabelianrelinit(T,K,rel,[2,0,0]);
+lfun(L,2)
+lfuncost(L)
+
+L=lfuninit(polcyclo(3), [1/2,0,0]);
+lfuncheckfeq(L)
+lfuncost(L)
+
+lfunconductor(1,1)
+
+/* lfunconductor */
+
+default(realprecision,38);
+lfunconductor(1)
+lfunconductor(-4)
+lfunconductor(857)
+lfunconductor(120)
+lfunconductor(2108)
+
+lfunrootres(x^3+x^2-3*x-1)
+
+default(realprecision,19)
+lfunconductor(1,[1/2,10])
+/* guess small conductor */
+e1=ellinit([0, 0, 1, -7, 6]);
+lfunconductor(e1)
+
+lnf725=lfundiv(x^4-x^3-3*x^2+x+1,1);
+lfunconductor(lnf725,,1)
+
+/* bigger one.
+ * remark: should be able to search in a big range
+ * with few coefficients, would be faster
+ */
+lnf24217=lfundiv(nf24217,1);
+lfunconductor(lnf24217,10^5,1)
+
+e2=ellinit([3,-27,-18,24,9]);
+lfunconductor(e2,10^8,1)
+
+N=nfinit(x^6-3*x^5+5*x^4-5*x^3+5*x^2-3*x+1);G=galoisinit(N);
+L=lfunartin(N,G,[[-1,1;-1,0],[0,1;1,0]],1);
+if(lfunan(L,100)!=lfunan(lfundiv(x^3-3*x^2+2*x-1,1),100),error("lfunartin"));
+
+N=nfinit(x^12-11*x^10+44*x^8-78*x^6+60*x^4-16*x^2+1);
+G=galoisinit(N);
+L=lfunartin(N,G,[1,-y+1,y,-y+1,-1,y,-y,1,y-1,-y,y-1,-1]~,6);
+if(round(lfunan(L,100)-lfunan([znstar(28,1),[5,1]],100),&e),error("lfunartin"));
+e
+
+K=nfinit(polcyclo(4,a));G=galoisinit(K);[T,o]=galoischartable(G);
+L=lfunartin(K,G,T[,1]+T[,2],o);
+localbitprec(50);lfuncheckfeq(L)
+
+localbitprec(20); #lfunzeros('x^2-2,6)
+
+lfuncost(1, [100], 5)
+L = lfuninit(polcyclo(5), [1/2,1/2,50]);
+lfuncost(L)
+
+lfun(1,2000)
+default(realprecision,38)
+Z=znstar(7,1);
+La=lfuncreate([Z,[2]]);
+Lb=lfuncreate([Z,[4]]);
+L=La;L[2]=Lb[1];
+lfun(L,2+I)
+lfun(La,2+I)
+{
+  L1=lfuncreate([Z,[1]]);
+  L2=lfuncreate([Z,[3]]);
+  my(t=lfunrootres(L1)[3]);
+  L=lfuncreate([n->lfunan(L1,n)+lfunan(L2,n),n->conj(lfunan(L1,n))*t+lfunan(L2,n),[1],1,7,1]);
+}
+f(s)=[round(lfun(L,s)/(lfun(L1,s)+lfun(L2,s)),&e),e];
+lfuncheckfeq(L)
+f(2+I)
+
+\\ zeta via lfuncreate + Lambda polar part
+a=n->vector(n,i,1);
+z=lfuncreate([a, a, [0], 1, 1, 1, [[0,-1/x+O(1)], [1,1/x+O(1)]]~]);
+lfun(z,2)
+
+{
+  E=ellinit([0,0,1,0,-7]); \\27a1
+  localbitprec(48);
+  for(i=1,7,
+    L=lfunsympow(E,i);
+    print(i,":",lfuncheckfeq(L)))
+}
+L=lfunsympow(E,5); lfun(L,1,1)
+
+\\ #2118
+Z = lfuncreate([n->[1], 0, [0], 1, 1, 1, 1]); lfun(Z,2)
+
+\\ ERRORS: keep them at end of file
+lfuntheta(1,0)
+lfunhardy(1,I)
+lfun(1,2,-1)
+lfunan(lfuncreate([1,0,[0],1,1,1,1]),10)
+N=nfinit(x^2+1);G=galoisinit(N);lfunartin(N,G,[1]~,2)
+N=nfinit(x^2+1);G=galoisinit(N);lfunartin(N,G,[1,1,1]~,2)
+
+Lt=lfuncreate([1,0,[-1,0,0,1,-2,-1,0,0],21,61^2,1]);
+localbitprec(16);lfun(Lt,12);

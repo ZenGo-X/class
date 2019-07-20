@@ -1,0 +1,26 @@
+#! /bin/sh
+unset LANG LC_ALL LC_COLLATE LC_CTYPE
+srcbase="`echo src/*/*.[chy] | sed -e 's,src/language/parse\.[ch],,g'`"
+CFILES="$srcbase src/*/*/*.[ch] examples/*.c examples/*.gp"
+docbase="`echo doc/*.tex doc/*.1 | sed -e 's,doc/usersch3.tex,,'`"
+OFILES="$docbase AUTHORS COMPAT NEW TODO CHANGES src/test/in/* src/functions/*/*"
+SCRIPTS="config/* src/test/dotest"
+ALLFILES="$CFILES $OFILES $SCRIPTS"
+err=0;
+if grep -P '[\x80-\xff]' $ALLFILES; then
+  echo "BUG: high bit found."
+  err=1;
+fi
+if grep ' $' $ALLFILES; then
+  echo "BUG: trailing spaces found."
+  err=1;
+fi
+if grep '	' $CFILES $OFILES; then
+  echo "BUG: TAB found."
+  err=1;
+fi
+if grep '	$' $SCRIPTS; then
+  echo "BUG: TAB found in scripts."
+  err=1;
+fi
+exit $err

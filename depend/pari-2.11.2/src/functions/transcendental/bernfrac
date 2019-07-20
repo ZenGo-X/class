@@ -1,0 +1,8 @@
+Function: bernfrac
+Section: transcendental
+C-Name: bernfrac
+Prototype: L
+Help: bernfrac(x): Bernoulli number B_x, as a rational number.
+Doc: Bernoulli number\sidx{Bernoulli numbers} $B_x$,
+ where $B_0=1$, $B_1=-1/2$, $B_2=1/6$,\dots, expressed as a rational number.
+ The argument $x$ should be of type integer.

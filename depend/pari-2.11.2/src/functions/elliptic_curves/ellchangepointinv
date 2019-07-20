@@ -1,0 +1,21 @@
+Function: ellchangepointinv
+Section: elliptic_curves
+C-Name: ellchangepointinv
+Prototype: GG
+Help: ellchangepointinv(x,v): change data on point or vector of points x on an
+ elliptic curve according to v=[u,r,s,t], inverse of ellchangepoint.
+Doc:
+ changes the coordinates of the point or vector of points $x$ using
+ the inverse of the isomorphism attached to \kbd{v=[u,r,s,t]},
+ i.e.~if $x'$ and $y'$ are the old coordinates, then $x=u^2x'+r$,
+ $y=u^3y'+su^2x'+t$ (inverse of \kbd{ellchangepoint}).
+ \bprog
+ ? E0 = ellinit([1,1]); P0 = [0,1]; v = [1,2,3,4];
+ ? E = ellchangecurve(E0, v);
+ ? P = ellchangepoint(P0,v)
+ %3 = [-2, 3]
+ ? ellisoncurve(E, P)
+ %4 = 1
+ ? ellchangepointinv(P,v)
+ %5 = [0, 1]  \\ we get back P0
+ @eprog

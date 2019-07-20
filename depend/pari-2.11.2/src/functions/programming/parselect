@@ -1,0 +1,17 @@
+Function: parselect
+Section: programming/parallel
+C-Name: parselect
+Prototype: GGD0,L,
+Help: parselect(f, A, {flag = 0}): (parallel select) selects elements of A
+ according to the selection function f which is tested in parallel. If flag
+ is 1, return the indices of those elements (indirect selection).
+Doc: selects elements of $A$ according to the selection function $f$, done in
+ parallel.  If \fl is $1$, return the indices of those elements (indirect
+ selection) The function \kbd{f} must not access global variables or
+ variables declared with local(), and must be free of side effects.
+
+Function: _parselect_worker
+Section: programming/internals
+C-Name: parselect_worker
+Prototype: GG
+Help: _parselect_worker(d,C): evaluate the boolean closure C on d.

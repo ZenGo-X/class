@@ -1,0 +1,72 @@
+Function: contfrac
+Section: number_theoretical
+C-Name: contfrac0
+Prototype: GDGD0,L,
+Help: contfrac(x,{b},{nmax}): continued fraction expansion of x (x
+ rational,real or rational function). b and nmax are both optional, where b
+ is the vector of numerators of the continued fraction, and nmax is a bound
+ for the number of terms in the continued fraction expansion.
+Doc: returns the row vector whose components are the partial quotients of the
+ \idx{continued fraction} expansion of $x$. In other words, a result
+ $[a_0,\dots,a_n]$ means that $x \approx a_0+1/(a_1+\dots+1/a_n)$. The
+ output is normalized so that $a_n \neq 1$ (unless we also have $n = 0$).
+
+ The number of partial quotients $n+1$ is limited by \kbd{nmax}. If
+ \kbd{nmax} is omitted, the expansion stops at the last significant partial
+ quotient.
+ \bprog
+ ? \p19
+   realprecision = 19 significant digits
+ ? contfrac(Pi)
+ %1 = [3, 7, 15, 1, 292, 1, 1, 1, 2, 1, 3, 1, 14, 2, 1, 1, 2, 2]
+ ? contfrac(Pi,, 3)  \\ n = 2
+ %2 = [3, 7, 15]
+ @eprog\noindent
+ $x$ can also be a rational function or a power series.
+
+ If a vector $b$ is supplied, the numerators are equal to the coefficients
+ of $b$, instead of all equal to $1$ as above; more precisely, $x \approx
+ (1/b_0)(a_0+b_1/(a_1+\dots+b_n/a_n))$; for a numerical continued fraction
+ ($x$ real), the $a_i$ are integers, as large as possible; if $x$ is a
+ rational function, they are polynomials with $\deg a_i = \deg b_i + 1$.
+ The length of the result is then equal to the length of $b$, unless the next
+ partial quotient cannot be reliably computed, in which case the expansion
+ stops. This happens when a partial remainder is equal to zero (or too small
+ compared to the available significant digits for $x$ a \typ{REAL}).
+
+ A direct implementation of the numerical continued fraction
+ \kbd{contfrac(x,b)} described above would be
+ \bprog
+ \\ "greedy" generalized continued fraction
+ cf(x, b) =
+ { my( a= vector(#b), t );
+
+   x *= b[1];
+   for (i = 1, #b,
+     a[i] = floor(x);
+     t = x - a[i]; if (!t || i == #b, break);
+     x = b[i+1] / t;
+   ); a;
+ }
+ @eprog\noindent There is some degree of freedom when choosing the $a_i$; the
+ program above can easily be modified to derive variants of the standard
+ algorithm. In the same vein, although no builtin
+ function implements the related \idx{Engel expansion} (a special kind of
+ \idx{Egyptian fraction} decomposition: $x = 1/a_1 + 1/(a_1a_2) + \dots$ ),
+ it can be obtained as follows:
+ \bprog
+ \\ n terms of the Engel expansion of x
+ engel(x, n = 10) =
+ { my( u = x, a = vector(n) );
+   for (k = 1, n,
+     a[k] = ceil(1/u);
+     u = u*a[k] - 1;
+     if (!u, break);
+   ); a
+ }
+ @eprog
+
+ \misctitle{Obsolete hack} (don't use this): if $b$ is an integer, \var{nmax}
+ is ignored and the command is understood as \kbd{contfrac($x,, b$)}.
+Variant: Also available are \fun{GEN}{gboundcf}{GEN x, long nmax},
+ \fun{GEN}{gcf}{GEN x} and \fun{GEN}{gcf2}{GEN b, GEN x}.

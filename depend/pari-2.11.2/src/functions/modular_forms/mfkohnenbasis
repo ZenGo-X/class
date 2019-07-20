@@ -1,0 +1,30 @@
+Function: mfkohnenbasis
+Section: modular_forms
+C-Name: mfkohnenbasis
+Prototype: G
+Help: mfkohnenbasis(mf): mf being a cuspidal space of half-integral weight
+ k >= 3/2, gives a basis B of the Kohnen + space of mf as a matrix
+ whose columns are the coefficients of B on the basis of mf.
+Doc: \kbd{mf} being a cuspidal space of half-integral weight $k\ge3/2$
+ with level $N$ and character $\chi$, gives a
+ basis $B$ of the Kohnen $+$-space of \kbd{mf} as a matrix whose columns are
+ the coefficients of $B$ on the basis of \kbd{mf}. The conductor of either
+ $\chi$ or $\chi \cdot (-4/.)$ must divide $N/4$.
+ \bprog
+ ? mf = mfinit([36,5/2],1); K = mfkohnenbasis(mf); K~
+ %1 =
+ [-1 0 0 2 0 0]
+
+ [ 0 0 0 0 1 0]
+ ? (mfcoefs(mf,20) * K)~
+ %4 =
+ [0 -1 0 0 2 0 0 0  0 0 0 0 0 -6 0 0 8 0 0 0 0]
+
+ [0  0 0 0 0 1 0 0 -2 0 0 0 0  0 0 0 0 1 0 0 2]
+
+ ? mf = mfinit([40,3/2,8],1); mfkohnenbasis(mf)
+  ***   at top-level: mfkohnenbasis(mf)
+  ***                 ^-----------------
+  *** mfkohnenbasis: incorrect type in mfkohnenbasis [incorrect CHI] (t_VEC).
+ @eprog In the final example both $\chi = (8/.)$ and $\chi \cdot (-4/.)$
+ have conductor $8$, which does not divide N/4 = 10.

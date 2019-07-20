@@ -1,0 +1,21 @@
+Function: alglatsubset
+Section: algebras
+C-Name: alglatsubset
+Prototype: iGGGD&
+Help: alglatsubset(al,lat1,lat2,{&ptindex}): tests whether lat1 is contained in
+ lat2 and if true and ptindex is present, sets it to the index (lat2:lat1).
+Doc: Given an algebra~\var{al} and two lattices~\var{lat1} and~\var{lat2}
+ in~\var{al}, tests whether~$lat1\subset lat2$. If it is true and \var{ptindex}
+ is present, sets it to the index of~\var{lat1} in~\var{lat2}.
+ \bprog
+ ? al = alginit(nfinit(y^2+7), [-1,-1]);
+ ? lat1 = alglathnf(al,[1,1,0,0,0,0,0,0]~);
+ ? lat2 = alglathnf(al,[1,0,1,0,0,0,0,0]~);
+ ? alglatsubset(al,lat1,lat2)
+ %4 = 0
+ ? latsum = alglatadd(al,lat1,lat2);
+ ? alglatsubset(al,lat1,latsum,&index)
+ %6 = 1
+ ? index
+ %7 = 4
+ @eprog

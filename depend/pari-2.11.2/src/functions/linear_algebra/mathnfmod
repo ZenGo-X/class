@@ -1,0 +1,16 @@
+Function: mathnfmod
+Section: linear_algebra
+C-Name: hnfmod
+Prototype: GG
+Help: mathnfmod(x,d): (upper triangular) Hermite normal form of x, basis for
+ the lattice formed by the columns of x, where d is a multiple of the
+ non-zero determinant of this lattice.
+Doc: if $x$ is a (not necessarily square) matrix of
+ maximal rank with integer entries, and $d$ is a multiple of the (non-zero)
+ determinant of the lattice spanned by the columns of $x$, finds the
+ \emph{upper triangular} \idx{Hermite normal form} of $x$.
+
+ If the rank of $x$ is equal to its number of rows, the result is a square
+ matrix. In general, the columns of the result form a basis of the lattice
+ spanned by the columns of $x$. Even when $d$ is known, this is in general
+ slower than \kbd{mathnf} but uses much less memory.

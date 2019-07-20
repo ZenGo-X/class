@@ -1,0 +1,34 @@
+Function: _wrap_G
+Class: gp2c_internal
+C-Name: gp_call
+Prototype: G
+Description:
+  (gen):gen    $1
+
+Function: _wrap_Gp
+Class: gp2c_internal
+C-Name: gp_callprec
+Prototype: Gp
+Description:
+  (gen):gen    $1
+
+Function: _wrap_GG
+Class: gp2c_internal
+C-Name: gp_call2
+Prototype: GG
+Description:
+  (gen):gen    $1
+
+Function: _wrap_vG
+Class: gp2c_internal
+C-Name: gp_callvoid
+Prototype: lG
+Description:
+  (void):small  0
+
+Function: _wrap_bG
+Class: gp2c_internal
+C-Name: gp_callbool
+Prototype: lG
+Description:
+  (bool):bool   $1

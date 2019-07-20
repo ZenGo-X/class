@@ -1,0 +1,8 @@
+Function: writetex
+Section: programming/specific
+C-Name: writetex
+Prototype: vss*
+Help: writetex(filename,{str}*): appends the remaining arguments (same format as
+ print) to filename, in TeX format.
+Doc: as \kbd{write}, in \TeX\ format.
+ %\syn{NO}

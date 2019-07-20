@@ -1,0 +1,17 @@
+Function: rnfsteinitz
+Section: number_fields
+C-Name: rnfsteinitz
+Prototype: GG
+Help: rnfsteinitz(nf,x): given an order x as output by rnfpseudobasis,
+ gives [A,I,D,d] where (A,I) is a pseudo basis where all the ideals except
+ perhaps the last are trivial.
+Doc: given a number field $\var{nf}$ as
+ output by \kbd{nfinit} and either a polynomial $x$ with coefficients in
+ $\var{nf}$ defining a relative extension $L$ of $\var{nf}$, or a pseudo-basis
+ $x$ of such an extension as output for example by \kbd{rnfpseudobasis},
+ computes another pseudo-basis $(A,I)$ (not in HNF in general) such that all
+ the ideals of $I$ except perhaps the last one are equal to the ring of
+ integers of $\var{nf}$, and outputs the four-component row vector $[A,I,D,d]$
+ as in \kbd{rnfpseudobasis}. The name of this function comes from the fact
+ that the ideal class of the last ideal of $I$, which is well defined, is the
+ \idx{Steinitz class} of the $\Z_K$-module $\Z_L$ (its image in $SK_0(\Z_K)$).

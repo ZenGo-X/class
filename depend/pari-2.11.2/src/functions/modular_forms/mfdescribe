@@ -1,0 +1,30 @@
+Function: mfdescribe
+Section: modular_forms
+C-Name: mfdescribe
+Prototype: GD&
+Help: mfdescribe(F,{&G}): gives a human-readable description of F, which is
+ either a modular form space or a modular form. If the address of G is given,
+ puts into G the vector of parameters of the outmost operator defining F
+ (the empty vector if F is a leaf or a modular form space).
+Doc: gives a human-readable description of $F$, which is either a modular
+ form space or a generalized modular form. If the address of $G$ is given,
+ puts into $G$ the vector of parameters of the outmost operator defining $F$
+ (the empty vector if $F$ is a leaf or a modular form space).
+ \bprog
+ ? E1 = mfeisenstein(4,-3,-4); mfdescribe(E1)
+ %1 = "F_4(-3, -4)"
+ ? E2 = mfeisenstein(3,5,-7); mfdescribe(E2)
+ %2 = "F_3(5, -7)"
+ ? E3 = mfderivE2(mfmul(E1,E2), 3); mfdescribe(E3,&G)
+ %3 = "DERE2^3(MUL(F_4(-3, -4), F_3(5, -7)))"
+ ? mfdescribe(G[1][1])
+ %4 = "MUL(F_4(-3, -4), F_3(5, -7))"
+ ? G[2]
+ %5 = 3
+ ? for (i = 0, 4, mf = mfinit([37,4],i); print(mfdescribe(mf)));
+ S_4^new(G_0(37, 1))
+ S_4(G_0(37, 1))
+ S_4^old(G_0(37, 1))
+ E_4(G_0(37, 1))
+ M_4(G_0(37, 1))
+ @eprog

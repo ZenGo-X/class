@@ -1,0 +1,7 @@
+Function: rnfdet
+Section: number_fields
+C-Name: rnfdet
+Prototype: GG
+Help: rnfdet(nf,M): given a pseudo-matrix M, compute its determinant.
+Doc: given a pseudo-matrix $M$ over the maximal
+ order of $\var{nf}$, computes its determinant.

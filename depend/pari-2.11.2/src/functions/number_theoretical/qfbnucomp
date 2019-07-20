@@ -1,0 +1,18 @@
+Function: qfbnucomp
+Section: number_theoretical
+C-Name: nucomp
+Prototype: GGG
+Help: qfbnucomp(x,y,L): composite of primitive positive definite quadratic
+ forms x and y using nucomp and nudupl, where L=[|D/4|^(1/4)] is precomputed.
+Doc: \idx{composition} of the primitive positive
+ definite binary quadratic forms $x$ and $y$ (type \typ{QFI}) using the NUCOMP
+ and NUDUPL algorithms of \idx{Shanks}, \`a la Atkin. $L$ is any positive
+ constant, but for optimal speed, one should take $L=|D/4|^{1/4}$, i.e.
+ \kbd{sqrtnint(abs(D)>>2,4)}, where $D$ is the common discriminant of $x$ and
+ $y$. When $x$ and $y$ do not have the same discriminant, the result is
+ undefined.
+
+ The current implementation is slower than the generic routine for small $D$,
+ and becomes faster when $D$ has about $45$ bits.
+
+Variant: Also available is \fun{GEN}{nudupl}{GEN x, GEN L} when $x=y$.

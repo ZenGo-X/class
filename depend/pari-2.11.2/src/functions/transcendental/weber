@@ -1,0 +1,23 @@
+Function: weber
+Section: transcendental
+C-Name: weber0
+Prototype: GD0,L,p
+Help: weber(x,{flag=0}): one of Weber's f function of x. flag is optional,
+ and can be 0: default, function f(x)=exp(-i*Pi/24)*eta((x+1)/2)/eta(x),
+ 1: function f1(x)=eta(x/2)/eta(x)
+ 2: function f2(x)=sqrt(2)*eta(2*x)/eta(x). Note that
+ j = (f^24-16)^3/f^24 = (f1^24+16)^3/f1^24 = (f2^24+16)^3/f2^24.
+Doc: one of Weber's three $f$ functions.
+ If $\fl=0$, returns
+ $$f(x)=\exp(-i\pi/24)\cdot\eta((x+1)/2)\,/\,\eta(x) \quad\hbox{such that}\quad
+ j=(f^{24}-16)^3/f^{24}\,,$$
+ where $j$ is the elliptic $j$-invariant  (see the function \kbd{ellj}).
+ If $\fl=1$, returns
+ $$f_1(x)=\eta(x/2)\,/\,\eta(x)\quad\hbox{such that}\quad
+ j=(f_1^{24}+16)^3/f_1^{24}\,.$$
+ Finally, if $\fl=2$, returns
+ $$f_2(x)=\sqrt{2}\eta(2x)\,/\,\eta(x)\quad\hbox{such that}\quad
+ j=(f_2^{24}+16)^3/f_2^{24}.$$
+ Note the identities $f^8=f_1^8+f_2^8$ and $ff_1f_2=\sqrt2$.
+Variant: Also available are \fun{GEN}{weberf}{GEN x, long prec},
+ \fun{GEN}{weberf1}{GEN x, long prec} and \fun{GEN}{weberf2}{GEN x, long prec}.

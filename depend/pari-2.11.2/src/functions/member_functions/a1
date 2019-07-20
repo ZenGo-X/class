@@ -1,0 +1,8 @@
+Function: _.a1
+Section: member_functions
+C-Name: member_a1
+Prototype: mG
+Help: _.a1
+Description:
+ (ell):gen:copy        ell_get_a1($1)
+

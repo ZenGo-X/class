@@ -1,0 +1,46 @@
+Function: ellcard
+Section: elliptic_curves
+C-Name: ellcard
+Prototype: GDG
+Help: ellcard(E,{p}): given an elliptic curve E defined over
+ a finite field Fq, return the order of the group E(Fq); for other fields
+ of definition K, p must define a finite residue field,
+ (p prime for K = Qp or Q; p a maximal ideal for K a number field),
+ return the order of the (non-singular) reduction of E.
+Doc: Let \kbd{E} be an \kbd{ell} structure as output by \kbd{ellinit}, attached
+ to an elliptic curve $E/K$. If $K = \F_q$ is finite, return the order of the
+ group $E(\F_q)$.
+ \bprog
+ ? E = ellinit([-3,1], 5); ellcard(E)
+ %1 = 7
+ ? t = ffgen(3^5,'t); E = ellinit([t,t^2+1]); ellcard(E)
+ %2 = 217
+ @eprog\noindent
+ For other fields of definition and $p$ defining a finite residue field
+ $\F_q$, return the order of the reduction of $E$: the argument $p$ is best
+ left omitted if $K = \Q_\ell$ (else we must have $p = \ell$) and must be a
+ prime number ($K = \Q$) or prime ideal ($K$ a general number field) with
+ residue field $\F_q$ otherwise. The equation need not be minimal
+ or even integral at $p$; of course, a minimal model will be more efficient.
+ The function considers the group of non-singular points of the reduction
+ of a minimal model of the curve at $p$, so also makes sense when the curve
+ has bad reduction.
+ \bprog
+ ? E = ellinit([-3,1]);
+ ? factor(E.disc)
+ %2 =
+ [2 4]
+
+ [3 4]
+ ? ellcard(E, 5)  \\ as above !
+ %3 = 7
+ ? ellcard(E, 2) \\ additive reduction
+ %4 = 2
+ @eprog
+
+ When the characteristic of the finite field is large, the availability of
+ the \kbd{seadata} package will speed the computation. See also \tet{ellap}
+ for the list of implemented algorithms.
+
+Variant: Also available is \fun{GEN}{ellcard}{GEN E, GEN p} where $p$ is not
+ \kbd{NULL}.

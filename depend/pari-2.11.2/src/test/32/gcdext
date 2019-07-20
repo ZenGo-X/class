@@ -1,0 +1,121 @@
+[0, 0, 0]
+[0, 0, 0]
+[0, 0, 0]
+[0, 1, 2]
+[0, 3 + 2*5 + 2*5^2 + O(5^3), 1]
+[0, 1, x]
+[0, 0, 0]
+[0, 0, 0]
+[0, 0, 0]
+[0, 1/2, 1]
+[0, 3 + 2*5 + 2*5^2 + O(5^3), 1]
+[0, 1, x]
+[0, 0, 0]
+[0, 0, 0]
+[0, 0, 0]
+[0, 1/2, 1]
+[0, 3 + 2*5 + 2*5^2 + O(5^3), 1]
+[0, 1, x]
+[1, 0, 2]
+[1/2, 0, 1]
+[1/2, 0, 1]
+[0, 1, 2]
+[1/2, 0, 1]
+[1/2, 0, 1]
+[3 + 2*5 + 2*5^2 + O(5^3), 0, 1]
+[3 + 2*5 + 2*5^2 + O(5^3), 0, 1]
+[3 + 2*5 + 2*5^2 + O(5^3), 0, 1]
+[3 + 2*5 + 2*5^2 + O(5^3), 0, 1]
+[3 + 2*5 + 2*5^2 + O(5^3), 0, 1]
+[3 + 2*5 + 2*5^2 + O(5^3), 0, 1]
+[1, 0, x]
+[1, 0, x]
+[1, 0, x]
+[0, 1/2, 1]
+[0, 3 + 2*5 + 2*5^2 + O(5^3), 1]
+[0, 1, x]
+[0, -3, 3*x + 5]
+[0, 1, (10*T^3 + 3*T + 5)*z^6 + (11*T^3 + 15*T^2 + 10*T + 13)*z^4 + (14*T^3 
++ 13*T^2 + 15)*z^2 + (9 + 13*T + 14*T^2 + 11*T^3 + O(T^20))]
+Mod(1, 7)*x
+x + a
+[(a^4 + 2*a^3 + a^2 + a + 1)*x^2 + (a^4 + 2*a^3 + a^2 + a + 2)*x + 1, (2*a^4
+ + a^3 + 2*a^2 + 2*a + 2)*x + (2*a^4 + a^3 + 2*a^2 + 2*a + 1), 1]
+1 + I
+1
+1
+2
+w
+w
+Mod(2, 4)
+  ***   at top-level: gcd(1/2,Mod(2,4))
+  ***                 ^-----------------
+  *** gcd: inconsistent gcd t_INTMOD , t_FRAC.
+Mod(1, 4)
+2
+Mod(1, 5)
+Mod(1, 5)
+1/2
+1/2
+1
+1
+1
+Mod(1, x^3)
+Mod(x, x^3)
+1
+  ***   at top-level: gcd(t,1/x)
+  ***                 ^----------
+  *** gcd: inconsistent gcd t_POLMOD , t_RFRAC.
+1
+y
+x
+1/x^2
+1
+1
+1
+0
+1
+1
+error("forbidden multiplication t_REAL * t_FFELT.")
+error("forbidden gcd t_REAL , t_FFELT.")
+error("forbidden gcd t_REAL , t_FFELT.")
+1
+1
+error("inconsistent gcd t_INTMOD , t_FFELT.")
+error("impossible inverse in FF_Z_Z_muldiv: 2.")
+error("inconsistent gcd t_FRAC , t_FFELT.")
+1
+1
+1
+error("inconsistent gcd t_FRAC , t_FFELT.")
+0
+1
+error("inconsistent gcd t_FRAC , t_FFELT.")
+error("forbidden multiplication t_FFELT * t_COMPLEX.")
+error("forbidden gcd t_FFELT , t_COMPLEX.")
+error("forbidden gcd t_FFELT , t_COMPLEX.")
+error("forbidden multiplication t_FFELT * t_QUAD.")
+error("forbidden gcd t_FFELT , t_QUAD.")
+error("forbidden gcd t_FFELT , t_QUAD.")
+error("forbidden multiplication t_FFELT * t_PADIC.")
+1
+error("inconsistent gcd t_FFELT , t_PADIC.")
+error("forbidden multiplication t_FFELT * t_PADIC.")
+1
+error("inconsistent gcd t_FFELT , t_PADIC.")
+error("forbidden multiplication t_FFELT * t_PADIC.")
+error("inconsistent gcd t_FFELT , t_PADIC.")
+error("inconsistent gcd t_FFELT , t_PADIC.")
+1
+1 + I
+Mod(1, 3)
+1
+Mod(1, 13)
+1
+(-k + 0.E-38)/k
+1/18446744073709551616
+Mod(1, 2)*x + Mod(1, 2)
+x + 1
+0
+Mod(0, 3)
+Total time spent: 2

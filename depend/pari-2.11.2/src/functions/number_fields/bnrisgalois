@@ -1,0 +1,32 @@
+Function: bnrisgalois
+Section: number_fields
+C-Name: bnrisgalois
+Prototype: lGGG
+Help: bnrisgalois(bnr, gal, H): check whether the class field attached to
+ the subgroup H is Galois over the subfield of bnr.nf fixed by the Galois
+ group gal, which can be given as output by galoisinit, or as a matrix or a
+ vector of matrices as output by bnrgaloismatrix. The ray class field
+ attached to bnr need to be Galois, which is not checked.
+Doc: check whether the class field attached to the subgroup $H$ is Galois
+ over the subfield of \kbd{bnr.nf} fixed by the group \var{gal}, which can be
+ given as output by \tet{galoisinit}, or as a matrix or a vector of matrices as
+ output by \kbd{bnrgaloismatrix}, the second option being preferable, since it
+ saves the recomputation of the matrices.  Note: The function assumes that the
+ ray class field attached to bnr is Galois, which is not checked.
+
+ In the following example, we lists the congruence subgroups of subextension of
+ degree at most $3$ of the ray class field of conductor $9$ which are Galois
+ over the rationals.
+
+ \bprog
+ K=bnfinit(a^4-3*a^2+253009);
+ G=galoisinit(K);
+ B=bnrinit(K,9,1);
+ L1=[H|H<-subgrouplist(B,3), bnrisgalois(B,G,H)]
+ ##
+ M=bnrgaloismatrix(B,G)
+ L2=[H|H<-subgrouplist(B,3), bnrisgalois(B,M,H)]
+ ##
+ @eprog
+ The second computation is much faster since \kbd{bnrgaloismatrix(B,G)} is
+ computed only once.

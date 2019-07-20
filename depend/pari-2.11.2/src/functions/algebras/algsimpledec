@@ -1,0 +1,20 @@
+Function: algsimpledec
+Section: algebras
+C-Name: algsimpledec
+Prototype: GD0,L,
+Help: algsimpledec(al,{maps=0}): [J,dec] where J is the Jacobson radical of al
+ and dec is the decomposition into simple algebras of the semisimple algebra
+ al/J.
+Doc: \var{al} being the output of \tet{algtableinit}, returns a \typ{VEC}
+ $[J,[\var{al}_1,\var{al}_2,\dots,\var{al}_n]]$ where $J$ is a basis of the
+ Jacobson radical of \var{al} and~$\var{al}/J$ is isomorphic to the direct
+ product of the simple algebras~$\var{al}_i$. When $\var{maps}=1$,
+ each~$\var{al}_i$ is replaced with a \typ{VEC}
+ $[\var{al}_i,\var{proj}_i,\var{lift}_i]$ where $\var{proj}_i$ and~$\var{lift}_i$
+ are matrices respectively representing the projection map~$\var{al} \to
+ \var{al}_i$ and a section of it. Modulo~$J$, the images of the $\var{lift}_i$
+ form a direct sum in~$\var{al}/J$, so that the images of~$1\in\var{al}_i$
+ under~$\var{lift}_i$ are central primitive idempotents of~$\var{al}/J$. The
+ factors are sorted by increasing dimension, then increasing dimension of the
+ center. This ensures that the ordering of the isomorphism classes of the
+ factors is deterministic over finite fields, but not necessarily over~$\Q$.

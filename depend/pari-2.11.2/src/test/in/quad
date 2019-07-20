@@ -1,0 +1,30 @@
+default(realprecision,38);
+w=quadgen(5);
+w^0
+w+1.
+w+(I+0.)
+1.*w
+(I+0.)*w
+norm(w)
+norml2(w)
+trace(w)
+trace(1+0*w)
+
+w < 1
+1 < w
+w < 1.
+1. < w
+w < 3/2
+3/2 < w
+w < w
+w <= w
+w <= +oo
+w <= -oo
+quadgen(-8) < 1
+
+test(a)=[sign(z) | z<-[a,a-1,a-2,1-a,2-a]]
+test(w)
+test(quadgen(8))
+sign(quadgen(-8))
+
+quadgen(2^64+1) * 1.

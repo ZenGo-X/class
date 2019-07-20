@@ -1,0 +1,55 @@
+Function: primecertexport
+Section: number_theoretical
+C-Name: primecertexport
+Prototype: GD0,L,
+Help: primecertexport(cert, {format = 0}): Returns a string suitable for
+ print/write to display a primality certificate.
+Doc:
+ Returns a string suitable for print/write to display a primality certificate
+ from \tet{primecert}, the format of which depends on the value of \kbd{format}:
+
+ \item 0 (default): Human-readable format.
+
+ \item 1: Primo format 4.
+
+ \item 2: MAGMA format.
+
+ Currently, only ECPP Primality Certificates are supported.
+
+ \bprog
+ ? cert = primecert(10^35+69);
+ ? s = primecertexport(cert); \\ Human-readable
+ ? print(s)
+ [1]
+  N = 100000000000000000000000000000000069
+  t = 546867911035452074
+  s = 2963504668391148
+ a4 = 0
+ D = -3
+ m = 99999999999999999453132088964547996
+ q = 33743830764501150277
+ E = [0, 1]
+ P = [21567861682493263464353543707814204,
+ 49167839501923147849639425291163552]
+ [2]
+  N = 33743830764501150277
+  t = -11610830419
+  s = 734208843
+ a4 = 0
+ D = -3
+ m = 33743830776111980697
+ q = 45959444779
+ E = [0, 25895956964997806805]
+ P = [29257172487394218479, 3678591960085668324]
+
+ \\ Primo format
+ ? s = primecertexport(cert,1); write("cert.out", s);
+
+ \\ Magma format, write to file
+ ? s = primecertexport(cert,2); write("cert.m", s);
+
+ ? cert = primecert(10^35+69, 1); \\ N-1 certificate
+  ***   at top-level: primecertexport(cert)
+  ***                 ^---------------------
+  *** primecertexport: sorry, N-1 certificate is not yet implemented.
+ @eprog

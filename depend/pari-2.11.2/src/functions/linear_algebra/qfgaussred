@@ -1,0 +1,34 @@
+Function: qfgaussred
+Section: linear_algebra
+C-Name: qfgaussred
+Prototype: G
+Help: qfgaussred(q): square reduction of the (symmetric) matrix q (returns a
+ square matrix whose i-th diagonal term is the coefficient of the i-th square
+ in which the coefficient of the i-th variable is 1).
+Doc:
+ \idx{decomposition into squares} of the
+ quadratic form represented by the symmetric matrix $q$. The result is a
+ matrix whose diagonal entries are the coefficients of the squares, and the
+ off-diagonal entries on each line represent the bilinear forms. More
+ precisely, if $(a_{ij})$ denotes the output, one has
+ $$ q(x) = \sum_i a_{ii} (x_i + \sum_{j \neq i} a_{ij} x_j)^2 $$
+ \bprog
+ ? qfgaussred([0,1;1,0])
+ %1 =
+ [1/2 1]
+
+ [-1 -1/2]
+ @eprog\noindent This means that $2xy = (1/2)(x+y)^2 - (1/2)(x-y)^2$.
+ Singular matrices are supported, in which case some diagonal coefficients
+ will vanish:
+ \bprog
+ ? qfgaussred([1,1;1,1])
+ %1 =
+ [1 1]
+
+ [1 0]
+ @eprog\noindent This means that $x^2 + 2xy + y^2 = (x+y)^2$.
+
+Variant: \fun{GEN}{qfgaussred_positive}{GEN q} assumes that $q$ is
+  positive definite and is a little faster; returns \kbd{NULL} if a vector
+  with negative norm occurs (non positive matrix or too many rounding errors).

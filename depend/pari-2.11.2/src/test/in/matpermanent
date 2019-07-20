@@ -1,0 +1,23 @@
+default(realprecision,38);
+matpermanent([;])
+matpermanent(Mat(a))
+matpermanent(Mat(1))
+matpermanent([a,b,c;d,e,f;g,h,j])
+m = [1,2,3;4,5,6;7,8,9];
+matpermanent(m)
+matpermanent(m/2)
+matpermanent(m*1.)
+m = matrix(20,20,i,j,1);
+matpermanent(m)
+m = matrix(20,20,i,j,2^i + j);
+matpermanent(m)
+m = matrix(20,20,i,j,16^i + j);
+matpermanent(m)
+{
+  for (n = 1, 10, m = matrix(n,n,i,j,i!=j);
+    if (matpermanent(m)!=n!*sum(i=0,n,(-1)^i/i!), error(n)))
+}
+
+\\Errors
+matpermanent(matrix(64))
+matpermanent(matrix(2,3))

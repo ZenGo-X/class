@@ -1,0 +1,12 @@
+Function: gettime
+Section: programming/specific
+C-Name: gettime
+Prototype: l
+Help: gettime(): milliseconds of CPU time used since the last call to gettime.
+Doc: returns the CPU time (in milliseconds) used since either the last call to
+ \kbd{gettime}, or to the beginning of the containing GP instruction (if
+ inside \kbd{gp}), whichever came last.
+
+ For a reentrant version, see \tet{getabstime}.
+
+ For a version giving wall-clock time, see \tet{getwalltime}.

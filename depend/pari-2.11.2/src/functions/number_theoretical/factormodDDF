@@ -1,0 +1,61 @@
+Function: factormodDDF
+Section: number_theoretical
+C-Name: factormodDDF
+Prototype: GDG
+Help: factormodDDF(f,{D}): distinct-degree factorization of the
+ squarefree polynomial f over the finite field defined by the domain D.
+Doc: distinct-degree factorization of the squarefree polynomial $f$ over the
+ finite field defined by the domain $D$ as follows:
+
+ \item $D = p$ a prime: factor over $\F_p$;
+
+ \item $D = [T,p]$ for a prime $p$ and $T$ an irreducible polynomial over
+ $\F_p$: factor over $\F_p[x]/(T)$;
+
+ \item $D$ a \typ{FFELT}: factor over the attached field;
+
+ \item $D$ omitted: factor over the field of definition of $f$, which
+ must be a finite field.
+
+ This is somewhat faster than full factorization. The coefficients of $f$
+ must be operation-compatible with the corresponding finite field. The result
+ is a two-column matrix:
+
+ \item the first column contains monic (squarefree) pairwise coprime polynomials
+ dividing $f$, all of whose irreducible factors have degree $d$;
+
+ \item the second column contains the degrees of the irreducible factors.
+
+ The factors are ordered by increasing degree and the result is canonical: it
+ will not change across multiple calls or sessions.
+
+ \bprog
+ ? f = (x^2 + 1) * (x^2-1);
+ ? factormodSQF(f,3) \\ squarefree over F_3
+ %2 =
+ [Mod(1, 3)*x^4 + Mod(2, 3) 1]
+
+ ? factormodDDF(f, 3)
+ %3 =
+ [Mod(1, 3)*x^2 + Mod(2, 3) 1]  \\ two degree 1 factors
+
+ [Mod(1, 3)*x^2 + Mod(1, 3) 2]  \\ irred of degree 2
+
+ ? for(i=1,10^5,factormodDDF(f,3))
+ time = 424 ms.
+ ? for(i=1,10^5,factormod(f,3))  \\ full factorization is slower
+ time = 464 ms.
+
+ ? liftall( factormodDDF(x^2 + 1, [3, t^2+1]) ) \\ over F_9
+ %6 =
+ [x^2 + 1 1] \\ product of two degree 1 factors
+
+ ? t = ffgen(t^2+Mod(1,3)); factormodDDF(x^2 + t^0) \\ same using t_FFELT
+ %7 =
+ [x^2 + 1 1]
+
+ ? factormodDDF(x^2-Mod(1,3))
+ %8 =
+ [Mod(1, 3)*x^2 + Mod(2, 3) 1]
+
+ @eprog

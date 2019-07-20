@@ -1,0 +1,9 @@
+v=[1,1.,Mod(1,6),1/2,I+Mod(1,3), O(2), quadgen(5)*Mod(1,3), Mod(1,x)];
+for (i=1,#v, print(characteristic(v[i])))
+characteristic(v)
+characteristic(matid(2)*Mod(1,2))
+characteristic([])
+characteristic(List())
+characteristic(ffgen(2^3))
+characteristic([ffgen(2),ffgen(3)])
+characteristic([ffgen(2),Mod(1,3)])

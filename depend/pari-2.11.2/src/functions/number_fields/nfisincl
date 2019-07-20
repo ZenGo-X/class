@@ -1,0 +1,57 @@
+Function: nfisincl
+Section: number_fields
+C-Name: nfisincl
+Prototype: GG
+Help: nfisincl(f,g): let f and g define number fields, either irreducible
+ rational polynomials or number fields as output by nfinit; tests whether the
+ number field f is isomorphic to a subfield of g. Return 0 if not, and
+ otherwise all the isomorphisms.
+Doc: let $f$ and $g$ define number fields, where $f$ and $g$ are irreducible
+ polynomials in $\Q[X]$ and \var{nf} structures as output by \kbd{nfinit}.
+ Tests whether the number field $f$ is conjugate to a subfield of the field
+ $g$. If they are not, the output is the integer 0. If they are, the output is
+ a vector of polynomials, each polynomial $a$ representing an embedding
+ i.e.~being such that $g\mid f\circ a$. If either $f$ or $g$ is not
+ irreducible, the result is undefined.
+
+ \bprog
+ ? T = x^6 + 3*x^4 - 6*x^3 + 3*x^2 + 18*x + 10;
+ ? U = x^3 + 3*x^2 + 3*x - 2
+
+ ? v = nfisincl(U, T);
+ %2 = [24/179*x^5-27/179*x^4+80/179*x^3-234/179*x^2+380/179*x+94/179]
+
+ ? subst(U, x, Mod(v[1],T))
+ %3 = Mod(0, x^6 + 3*x^4 - 6*x^3 + 3*x^2 + 18*x + 10)
+ ? #nfisincl(x^2+1, T) \\ two embeddings
+ %4 = 2
+
+ \\ same result with nf structures
+ ? nfisincl(U, L = nfinit(T)) == v
+ %5 = 1
+ ? nfisincl(K = nfinit(U), T) == v
+ %6 = 1
+ ? nfisincl(K, L) == v
+ %7 = 1
+
+ \\ comparative bench: an nf is a little faster, esp. for the subfield
+ ? B = 10^3;
+ ? for (i=1, B, nfisincl(U,T))
+ time = 712 ms.
+
+ ? for (i=1, B, nfisincl(K,T))
+ time = 485 ms.
+
+ ? for (i=1, B, nfisincl(U,L))
+ time = 704 ms.
+
+ ? for (i=1, B, nfisincl(K,L))
+ time = 465 ms.
+ @eprog\noindent Using an \var{nf} structure for the potential subfield is
+ faster if the structure is already available. On the other hand, the gain in
+ \kbd{nfisincl} is usually not sufficient to make it worthwhile to initialize
+ only for that purpose.
+ \bprog
+ ? for (i=1, B, nfinit(U))
+ time = 308 ms.
+ @eprog

@@ -1,0 +1,51 @@
+Function: localprec
+Section: programming/specific
+C-Name: localprec
+Prototype: vL
+Help: localprec(p): set the real precision to p in the dynamic scope.
+Doc: set the real precision to $p$ in the dynamic scope. All computations
+ are performed as if \tet{realprecision} was $p$:
+ transcendental constants (e.g.~\kbd{Pi}) and
+ conversions from exact to floating point inexact data use $p$ decimal
+ digits, as well as iterative routines implicitly using a floating point
+ accuracy as a termination criterion (e.g.~\tet{solve} or \tet{intnum}).
+ But \kbd{realprecision} itself is unaffected
+ and is ``unmasked'' when we exit the dynamic (\emph{not} lexical) scope.
+ In effect, this is similar to
+ \bprog
+ my(prec = default(realprecision));
+ default(realprecision,p);
+ ...
+ default(realprecision, prec);
+ @eprog\noindent but is both less cumbersome, cleaner (no need to manipulate
+ a global variable, which in fact never changes and is only temporarily masked)
+ and more robust: if the above computation is interrupted or an exception
+ occurs, \kbd{realprecision} will not be restored as intended.
+
+ Such \kbd{localprec} statements can be nested, the innermost one taking
+ precedence as expected. Beware that \kbd{localprec} follows the semantic of
+ \tet{local}, not \tet{my}: a subroutine called from \kbd{localprec} scope
+ uses the local accuracy:
+ \bprog
+ ? f()=precision(1.);
+ ? f()
+ %2 = 38
+ ? localprec(19); f()
+ %3 = 19
+ @eprog\noindent
+ \misctitle{Warning} Changing \kbd{realprecision} itself in programs is
+ now deprecated in favor of \kbd{localprec}. Think about the
+ \kbd{realprecision} default as an interactive command for the \kbd{gp}
+ interpreter, best left out of GP programs. Indeed, the above rules
+ imply that mixing both constructs yields surprising results:
+ \bprog
+ ? \p38
+ ? localprec(19); default(realprecision,100); Pi
+ %1 = 3.141592653589793239
+ ? \p
+     realprecision = 115 significant digits (100 digits displayed)
+ @eprog\noindent Indeed, \kbd{realprecision} itself is ignored within
+ \kbd{localprec} scope, so \kbd{Pi} is computed to a low accuracy. And when
+ we leave \kbd{localprec} scope, \kbd{realprecision} only regains precedence,
+ it is not ``restored'' to the original value.
+ %\syn{NO}

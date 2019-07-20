@@ -1,0 +1,7 @@
+Function: plotcursor
+Section: graphic
+C-Name: plotcursor
+Prototype: L
+Help: plotcursor(w): current position of cursor in rectwindow w.
+Doc: give as a 2-component vector the current
+ (scaled) position of the virtual cursor corresponding to the rectwindow $w$.

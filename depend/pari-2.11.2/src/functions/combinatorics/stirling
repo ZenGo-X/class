@@ -1,0 +1,41 @@
+Function: stirling
+Section: combinatorics
+C-Name: stirling
+Prototype: LLD1,L,
+Help: stirling(n,k,{flag=1}): if flag=1 (default) return the Stirling number
+ of the first kind s(n,k), if flag=2, return the Stirling number of the second
+ kind S(n,k).
+Doc: \idx{Stirling number} of the first kind $s(n,k)$ ($\fl=1$, default) or
+ of the second kind $S(n,k)$ (\fl=2), where $n$, $k$ are non-negative
+ integers. The former is $(-1)^{n-k}$ times the
+ number of permutations of $n$ symbols with exactly $k$ cycles; the latter is
+ the number of ways of partitioning a set of $n$ elements into $k$ non-empty
+ subsets. Note that if all $s(n,k)$ are needed, it is much faster to compute
+ $$\sum_k s(n,k) x^k = x(x-1)\dots(x-n+1).$$
+ Similarly, if a large number of $S(n,k)$ are needed for the same $k$,
+ one should use
+ $$\sum_n S(n,k) x^n = \dfrac{x^k}{(1-x)\dots(1-kx)}.$$
+ (Should be implemented using a divide and conquer product.) Here are
+ simple variants for $n$ fixed:
+ \bprog
+ /* list of s(n,k), k = 1..n */
+ vecstirling(n) = Vec( factorback(vector(n-1,i,1-i*'x)) )
+
+ /* list of S(n,k), k = 1..n */
+ vecstirling2(n) =
+ { my(Q = x^(n-1), t);
+   vector(n, i, t = divrem(Q, x-i); Q=t[1]; simplify(t[2]));
+ }
+
+ /* Bell numbers, B_n = B[n+1] = sum(k = 0, n, S(n,k)), n = 0..N */
+ vecbell(N)=
+ { my (B = vector(N+1));
+   B[1] = B[2] = 1;
+   for (n = 2, N,
+     my (C = binomial(n-1));
+     B[n+1] = sum(k = 1, n, C[k]*B[k]);
+   ); B;
+ }
+ @eprog
+Variant: Also available are \fun{GEN}{stirling1}{ulong n, ulong k}
+ ($\fl=1$) and \fun{GEN}{stirling2}{ulong n, ulong k} ($\fl=2$).

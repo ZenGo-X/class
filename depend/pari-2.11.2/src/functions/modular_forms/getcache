@@ -1,0 +1,53 @@
+Function: getcache
+Section: modular_forms
+C-Name: getcache
+Prototype:
+Help: getcache(): returns information about various auto-growing caches. For
+ each ressource, we report its name, its size, the number of cache misses
+ (since the last extension) and the largest cache miss.
+Doc:
+ returns information about various auto-growing caches. For
+ each ressource, we report its name, its size, the number of cache misses
+ (since the last extension), the largest cache miss and the size of the cache
+ in bytes.
+
+ The caches are initially empty, then set automatically to a small
+ inexpensive default value, then grow on demand up to some maximal value.
+ Their size never decreases, they are only freed on exit.
+
+ The current caches are
+
+ \item Hurwitz class numbers $H(D)$ for $|D| \leq N$, computed in time
+ $O(N^{3/2})$ using $O(N)$ space.
+
+ \item Factorizations of small integers up to $N$, computed in time
+ $O(N^{1+\varepsilon})$ using $O(N\log N)$ space.
+
+ \item Divisors of small integers up to $N$, computed in time
+ $O(N^{1+\varepsilon})$ using $O(N\log N)$ space.
+
+ \item Primitive dihedral forms of weight $1$ and level up to $N$,
+ computed in time $O(N^{2+\varepsilon})$ and space $O(N^2)$.
+
+ \bprog
+ ? getcache()  \\ on startup, all caches are empty
+ %1 =
+ [ "Factors" 0 0 0 0]
+
+ ["Divisors" 0 0 0 0]
+
+ [       "H" 0 0 0 0]
+
+ ["Dihedral" 0 0 0 0]
+ ? mfdim([500,1,0],0); \\ non-trivial computation
+ time = 540 ms.
+ ? getcache()
+ %3 =
+ [ "Factors" 50000 0      0 4479272]
+
+ ["Divisors" 50000 1 100000 5189808]
+
+ [       "H" 50000 0      0  400008]
+
+ ["Dihedral"  1000 0      0 2278208]
+ @eprog

@@ -1,0 +1,30 @@
+Function: matinvmod
+Section: linear_algebra
+C-Name: matinvmod
+Prototype: GG
+Help: matinvmod(x,d): left inverse of the matrix x modulo d.
+Doc: computes a left inverse of the matrix~$x$ modulo~$d$. The matrix $x$ must
+ have \typ{INT} entries, and $d$ can be an arbitrary positive integer.
+
+ \bprog
+ ? A = [3,1,2;1,2,1;3,1,1];
+ ? U = matinvmod(A,6)
+ %2 =
+ [1 1 3]
+
+ [2 3 5]
+
+ [1 0 5]
+
+ ? (U*A)%6
+ %3 =
+ [1 0 0]
+
+ [0 1 0]
+
+ [0 0 1]
+ ? matinvmod(A,5)
+  ***   at top-level: matinvmod(A,5)
+  ***                 ^--------------
+  *** matinvmod: impossible inverse in gen_inv: 0.
+ @eprog

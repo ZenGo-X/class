@@ -1,0 +1,8 @@
+Function: _\/_
+Help: x\/y: rounded Euclidean quotient of x and y.
+Section: symbolic_operators
+C-Name: gdivround
+Prototype: GG
+Description:
+ (int, int):int                        gdivround($1, $2)
+ (gen, gen):gen                        gdivround($1, $2)

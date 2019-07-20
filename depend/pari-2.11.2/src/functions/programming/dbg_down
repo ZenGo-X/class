@@ -1,0 +1,8 @@
+Function: dbg_down
+Class: gp
+Section: programming/control
+C-Name: dbg_down
+Prototype: vD1,L,
+Help: dbg_down({n=1}): (break loop) go down n frames. Cancel a previous dbg_up.
+Doc: (In the break loop) go down n frames. This allows to cancel a previous call to
+ \kbd{dbg\_up}.

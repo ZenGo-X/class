@@ -1,0 +1,87 @@
+  ***   at top-level: contfrac(1,[],-1)
+  ***                 ^-----------------
+  *** contfrac: domain error in contfrac: nmax < 0
+  ***   at top-level: contfracpnqn(Vecsmall([]))
+  ***                 ^--------------------------
+  *** contfracpnqn: incorrect type in pnqn (t_VECSMALL).
+
+[1 0]
+
+[0 1]
+
+[;]
+[;]
+
+[2 1]
+
+[1 0]
+
+
+[2]
+
+[1]
+
+
+[2]
+
+[1]
+
+
+[10 3]
+
+[ 7 2]
+
+
+[1]
+
+[1]
+
+
+[1 3]
+
+[1 2]
+
+
+[1 3 10]
+
+[1 2  7]
+
+
+[144 22]
+
+[ 33  5]
+
+
+[4]
+
+[1]
+
+
+[4 22]
+
+[1  5]
+
+
+[4 22 144]
+
+[1  5  33]
+
+[[], []]
+[[-1], []]
+[[-1], [1/2]]
+[[], []]
+0
+[[-1, 1/3, 1/15, 1/35, 1/63, 1/99, 1/143, 1/195], [1/2, 1/36, 1/100, 1/196, 
+1/324, 1/484, 1/676, 1/900]]
+  ***   at top-level: contfraceval(e,1,10)
+  ***                 ^--------------------
+  *** contfraceval: non-existent component in contfraceval: index > 8
+410105312/150869313
+517656/190435
+410105312/150869313
+[[-2], [1]]
+[[], []]
+  ***   at top-level: contfracinit(1)
+  ***                 ^---------------
+  *** contfracinit: incorrect type in contfracinit (t_INT).
+Total time spent: 0

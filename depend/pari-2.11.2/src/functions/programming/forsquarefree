@@ -1,0 +1,101 @@
+Function: forsquarefree
+Section: programming/control
+C-Name: forsquarefree
+Prototype: vV=GGI
+Help: forsquarefree(N=a,b,seq): the sequence is evaluated, N is of the form
+ [n, factor(n)], n going through squarefree integers from a up to b;
+ one must have a*b >= 0.
+Doc: evaluates \var{seq}, where the formal variable $N$ is $[n,
+ \kbd{factor}(n)]$ and $n$ goes through squarefree integers from $a$ to $b$;
+ $a$ and $b$ must be integers of the same sign. Nothing is done if $a>b$.
+
+ \bprog
+ ? forsquarefree(N=2,10,print(N))
+ [2, Mat([2, 1])]
+ [3, Mat([3, 1])]
+ [5, Mat([5, 1])]
+ [6, [2, 1; 3, 1]]
+ [7, Mat([7, 1])]
+ [10, [2, 1; 5, 1]]
+
+ \\ negative numbers are allowed as well
+ ? forsquarefree(N=-10,-3,print(N))
+ [-10, [-1, 1; 2, 1; 5, 1]]
+ [-7, [-1, 1; 7, 1]]
+ [-6, [-1, 1; 2, 1; 3, 1]]
+ [-5, [-1, 1; 5, 1]]
+ [-3, [-1, 1; 3, 1]]
+
+ \\ but not bounds of different signs
+ ? forsquarefree(N=-3,3,print(N))
+  ***   at top-level: forsquarefree(N=-3,3,print(N))
+  ***                 ^------------------------------
+  *** forsquarefree: incorrect type in forsquarefree [!= signs] (t_VEC).
+ @eprog
+
+ This function is only implemented for $|a|, |b| < 2^{64}$ ($2^{32}$ on a 32-bit
+ machine). It uses a sieve and runs in time $O(\sqrt{b} + b-a)$. It should
+ be at least 5 times faster than regular factorization as long as the interval
+ length $b-a$ is much larger than $\sqrt{b}$ and get relatively faster as
+ the bounds increase. The function slows down dramatically
+ if $\kbd{primelimit} < \sqrt{b}$. It is comparable to \kbd{forfactored}, but
+ about $\zeta(2) = \pi^2/6$ times faster due to the relative density
+ of squarefree integers.
+
+ \bprog
+ ? B = 10^9;
+ ? for (N = B, B+10^6, factor(N))
+ time = 4,392 ms.
+ ? forfactored (N = B, B+10^6, [n,fan] = N)
+ time = 915 ms.
+ ? forsquarefree (N = B, B+10^6, [n,fan] = N)
+ time = 532 ms.
+
+ ? B = 10^11;
+ ? for (N = B, B+10^6, factor(N))
+ time = 13,053 ms.
+ ? forfactored (N = B, B+10^6, [n,fan] = N)
+ time = 1,976 ms.
+ ? forsquarefree (N = B, B+10^6, [n,fan] = N)
+ time = 1,245 ms.
+
+ ? B = 10^14;
+ ? for (N = B, B+10^6, factor(N))
+ time = 50,612 ms.
+ ? forsquarefree (N = B, B+10^6, [n,fan] = N)
+ time = 46,309 ms.
+ @eprog\noindent The last timing is with the default \kbd{primelimit}
+ (500000) which is much less than $\sqrt{B+10^6}$; it goes down
+ to \kbd{20,396ms} if \kbd{primelimit} gets bigger than that bound.
+ In any case $\sqrt{B+10^6}$ is much larger than the interval length $10^6$
+ so \kbd{forsquarefree} gets relatively slower for that reason as well.
+
+ Note that all PARI multiplicative functions accept the \kbd{[n,fan]}
+ argument natively:
+ \bprog
+ ? s = 0; forsquarefree(N = 1, 10^7, s += moebius(N)*eulerphi(N)); s
+ time = 3,788 ms.
+ %1 = 6393738650
+ ? s = 0; for(N = 1, 10^7, s += moebius(N)*eulerphi(N)); s
+ time = 28,630 ms. \\ slower, we must factor N. Twice.
+ %2 = 6393738650
+ @eprog
+
+ The following loops over the fundamental dicriminants less than $X$:
+ \bprog
+ ? X = 10^8;
+ ? for(d=1,X, if (isfundamental(d),))
+ time = 1min, 29,066 ms.
+ ? forfactored(d=1,X, if (isfundamental(d),));
+ time = 42,387 ms.
+ ? forsquarefree(d=1,X, D = quaddisc(d); if (D <= X, ));
+ time = 32,479 ms.
+ @eprog\noindent Note that in the last loop, the fundamental discriminants
+ $D$ are not evaluated in order (since \kbd{quaddisc(d)} for squarefree $d$
+ is either $d$ or $4d$). This is the price we pay for a faster evaluation,
+ and the set of numbers we run through is the same.
+
+ We can run through negative fundamental discriminants in the same way
+ \bprog
+ ? forsquarefree(d=-X,-1, D = quaddisc(d); if (D >= -X, ));
+ @eprog

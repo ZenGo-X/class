@@ -1,0 +1,25 @@
+Function: mfsturm
+Section: modular_forms
+C-Name: mfsturm
+Prototype: lG
+Help: mfsturm(NK): Sturm bound for modular forms on G_0(N) and
+ weight k, i.e., an upper bound for the order of the zero at infinity of
+ a nonzero form. NK is either [N,k] or an mfinit (exact bound in the
+ latter case).
+Doc: Gives the Sturm bound for modular forms on $\Gamma_0(N)$ and
+ weight $k$, i.e., an upper bound for the order of the zero at infinity of
+ a nonzero form. \kbd{NK} is either
+
+ \item a pair $[N,k]$,
+
+ \item or the output of \tet{mfinit} in which case the exact upper bound
+ is returned.
+
+ \bprog
+ ? NK = [96,6]; mfsturm(NK)
+ %1 = 97
+ ? mf=mfinit(NK,1); mfsturm(mf)
+ %2 = 76
+ ? mfdim(NK,0) \\ new space
+ %3 = 72
+ @eprog

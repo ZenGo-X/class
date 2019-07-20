@@ -1,0 +1,14 @@
+Function: matkerint
+Section: linear_algebra
+C-Name: matkerint0
+Prototype: GD0,L,
+Help: matkerint(x,{flag=0}): LLL-reduced Z-basis of the kernel of the matrix
+ x with integral entries. flag is deprecated, and may be set to 0 or 1
+ for backward compatibility.
+Doc: gives an \idx{LLL}-reduced $\Z$-basis
+ for the lattice equal to the kernel of the matrix $x$ with rational entries.
+
+ \fl is deprecated, kept for backward compatibility.
+
+Variant: Use directly \fun{GEN}{kerint}{GEN x} if $x$ is known to have
+ integer entries, and \tet{Q_primpart} first otherwise.

@@ -1,0 +1,18 @@
+Function: quadunit
+Section: number_theoretical
+C-Name: quadunit0
+Prototype: GDn
+Help: quadunit(D,{v = 'w}): fundamental unit u of the quadratic field of
+ discriminant D where D must be positive.
+ If v is given, the variable name is used to display u, else 'w' is used.
+Doc: fundamental unit\sidx{fundamental units} $u$ of the
+ real quadratic field $\Q(\sqrt D)$ where  $D$ is the positive discriminant
+ of the field. If $D$ is not a fundamental discriminant, this probably gives
+ the fundamental unit of the corresponding order. $D$ must be an integer
+ congruent to 0 or 1 modulo 4, which is not a square; the result is a
+ quadratic number (see \secref{se:quadgen}).
+ If \var{v} is given, the variable name is used to display $u$
+ else 'w' is used.
+Variant:
+ When \var{v} does not matter, the function
+ \fun{GEN}{quadunit}{GEN D} is also available.

@@ -1,0 +1,34 @@
+Function: addhelp
+Section: programming/specific
+C-Name: addhelp
+Prototype: vrs
+Help: addhelp(sym,str): add/change help message for the symbol sym.
+Doc: changes the help message for the symbol \kbd{sym}. The string \var{str}
+ is expanded on the spot and stored as the online help for \kbd{sym}. It is
+ recommended to document global variables and user functions in this way,
+ although \kbd{gp} will not protest if you don't.
+
+ You can attach a help text to an alias, but it will never be
+ shown: aliases are expanded by the \kbd{?} help operator and we get the help
+ of the symbol the alias points to. Nothing prevents you from modifying the
+ help of built-in PARI functions. But if you do, we would like to hear why you
+ needed it!
+
+ Without \tet{addhelp}, the standard help for user functions consists of its
+ name and definition.
+ \bprog
+ gp> f(x) = x^2;
+ gp> ?f
+ f =
+   (x)->x^2
+
+ @eprog\noindent Once addhelp is applied to $f$, the function code is no
+ longer included. It can still be consulted by typing the function name:
+ \bprog
+ gp> addhelp(f, "Square")
+ gp> ?f
+ Square
+
+ gp> f
+ %2 = (x)->x^2
+ @eprog

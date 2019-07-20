@@ -1,0 +1,31 @@
+Function: poldisc
+Section: polynomials
+C-Name: poldisc0
+Prototype: GDn
+Help: poldisc(pol,{v}): discriminant of the polynomial pol, with respect to main
+ variable if v is omitted, with respect to v otherwise.
+Description:
+ (gen):gen        poldisc0($1, -1)
+ (gen, var):gen   poldisc0($1, $2)
+Doc: discriminant of the polynomial
+ \var{pol} in the main variable if $v$ is omitted, in $v$ otherwise. Uses a
+ modular algorithm over $\Z$ or $\Q$, and the \idx{subresultant algorithm}
+ otherwise.
+ \bprog
+ ? T = x^4 + 2*x+1;
+ ? poldisc(T)
+ %2 = -176
+ ? poldisc(T^2)
+ %3 = 0
+ @eprog
+
+ For convenience, the function also applies to types \typ{QUAD} and
+ \typ{QFI}/\typ{QFR}:
+ \bprog
+ ? z = 3*quadgen(8) + 4;
+ ? poldisc(z)
+ %2 = 8
+ ? q = Qfb(1,2,3);
+ ? poldisc(q)
+ %4 = -8
+ @eprog

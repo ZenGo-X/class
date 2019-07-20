@@ -1,0 +1,11 @@
+Function: plotrecth
+Section: graphic
+C-Name: plotrecth0
+Prototype: LV=GGED0,M,D0,L,p\nParametric|1; Recursive|2; no_Rescale|4; no_X_axis|8; no_Y_axis|16; no_Frame|32; no_Lines|64; Points_too|128; Splines|256; no_X_ticks|512; no_Y_ticks|1024; Same_ticks|2048; Complex|4096
+Help: plotrecth(w,X=a,b,expr,{flag=0},{n=0}):
+ writes to rectwindow w the curve output of
+ ploth(w,X=a,b,expr,flag,n). Returns a vector for the bounding box.
+Doc: writes to rectwindow $w$ the curve output of
+ \kbd{ploth}$(w,X=a,b,\var{expr},\fl,n)$. Returns a vector for the bounding box.
+
+ %\syn{NO}

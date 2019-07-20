@@ -1,0 +1,18 @@
+Function: fromdigits
+Section: conversions
+C-Name: fromdigits
+Prototype: GDG
+Help: fromdigits(x,{b=10}): gives the integer formed by the elements of x seen
+ as the digits of a number in base b.
+Doc: gives the integer formed by the elements of $x$ seen as the digits of a
+ number in base $b$ ($b = 10$ by default).  This is the reverse of \kbd{digits}:
+ \bprog
+ ? digits(1234,5)
+ %1 = [1,4,4,1,4]
+ ? fromdigits([1,4,4,1,4],5)
+ %2 = 1234
+ @eprog\noindent By convention, $0$ has no digits:
+ \bprog
+ ? fromdigits([])
+ %3 = 0
+ @eprog

@@ -1,0 +1,9 @@
+Function: numdiv
+Section: number_theoretical
+C-Name: numdiv
+Prototype: G
+Help: numdiv(x): number of divisors of x.
+Description:
+ (gen):int        numdiv($1)
+Doc: number of divisors of $|x|$. $x$ must be of type integer.
+

@@ -1,0 +1,8 @@
+binomial(x,2)
+binomial(6,3)
+binomial(6)
+
+\\errors
+binomial(1,2.)
+binomial(-1)
+binomial(1.)

@@ -1,0 +1,289 @@
+default(realprecision,38);
+default(parisize,100M);
+
+\\Tests related to hasse invariants in algebras
+
+do(name, test) = {
+ setrand(1);
+ print(name,": ", iferr(test(), E, E));
+}
+gusuite(name, tests) = print("Suite: ", name); tests();
+
+searchin(hf,pr,h) =
+{
+  my(i,n);
+  for(i=1,#hf[1],
+    if(hf[1][i]==pr, return(hf[2][i]==h))
+  );
+  return(h==0);
+};
+
+samehasse(hf1,hi1,hf2,hi2) =
+{
+  my(i,n);
+  if(hi1 != hi2, return(0));
+
+  n = #hf1[1];
+  for(i=1,n,
+    if(!searchin(hf2,hf1[1][i],hf1[2][i]), return(0));
+  );
+
+  n = #hf2[1];
+  for(i=1,n,
+    if(!searchin(hf1,hf2[1][i],hf2[2][i]), return(0));
+  );
+
+  return(1);
+};
+
+hassetriv(hf,hi) = samehasse(hf,hi,[[],Vecsmall([])],Vecsmall(vector(#hi,i,0)));
+altriv(al) = hassetriv(alghassef(al),alghassei(al));
+alsame(al,hf,hi) = samehasse(alghassef(al),alghassei(al),hf,hi);
+
+alcheckhasse(al) =
+{
+  my(n,h);
+  n = algdegree(al);
+  h = Mod(0,n);
+  for(i=1, #alghassef(al)[1],
+      h += alghassef(al)[2][i]);
+  for(i=1, #alghassei(al),
+      h += (n/2)*alghassei(al)[i]);
+  return(h == Mod(0,n));
+};
+
+al_cyclotomic(p,b,mo=1) =
+{
+  my(Q,F,pc,r);
+  Q = nfinit(y);
+  pc = polcyclo(p,x);
+  F = rnfinit(Q,pc);
+  r = lift(znprimroot(p));
+  return(alginit(F, [Mod(Mod(1,y)*x^r,pc), b], 'x, mo));
+};
+
+hasse0() = gusuite("hasse sum to 0", ()->{
+  do("cyclo construction", ()->al_cyclotomic(3,-175624635));
+  do("cyclo ramified at infinity", ()->alcheckhasse(al_cyclotomic(3,-175624635)));
+  do("cyclo unramified at infinity", ()->alcheckhasse(al_cyclotomic(3,2763764)));
+  do("cyclo 5", ()->alcheckhasse(al_cyclotomic(5,7861623)));
+  do("cyclo 5 bis", ()->alcheckhasse(al_cyclotomic(5,6569846846546548798*25)));
+  do("cyclo 7 bis no mo", ()->alcheckhasse(al_cyclotomic(7,168656465154165487*7^3,0)));
+  do("cyclo 11 no mo", ()->alcheckhasse(al_cyclotomic(11,87165765,0)));
+  do("quat -1,-1 over Q", ()->alcheckhasse(alginit(nfinit(y),[-1,-1])));
+  do("quat -1,-1 over Q(sqrt(2))", ()->alcheckhasse(alginit(nfinit(y^2-2),[-1,-1],x)));
+  do("quat -1,-1 over Q(sqrt(60))", ()->alcheckhasse(alginit(nfinit(y^2-60),[-1,-1],x)));
+});
+
+alfromhasse() = gusuite("algebra from Hasse invariants", ()->{
+  my(nf, pr7, pr13, finvm, finv, finv1, finv2, iinvm, iinv, iinv1, iinv2, d1,\
+    d2, d, dm, mai, al);
+  nf = nfinit(y^3+y^2-2*y-1);
+  pr7 = idealprimedec(nf,7);
+  pr13 = idealprimedec(nf,13);
+  J = varhigher("J");
+
+  al = alginit(nf,3,J);
+  do("matrix algebra invariants", ()->altriv(al));
+
+  d1 = 3;
+  finv1 = [pr13,Vecsmall([1,1,1])];
+  iinv1 = Vecsmall([0,0,0]);
+  al = alginit(nf,[d1,finv1,iinv1],J);
+  do("algebra 1 invariants", ()->alsame(al,finv1,iinv1));
+
+  d2 = 2;
+  finv2 = [pr7,Vecsmall([1])];
+  iinv2 = Vecsmall([1,0,0]);
+  al = alginit(nf,[d2,finv2,iinv2],J);
+  do("algebra 2 invariants", ()->alsame(al,finv2,iinv2));
+
+  nf = nfinit(y);
+  p13 = idealprimedec(nf,13)[1];
+  finv1 = [[p13],[Mod(1,2)]];
+  iinv1 = Vecsmall([1]);
+  do("test", ()->alginit(nf,[2,finv1,iinv1],J));
+
+  d = 6;
+  p3 = idealprimedec(nf,3)[1];
+  p5 = idealprimedec(nf,5)[1];
+  p7 = idealprimedec(nf,7)[1];
+  p11 = idealprimedec(nf,11)[1];
+  finv = [[p3,p5,p7,p11], Vecsmall([3,2,2,2])];
+  iinv = Vecsmall([3]);
+  al = alginit(nf,[d,finv,iinv],J,0);
+  do("degree 6 algebra over Q", ()->alsame(al,finv,iinv));
+
+  nf = nfinit(y^2-5);
+  finv1 = [[],[]];
+  iinv1 = Vecsmall([1,1]);
+  do("trivial finite conditions", ()->my(al=alginit(nf,[2,finv1,iinv1]));
+    [alghassei(al),alghassef(al)]);
+
+});
+
+all() = gusuite("all", ()->{
+  hasse0();
+  alfromhasse();
+});
+
+all();
+
+\\better accessors for hasse invariants
+print("better accessors");
+setrand(1);
+x='x;
+nf = nfinit(y^3-y+1);
+rnf = rnfinit(nf, polcyclo(5,x));
+al = alginit(rnf, [x^2,-2],, 0);
+alghasse(al,1)
+alghasse(al,2)
+alghasse(al,idealprimedec(nf,2)[1])
+alghasse(al,idealprimedec(nf,3)[1])
+alghasse(al,idealprimedec(nf,5)[1])
+alghasse(al,idealprimedec(nf,5)[2])
+algindex(al,1)
+algindex(al,2)
+algindex(al,idealprimedec(nf,2)[1])
+algindex(al,idealprimedec(nf,3)[1])
+algindex(al,idealprimedec(nf,5)[1])
+algindex(al,idealprimedec(nf,5)[2])
+algindex(al)
+algisdivision(al,1)
+algisdivision(al,2)
+algisdivision(al,idealprimedec(nf,2)[1])
+algisdivision(al,idealprimedec(nf,3)[1])
+algisdivision(al,idealprimedec(nf,5)[1])
+algisdivision(al,idealprimedec(nf,5)[2])
+algisdivision(al)
+algissplit(al,1)
+algissplit(al,2)
+algissplit(al,idealprimedec(nf,2)[1])
+algissplit(al,idealprimedec(nf,3)[1])
+algissplit(al,idealprimedec(nf,5)[1])
+algissplit(al,idealprimedec(nf,5)[2])
+algissplit(al)
+algisramified(al,1)
+algisramified(al,2)
+algisramified(al,idealprimedec(nf,2)[1])
+algisramified(al,idealprimedec(nf,3)[1])
+algisramified(al,idealprimedec(nf,5)[1])
+algisramified(al,idealprimedec(nf,5)[2])
+algisramified(al)
+algramifiedplaces(al)
+
+print(" ");
+al = 0;
+al = alginit(rnf, [x^2,-1],, 0);
+alghasse(al,1)
+alghasse(al,2)
+alghasse(al,idealprimedec(nf,2)[1])
+alghasse(al,idealprimedec(nf,5)[1])
+alghasse(al,idealprimedec(nf,5)[2])
+algindex(al,1)
+algindex(al,2)
+algindex(al,idealprimedec(nf,2)[1])
+algindex(al,idealprimedec(nf,5)[1])
+algindex(al,idealprimedec(nf,5)[2])
+algindex(al)
+algisdivision(al,1)
+algisdivision(al,2)
+algisdivision(al,idealprimedec(nf,2)[1])
+algisdivision(al,idealprimedec(nf,5)[1])
+algisdivision(al,idealprimedec(nf,5)[2])
+algisdivision(al)
+algissplit(al,1)
+algissplit(al,2)
+algissplit(al,idealprimedec(nf,2)[1])
+algissplit(al,idealprimedec(nf,5)[1])
+algissplit(al,idealprimedec(nf,5)[2])
+algissplit(al)
+algisramified(al,1)
+algisramified(al,2)
+algisramified(al,idealprimedec(nf,2)[1])
+algisramified(al,idealprimedec(nf,5)[1])
+algisramified(al,idealprimedec(nf,5)[2])
+algisramified(al)
+algramifiedplaces(al)
+
+print(" ");
+al = 0;
+al = alginit(rnf, [x^2, 1],, 0);
+alghasse(al,1)
+alghasse(al,2)
+alghasse(al,idealprimedec(nf,2)[1])
+alghasse(al,idealprimedec(nf,5)[2])
+algindex(al,1)
+algindex(al,2)
+algindex(al,idealprimedec(nf,2)[1])
+algindex(al,idealprimedec(nf,5)[2])
+algindex(al)
+algisdivision(al,1)
+algisdivision(al,2)
+algisdivision(al,idealprimedec(nf,2)[1])
+algisdivision(al,idealprimedec(nf,5)[2])
+algisdivision(al)
+algissplit(al,1)
+algissplit(al,2)
+algissplit(al,idealprimedec(nf,2)[1])
+algissplit(al,idealprimedec(nf,5)[2])
+algissplit(al)
+algisramified(al,1)
+algisramified(al,2)
+algisramified(al,idealprimedec(nf,2)[1])
+algisramified(al,idealprimedec(nf,5)[2])
+algisramified(al)
+algramifiedplaces(al)
+
+print("Hasse inv 0 bug");
+setrand(1); a='a;
+K=nfinit(a);PR=idealprimedec(K,2);A=alginit(K,[3,[PR,[0]],[0]],,0);
+algdegree(A)
+algdim(A)
+algindex(A)
+algisdivision(A)
+algadd(A,[1,0,0,0,0,0,0,0,0]~,[1,2,3]~)
+algsub(A,[1,0,0,0,0,0,0,0,0]~,[1,2,3]~)
+algmul(A,[0,0,0,0,0,0,0,0,0]~,[1,2,3]~)
+
+print("\ntests with splitting field that does not descend");
+setrand(1);
+nf = nfinit(y^2-5);
+al = alginit(nf,[y,-1]);
+algramifiedplaces(al)
+al = alginit(nf,[-3+y,-1]);
+algramifiedplaces(al)
+al = alginit(nf,[-3+y,y]);
+algramifiedplaces(al)
+nf = nfinit(y^4 - 10*y^2 + 1);
+p3 = idealprimedec(nf,3)[1];
+p5 = idealprimedec(nf,5)[1];
+al = alginit(nf, [2, [[p3,p5],[1/2,1/2]], [1/2,0,0,1/2]]);
+algramifiedplaces(al)
+al = alginit(nf, [2, [[p3],[1/2]], [0,1/2,0,0]]);
+algramifiedplaces(al)
+nf = nfinit(y^8 - 40*y^6 + 352*y^4 - 960*y^2 + 576);
+p3 = idealprimedec(nf,3)[1];
+al = alginit(nf, [2,[[p3],[1/2]], [1/2,0,0,1/2,1/2,0,0,0]]);
+algramifiedplaces(al)
+
+print("degree bug");
+nf = nfinit(y); p2 = idealprimedec(nf,2)[1]; p3 = idealprimedec(nf,3)[1];
+al = alginit(nf, [4,[[p2,p3],[1/2,1/2]],[0]]); algdegree(al)
+{for(i=1,10,
+  al = alginit(nf, [2,[[p2,p3],[0,0]],[0]]);
+  print1(algdegree(al)," ");
+)};
+al = alginit(nf, [4,[[p2,p3],[0,0]],[0]]); algdegree(al)
+nf = nfinit(z^2+1);
+p31 = idealprimedec(nf,31)[1];
+p2 = idealprimedec(nf,2)[1];
+{for(i=1,10,
+   al = alginit(nf, [2, [[p31,p2], [0, 0]], []]); print1(algdegree(al)," ");
+)};
+
+
+
+
+
+

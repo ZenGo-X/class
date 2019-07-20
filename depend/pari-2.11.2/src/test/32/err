@@ -1,0 +1,656 @@
+  ***   at top-level: g(10)
+  ***                 ^-----
+  ***   in function g: for(i=-N,N,f(i))
+  ***                             ^-----
+  ***   in function f: 1/x
+  ***                   ^--
+  *** _/_: impossible inverse in gdiv: 0.
+
+  ***   at top-level: f(Mat(0),Col(1))
+  ***                 ^----------------
+  ***   in function f: matsolve
+  ***                  ^--------
+  *** matsolve: impossible inverse in gauss: Mat(0).
+
+  ***   at top-level: (matsolve)(Mat(0),Col(1))
+  ***                  ^------------------------
+  *** matsolve: impossible inverse in gauss: Mat(0).
+
+  ***   at top-level: g(I)
+  ***                 ^----
+  ***   in function g: [x.foo]
+  ***                     ^----
+  ***   in member function foo: 1/(1+a^2)
+  ***                            ^--------
+  *** _/_: impossible inverse in gdiv: 0.
+
+  ***   at top-level: (x->1/x)(0)
+  ***                  ^----------
+  ***   in anonymous function: 1/x
+  ***                           ^--
+  *** _/_: impossible inverse in gdiv: 0.
+
+274177
+274177
+  ***   at top-level: ...=2;A=x^2+1;B=[x+t,x+t];r=polhensellift(A,B,[p,
+  ***                                             ^---------------------
+  *** polhensellift: elements not coprime in BuildTree:
+    x + t
+    x + t
+  ***   at top-level: M[,1]=1
+  ***                 ^-------
+  ***   incorrect type in matrix col assignment (t_INT).
+  ***   at top-level: M[,3]=1
+  ***                  ^------
+  ***   non-existent component: index > 2
+  ***   at top-level: M[,1]=[1,2]
+  ***                 ^-----------
+  ***   incorrect type in matrix col assignment (t_VEC).
+  ***   at top-level: M[,1]=[1,2,3]~
+  ***                 ^--------------
+  ***   inconsistent dimensions in matrix col assignment.
+  ***   at top-level: M[1,]=1
+  ***                 ^-------
+  ***   incorrect type in matrix row assignment (t_INT).
+  ***   at top-level: M[3,]=1
+  ***                  ^------
+  ***   non-existent component: index > 2
+  ***   at top-level: M[1,]=[1,2]~
+  ***                 ^------------
+  ***   incorrect type in matrix row assignment (t_COL).
+  ***   at top-level: M[1,]=[1,2,3]
+  ***                 ^-------------
+  ***   inconsistent dimensions in matrix row assignment.
+  ***   at top-level: [;][1,]
+  ***                    ^----
+  ***   non-existent component: index > 0
+  ***   at top-level: [;][,1]
+  ***                    ^----
+  ***   non-existent component: index > 0
+  ***   at top-level: 1[1]
+  ***                  ^---
+  ***   incorrect type in _[_] OCcompo1 [not a vector] (t_INT).
+  ***   at top-level: issquare(1,&v[1])
+  ***                              ^----
+  ***   incorrect type in &_[_] OCcompo1ptr [not a vector] (t_POL).
+  ***   at top-level: 1[1,1]
+  ***                  ^-----
+  ***   incorrect type in _[_,_] OCcompo2 [not a matrix] (t_INT).
+  ***   at top-level: 1[,1]
+  ***                  ^----
+  ***   incorrect type in _[,_] OCcompoC [not a matrix] (t_INT).
+  ***   at top-level: issquare(1,&v[,1])
+  ***                              ^-----
+  ***   incorrect type in &_[,_] OCcompoCptr [not a matrix] (t_POL).
+  ***   at top-level: 1[1,]
+  ***                  ^----
+  ***   incorrect type in _[_,] OCcompoL [not a matrix] (t_INT).
+  ***   at top-level: issquare(1,&v[1,])
+  ***                              ^-----
+  ***   incorrect type in &_[_,] OCcompoLptr [not a matrix] (t_POL).
+  ***   at top-level: v[2]=1
+  ***                  ^-----
+  ***   non-existent component: index > 1
+  ***   at top-level: v[1]=Pi
+  ***                 ^-------
+  ***   incorrect type in t_VECSMALL assignment (t_REAL).
+  ***   at top-level: v[1]=2^64
+  ***                 ^---------
+  ***   incorrect type in t_VECSMALL assignment (t_INT).
+  ***   at top-level: v[Pi]=1
+  ***                   ^-----
+  ***   incorrect type in gtos [integer expected] (t_REAL).
+  ***   at top-level: M=[1.,0;0,1];qflll(M,1)
+  ***                              ^----------
+  *** qflll: incorrect type in qflll [integer matrix] (t_MAT).
+  ***   at top-level: addprimes(1.)
+  ***                 ^-------------
+  *** addprimes: incorrect type in addprimes [integer vector] (t_VEC).
+  ***   at top-level: nfalgtobasis(nfinit(t^3-2),Mod(t,t^2+1))
+  ***                 ^----------------------------------------
+  *** nfalgtobasis: inconsistent moduli in algtobasis: t^3 - 2 != t^2 + 1
+  ***   at top-level: vector(-1,i,0)
+  ***                 ^--------------
+  *** vector: domain error in vector: dimension < 0
+  ***   at top-level: vectorv(-1,i,0)
+  ***                 ^---------------
+  *** vectorv: domain error in vector: dimension < 0
+  ***   at top-level: vectorsmall(-1,i,0)
+  ***                 ^-------------------
+  *** vectorsmall: domain error in vectorsmall: dimension < 0
+  ***   at top-level: matrix(-1,1,i,j,0)
+  ***                 ^------------------
+  *** matrix: domain error in matrix: nbrows < 0
+  ***   at top-level: matrix(1,-1,i,j,0)
+  ***                 ^------------------
+  *** matrix: domain error in matrix: nbcols < 0
+  ***   at top-level: next(-1)
+  ***                 ^--------
+  *** next: domain error in next: n < 1
+  ***   at top-level: break(-1)
+  ***                 ^---------
+  *** break: domain error in break: n < 1
+  ***   at top-level: v[-1]
+  ***                  ^----
+  ***   non-existent component: index < 1
+  ***   at top-level: v[#v+1]
+  ***                  ^------
+  ***   non-existent component: index > 1
+  ***   variable name expected: subst(x,1,0)
+  ***                                   ^----
+  ***   at top-level: exp(1e40)
+  ***                 ^---------
+  *** exp: overflow in expo().
+  ***   at top-level: exp(-1e40)
+  ***                 ^----------
+  *** exp: overflow in expo().
+  ***   at top-level: exp(1/x)
+  ***                 ^--------
+  *** exp: domain error in exp: valuation < 0
+  ***   at top-level: cos(1/x)
+  ***                 ^--------
+  *** cos: domain error in cos: valuation < 0
+  ***   at top-level: sin(1/x)
+  ***                 ^--------
+  *** sin: domain error in sin: valuation < 0
+  ***   at top-level: tan(1/x)
+  ***                 ^--------
+  *** tan: domain error in tan: valuation < 0
+  ***   at top-level: cotan(1/x)
+  ***                 ^----------
+  *** cotan: domain error in cotan: valuation < 0
+  ***   at top-level: atan(1/x)
+  ***                 ^---------
+  *** atan: domain error in atan: valuation < 0
+  ***   at top-level: asin(1/x)
+  ***                 ^---------
+  *** asin: domain error in asin: valuation < 0
+  ***   at top-level: acos(1/x)
+  ***                 ^---------
+  *** acos: domain error in acos: valuation < 0
+  ***   at top-level: asinh(1/x)
+  ***                 ^----------
+  *** asinh: domain error in asinh: valuation < 0
+  ***   at top-level: acosh(1/x)
+  ***                 ^----------
+  *** acosh: domain error in acosh: valuation < 0
+  ***   at top-level: atanh(1/x)
+  ***                 ^----------
+  *** atanh: domain error in atanh: valuation < 0
+  ***   at top-level: lngamma(x)
+  ***                 ^----------
+  *** lngamma: domain error in lngamma: valuation != 0
+  ***   at top-level: besselj(2,1/x)
+  ***                 ^--------------
+  *** besselj: domain error in besselj: valuation < 0
+  ***   at top-level: besseljh(2,1/x)
+  ***                 ^---------------
+  *** besseljh: domain error in besseljh: valuation < 0
+  ***   at top-level: besselk(2,1/x)
+  ***                 ^--------------
+  *** besselk: domain error in _kbessel1: valuation < 0
+  ***   at top-level: besselk(1/3,O(x))
+  ***                 ^-----------------
+  *** besselk: domain error in besselk: 2n mod Z != 0
+  ***   at top-level: besseln(2,1/x)
+  ***                 ^--------------
+  *** besseln: domain error in _kbessel1: valuation < 0
+  ***   at top-level: besseln(1/3,O(x))
+  ***                 ^-----------------
+  *** besseln: domain error in besseln: 2n mod Z != 0
+  ***   at top-level: polylog(2,1/x)
+  ***                 ^--------------
+  *** polylog: domain error in polylog: valuation < 0
+  ***   at top-level: sqrt(x)
+  ***                 ^-------
+  *** sqrt: domain error in sqrtn: valuation != Mod(0, 2)
+  ***   at top-level: sqrt(2+O(2^2))
+  ***                 ^--------------
+  *** sqrt: not an n-th power residue in Qp_sqrt: 2 + O(2^2).
+  ***   at top-level: sqrtn(x,3)
+  ***                 ^----------
+  *** sqrtn: domain error in sqrtn: valuation != Mod(0, 3)
+  ***   at top-level: sqrtn(2+O(2^2),3)
+  ***                 ^-----------------
+  *** sqrtn: not an n-th power residue in gsqrtn: 2 + O(2^2).
+  ***   at top-level: log(x)
+  ***                 ^------
+  *** log: domain error in log: series valuation != 0
+  ***   at top-level: log(0)
+  ***                 ^------
+  *** log: domain error in log: argument = 0
+  ***   at top-level: abs(x+O(x^2))
+  ***                 ^-------------
+  *** abs: domain error in abs: series valuation != 0
+  ***   at top-level: real(Vecsmall([]))
+  ***                 ^------------------
+  *** real: incorrect type in greal/gimag (t_VECSMALL).
+  ***   at top-level: imag(Vecsmall([]))
+  ***                 ^------------------
+  *** imag: incorrect type in greal/gimag (t_VECSMALL).
+  ***   at top-level: vecmax(Vecsmall([]))
+  ***                 ^--------------------
+  *** vecmax: domain error in vecmax: empty argument = Vecsmall([])
+  ***   at top-level: vecmax([])
+  ***                 ^----------
+  *** vecmax: domain error in vecmax: empty argument = []
+  ***   at top-level: vecmax([],&i)
+  ***                 ^-------------
+  *** vecmax: domain error in vecmax: empty argument = []
+  ***   at top-level: vecmin(Vecsmall([]))
+  ***                 ^--------------------
+  *** vecmin: domain error in vecmin: empty argument = Vecsmall([])
+  ***   at top-level: vecmin([])
+  ***                 ^----------
+  *** vecmin: domain error in vecmin: empty argument = []
+  ***   unexpected character '&': vecmmin([],&i)
+  ***                                        ^---
+  ***   at top-level: vecmax(matrix(0,2))
+  ***                 ^-------------------
+  *** vecmax: domain error in vecmax: empty argument = matrix(0,2)
+  ***   at top-level: listput(L,x,-1)
+  ***                 ^---------------
+  *** listput: non-existent component in listput: index < 0
+  ***   at top-level: listinsert(L,x,-1)
+  ***                 ^------------------
+  *** listinsert: non-existent component in listinsert: index <= 0
+  ***   at top-level: listinsert(L,x,10)
+  ***                 ^------------------
+  *** listinsert: non-existent component in listinsert: index > 1
+  ***   at top-level: ellj(Mod(1,2))
+  ***                 ^--------------
+  *** ellj: incorrect type in modular function (t_INTMOD).
+  ***   at top-level: ellj(Qfb(1,1,1))
+  ***                 ^----------------
+  *** ellj: incorrect type in ellj (t_QFI).
+  ***   at top-level: eta(1+O(2))
+  ***                 ^-----------
+  *** eta: domain error in eta: v_p(q) <= 0
+  ***   at top-level: eta(1/x)
+  ***                 ^--------
+  *** eta: domain error in eta: v_p(q) <= 0
+  ***   at top-level: idealhnf(K,Qfb(1,1,1))
+  ***                 ^----------------------
+  *** idealhnf: domain error in idealhnf [Qfb]: disc(q) != -4
+  ***   at top-level: idealfactor(K,[;])
+  ***                 ^------------------
+  *** idealfactor: domain error in idealfactor: ideal = 0
+  ***   at top-level: idealdiv(K,2,0,1)
+  ***                 ^-----------------
+  *** idealdiv: impossible inverse in idealdivexact: 0.
+  ***   at top-level: valuation(Pi,2)
+  ***                 ^---------------
+  *** valuation: inconsistent valuation t_REAL , t_INT.
+  ***   at top-level: x^Pi
+  ***                  ^---
+  *** _^_: domain error in gpow [irrational exponent]: valuation != 0
+  ***   at top-level: x^x
+  ***                  ^--
+  *** _^_: domain error in gpow [irrational exponent]: valuation != 0
+  ***   at top-level: 0^0.
+  ***                  ^---
+  *** _^_: domain error in gpow(0,n): n <= 0
+  ***   at top-level: agm([],[])
+  ***                 ^----------
+  *** agm: forbidden agm t_VEC (0 elts) , t_VEC (0 elts).
+  ***   at top-level: sin(1/2+O(2^1))
+  ***                 ^---------------
+  *** sin: domain error in gsin(t_PADIC): argument out of range
+  ***   at top-level: cos(1/9+O(3^1))
+  ***                 ^---------------
+  *** cos: domain error in gcos(t_PADIC): argument out of range
+  ***   at top-level: exp(1/9+O(3^1))
+  ***                 ^---------------
+  *** exp: domain error in gexp(t_PADIC): argument out of range
+  ***   at top-level: ...],Vecsmall([2,2,2,2,3])];galoissubgroups(G)
+  ***                                             ^------------------
+  *** galoissubgroups: sorry, group_quotient for a non-WSS group is not yet implemented.
+  ***   at top-level: bnrstark(bnrinit(bnfinit(y^2+1),2))
+  ***                 ^-----------------------------------
+  *** bnrstark: domain error in bnrstark: r2 != 0
+  ***   at top-level: bnrstark(bnrinit(bnfinit(y^2-2),[4,[1,1]]))
+  ***                 ^-------------------------------------------
+  *** bnrstark: domain error in bnrstark: r2(class field) != 0
+  ***   at top-level: quadray(-16,1)
+  ***                 ^--------------
+  *** quadray: domain error in quadray: isfundamental(D) = 0
+  ***   at top-level: quadray(bnfinit(x^3-2),1)
+  ***                 ^-------------------------
+  *** quadray: domain error in quadray: degree != 2
+  ***   at top-level: galoissubcyclo(-1)
+  ***                 ^------------------
+  *** galoissubcyclo: domain error in galoissubcyclo: degree <= 0
+  ***   at top-level: galoissubcyclo(6,Mod(1,3))
+  ***                 ^--------------------------
+  *** galoissubcyclo: inconsistent moduli in galoissubcyclo: 6 != 3
+  ***   at top-level: galoissubcyclo(6,[;])
+  ***                 ^---------------------
+  *** galoissubcyclo: incorrect type in galoissubcyclo [H not in HNF] (t_MAT).
+  ***   at top-level: galoissubcyclo(6,Mat(1))
+  ***                 ^------------------------
+  *** galoissubcyclo: incorrect type in galoissubcyclo [N not a bnrinit or znstar] (t_MAT).
+  ***   at top-level: galoissubcyclo(znstar(5),matid(2))
+  ***                 ^----------------------------------
+  *** galoissubcyclo: inconsistent dimensions in galoissubcyclo.
+  ***   at top-level: galoissubcyclo([3,[3],[3]],Mat(3))
+  ***                 ^----------------------------------
+  *** galoissubcyclo: incorrect type in galoissubcyclo (t_VEC).
+  ***   at top-level: galoissubcyclo(bnrinit(bnfinit(y^2+1),1),2)
+  ***                 ^-------------------------------------------
+  *** galoissubcyclo: domain error in bnr_to_znstar: bnr != Q
+  ***   at top-level: polsubcyclo(-1,2)
+  ***                 ^-----------------
+  *** polsubcyclo: domain error in polsubcyclo: n <= 0
+  ***   at top-level: polsubcyclo(2,-1)
+  ***                 ^-----------------
+  *** polsubcyclo: domain error in polsubcyclo: d <= 0
+  ***   at top-level: random(-1)
+  ***                 ^----------
+  *** random: domain error in random: N <= 0
+  ***   at top-level: znprimroot(0)
+  ***                 ^-------------
+  *** znprimroot: domain error in znprimroot: argument = 0
+  ***   at top-level: sqrtint(-1)
+  ***                 ^-----------
+  *** sqrtint: domain error in sqrtint: argument < 0
+  ***   at top-level: sqrtnint(-1,2)
+  ***                 ^--------------
+  *** sqrtnint: domain error in sqrtnint: x < 0
+  ***   at top-level: sqrtnint(2,-2)
+  ***                 ^--------------
+  *** sqrtnint: domain error in sqrtnint: n <= 0
+  ***   at top-level: znprimroot(8)
+  ***                 ^-------------
+  *** znprimroot: domain error in znprimroot: argument = 8
+  ***   at top-level: polroots(x^2+Mod(1,2))
+  ***                 ^----------------------
+  *** polroots: incorrect type in roots (t_INTMOD).
+  ***   at top-level: polroots(0)
+  ***                 ^-----------
+  *** polroots: zero polynomial in roots.
+  ***   at top-level: polroots(Mod(1,2))
+  ***                 ^------------------
+  *** polroots: incorrect type in roots (t_INTMOD).
+  ***   at top-level: polrootsmod(x,x)
+  ***                 ^----------------
+  *** polrootsmod: incorrect type in factormod (t_POL).
+  ***   at top-level: prime(-2)
+  ***                 ^---------
+  *** prime: domain error in prime: n <= 0
+  ***   at top-level: addprimes(-1)
+  ***                 ^-------------
+  *** addprimes: domain error in addprimes: p < 2
+  ***   at top-level: padicappr(x^2+1+O(3^5),1+O(5))
+  ***                 ^------------------------------
+  *** padicappr: inconsistent moduli in Zp_to_Z: 5 != 3
+  ***   at top-level: factorpadic(x^2+1,2,-1)
+  ***                 ^-----------------------
+  *** factorpadic: domain error in factorpadic: precision <= 0
+  ***   at top-level: polrootspadic(x^2+1,2,-1)
+  ***                 ^-------------------------
+  *** polrootspadic: domain error in rootpadic: precision <= 0
+  ***   at top-level: ellinit([1+O(3),1+O(5)])
+  ***                 ^------------------------
+  *** ellinit: inconsistent moduli in ellinit: 3 != 5
+  ***   at top-level: ellwp([1,I],I)
+  ***                 ^--------------
+  *** ellwp: domain error in ellwp: argument = 0
+  ***   at top-level: ellsigma([1,I],x,1)
+  ***                 ^-------------------
+  *** ellsigma: incorrect type in log(ellsigma) (t_SER).
+  ***   at top-level: ellsigma([1,I],1,1)
+  ***                 ^-------------------
+  *** ellsigma: domain error in log(ellsigma): argument = 0
+  ***   at top-level: ellap(E)
+  ***                 ^--------
+  *** ellap: incorrect type in ellap [can't determine p] (t_VEC).
+  ***   at top-level: ellap(E,1)
+  ***                 ^----------
+  *** ellap: domain error in ellap: p < 2
+  ***   at top-level: ellap(E,'x)
+  ***                 ^-----------
+  *** ellap: incorrect type in ellap (t_POL).
+  ***   at top-level: ellissupersingular(x,1)
+  ***                 ^-----------------------
+  *** ellissupersingular: incorrect type in checkell (t_POL).
+  ***   at top-level: elltaniyama(E,-1)
+  ***                 ^-----------------
+  *** elltaniyama: domain error in elltaniyama: precision < 0
+  ***   at top-level: ellheight(E,[2,2])
+  ***                 ^------------------
+  *** ellheight: domain error in ellheight: point not on E
+  ***   at top-level: Qfb(0,0,0)
+  ***                 ^----------
+  *** Qfb: domain error in Qfb: issquare(disc) = 1
+  ***   at top-level: quadpoly(2)
+  ***                 ^-----------
+  *** quadpoly: domain error in quadpoly: disc % 4 > 1
+  ***   at top-level: qfbprimeform(2,5)
+  ***                 ^-----------------
+  *** qfbprimeform: domain error in primeform: disc % 4 > 1
+  ***   at top-level: qfbcomp(Qfb(1,1,1),Qfb(1,0,2))
+  ***                 ^------------------------------
+  ***   not a function in function call
+  ***   at top-level: galoisinit(x^2)
+  ***                 ^---------------
+  *** galoisinit: domain error in galoisinit: issquarefree(pol) = 0
+  ***   at top-level: galoisinit(2*x)
+  ***                 ^---------------
+  *** galoisinit: sorry, galoisinit(non-monic) is not yet implemented.
+  ***   at top-level: ellL1(1,-1)
+  ***                 ^-----------
+  *** ellL1: domain error in ellL1: derivative order < 0
+  ***   at top-level: ellheegner(ellinit([0,-1,1,-10,-20]))
+  ***                 ^-------------------------------------
+  *** ellheegner: domain error in ellheegner: (analytic rank)%2 = 0
+  ***   at top-level: ellheegner(ellinit([0,0,1,-7,6]))
+  ***                 ^---------------------------------
+  *** ellheegner: domain error in ellheegner: analytic rank > 1
+  ***   at top-level: substpol(x+O(x^2),x^3,x)
+  ***                 ^------------------------
+  *** substpol: domain error in gdeflate: valuation(x) % 3 != 0
+  ***   at top-level: intformal(1/(x^2+1))
+  ***                 ^--------------------
+  *** intformal: domain error in intformal: residue(series, pole) != 0
+  ***   at top-level: component(x,-1)
+  ***                 ^---------------
+  *** component: non-existent component: index < 1
+  ***   at top-level: component(O(x),2)
+  ***                 ^-----------------
+  *** component: non-existent component: index > 0
+  ***   at top-level: component(Vecsmall([]),1)
+  ***                 ^-------------------------
+  *** component: non-existent component: index > 0
+  ***   at top-level: component(x->x,6)
+  ***                 ^-----------------
+  *** component: non-existent component: index > 5
+  ***   at top-level: polcoef(O(x),2)
+  ***                 ^---------------
+  *** polcoef: domain error in polcoef: t_SER = O(x)
+  ***   at top-level: polcoef(x+O(x^2),2)
+  ***                 ^-------------------
+  *** polcoef: domain error in polcoef: degree > 1
+  ***   at top-level: polcoef([],2)
+  ***                 ^-------------
+  *** polcoef: incorrect type in polcoef (t_VEC).
+  ***   at top-level: matcompanion(0*x)
+  ***                 ^-----------------
+  *** matcompanion: domain error in matcompanion: polynomial = 0
+  ***   at top-level: matrixqz(Mat([1,2]))
+  ***                 ^--------------------
+  *** matrixqz: domain error in QM_minors_coprime: n > m
+  ***   at top-level: matrixqz(Mat(0))
+  ***                 ^----------------
+  *** matrixqz: domain error in QM_minors_coprime: rank(A) < 1
+  ***   at top-level: vecextract([1],[-1])
+  ***                 ^--------------------
+  *** vecextract: non-existent component in vecextract: index <= 0
+  ***   at top-level: vecextract([1],[2])
+  ***                 ^-------------------
+  *** vecextract: non-existent component in vecextract: index >= 2
+  ***   at top-level: idealfrobenius(K,galoisinit(K),idealprimedec(K
+  ***                 ^----------------------------------------------
+  *** idealfrobenius: domain error in idealfrobenius: pr.e > 1
+  ***   at top-level: nfisincl(x^2,x^2)
+  ***                 ^-----------------
+  *** nfisincl: not an irreducible polynomial in nfisincl: x^2.
+  ***   at top-level: polcompositum(x^2,x)
+  ***                 ^--------------------
+  *** polcompositum: domain error in polcompositum: issquarefree(arg) = 0
+  ***   at top-level: rnfdedekind(K,x^2+x-1/3)
+  ***                 ^------------------------
+  *** rnfdedekind: incorrect type in rnfdedekind [non integral pol] (t_POL).
+  ***   at top-level: hilbert(Mod(1,2),1)
+  ***                 ^-------------------
+  *** hilbert: precision too low in hilbert.
+  ***   at top-level: hilbert(Mod(1,3),Mod(1,5))
+  ***                 ^--------------------------
+  *** hilbert: inconsistent moduli in hilbert: 5 != 3
+  ***   at top-level: hilbert(Mod(1,3),2,0)
+  ***                 ^---------------------
+  *** hilbert: inconsistent moduli in hilbert: 3 != "oo"
+  ***   at top-level: znorder(0)
+  ***                 ^----------
+  *** znorder: incorrect type in znorder [t_INTMOD expected] (t_INT).
+  ***   at top-level: znorder(Mod(2,4))
+  ***                 ^-----------------
+  *** znorder: elements not coprime in znorder:
+    2
+    4
+  ***   at top-level: contfrac(1e100)
+  ***                 ^---------------
+  *** contfrac: precision too low in gboundcf.
+  ***   at top-level: contfrac(1.,[1],10)
+  ***                 ^-------------------
+  *** contfrac: inconsistent dimensions in contfrac [too few denominators].
+  ***   at top-level: contfrac(1,,-1)
+  ***                 ^---------------
+  *** contfrac: domain error in gboundcf: nmax < 0
+  ***   at top-level: contfracpnqn(matrix(3,1))
+  ***                 ^-------------------------
+  *** contfracpnqn: inconsistent dimensions in pnqn [ nbrows != 1,2 ].
+  ***   at top-level: divisors(1/2)
+  ***                 ^-------------
+  *** divisors: incorrect type in divisors [denominator] (t_FRAC).
+  ***   at top-level: idealstar(K,0)
+  ***                 ^--------------
+  *** idealstar: domain error in idealfactor: ideal = 0
+  ***   at top-level: idealstar(K,1/2)
+  ***                 ^----------------
+  *** idealstar: domain error in Idealstar: denominator(ideal) != 1
+  ***   at top-level: idealaddtoone(K,[[;]])
+  ***                 ^----------------------
+  *** idealaddtoone: domain error in idealaddmultoone: sum(ideals) != 1
+  ***   at top-level: idealdiv(K,1,2,1)
+  ***                 ^-----------------
+  *** idealdiv: domain error in idealdivexact: denominator(x/y) != 1
+  ***   at top-level: idealred(K,matid(2),[])
+  ***                 ^-----------------------
+  *** idealred: inconsistent dimensions in idealred.
+  ***   at top-level: idealtwoelt(K,matid(2),1/2)
+  ***                 ^---------------------------
+  *** idealtwoelt: domain error in idealtwoelt2: element mod ideal != 0
+  ***   at top-level: rnf=rnfinit(K,x^2-y);rnfeltdown(rnf,x)
+  ***                                      ^-----------------
+  *** rnfeltdown: domain error in rnfeltdown: element not in the base field
+  ***   at top-level: matid(-1)
+  ***                 ^---------
+  *** matid: domain error in matid: size < 0
+  ***   at top-level: polinterpolate([1,1],[2,3],Pi)
+  ***                 ^------------------------------
+  *** polinterpolate: domain error in polinterpolate: X[1] = X[2]
+  ***   at top-level: modreverse(Mod(-x^3+9*x,x^4-10*x^2+1))
+  ***                 ^--------------------------------------
+  *** modreverse: domain error in modreverse: deg(minpoly(z)) < 4
+[;]
+  ***   at top-level: concat([1,2],[3,4]~)
+  ***                 ^--------------------
+  *** concat: inconsistent concatenation t_VEC (2 elts) , t_COL (2 elts).
+  ***   at top-level: concat([])
+  ***                 ^----------
+  *** concat: domain error in concat: vector = []
+  ***   at top-level: concat(List())
+  ***                 ^--------------
+  *** concat: domain error in concat: vector = List([])
+  ***   at top-level: mathnfmod([1;2],2)
+  ***                 ^------------------
+  *** mathnfmod: domain error in ZM_hnfmod: nb lines > nb columns
+  ***   at top-level: removeprimes(2)
+  ***                 ^---------------
+  *** removeprimes: domain error in removeprimes: prime not in primetable
+  ***   at top-level: forstep(a=1,2,0,)
+  ***                 ^-----------------
+  *** forstep: domain error in forstep: step = 0
+  ***   at top-level: e.omega
+  ***                   ^-----
+  *** _.omega: incorrect type in omega [not defined over C] (t_VEC).
+  ***   at top-level: e.eta
+  ***                   ^---
+  *** _.eta: incorrect type in eta [not defined over C] (t_VEC).
+  ***   at top-level: e.area
+  ***                   ^----
+  *** _.area: incorrect type in area [not defined over C] (t_VEC).
+  ***   at top-level: e.tate
+  ***                   ^----
+  *** _.tate: incorrect type in tate [not defined over Qp] (t_VEC).
+  ***   at top-level: ellorder(e,[0,0]*Mod(1,2))
+  ***                 ^--------------------------
+  *** ellorder: sorry, ellorder for curve with singular reduction is not yet implemented.
+  ***   at top-level: thue(x*(x^3-2),0)
+  ***                 ^-----------------
+  *** thue: domain error in thue: #sols = oo
+  ***   at top-level: direuler(p=2,10,2/(1-p*X))
+  ***                                 ^----------
+  ***   domain error in direuler: constant term != 1
+  ***   at top-level: solve(x=0,1,x^2+1)
+  ***                             ^------
+  ***   domain error in solve: f(a)f(b) > 0
+  ***   user warning: 1
+  ***   at top-level: iferr(1/0,E,1,errname(E)=="e_DOMAIN")
+  ***                 ^-------------------------------------
+  *** iferr: impossible inverse in gdiv: 0.
+4
+  ***   at top-level: iferr(1/0,E,1,break())
+  ***                               ^--------
+  ***   break not allowed here.
+(x)->trap(e_INV,INFINITY,1/x)
+1/2
+INFINITY
+  ***   at top-level: trap(e_INV,INFINITY,log(0))
+  ***                                     ^-------
+  *** log: domain error in log: argument = 0
+  ***   at top-level: notafunc('a)
+  ***                 ^------------
+  ***   not a function in function call
+1
+  ***   at top-level: znlog(Mod(1,n),Mod(1,n+1))
+  ***                 ^--------------------------
+  *** znlog: inconsistent moduli in Rg_to_Fp: (...) != (...)
+  ***   at top-level: Mod(0,n)^(-1)
+  ***                         ^-----
+  *** _^_: impossible inverse in Fp_inv: (...).
+  ***   at top-level: a*b
+  ***                  ^--
+  *** _*_: inconsistent multiplication t_POL * t_POL.
+  ***   at top-level: a%b
+  ***                  ^--
+  *** _%_: inconsistent division t_POL % t_POL.
+  ***   at top-level: (a*x^2+b)^2
+  ***                          ^--
+  *** _^s: inconsistent multiplication t_POL * t_POL.
+  ***   at top-level: matrank(M)
+  ***                 ^----------
+  *** matrank: inconsistent rank t_MAT (2x2) , t_POL.
+  ***   at top-level: matimage(M)
+  ***                 ^-----------
+  *** matimage: inconsistent image t_MAT (2x2) , t_POL.
+  ***   at top-level: matker(M)
+  ***                 ^---------
+  *** matker: inconsistent ker t_MAT (2x2) , t_POL.
+  ***   incorrect value for plothsizes: [
+  ***                                    ^
+  ***   incorrect value for plothsizes: 1
+  ***                                   ^-
+  ***   incorrect value for plothsizes: [2,
+  ***                                      ^
+Total time spent: 4

@@ -1,0 +1,33 @@
+Function: idealmul
+Section: number_fields
+C-Name: idealmul0
+Prototype: GGGD0,L,
+Help: idealmul(nf,x,y,{flag=0}): product of the two ideals x and y in the
+ number field nf. If (optional) flag is non-nul, reduce the result.
+Description:
+ (gen, gen, gen, ?0):gen        idealmul($1, $2, $3)
+ (gen, gen, gen, 1):gen         idealmulred($1, $2, $3)
+ (gen, gen, gen, #small):gen    $"invalid flag in idealmul"
+ (gen, gen, gen, small):gen     idealmul0($1, $2, $3, $4)
+Doc: ideal multiplication of the ideals $x$ and $y$ in the number field
+ \var{nf}; the result is the ideal product in HNF. If either $x$ or $y$
+ are extended ideals\sidx{ideal (extended)}, their principal part is suitably
+ updated: i.e. multiplying $[I,t]$, $[J,u]$ yields $[IJ, tu]$; multiplying
+ $I$ and $[J, u]$ yields $[IJ, u]$.
+ \bprog
+ ? nf = nfinit(x^2 + 1);
+ ? idealmul(nf, 2, x+1)
+ %2 =
+ [4 2]
+
+ [0 2]
+ ? idealmul(nf, [2, x], x+1)        \\ extended ideal * ideal
+ %3 = [[4, 2; 0, 2], x]
+ ? idealmul(nf, [2, x], [x+1, x])   \\ two extended ideals
+ %4 = [[4, 2; 0, 2], [-1, 0]~]
+ @eprog\noindent
+ If $\fl$ is non-zero, reduce the result using \kbd{idealred}.
+Variant:
+ \noindent See also
+ \fun{GEN}{idealmul}{GEN nf, GEN x, GEN y} ($\fl=0$) and
+ \fun{GEN}{idealmulred}{GEN nf, GEN x, GEN y} ($\fl\neq0$).

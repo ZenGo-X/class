@@ -1,0 +1,6 @@
+Function: getenv
+Section: programming/specific
+C-Name: gp_getenv
+Prototype: s
+Help: getenv(s): value of the environment variable s, 0 if it is not defined.
+Doc: return the value of the environment variable \kbd{s} if it is defined, otherwise return 0.

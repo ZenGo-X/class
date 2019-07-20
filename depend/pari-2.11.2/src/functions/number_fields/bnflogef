@@ -1,0 +1,23 @@
+Function: bnflogef
+Section: number_fields
+C-Name: bnflogef
+Prototype: GG
+Help: bnflogef(nf,pr): return [e~, f~] the logarithmic ramification and
+ residue degrees for the maximal ideal pr.
+Doc: let \var{nf} be a \var{nf} structure attached to a number field $F$
+ and let \var{pr} be a \var{prid} structure attached to a
+ maximal ideal $\goth{p} / p$. Return
+ $[\tilde{e}(F_\goth{p} / \Q_p), \tilde{f}(F_\goth{p} / \Q_p)]$
+ the logarithmic ramification and residue degrees. Let $\Q_p^c/\Q_p$ be the
+ cyclotomic $\Z_p$-extension, then
+ $\tilde{e} = [F_\goth{p} \colon F_\goth{p} \cap \Q_p^c]$ and
+ $\tilde{f} = [F_\goth{p} \cap \Q_p^c \colon \Q_p]$. Note that
+ $\tilde{e}\tilde{f} = e(\goth{p}/p) f(\goth{p}/p)$, where $e(\goth{p}/p)$ and $f(\goth{p}/p)$ denote the
+ usual ramification and residue degrees.
+ \bprog
+ ? F = nfinit(y^6 - 3*y^5 + 5*y^3 - 3*y + 1);
+ ? bnflogef(F, idealprimedec(F,2)[1])
+ %2 = [6, 1]
+ ? bnflogef(F, idealprimedec(F,5)[1])
+ %3 = [1, 2]
+ @eprog

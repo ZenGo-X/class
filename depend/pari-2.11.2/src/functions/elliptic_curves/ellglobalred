@@ -1,0 +1,40 @@
+Function: ellglobalred
+Section: elliptic_curves
+C-Name: ellglobalred
+Prototype: G
+Help: ellglobalred(E): E being an elliptic curve over a number field,
+ returns [N, v, c, faN, L], where N is the conductor of E,
+ c is the product of the local Tamagawa numbers c_p, faN is the
+ factorization of N and L[i] is elllocalred(E, faN[i,1]); v is an obsolete
+ field.
+Description:
+ (gen):gen        ellglobalred($1)
+Doc: let $E$ be an \kbd{ell} structure as output by \kbd{ellinit} attached
+ to an elliptic curve defined over a number field. This function calculates
+ the arithmetic conductor and the global \idx{Tamagawa number} $c$.
+ The result $[N,v,c,F,L]$ is slightly different if $E$ is defined
+ over $\Q$ (domain $D = 1$ in \kbd{ellinit}) or over a number field
+ (domain $D$ is a number field structure, including \kbd{nfinit(x)}
+ representing $\Q$ !):
+
+ \item $N$ is the arithmetic conductor of the curve,
+
+ \item $v$ is an obsolete field, left in place for backward compatibility.
+ If $E$ is defined over $\Q$, $v$ gives the coordinate change for $E$ to the
+ standard minimal integral model (\tet{ellminimalmodel} provides it in a
+ cheaper way); if $E$ is defined over another number field, $v$ gives a
+ coordinate change to an integral model (\tet{ellintegralmodel} provides it
+ in a cheaper way).
+
+ \item $c$ is the product of the local Tamagawa numbers $c_p$, a quantity
+ which enters in the \idx{Birch and Swinnerton-Dyer conjecture},
+
+ \item $F$ is the factorization of $N$,
+
+ \item $L$ is a vector, whose $i$-th entry contains the local data
+ at the $i$-th prime ideal divisor of $N$, i.e.
+ \kbd{L[i] = elllocalred(E,F[i,1])}. If $E$ is defined over $\Q$, the local
+ coordinate change has been deleted and replaced by a 0; if $E$ is defined
+ over another number field the local coordinate change to a local minimal
+ model is given relative to the integral model afforded by $v$ (so either
+ start from an integral model so that $v$ be trivial, or apply $v$ first).

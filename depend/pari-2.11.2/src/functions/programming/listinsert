@@ -1,0 +1,13 @@
+Function: listinsert
+Section: programming/specific
+C-Name: listinsert
+Prototype: WGL
+Help: listinsert(L,x,n): insert x at index n in list L, shifting the
+ remaining elements to the right.
+Description:
+ (list, gen, small):gen        listinsert($1, $2, $3)
+Doc: inserts the object $x$ at
+ position $n$ in $L$ (which must be of type \typ{LIST}). This has
+ complexity $O(\#L - n + 1)$: all the
+ remaining elements of \var{list} (from position $n+1$ onwards) are shifted
+ to the right.

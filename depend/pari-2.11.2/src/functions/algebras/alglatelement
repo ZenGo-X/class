@@ -1,0 +1,20 @@
+Function: alglatelement
+Section: algebras
+C-Name: alglatelement
+Prototype: GGG
+Help: alglatelement(al,lat,c): returns the element of al whose coordinates on
+ the Z-basis of lat are c.
+Doc: Given an algebra \var{al}, a lattice \var{lat} and a~\typ{COL}~\var{c},
+ returns the element of~\var{al} whose coordinates on the \Z-basis of~\var{lat}
+ are given by~\var{c}.
+ \bprog
+ ? al = alginit(nfinit(y^2+7), [-1,-1]);
+ ? a1 = [1,-1,0,1,2,0,1,2]~;
+ ? lat1 = alglathnf(al,a1);
+ ? c = [1..8]~;
+ ? elt = alglatelement(al,lat1,c);
+ ? alglatcontains(al,lat1,elt,&c2)
+ %6 = 1
+ ? c==c2
+ %7 = 1
+ @eprog

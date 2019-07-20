@@ -1,0 +1,25 @@
+Function: polresultantext
+Section: polynomials
+C-Name: polresultantext0
+Prototype: GGDn
+Help: polresultantext(A,B,{v}): return [U,V,R] such that
+ R=polresultant(A,B,v) and U*A+V*B = R, where A and B are polynomials.
+Doc: finds polynomials $U$ and $V$ such that $A*U + B*V = R$, where $R$ is
+ the resultant of $U$ and $V$ with respect to the main variables of $A$ and
+ $B$ if $v$ is omitted, and with respect to $v$ otherwise. Returns the row
+ vector $[U,V,R]$. The algorithm used (subresultant) assumes that the base
+ ring is a domain.
+ \bprog
+ ? A = x*y; B = (x+y)^2;
+ ? [U,V,R] = polresultantext(A, B)
+ %2 = [-y*x - 2*y^2, y^2, y^4]
+ ? A*U + B*V
+ %3 = y^4
+ ? [U,V,R] = polresultantext(A, B, y)
+ %4 = [-2*x^2 - y*x, x^2, x^4]
+ ? A*U+B*V
+ %5 = x^4
+ @eprog
+Variant: Also available is
+ \fun{GEN}{polresultantext}{GEN x, GEN y}.
+

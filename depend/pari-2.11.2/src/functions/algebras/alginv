@@ -1,0 +1,14 @@
+Function: alginv
+Section: algebras
+C-Name: alginv
+Prototype: GG
+Help: alginv(al,x): element 1/x in al.
+Doc: Given an element $x$ in \var{al}, computes its inverse $x^{-1}$ in the
+ algebra \var{al}. Assumes that $x$ is invertible.
+ \bprog
+ ? A = alginit(nfinit(y), [-1,-1]);
+ ? alginv(A,[1,1,0,0]~)
+ %2 = [1/2, 1/2, 0, 0]~
+ @eprog
+
+ Also accepts matrices with coefficients in \var{al}.

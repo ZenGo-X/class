@@ -1,0 +1,59 @@
+Function: factormodSQF
+Section: number_theoretical
+C-Name: factormodSQF
+Prototype: GDG
+Help: factormodSQF(f,{D}): squarefree factorization of the polynomial f over
+ the finite field defined by the domain D.
+Doc: squarefree factorization of the polynomial $f$ over the finite field
+ defined by the domain $D$ as follows:
+
+ \item $D = p$ a prime: factor over $\F_p$;
+
+ \item $D = [T,p]$ for a prime $p$ and $T$ an irreducible polynomial over
+ $\F_p$: factor over $\F_p[x]/(T)$;
+
+ \item $D$ a \typ{FFELT}: factor over the attached field;
+
+ \item $D$ omitted: factor over the field of definition of $f$, which
+ must be a finite field.
+
+ This is somewhat faster than full factorization. The coefficients of $f$
+ must be operation-compatible with the corresponding finite field. The result
+ is a two-column matrix:
+
+ \item the first column contains monic squarefree pairwise coprime polynomials
+ dividing $f$;
+
+ \item the second column contains the power to which the polynomial in column
+ $1$ divides $f$;
+
+ The factors are ordered by increasing degree and the result is canonical: it
+ will not change across multiple calls or sessions.
+
+ \bprog
+ ? f = (x^2 + 1)^3 * (x^2-1)^2;
+ ? factormodSQF(f, 3)  \\ over F_3
+ %1 =
+ [Mod(1, 3)*x^2 + Mod(2, 3) 2]
+
+ [Mod(1, 3)*x^2 + Mod(1, 3) 3]
+
+ ? for(i=1,10^5,factormodSQF(f,3))
+ time = 192 ms.
+ ? for(i=1,10^5,factormod(f,3))  \\ full factorization is slower
+ time = 409 ms.
+
+ ? liftall( factormodSQF((x^2 + 1)^3, [3, t^2+1]) ) \\ over F_9
+ %4 =
+ [x^2 + 1 3]
+
+ ? t = ffgen(t^2+Mod(1,3)); factormodSQF((x^2 + t^0)^3) \\ same using t_FFELT
+ %5 =
+ [x^2 + 1 3]
+
+ ? factormodSQF(x^8 + x^7 + x^6 + x^2 + x + Mod(1,2))
+ %6 =
+ [                Mod(1, 2)*x + Mod(1, 2) 2]
+
+ [Mod(1, 2)*x^2 + Mod(1, 2)*x + Mod(1, 2) 3]
+ @eprog

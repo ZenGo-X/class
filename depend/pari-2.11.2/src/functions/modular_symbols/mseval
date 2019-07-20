@@ -1,0 +1,51 @@
+Function: mseval
+Section: modular_symbols
+C-Name: mseval
+Prototype: GGDG
+Help: mseval(M,s,{p}): M being a full modular symbol space, as given by
+ msinit, s being a modular symbol from M and p being a path between two
+ elements in P^1(Q), return s(p).
+Doc: Let $\Delta:=\text{Div}^0(\P^1 (\Q))$.
+ Let $M$ be a full modular symbol space, as given by \kbd{msinit},
+ let $s$ be a modular symbol from $M$, i.e. an element
+ of $\Hom_G(\Delta, V)$, and let $p=[a,b] \in \Delta$ be a path between
+ two elements in $\P^1(\Q)$, return $s(p)\in V$. The path extremities $a$ and
+ $b$ may be given as \typ{INT}, \typ{FRAC} or $\kbd{oo} = (1:0)$; it
+ is also possible to describe the path by a $2 \times 2$ integral matrix
+ whose columns give the two cusps. The symbol $s$ is either
+
+ \item a \typ{COL} coding a modular symbol in terms of
+ the fixed basis of $\Hom_G(\Delta,V)$ chosen in $M$; if $M$ was
+ initialized with a non-zero \emph{sign} ($+$ or $-$), then either the
+ basis for the full symbol space or the $\pm$-part can be used (the dimension
+ being used to distinguish the two).
+
+ \item a \typ{MAT} whose columns encode modular symbols as above. This is
+ much faster than evaluating individual symbols on the same path $p$
+ independently.
+
+ \item a \typ{VEC} $(v_i)$ of elements of $V$, where the $v_i = s(g_i)$ give
+ the image of the generators $g_i$ of $\Delta$, see \tet{mspathgens}.
+ We assume that $s$ is a proper symbol, i.e.~that the $v_i$ satisfy
+ the \kbd{mspathgens} relations.
+
+ If $p$ is omitted, convert a single symbol $s$  to the second form: a vector
+ of the $s(g_i)$. A \typ{MAT} is converted to a vector of such.
+
+ \bprog
+ ? M = msinit(2,8,1); \\ M_8(Gamma_0(2))^+
+ ? g = mspathgens(M)[1]
+ %2 = [[+oo, 0], [0, 1]]
+ ? N = msnew(M)[1]; #N \\ Q-basis of new subspace, dimension 1
+ %3 = 1
+ ? s = N[,1]         \\ t_COL representation
+ %4 = [-3, 6, -8]~
+ ? S = mseval(M, s)   \\ t_VEC representation
+ %5 = [64*x^6-272*x^4+136*x^2-8, 384*x^5+960*x^4+192*x^3-672*x^2-432*x-72]
+ ? mseval(M,s, g[1])
+ %6 = 64*x^6 - 272*x^4 + 136*x^2 - 8
+ ? mseval(M,S, g[1])
+ %7 = 64*x^6 - 272*x^4 + 136*x^2 - 8
+ @eprog\noindent Note that the symbol should have values in
+ $V = \Q[x,y]_{k-2}$, we return the de-homogenized values corresponding to $y
+ = 1$ instead.

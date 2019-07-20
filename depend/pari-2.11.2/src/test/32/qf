@@ -1,0 +1,75 @@
+
+[7/2    1   8/7     11/7]
+
+[ -1 -7/2  -4/7     -5/7]
+
+[  0    0 -24/7   -29/24]
+
+[  0    0     0 -311/168]
+
+[12, 1]
+266
+Vecsmall([0, 0, 0, 0, 0, 0, 0, 133, 0, 165, 0, 638, 0, 396, 0, 4268])
+Vecsmall([0, 0, 0, 133, 165, 638, 396, 4268])
+[8, [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]~]
+[8, [2, 2, -1, -1, 1, 1, -2, 0, -1, -1, -1, -1]~]
+[]
+[]
+[0, 0, [;]]
+[0, 0, [;]]
+[]
+[0, 0, [;]]
+  ***   at top-level: qfminim(L~*L,10^16)[2]
+  ***                 ^----------------------
+  *** qfminim: precision too low in qfminim.
+10000000000000000.000
+[0, 1]~
+[1, 0]~
+[1, -1]~
+[1, -1]~
+14
+23
+2
+-13
+
+[66  78  90]
+
+[78  93 108]
+
+[90 108 126]
+
+
+[35  67  99]
+
+[67 110 153]
+
+[99 153 207]
+
+  ***   at top-level: qfeval(,1)
+  ***                 ^----------
+  *** qfeval: incorrect type in qfeval (t_INT).
+  ***   at top-level: qfeval(,1,1)
+  ***                 ^------------
+  *** qfeval: incorrect type in qfeval (t_INT).
+  ***   at top-level: qfeval(Mat(1),x)
+  ***                 ^----------------
+  *** qfeval: inconsistent dimensions in qfeval.
+  ***   at top-level: qfeval(Mat(x~),x)
+  ***                 ^-----------------
+  *** qfeval: inconsistent dimensions in qfeval.
+  ***   at top-level: qfeval(,1,1)
+  ***                 ^------------
+  *** qfeval: incorrect type in qfeval (t_INT).
+  ***   at top-level: qfeval(,[1],[1,2])
+  ***                 ^------------------
+  *** qfeval: inconsistent dimensions in qfeval.
+  ***   at top-level: qfeval(q,[1,2],[1,2])
+  ***                 ^---------------------
+  *** qfeval: inconsistent dimensions in qfevalb.
+  ***   at top-level: qfeval(Mat([1,2]),[1,2],[1,2])
+  ***                 ^------------------------------
+  *** qfeval: inconsistent operation 'RgV_RgM_mul' t_VEC (2 elts) , t_MAT (1x2).
+  ***   at top-level: qfeval(1,1)
+  ***                 ^-----------
+  *** qfeval: incorrect type in qfeval (t_INT).
+Total time spent: 16

@@ -1,0 +1,69 @@
+Function: nfcompositum
+Section: number_fields
+C-Name: nfcompositum
+Prototype: GGGD0,L,
+Help: nfcompositum(nf,P,Q,{flag=0}): vector of all possible compositums
+ of the number fields defined by the polynomials P and Q; flag is
+ optional, whose binary digits mean 1: output for each compositum, not only
+ the compositum polynomial pol, but a vector [R,a,b,k] where a (resp. b) is a
+ root of P (resp. Q) expressed as a polynomial modulo R, and a small integer k
+ such that al2+k*al1 is the chosen root of R; 2: assume that the number
+ fields defined by P and Q are linearly disjoint.
+
+Doc: Let \var{nf} be a number field structure attached to the field $K$
+ and let \sidx{compositum} $P$ and $Q$
+ be squarefree polynomials in $K[X]$ in the same variable. Outputs
+ the simple factors of the \'etale $K$-algebra $A = K[X, Y] / (P(X), Q(Y))$.
+ The factors are given by a list of polynomials $R$ in $K[X]$, attached to
+ the number field $K[X]/ (R)$, and sorted by increasing degree (with respect
+ to lexicographic ordering for factors of equal degrees). Returns an error if
+ one of the polynomials is not squarefree.
+
+ Note that it is more efficient to reduce to the case where $P$ and $Q$ are
+ irreducible first. The routine will not perform this for you, since it may be
+ expensive, and the inputs are irreducible in most applications anyway. In
+ this case, there will be a single factor $R$ if and only if the number
+ fields defined by $P$ and $Q$ are linearly disjoint (their intersection is
+ $K$).
+
+ The binary digits of $\fl$ mean
+
+ 1: outputs a vector of 4-component vectors $[R,a,b,k]$, where $R$
+ ranges through the list of all possible compositums as above, and $a$
+ (resp. $b$) expresses the root of $P$ (resp. $Q$) as an element of
+ $K[X]/(R)$. Finally, $k$ is a small integer such that $b + ka = X$ modulo
+ $R$.
+
+ 2: assume that $P$ and $Q$ define number fields that are linearly disjoint:
+ both polynomials are irreducible and the corresponding number fields
+ have no common subfield besides $K$. This allows to save a costly
+ factorization over $K$. In this case return the single simple factor
+ instead of a vector with one element.
+
+ A compositum is often defined by a complicated polynomial, which it is
+ advisable to reduce before further work. Here is an example involving
+ the field $K(\zeta_5, 5^{1/10})$, $K=\Q(\sqrt{5})$:
+ \bprog
+ ? K = nfinit(y^2-5);
+ ? L = nfcompositum(K, x^5 - y, polcyclo(5), 1); \\@com list of $[R,a,b,k]$
+ ? [R, a] = L[1];  \\@com pick the single factor, extract $R,a$ (ignore $b,k$)
+ ? lift(R)         \\@com defines the compositum
+ %4 = x^10 + (-5/2*y + 5/2)*x^9 + (-5*y + 20)*x^8 + (-20*y + 30)*x^7 + \
+ (-45/2*y + 145/2)*x^6 + (-71/2*y + 121/2)*x^5 + (-20*y + 60)*x^4 +    \
+ (-25*y + 5)*x^3 + 45*x^2 + (-5*y + 15)*x + (-2*y + 6)
+ ? a^5 - y         \\@com a fifth root of $y$
+ %5 = 0
+ ? [T, X] = rnfpolredbest(K, R, 1);
+ ? lift(T)     \\@com simpler defining polynomial for $K[x]/(R)$
+ %7 = x^10 + (-11/2*y + 25/2)
+ ? liftall(X)  \\ @com root of $R$ in $K[x]/(T(x))$
+ %8 = (3/4*y + 7/4)*x^7 + (-1/2*y - 1)*x^5 + 1/2*x^2 + (1/4*y - 1/4)
+ ? a = subst(a.pol, 'x, X);  \\@com \kbd{a} in the new coordinates
+ ? liftall(a)
+ %10 = (-3/4*y - 7/4)*x^7 - 1/2*x^2
+ ? a^5 - y
+ %11 = 0
+ @eprog
+
+ The main variables of $P$ and $Q$ must be the same and have higher priority
+ than that of \var{nf} (see~\kbd{varhigher} and~\kbd{varlower}).

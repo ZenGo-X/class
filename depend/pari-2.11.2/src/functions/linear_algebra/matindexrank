@@ -1,0 +1,11 @@
+Function: matindexrank
+Section: linear_algebra
+C-Name: indexrank
+Prototype: G
+Help: matindexrank(M): gives two extraction vectors (rows and columns) for
+ the matrix M such that the extracted matrix is square of maximal rank.
+Doc: $M$ being a matrix of rank $r$, returns a vector with two
+ \typ{VECSMALL} components $y$ and $z$ of length $r$ giving a list of rows
+ and columns respectively (starting from 1) such that the extracted matrix
+ obtained from these two vectors using $\tet{vecextract}(M,y,z)$ is
+ invertible. The vectors $y$ and $z$ are sorted in increasing order.

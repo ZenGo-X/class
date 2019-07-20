@@ -1,0 +1,30 @@
+Function: bnrclassnolist
+Section: number_fields
+C-Name: bnrclassnolist
+Prototype: GG
+Help: bnrclassnolist(bnf,list): if list is as output by ideallist or
+ similar, gives list of corresponding ray class numbers.
+Doc: $\var{bnf}$ being as
+ output by \kbd{bnfinit}, and \var{list} being a list of moduli (with units) as
+ output by \kbd{ideallist} or \kbd{ideallistarch}, outputs the list of the
+ class numbers of the corresponding ray class groups. To compute a single
+ class number, \tet{bnrclassno} is more efficient.
+
+ \bprog
+ ? bnf = bnfinit(x^2 - 2);
+ ? L = ideallist(bnf, 100, 2);
+ ? H = bnrclassnolist(bnf, L);
+ ? H[98]
+ %4 = [1, 3, 1]
+ ? l = L[1][98]; ids = vector(#l, i, l[i].mod[1])
+ %5 = [[98, 88; 0, 1], [14, 0; 0, 7], [98, 10; 0, 1]]
+ @eprog
+ The weird \kbd{l[i].mod[1]}, is the first component of \kbd{l[i].mod}, i.e.
+ the finite part of the conductor. (This is cosmetic: since by construction
+ the Archimedean part is trivial, I do not want to see it). This tells us that
+ the ray class groups modulo the ideals of norm 98 (printed as \kbd{\%5}) have
+ respectively order $1$, $3$ and $1$. Indeed, we may check directly:
+ \bprog
+ ? bnrclassno(bnf, ids[2])
+ %6 = 3
+ @eprog

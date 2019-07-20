@@ -1,0 +1,8 @@
+Function: _.sign
+Help: _.sign
+Section: member_functions
+C-Name: member_sign
+Prototype: mG
+Description:
+ (nf):vec:copy                  gel($1, 2)
+ (gen):vec:copy                 member_sign($1)

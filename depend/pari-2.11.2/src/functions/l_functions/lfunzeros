@@ -1,0 +1,40 @@
+Function: lfunzeros
+Section: l_functions
+C-Name: lfunzeros
+Prototype: GGD8,L,b
+Help: lfunzeros(L,lim,{divz=8}): lim being
+ either an upper limit or a real interval, computes an ordered list of
+ zeros of L(s) on the critical line up to the given upper limit or in the
+ given interval. Use a naive algorithm which may miss some zeros.
+ To use a finer search mesh, set divz to some integral value
+ larger than the default (= 8).
+Doc: \kbd{lim} being either a positive upper limit or a non-empty real
+ interval inside $[0,+\infty[$, computes an
+ ordered list of zeros of $L(s)$ on the critical line up to the given
+ upper limit or in the given interval. Use a naive algorithm which may miss
+ some zeros: it assumes that two consecutive zeros at height $T \geq 1$
+ differ at least by $2\pi/\omega$, where
+ $$\omega := \kbd{divz} \cdot \big(d\log(T/2\pi) +d+ 2\log(N/(\pi/2)^d)\big).$$
+ To use a finer search mesh, set divz to some integral value
+ larger than the default (= 8).
+ \bprog
+ ? lfunzeros(1, 30) \\ zeros of Rieman zeta up to height 30
+ %1 = [14.134[...], 21.022[...], 25.010[...]]
+ ? #lfunzeros(1, [100,110])  \\ count zeros with 100 <= Im(s) <= 110
+ %2 = 4
+ @eprog\noindent The algorithm also assumes that all zeros are simple except
+ possibly on the real axis at $s = k/2$ and that there are no poles in the
+ search interval. (The possible zero at $s = k/2$ is repeated according to
+ its multiplicity.)
+
+ Should you pass an \kbd{Linit} argument to the function, beware that the
+ algorithm needs at least
+ \bprog
+    L = lfuninit(Ldata, [T+1])
+ @eprog\noindent where $T$ is the upper bound of the interval defined by
+ \kbd{lim}: this allows to detect zeros near $T$. Make sure that your
+ \kbd{Linit} domain contains this one, i.e. a domain $[1,T+1]$ is fine but
+ $[0, T]$ is not! The algorithm assumes that a multiple zero at $s = k / 2$
+ has order less than or equal to the maximal derivation order allowed by the
+ \kbd{Linit}. You may increase that value in the \kbd{Linit} but this is
+ costly: only do it for zeros of low height or in \kbd{lfunorderzero} instead.

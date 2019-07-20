@@ -1,0 +1,24 @@
+Function: norml2
+Section: linear_algebra
+C-Name: gnorml2
+Prototype: G
+Help: norml2(x): square of the L2-norm of x.
+Doc: square of the $L^2$-norm of $x$. More precisely,
+ if $x$ is a scalar, $\kbd{norml2}(x)$ is defined to be the square
+ of the complex modulus of $x$ (real \typ{QUAD}s are not supported).
+ If $x$ is a polynomial, a (row or column) vector or a matrix, \kbd{norml2($x$)} is
+ defined recursively as $\sum_i \kbd{norml2}(x_i)$, where $(x_i)$ run through
+ the components of $x$. In particular, this yields the usual $\sum |x_i|^2$
+ (resp.~$\sum |x_{i,j}|^2$) if $x$ is a polynomial or vector (resp.~matrix) with
+ complex components.
+
+ \bprog
+ ? norml2( [ 1, 2, 3 ] )      \\ vector
+ %1 = 14
+ ? norml2( [ 1, 2; 3, 4] )   \\ matrix
+ %2 = 30
+ ? norml2( 2*I + x )
+ %3 = 5
+ ? norml2( [ [1,2], [3,4], 5, 6 ] )   \\ recursively defined
+ %4 = 91
+ @eprog

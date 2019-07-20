@@ -1,0 +1,222 @@
+Function: _header_operators
+Class: header
+Section: operators
+Doc:
+ \section{Standard monadic or dyadic operators}
+
+ \subseckbd{+$/$-} The expressions \kbd{+}$x$ and \kbd{-}$x$ refer
+ to monadic operators (the first does nothing, the second negates $x$).
+
+ The library syntax is \fun{GEN}{gneg}{GEN x} for \kbd{-}$x$.
+
+ \subseckbd{+} The expression $x$ \kbd{+} $y$ is the \idx{sum} of $x$ and $y$.
+ Addition between a scalar type $x$ and a \typ{COL} or \typ{MAT} $y$ returns
+ respectively $[y[1] + x, y[2],\dots]$ and $y + x \text{Id}$. Other additions
+ between a scalar type and a vector or a matrix, or between vector/matrices of
+ incompatible sizes are forbidden.
+
+ The library syntax is \fun{GEN}{gadd}{GEN x, GEN y}.
+
+ \subseckbd{-} The expression $x$ \kbd{-} $y$ is the \idx{difference} of $x$
+ and $y$. Subtraction between a scalar type $x$ and a \typ{COL} or \typ{MAT}
+ $y$ returns respectively $[y[1] - x, y[2],\dots]$ and $y - x \text{Id}$.
+ Other subtractions between a scalar type and a vector or a matrix, or
+ between vector/matrices of incompatible sizes are forbidden.
+
+ The library syntax is \fun{GEN}{gsub}{GEN x, GEN y} for $x$ \kbd{-} $y$.
+
+ \subseckbd{*} The expression $x$ \kbd{*} $y$ is the \idx{product} of $x$
+ and $y$. Among the prominent impossibilities are multiplication between
+ vector/matrices of incompatible sizes, between a \typ{INTMOD} or \typ{PADIC}
+ Restricted to scalars, \kbd{*} is commutative; because of vector and matrix
+ operations, it is not commutative in general.
+
+ Multiplication between two \typ{VEC}s or two \typ{COL}s is not
+ allowed; to take the \idx{scalar product} of two vectors of the same length,
+ transpose one of the vectors (using the operator \kbd{\til} or the function
+ \kbd{mattranspose}, see \secref{se:linear_algebra}) and multiply a line vector
+ by a column vector:
+ \bprog
+ ? a = [1,2,3];
+ ? a * a
+   ***   at top-level: a*a
+   ***                  ^--
+   *** _*_: forbidden multiplication t_VEC * t_VEC.
+ ? a * a~
+ %2 = 14
+ @eprog
+
+ If $x,y$ are binary quadratic forms, compose them; see also
+ \kbd{qfbnucomp} and \kbd{qfbnupow}. If $x,y$ are \typ{VECSMALL} of the same
+ length, understand them as permutations and compose them.
+
+ The library syntax is \fun{GEN}{gmul}{GEN x, GEN y} for $x$ \kbd{*} $y$.
+ Also available is \fun{GEN}{gsqr}{GEN x} for $x$ \kbd{*} $x$.
+
+ \subseckbd{/} The expression $x$ \kbd{/} $y$ is the \idx{quotient} of $x$
+ and $y$. In addition to the impossibilities for multiplication, note that if
+ the divisor is a matrix, it must be an invertible square matrix, and in that
+ case the result is $x*y^{-1}$. Furthermore note that the result is as exact
+ as possible: in particular, division of two integers always gives a rational
+ number (which may be an integer if the quotient is exact) and \emph{not} the
+ Euclidean quotient (see $x$ \kbd{\bs} $y$ for that), and similarly the
+ quotient of two polynomials is a rational function in general. To obtain the
+ approximate real value of the quotient of two integers, add \kbd{0.} to the
+ result; to obtain the approximate $p$-adic value of the quotient of two
+ integers, add \kbd{O(p\pow k)} to the result; finally, to obtain the
+ \idx{Taylor series} expansion of the quotient of two polynomials, add
+ \kbd{O(X\pow k)} to the result or use the \kbd{taylor} function
+ (see \secref{se:taylor}). \label{se:gdiv}
+
+ The library syntax is \fun{GEN}{gdiv}{GEN x, GEN y} for $x$ \kbd{/} $y$.
+
+ \subseckbd{\bs} The expression \kbd{$x$ \bs\ $y$} is the
+ \idx{Euclidean quotient} of $x$ and $y$. If $y$ is a real scalar, this is
+ defined as \kbd{floor($x$/$y$)} if $y > 0$, and \kbd{ceil($x$/$y$)} if
+ $y < 0$ and the division is not exact. Hence the remainder
+ \kbd{$x$ - ($x$\bs$y$)*$y$} is in $[0, |y|[$.
+
+ Note that when $y$ is an integer and $x$ a polynomial, $y$ is first promoted
+ to a polynomial of degree $0$. When $x$ is a vector or matrix, the operator
+ is applied componentwise.
+
+ The library syntax is \fun{GEN}{gdivent}{GEN x, GEN y}
+ for $x$ \kbd{\bs} $y$.
+
+ \subseckbd{\bs/} The expression $x$ \b{/} $y$ evaluates to the rounded
+ \idx{Euclidean quotient} of $x$ and $y$. This is the same as \kbd{$x$ \bs\ $y$}
+ except for scalar division: the quotient is such that the corresponding
+ remainder is smallest in absolute value and in case of a tie the quotient
+ closest to $+\infty$ is chosen (hence the remainder would belong to
+ $]{-}|y|/2, |y|/2]$).
+
+ When $x$ is a vector or matrix, the operator is applied componentwise.
+
+ The library syntax is \fun{GEN}{gdivround}{GEN x, GEN y}
+ for $x$ \b{/} $y$.
+
+ \subseckbd{\%} The expression \kbd{$x$ \% $y$} evaluates to the modular
+ \idx{Euclidean remainder} of $x$ and $y$, which we now define. When $x$ or $y$
+ is a non-integral real number, \kbd{$x$\%$y$} is defined as
+ \kbd{$x$ - ($x$\bs$y$)*$y$}. Otherwise, if $y$ is an integer, this is
+ the smallest
+ non-negative integer congruent to $x$ modulo $y$. (This actually coincides
+ with the previous definition if and only if $x$ is an integer.) If $y$ is a
+ polynomial, this is the polynomial of smallest degree congruent to
+ $x$ modulo $y$. For instance:
+ \bprog
+ ? (1/2) % 3
+ %1 = 2
+ ? 0.5 % 3
+ %2 = 0.5000000000000000000000000000
+ ? (1/2) % 3.0
+ %3 = 1/2
+ @eprog
+ Note that when $y$ is an integer and $x$ a polynomial, $y$ is first promoted
+ to a polynomial of degree $0$. When $x$ is a vector or matrix, the operator
+ is applied componentwise.
+
+ The library syntax is \fun{GEN}{gmod}{GEN x, GEN y}
+ for $x$ \kbd{\%} $y$.
+
+ \subseckbd{\pow} The expression $x\hbox{\kbd{\pow}}n$ is \idx{powering}.
+
+ \item If the exponent $n$ is an integer, then exact operations are performed
+ using binary (left-shift) powering techniques. If $x$ is a $p$-adic number, its
+ precision will increase if $v_p(n) > 0$. Powering a binary quadratic form
+ (types \typ{QFI} and \typ{QFR}) returns a representative of the class, which is
+ always reduced if the input was. (In particular, \kbd{x \pow 1} returns $x$
+ itself, whether it is reduced or not.)
+
+ PARI is able to rewrite the multiplication $x * x$ of two \emph{identical}
+ objects as $x^2$, or $\kbd{sqr}(x)$. Here, identical means the operands are
+ two different labels referencing the same chunk of memory; no equality test
+ is performed. This is no longer true when more than two arguments are
+ involved.
+
+ \item If the exponent $n$ is not an integer, powering is treated as the
+ transcendental function $\exp(n\log x)$, and in particular acts
+ componentwise on vector or matrices, even square matrices ! (See
+ \secref{se:trans}.)
+
+ \item As an exception, if the exponent is a rational number $p/q$ and $x$ an
+ integer modulo a prime or a $p$-adic number, return a solution $y$ of
+ $y^q=x^p$ if it exists. Currently, $q$ must not have large prime factors.
+ Beware that
+ \bprog
+ ? Mod(7,19)^(1/2)
+ %1 = Mod(11, 19) /* is any square root */
+ ? sqrt(Mod(7,19))
+ %2 = Mod(8, 19)  /* is the smallest square root */
+ ? Mod(7,19)^(3/5)
+ %3 = Mod(1, 19)
+ ? %3^(5/3)
+ %4 = Mod(1, 19)  /* Mod(7,19) is just another cubic root */
+ @eprog
+
+ \item If the exponent is a negative integer, an \idx{inverse} must be computed.
+ For non-invertible \typ{INTMOD} $x$, this will fail and implicitly exhibit a
+ non trivial factor of the modulus:
+ \bprog
+ ? Mod(4,6)^(-1)
+   ***   at top-level: Mod(4,6)^(-1)
+   ***                         ^-----
+   *** _^_: impossible inverse modulo: Mod(2, 6).
+ @eprog\noindent
+ (Here, a factor 2 is obtained directly. In general, take the gcd of the
+ representative and the modulus.) This is most useful when performing
+ complicated operations modulo an integer $N$ whose factorization is
+ unknown. Either the computation succeeds and all is well, or a factor $d$
+ is discovered and the computation may be restarted modulo $d$ or $N/d$.
+
+ For non-invertible \typ{POLMOD} $x$, the behavior is the same:
+ \bprog
+ ? Mod(x^2, x^3-x)^(-1)
+   ***   at top-level: Mod(x^2,x^3-x)^(-1)
+   ***                               ^-----
+   *** _^_: impossible inverse in RgXQ_inv: Mod(x^2, x^3 - x).
+ @eprog\noindent Note that the underlying algorihm (subresultant) assumes
+ the base ring is a domain:
+ \bprog
+ ? a = Mod(3*y^3+1, 4); b = y^6+y^5+y^4+y^3+y^2+y+1; c = Mod(a,b);
+ ? c^(-1)
+   ***   at top-level: Mod(a,b)^(-1)
+   ***                         ^-----
+   *** _^_: impossible inverse modulo: Mod(2, 4).
+ @eprog\noindent
+ In fact $c$ is invertible, but $\Z/4\Z$ is not a domain and the algorithm
+ fails. It is possible for the algorithm to succeed in such situations
+ and any returned result will be correct, but chances are an error
+ will occur first. In this specific case, one should work with $2$-adics.
+ In general, one can also try the following approach
+ \bprog
+ ? inversemod(a, b) =
+ { my(m, v = variable(b));
+   m = polsylvestermatrix(polrecip(a), polrecip(b));
+   m = matinverseimage(m, matid(#m)[,1]);
+   Polrev(m[1..poldegree(b)], v);
+ }
+ ? inversemod(a,b)
+ %2 = Mod(2,4)*y^5 + Mod(3,4)*y^3 + Mod(1,4)*y^2 + Mod(3,4)*y + Mod(2,4)
+ @eprog\noindent
+ This is not guaranteed to work either since \kbd{matinverseimage} must also
+ invert pivots. See \secref{se:linear_algebra}.
+
+ For a \typ{MAT} $x$, the matrix is expected to be square and invertible, except
+ in the special case \kbd{x\pow(-1)} which returns a left inverse if one exists
+ (rectangular $x$ with full column rank).
+ \bprog
+ ? x = Mat([1;2])
+ %1 =
+ [1]
+
+ [2]
+
+ ? x^(-1)
+ %2 =
+ [1 0]
+ @eprog
+
+ The library syntax is \fun{GEN}{gpow}{GEN x, GEN n, long prec}
+ for $x\hbox{\kbd{\pow}}n$.
+

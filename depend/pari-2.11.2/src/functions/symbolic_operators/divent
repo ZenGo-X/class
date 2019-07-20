@@ -1,0 +1,13 @@
+Function: _\_
+Section: symbolic_operators
+C-Name: gdivent
+Help: x\y: Euclidean quotient of x and y.
+Prototype: GG
+Description:
+ (small, small):small:parens             $(1)/$(2)
+ (int, small):int                        truedivis($1, $2)
+ (small, int):int                        gdiventsg($1, $2)
+ (int, int):int                          truedivii($1, $2)
+ (gen, small):gen                        gdiventgs($1, $2)
+ (small, gen):gen                        gdiventsg($1, $2)
+ (gen, gen):gen                          gdivent($1, $2)

@@ -1,0 +1,53 @@
+Function: algsplit
+Section: algebras
+C-Name: algsplit
+Prototype: GDn
+Help: algsplit(al,{v='x}): computes an isomorphism between al and M_d(F_q).
+Doc: If \var{al} is a table algebra over~$\F_p$ output by \tet{algtableinit}
+ that represents a simple algebra, computes an isomorphism between \var{al} and
+ a matrix algebra~$M_d(\F_{p^n})$ where~$N = nd^2$ is the dimension of~\var{al}.
+ Returns a \typ{VEC}~$[map,mapi]$, where:
+
+ \item \var{map} is a \typ{VEC} of~$N$ matrices of size~$d\times d$ with
+ \typ{FFELT} coefficients using the variable~\var{v}, representing the image of
+ the basis of~\var{al} under the isomorphism.
+
+ \item \var{mapi} is an~$N\times N$ matrix with \typ{INT} coefficients,
+  representing the image in \var{al} by the inverse isomorphism of the
+  basis~$(b_i)$ of~$M_d(\F_p[\alpha])$ (where~$\alpha$ has degree~$n$
+  over~$\F_p$) defined as follows:
+  let~$E_{i,j}$ be the matrix having all coefficients~$0$ except the~$(i,j)$-th
+  coefficient equal to~$1$, and define
+  $$b_i = E_{((i-1)/nd)+1, ((i-1)/n \mod d)+1} \alpha^{(i-1)\mod n}.$$
+
+ Example:
+ \bprog
+ ? al0 = alginit(nfinit(y^2+7), [-1,-1]);
+ ? al = algtableinit(algmultable(al0), 3); \\ isomorphic to M_2(F_9)
+ ? [map,mapi] = algsplit(al, 'a);
+ ? x = [1,2,1,0,0,0,0,0]~; fx = map*x
+ %4 =
+ [2*a 0]
+
+ [  0 2]
+ ? y = [0,0,0,0,1,0,0,1]~; fy = map*y
+ %5 =
+ [1   2*a]
+
+ [2 a + 2]
+ ? map*algmul(al,x,y) == fx*fy
+ %6 = 1
+ ? map*mapi[,6]
+ %7 =
+ [0 0]
+
+ [a 0]
+ @eprog
+
+ \misctitle{Warning} If~\var{al} is not simple, \kbd{algsplit(al)} can trigger
+ an error, but can also run into an infinite loop. Example:
+ \bprog
+ ? al = alginit(nfinit(y),[-1,-1]); \\ ramified at 2
+ ? al2 = algtableinit(algmultable(al),2); \\ maximal order modulo 2
+ ? algsplit(al2); \\ not semisimple, infinite loop
+ @eprog

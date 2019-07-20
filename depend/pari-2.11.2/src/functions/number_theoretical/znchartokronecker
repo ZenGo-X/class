@@ -1,0 +1,32 @@
+Function: znchartokronecker
+Section: number_theoretical
+C-Name: znchartokronecker
+Prototype: GGD0,L,
+Help: znchartokronecker(G, chi, {flag=0}): let G be znstar(N,1), let chi
+ be a Dirichlet character mod N, return the discriminant D if chi is
+ real equal to the Kronecker symbol (D/.) and 0 otherwise. If flag
+ is set, return the fundamental discriminant attached to the corresponding
+ primitive character.
+Doc: Let $G$ be attached to $(\Z/N\Z)^*$ (as per \kbd{G = znstar(N,1)})
+ and let \kbd{chi} be a Dirichlet character on $(\Z/N\Z)^*$, given by
+
+ \item a \typ{VEC}: a standard character on \kbd{bid.gen},
+
+ \item a \typ{INT} or a \typ{COL}: a Conrey index in $(\Z/q\Z)^*$ or its
+ Conrey logarithm;
+ see \secref{se:dirichletchar} or \kbd{??character}.
+
+ If $\fl = 0$, return the discriminant $D$ if \kbd{chi} is real equal to the
+ Kronecker symbol $(D/.)$ and $0$ otherwise. The discriminant $D$ is
+ fundamental if and only if \kbd{chi} is primitive.
+
+ If $\fl = 1$, return the fundamental discriminant attached to the
+ corresponding primitive character.
+
+ \bprog
+ ? G = znstar(8,1); CHARS = [1,3,5,7]; \\ Conrey labels
+ ? apply(t->znchartokronecker(G,t), CHARS)
+ %2 = [4, -8, 8, -4]
+ ? apply(t->znchartokronecker(G,t,1), CHARS)
+ %3 = [1, -8, 8, -4]
+ @eprog

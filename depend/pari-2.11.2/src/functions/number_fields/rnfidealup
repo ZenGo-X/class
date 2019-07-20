@@ -1,0 +1,36 @@
+Function: rnfidealup
+Section: number_fields
+C-Name: rnfidealup0
+Prototype: GGD0,L,
+Help: rnfidealup(rnf,x,{flag=0}): lifts the ideal x (of the base field) to the
+ relative field. As a vector of t_POLMODs if flag = 0 and as an ideal in HNF
+ in the absolute field if flag = 1.
+Doc: let $\var{rnf}$ be a relative number
+ field extension $L/K$ as output by \kbd{rnfinit} and let $x$ be an ideal of
+ $K$. This function returns the ideal $x\Z_L$ as an absolute ideal of $L/\Q$,
+ in the form of a $\Z$-basis. If $\fl = 0$, the result is given by a vector of
+ polynomials (modulo \kbd{rnf.pol}); if $\fl = 1$, it is given in HNF in terms
+ of the fixed $\Z$-basis for $\Z_L$, see \secref{se:rnfinit}.
+ \bprog
+ ? K = nfinit(y^2+1); rnf = rnfinit(K, x^2-y);
+ ? P = idealprimedec(K,2)[1];
+ ? rnfidealup(rnf, P)
+ %3 = [2, x^2 + 1, 2*x, x^3 + x]
+ ? rnfidealup(rnf, P,1)
+ %4 =
+ [2 1 0 0]
+
+ [0 1 0 0]
+
+ [0 0 2 1]
+
+ [0 0 0 1]
+ @eprog
+ The reason why we do not return by default ($\fl = 0$) the customary HNF in
+ terms of a fixed $\Z$-basis for $\Z_L$ is precisely because
+ a \var{rnf} does not contain such a basis by default. Completing the
+ structure so that it contains a \var{nf} structure for $L$ is polynomial
+ time but costly when the absolute degree is large, thus it is not done by
+ default. Note that setting $\fl = 1$ will complete the \var{rnf}.
+Variant: Also available is
+  \fun{GEN}{rnfidealup}{GEN rnf, GEN x} ($\fl = 0$).

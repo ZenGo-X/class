@@ -1,0 +1,21 @@
+2
+3
+4
+5
+  ***   at top-level: %``````
+  ***                 ^-------
+  *** %: History result %-1 not available [%1-%5].
+0
+3
+3
+1
+1
+1
+  ***   at top-level: %``
+  ***                 ^---
+  *** %: History result %11 not available [%13-%13].
+  ***   at top-level: %``
+  ***                 ^---
+  *** %: History result %12 has been deleted (histsize changed).
+1
+Total time spent: 0

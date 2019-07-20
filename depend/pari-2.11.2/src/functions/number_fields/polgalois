@@ -1,0 +1,88 @@
+Function: polgalois
+Section: number_fields
+C-Name: polgalois
+Prototype: Gp
+Help: polgalois(T): Galois group of the polynomial T (see manual for group
+ coding). Return [n, s, k, name] where n is the group order, s the signature,
+ k the index and name is the GAP4 name of the transitive group.
+Doc: \idx{Galois} group of the non-constant
+ polynomial $T\in\Q[X]$. In the present version \vers, $T$ must be irreducible
+ and the degree $d$ of $T$ must be less than or equal to 7. If the
+ \tet{galdata} package has been installed, degrees 8, 9, 10 and 11 are also
+ implemented. By definition, if $K = \Q[x]/(T)$, this computes the action of
+ the Galois group of the Galois closure of $K$ on the $d$ distinct roots of
+ $T$, up to conjugacy (corresponding to different root orderings).
+
+ The output is a 4-component vector $[n,s,k,name]$ with the
+ following meaning: $n$ is the cardinality of the group, $s$ is its signature
+ ($s=1$ if the group is a subgroup of the alternating group $A_d$, $s=-1$
+ otherwise) and name is a character string containing name of the transitive
+ group according to the GAP 4 transitive groups library by Alexander Hulpke.
+
+ $k$ is more arbitrary and the choice made up to version~2.2.3 of PARI is rather
+ unfortunate: for $d > 7$, $k$ is the numbering of the group among all
+ transitive subgroups of $S_d$, as given in ``The transitive groups of degree up
+ to eleven'', G.~Butler and J.~McKay, \emph{Communications in Algebra}, vol.~11,
+ 1983,
+ pp.~863--911 (group $k$ is denoted $T_k$ there). And for $d \leq 7$, it was ad
+ hoc, so as to ensure that a given triple would denote a unique group.
+ Specifically, for polynomials of degree $d\leq 7$, the groups are coded as
+ follows, using standard notations
+ \smallskip
+ In degree 1: $S_1=[1,1,1]$.
+ \smallskip
+ In degree 2: $S_2=[2,-1,1]$.
+ \smallskip
+ In degree 3: $A_3=C_3=[3,1,1]$, $S_3=[6,-1,1]$.
+ \smallskip
+ In degree 4: $C_4=[4,-1,1]$, $V_4=[4,1,1]$, $D_4=[8,-1,1]$, $A_4=[12,1,1]$,
+ $S_4=[24,-1,1]$.
+ \smallskip
+ In degree 5: $C_5=[5,1,1]$, $D_5=[10,1,1]$, $M_{20}=[20,-1,1]$,
+ $A_5=[60,1,1]$, $S_5=[120,-1,1]$.
+ \smallskip
+ In degree 6: $C_6=[6,-1,1]$, $S_3=[6,-1,2]$, $D_6=[12,-1,1]$, $A_4=[12,1,1]$,
+ $G_{18}=[18,-1,1]$, $S_4^-=[24,-1,1]$, $A_4\times C_2=[24,-1,2]$,
+ $S_4^+=[24,1,1]$, $G_{36}^-=[36,-1,1]$, $G_{36}^+=[36,1,1]$,
+ $S_4\times C_2=[48,-1,1]$, $A_5=PSL_2(5)=[60,1,1]$, $G_{72}=[72,-1,1]$,
+ $S_5=PGL_2(5)=[120,-1,1]$, $A_6=[360,1,1]$, $S_6=[720,-1,1]$.
+ \smallskip
+ In degree 7: $C_7=[7,1,1]$, $D_7=[14,-1,1]$, $M_{21}=[21,1,1]$,
+ $M_{42}=[42,-1,1]$, $PSL_2(7)=PSL_3(2)=[168,1,1]$, $A_7=[2520,1,1]$,
+ $S_7=[5040,-1,1]$.
+ \smallskip
+ This is deprecated and obsolete, but for reasons of backward compatibility,
+ we cannot change this behavior yet. So you can use the default
+ \tet{new_galois_format} to switch to a consistent naming scheme, namely $k$ is
+ always the standard numbering of the group among all transitive subgroups of
+ $S_n$. If this default is in effect, the above groups will be coded as:
+ \smallskip
+ In degree 1: $S_1=[1,1,1]$.
+ \smallskip
+ In degree 2: $S_2=[2,-1,1]$.
+ \smallskip
+ In degree 3: $A_3=C_3=[3,1,1]$, $S_3=[6,-1,2]$.
+ \smallskip
+ In degree 4: $C_4=[4,-1,1]$, $V_4=[4,1,2]$, $D_4=[8,-1,3]$, $A_4=[12,1,4]$,
+ $S_4=[24,-1,5]$.
+ \smallskip
+ In degree 5: $C_5=[5,1,1]$, $D_5=[10,1,2]$, $M_{20}=[20,-1,3]$,
+ $A_5=[60,1,4]$, $S_5=[120,-1,5]$.
+ \smallskip
+ In degree 6: $C_6=[6,-1,1]$, $S_3=[6,-1,2]$, $D_6=[12,-1,3]$, $A_4=[12,1,4]$,
+ $G_{18}=[18,-1,5]$, $A_4\times C_2=[24,-1,6]$, $S_4^+=[24,1,7]$,
+ $S_4^-=[24,-1,8]$, $G_{36}^-=[36,-1,9]$, $G_{36}^+=[36,1,10]$,
+ $S_4\times C_2=[48,-1,11]$, $A_5=PSL_2(5)=[60,1,12]$, $G_{72}=[72,-1,13]$,
+ $S_5=PGL_2(5)=[120,-1,14]$, $A_6=[360,1,15]$, $S_6=[720,-1,16]$.
+ \smallskip
+ In degree 7: $C_7=[7,1,1]$, $D_7=[14,-1,2]$, $M_{21}=[21,1,3]$,
+ $M_{42}=[42,-1,4]$, $PSL_2(7)=PSL_3(2)=[168,1,5]$, $A_7=[2520,1,6]$,
+ $S_7=[5040,-1,7]$.
+ \smallskip
+
+ \misctitle{Warning} The method used is that of resolvent polynomials and is
+ sensitive to the current precision. The precision is updated internally but,
+ in very rare cases, a wrong result may be returned if the initial precision
+ was not sufficient.
+Variant: To enable the new format in library mode,
+ set the global variable \tet{new_galois_format} to $1$.

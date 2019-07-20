@@ -1,0 +1,4 @@
+Function: uninline
+Section: programming/specific
+Help: uninline(): forget all inline variables [EXPERIMENTAL].
+Doc: (Experimental) Exit the scope of all current \kbd{inline} variables.

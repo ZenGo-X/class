@@ -1,0 +1,15 @@
+  ***   Warning: new stack size = 100000000 (95.367 Mbytes).
+Suite: compositum of relative extensions
+compositum of degrees 2 and 3 over quadratic field: 1
+compositum of degrees 2 and 4 over quadratic field: 1
+compositum of degrees 5 and 7 over quadratic field: 1
+compositum of degrees 2 and 3 over degree 5 field: 1
+compositum of degrees 2 and 4 over degree 5 field: 1
+compositum of degrees 5 and 4 over degree 5 field: 1
+  ***   at top-level: nfcompositum(nfinit(x),w^2+1,w^2+1)
+  ***                 ^-----------------------------------
+  *** nfcompositum: incorrect priority in polcompositum: variable x >= w
+  ***   at top-level: nfcompositum(x,w^2+1,w^2+1)
+  ***                 ^---------------------------
+  *** nfcompositum: incorrect type in checknf [please apply nfinit()] (t_POL).
+Total time spent: 940

@@ -1,0 +1,19 @@
+Function: setisset
+Section: linear_algebra
+C-Name: setisset
+Prototype: lG
+Help: setisset(x): true(1) if x is a set (row vector with strictly
+ increasing entries), false(0) if not.
+Doc:
+ returns true (1) if $x$ is a set, false (0) if
+ not. In PARI, a set is a row vector whose entries are strictly
+ increasing with respect to a (somewhat arbitrary) universal comparison
+ function. To convert any object into a set (this is most useful for
+ vectors, of course), use the function \kbd{Set}.
+ \bprog
+ ? a = [3, 1, 1, 2];
+ ? setisset(a)
+ %2 = 0
+ ? Set(a)
+ %3 = [1, 2, 3]
+ @eprog

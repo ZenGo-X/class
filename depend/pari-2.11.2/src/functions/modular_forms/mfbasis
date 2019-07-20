@@ -1,0 +1,31 @@
+Function: mfbasis
+Section: modular_forms
+C-Name: mfbasis
+Prototype: GD4,L,
+Help: mfbasis(NK,{space=4}): If NK=[N,k,CHI] as in mfinit, gives a basis of
+ the corresponding subspace of M_k(G_0(N),chi). NK can also be the output of
+ mfinit, in which case space is ignored. To obtain the eigenforms use
+ mfeigenbasis.
+Doc: If $NK=[N,k,\var{CHI}]$ as in \kbd{mfinit}, gives a basis of the
+ corresponding subspace of $M_k(\Gamma_0(N),\chi)$. $NK$ can also be the
+ output of \kbd{mfinit}, in which case \kbd{space} can be omitted.
+ To obtain the eigenforms, use \kbd{mfeigenbasis}.
+
+ If \kbd{space} is a full space $M_k$, the output is the union of first, a
+ basis of the space of Eisenstein series, and second, a basis of the cuspidal
+ space.
+ \bprog
+ ? see(L) = apply(f->mfcoefs(f,3), L);
+ ? mf = mfinit([35,2],0);
+ ? see( mfbasis(mf) )
+ %2 = [[0, 3, -1, 0], [0, -1, 9, -8], [0, 0, -8, 10]]
+ ? see( mfeigenbasis(mf) )
+ %3 = [[0, 1, 0, 1], [Mod(0, z^2 - z - 4), Mod(1, z^2 - z - 4), \
+        Mod(-z, z^2 - z - 4), Mod(z - 1, z^2 - z - 4)]]
+ ? mf = mfinit([35,2]);
+ ? see( mfbasis(mf) )
+ %5 = [[1/6, 1, 3, 4], [1/4, 1, 3, 4], [17/12, 1, 3, 4], \
+        [0, 3, -1, 0], [0, -1, 9, -8], [0, 0, -8, 10]]
+ ? see( mfbasis([48,4],0) )
+ %6 = [[0, 3, 0, -3], [0, -3, 0, 27], [0, 2, 0, 30]]
+ @eprog

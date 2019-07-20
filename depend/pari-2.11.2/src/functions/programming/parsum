@@ -1,0 +1,17 @@
+Function: parsum
+Section: programming/parallel
+C-Name: parsum
+Prototype: V=GGJDG
+Description:
+ (gen,gen,closure,?gen):gen parsum($1, $2, $3, $4)
+Help: parsum(i=a,b,expr,{x}): x plus the sum (X goes from a to b) of
+ expression expr, evaluated in parallel (in random order).
+Doc: sum of expression \var{expr}, initialized at $x$, the formal parameter
+ going from $a$ to $b$, evaluated in parallel in random order.
+ The expression \kbd{expr} must not access global variables or
+ variables declared with \kbd{local()}, and must be free of side effects.
+ \bprog
+ parsum(i=1,1000,ispseudoprime(2^prime(i)-1))
+ @eprog
+ returns the numbers of prime numbers among the first $1000$ Mersenne numbers.
+ %\syn{NO}

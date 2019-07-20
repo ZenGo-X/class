@@ -1,0 +1,58 @@
+Function: mspetersson
+Section: modular_symbols
+C-Name: mspetersson
+Prototype: GDGDG
+Help: mspetersson(M, {F}, {G=F}): M being a full modular symbol space,
+ as given by msinit, calculate the intersection product {F,G} of modular
+ symbols F and G on M.
+Doc: $M$ being a full modular symbol space for $\Gamma = \Gamma_0(N)$,
+ as given by \kbd{msinit},
+ calculate the intersection product $\{F, G\}$ of modular symbols $F$ and $G$
+ on $M=\Hom_{\Gamma}(\Delta, V_k)$ extended to an hermitian bilinear
+ form on $M \otimes \C$ whose radical is the Eisenstein subspace of $M$.
+
+ Suppose that $f_1$ and $f_2$ are two parabolic forms. Let $F_1$
+ and $F_2$ be the attached modular symbols
+ $$ F_i(\delta)= \int_{\delta} f_i(z) \cdot (z X + Y)^{k-2} \,dz$$
+ and let $F^{\R}_1$, $F^{\R}_2$ be the attached real modular symbols
+ $$ F^{\R}_i(\delta)= \int_{\delta}
+    \Re\big(f_i(z) \cdot (z X + Y)^{k-2} \,dz\big) $$
+ Then we have
+ $$
+ \{ F^{\R}_1, F^{\R}_2 \} = -2 (2i)^{k-2} \cdot
+    \Im(<f_1,f_2>_{\var{Petersson}}) $$
+ and
+ $$\{ F_1, \bar{F_2} \} = (2i)^{k-2} <f_1,f_2>_{\var{Petersson}}$$
+ In weight 2, the intersection product $\{F, G\}$ has integer values on the
+ $\Z$-structure on $M$ given by \kbd{mslattice} and defines a Riemann form on
+ $H^1_{par}(\Gamma,\R)$.
+
+ For user convenience, we allow $F$ and $G$ to be matrices and return the
+ attached Gram matrix. If $F$ is omitted: treat it as the full modular space
+ attached to $M$; if $G$ is omitted, take it equal to $F$.
+ \bprog
+ ? M = msinit(37,2);
+ ? C = mscuspidal(M)[1];
+ ? mspetersson(M, C)
+ %3 =
+ [ 0 -17 -8 -17]
+ [17   0 -8 -25]
+ [ 8   8  0 -17]
+ [17  25 17   0]
+ ? mspetersson(M, mslattice(M,C))
+ %4 =
+ [0 -1 0 -1]
+ [1  0 0 -1]
+ [0  0 0 -1]
+ [1  1 1  0]
+ ? E = ellinit("33a1");
+ ? [M,xpm] = msfromell(E); [xp,xm,L] = xpm;
+ ? mspetersson(M, mslattice(M,L))
+ %7 =
+ [0 -3]
+ [3  0]
+ ? ellmoddegree(E)
+ %8 = [3, -126]
+ @eprog
+ \noindent The coefficient $3$ in the matrix is the degree of the
+ modular parametrization.

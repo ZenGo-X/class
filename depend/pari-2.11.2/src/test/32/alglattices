@@ -1,0 +1,168 @@
+  ***   Warning: new stack size = 100000000 (95.367 Mbytes).
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+4897369/8503056
+[[48686, 0, 12094, 0, 64, 4654, 2480, 46456; 0, 48686, 0, 12094, 39440, 4409
+4, 19034, 16804; 0, 0, 1, 0, 0, 0, 0, 0; 0, 0, 0, 1, 0, 0, 0, 0; 0, 0, 0, 0,
+ 2, 0, 0, 0; 0, 0, 0, 0, 0, 2, 0, 0; 0, 0, 0, 0, 0, 0, 1, 0; 0, 0, 0, 0, 0, 
+0, 0, 1], 1/6]
+[[21567898, 0, 3274056, 0, 10918080, 13754198, 6566870, 15552536; 0, 2156789
+8, 0, 3274056, 4977580, 18731778, 303752, 15856288; 0, 0, 1, 0, 0, 0, 0, 0; 
+0, 0, 0, 1, 0, 0, 0, 0; 0, 0, 0, 0, 2, 0, 0, 0; 0, 0, 0, 0, 0, 2, 0, 0; 0, 0
+, 0, 0, 0, 0, 1, 0; 0, 0, 0, 0, 0, 0, 0, 1], 1/6]
+[[14619, 0, 7817, 4873, 14379, 10635, 13499, 1326; 0, 14619, 9746, 7817, 290
+7, 243, 8846, 7124; 0, 0, 1, 0, 0, 0, 0, 0; 0, 0, 0, 1, 0, 0, 0, 0; 0, 0, 0,
+ 0, 3, 0, 1, 2; 0, 0, 0, 0, 0, 3, 2, 0; 0, 0, 0, 0, 0, 0, 1, 0; 0, 0, 0, 0, 
+0, 0, 0, 1], 1]
+[[21567898, 0, 3274056, 0, 10918080, 13754198, 6566870, 15552536; 0, 2156789
+8, 0, 3274056, 4977580, 18731778, 303752, 15856288; 0, 0, 1, 0, 0, 0, 0, 0; 
+0, 0, 0, 1, 0, 0, 0, 0; 0, 0, 0, 0, 2, 0, 0, 0; 0, 0, 0, 0, 0, 2, 0, 0; 0, 0
+, 0, 0, 0, 0, 1, 0; 0, 0, 0, 0, 0, 0, 0, 1], 1/60]
+[[14619, 0, 7817, 4873, 14379, 10635, 13499, 1326; 0, 14619, 9746, 7817, 290
+7, 243, 8846, 7124; 0, 0, 1, 0, 0, 0, 0, 0; 0, 0, 0, 1, 0, 0, 0, 0; 0, 0, 0,
+ 0, 3, 0, 1, 2; 0, 0, 0, 0, 0, 3, 2, 0; 0, 0, 0, 0, 0, 0, 1, 0; 0, 0, 0, 0, 
+0, 0, 0, 1], 1/10]
+[[1606638, 0, 705947, 535546, 1168464, 438174, 849493, 1545605; 0, 1606638, 
+1071092, 705947, 146058, 584232, 233498, 477025; 0, 0, 24343, 0, 0, 0, 24311
+, 22015; 0, 0, 0, 24343, 0, 0, 19720, 22047; 0, 0, 0, 0, 146058, 0, 85279, 4
+8686; 0, 0, 0, 0, 0, 146058, 48686, 133965; 0, 0, 0, 0, 0, 0, 1, 0; 0, 0, 0,
+ 0, 0, 0, 0, 1], 3/24343]
+[[22, 0, 7, 0, 0, 0, 0, 0; 0, 22, 0, 7, 0, 0, 0, 0; 0, 0, 1, 0, 0, 0, 0, 0; 
+0, 0, 0, 1, 0, 0, 0, 0; 0, 0, 0, 0, 22, 0, 7, 0; 0, 0, 0, 0, 0, 22, 0, 7; 0,
+ 0, 0, 0, 0, 0, 1, 0; 0, 0, 0, 0, 0, 0, 0, 1], 9]
+1
+1
+[23804, 219387, -5/6, 1/6, 23/3, 2/3, 0, 1/6]~
+make integral
+1
+1
+1
+1
+1
+integral subalg
+
+[1   0]
+
+[0   0]
+
+[0 1/2]
+
+[0   0]
+
+1
+
+[1 0]
+
+[0 0]
+
+[0 1]
+
+[0 0]
+
+bug in subalg when first vector is not 1
+1
+image of lifts in algsimpledec
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+lattices in al_CSA
+1
+1
+1
+examples from docu
+4
+64
+4
+64
+0
+1
+4
+1
+0
+1
+[-1, -2, -1, 1, 2, 0, 1, 1]~
+1
+1
+29584
+0
+0
+0
+1
+0
+1
+0
+bad inputs
+  ***   at top-level: alglathnf(al,0)
+  ***                 ^---------------
+  *** alglathnf: incorrect type in alglathnf (t_INT).
+  ***   at top-level: alglathnf(al,Mat([0,0,0,0,0,0,0,0]))
+  ***                 ^------------------------------------
+  *** alglathnf: inconsistent dimensions in alglathnf.
+  ***   at top-level: alglathnf(al,[0;0;0;0;0;0;0;0])
+  ***                 ^-------------------------------
+  *** alglathnf: inconsistent dimensions in alglathnf.
+[]
+  ***   at top-level: alglathnf(al,fakemat)
+  ***                 ^---------------------
+  *** alglathnf: incorrect type in alglathnf (t_VEC).
+  ***   at top-level: alglathnf(al,matid(8)*0)
+  ***                 ^------------------------
+  *** alglathnf: impossible inverse in alglathnf [m does not have full rank]: [0, 0, 0, 0, 0, 0, 0, 0; 0, 0, 0, 0, 0, 0, 0, 0; 0, 0, 0, 0, 0, 0, 0, 0; 0, 0, 0, 0, 0, 0, 0, 0; 0, 0, 0, 0, 0, 0, 0, 0; 0, 0, 0, 0, 0, 0, 0, 0; 0, 0, 0, 0, 0, 0, 0, 0; 0, 0, 0, 0, 0, 0, 0, 0].
+  ***   at top-level: alglathnf(al,fakemat)
+  ***                 ^---------------------
+  *** alglathnf: impossible inverse in alglathnf [m does not have full rank]: [0, 0, 0, 0, 0, 0, 0, 0; 0, 1, 0, 0, 0, 0, 0, 0; 0, 0, 1, 0, 0, 0, 0, 0; 0, 0, 0, 1, 0, 0, 0, 0; 0, 0, 0, 0, 1, 0, 0, 0; 0, 0, 0, 0, 0, 1, 0, 0; 0, 0, 0, 0, 0, 0, 1, 0; 0, 0, 0, 0, 0, 0, 0, 1].
+  ***   at top-level: lat=alglathnf(al,matconcat([mt*0,mt*0]))
+  ***                     ^------------------------------------
+  *** alglathnf: inconsistent dimensions in alglathnf.
+  ***   at top-level: lat1=alglathnf(al,a)
+  ***                      ^---------------
+  *** alglathnf: inconsistent dimensions in alglathnf.
+  ***   at top-level: print(alglatelement(al,lat1,col~))
+  ***                       ^----------------------------
+  *** alglatelement: incorrect type in alglatelement (t_VEC).
+  ***   at top-level: alglatmul(al,a,b)
+  ***                 ^-----------------
+  *** alglatmul: incorrect type in alglatmul [one of lat1, lat2 has to be a lattice] (t_COL).
+  ***   at top-level: algmakeintegral(mt)
+  ***                 ^-------------------
+  *** algmakeintegral: incorrect type in algmakeintegral (t_VEC).
+  ***   at top-level: algmakeintegral(mt)
+  ***                 ^-------------------
+  *** algmakeintegral: incorrect type in algmakeintegral (t_VEC).
+  ***   at top-level: algmakeintegral('x,1)
+  ***                 ^---------------------
+  *** algmakeintegral: incorrect type in algmakeintegral (t_POL).
+  ***   at top-level: alglatmul(al,lat1,[matdiagonal([1,1,0,1,1,1,1,
+  ***                 ^----------------------------------------------
+  *** alglatmul: incorrect type in checklat [please apply alglathnf()] (t_VEC).
+Total time spent: 1220

@@ -1,0 +1,14 @@
+Function: qfbnupow
+Section: number_theoretical
+C-Name: nupow
+Prototype: GGDG
+Help: qfbnupow(x,n,{L}): n-th power of primitive positive definite quadratic
+ form x using nucomp and nudupl.
+Doc: $n$-th power of the primitive positive definite
+ binary quadratic form $x$ using \idx{Shanks}'s NUCOMP and NUDUPL algorithms;
+ if set, $L$ should be equal to \kbd{sqrtnint(abs(D)>>2,4)}, where $D < 0$ is
+ the discriminant of $x$.
+
+ The current implementation is slower than the generic routine for small
+ discriminant $D$, and becomes faster for $D \approx 2^{45}$.
+

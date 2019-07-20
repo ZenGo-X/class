@@ -1,0 +1,10 @@
+Function: _def_debug
+Class: default
+Section: default
+C-Name: sd_debug
+Prototype:
+Help:
+Doc: debugging level. If it is non-zero, some extra messages may be printed,
+ according to what is going on (see~\b{g}).
+
+ The default value is \kbd{0} (no debugging messages).

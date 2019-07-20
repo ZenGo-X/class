@@ -1,0 +1,7 @@
+Function: algrandom
+Section: algebras
+C-Name: algrandom
+Prototype: GG
+Help: algrandom(al,b): random element in al with coefficients in [-b,b].
+Doc: Given an algebra \var{al} and an integer \var{b}, returns a random
+ element in \var{al} with coefficients in~$[-b,b]$.

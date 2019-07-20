@@ -1,0 +1,16 @@
+Function: _def_echo
+Class: default
+Section: default
+C-Name: sd_echo
+Prototype:
+Help:
+Doc: this default can be 0 (off), 1 (on) or 2 (on, raw). When \kbd{echo}
+ mode is on, each command is reprinted before being executed. This can be
+ useful when reading a file with the \b{r} or \kbd{read} commands. For
+ example, it is turned on at the beginning of the test files used to check
+ whether \kbd{gp} has been built correctly (see \b{e}). When \kbd{echo} is set
+ to 1 the input is cleaned up, removing white space and comments and uniting
+ multi-line input. When set to 2 (raw), the input is written as-is, without any
+ pre-processing.
+
+ The default value is \kbd{0} (no echo).

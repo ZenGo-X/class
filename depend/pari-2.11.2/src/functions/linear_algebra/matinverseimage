@@ -1,0 +1,30 @@
+Function: matinverseimage
+Section: linear_algebra
+C-Name: inverseimage
+Prototype: GG
+Help: matinverseimage(x,y): an element of the inverse image of the vector y
+ by the matrix x if one exists, the empty vector otherwise.
+Doc: given a matrix $x$ and
+ a column vector or matrix $y$, returns a preimage $z$ of $y$ by $x$ if one
+ exists (i.e such that $x z = y$), an empty vector or matrix otherwise. The
+ complete inverse image is $z + \text{Ker} x$, where a basis of the kernel of
+ $x$ may be obtained by \kbd{matker}.
+ \bprog
+ ? M = [1,2;2,4];
+ ? matinverseimage(M, [1,2]~)
+ %2 = [1, 0]~
+ ? matinverseimage(M, [3,4]~)
+ %3 = []~    \\@com no solution
+ ? matinverseimage(M, [1,3,6;2,6,12])
+ %4 =
+ [1 3 6]
+
+ [0 0 0]
+ ? matinverseimage(M, [1,2;3,4])
+ %5 = [;]    \\@com no solution
+ ? K = matker(M)
+ %6 =
+ [-2]
+
+ [1]
+ @eprog

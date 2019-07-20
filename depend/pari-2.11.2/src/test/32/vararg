@@ -1,0 +1,32 @@
+(s,v[..])->if(#v>0,print1(v[1]);for(i=2,#v,print1(s,v[i])));print()
+myprintsep =
+  (s,v[..])->if(#v>0,print1(v[1]);for(i=2,#v,print1(s,v[i])));print()
+
+:
+:
+a, b, c, d
+a, 0, c, 0
+a0b0c0d
+x=5
+x=5 y=7
+x=5 y=7 z=9
+:
+  ***   at top-level: print1(":");myprintsep()
+  ***                             ^------------
+  ***   in function myprintsep: s,v[..]
+  ***                           ^-------
+  ***   missing mandatory argument 's' in user function.
+:
+a, b, c, d
+  ***   at top-level: myprintsep(,a,b,c,d)
+  ***                 ^--------------------
+  ***   in function myprintsep: s,v[..]
+  ***                           ^-------
+  ***   missing mandatory argument 's' in user function.
+a, 0, c, 0
+  ***   at top-level: f(1)
+  ***                 ^----
+  ***   in function f: b,c
+  ***                  ^---
+  ***   missing mandatory argument 'c' in user function.
+Total time spent: 0

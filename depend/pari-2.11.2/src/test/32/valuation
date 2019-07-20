@@ -1,0 +1,35 @@
++oo +oo +oo +oo 
+0 0 0 0 
+0 -1 0 0 
+ERROR ERROR 0 0 
+0 ERROR 0 0 
+ERROR 0 0 0 
+ERROR ERROR 0 0 
+1 0 0 0 
+ERROR 1 0 0 
+0 0 ERROR 0 
+1 0 0 0 
+0 1 1 ERROR 
+  ***   at top-level: valuation(0,1)
+  ***                 ^--------------
+  *** valuation: domain error in gvaluation: p = 1
+  ***   at top-level: valuation(0,-1)
+  ***                 ^---------------
+  *** valuation: domain error in gvaluation: p = -1
+  ***   at top-level: valuation(0,0)
+  ***                 ^--------------
+  *** valuation: domain error in gvaluation: p = 0
+  ***   at top-level: valuation(0,I)
+  ***                 ^--------------
+  *** valuation: domain error in gvaluation: p = I
+2
+0
+2
+1.0000000000000000000000000000000000000 - 1.00000000000000000000000000000000
+00000*x + O(x^2)
+1
+O(x)
+-oo
+-oo
+-oo
+Total time spent: 0

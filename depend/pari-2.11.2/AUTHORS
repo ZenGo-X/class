@@ -1,0 +1,162 @@
+The PARI/GP project started around 1985 in the Laboratoire A2X (Universite
+Bordeaux 1, France)  and a first version was written by  Christian  Batut,
+Dominique Bernardi, Henri Cohen and Michel Olivier and maintained by Henri
+Cohen till 1995. Karim Belabas took over the maintainance between 1995 and
+2001,  the project has been jointly maintained by Bill Allombert and Karim
+Belabas since 2002.
+
+A great  number  of people  have contributed  code through  the successive
+stages which eventually resulted in the present version  of PARI/GP.  Even
+more people, too numerous to list, contributed by testing,  reporting bugs
+or suggesting improvements, Igor Schein foremost among them.
+
+We would like to thank them all here.
+
+Current lead developers:
+
+  Bill ALLOMBERT (Bordeaux)
+  Karim BELABAS (Bordeaux)
+
+Major contributors (large modules written or rewritten from scratch):
+
+  Bill ALLOMBERT: GP2C, the GP parser, extension of the GP language
+    (my, closures), GMP kernel, modular kernel, ffinit, galois* routines,
+    subcyclo, black-box groups, elliptic curves, the elldata and galdata
+    package, multithread model, PARI description system, FLTK support,
+    Bug tracking system, administration of pari.math.u-bordeaux.fr, the
+    http://pari.math.u-bordeaux.fr website, Lfun package
+  Jared ASUNCION: ECPP
+  Christian BATUT: 68k multiprecision kernel, Linear algebra, lattices
+  Karim BELABAS: current project leader, native multiprecision kernel, modular
+    kernel, polynomial arithmetic, polynomial factorization (finite fields,
+    number fields), LLL, primality and compositeness tests, number fields,
+    polgalois and the galdata package, elliptic curves, qfsolve, transcendental
+    functions, install(), extension of the GP language (next/break/return,
+    local, op=, default()), gphelp, gphtml fork, Configure, readline, man pages,
+    documentation layout, reference card and user's manuals, the FAQ, the
+    http://pari.math.u-bordeaux.fr website, Lfun package, ModularForms package
+  Dominique BERNARDI: the original gp interpreter, ECM, original
+    elliptic curves implementation
+  Peter BRUIN: asymptotically fast linear algebra over finite fields
+  Henri COHEN: original designer and project leader, native multiprecision
+    kernel, arithmetic functions, LLL, transcendental functions, number fields,
+    original elliptic curves implementation, numerical integration and
+    summation, Lfun package, ModularForms package
+  Jeroen DEMEYER: SVG support
+  Francisco DIAZ Y DIAZ: number fields (class groups, units)
+  Yves EICHENLAUB: original polgalois implementation
+  Xavier GOURDON: polroots, initial Karatsuba/Toom Cook/fft implementations
+  Louis GRANBOULAN: breakup of monolithic PARI into modules, first GMP
+    kernel, first Configure
+  Loic GRENIE: bnfinit() rewrite, openMP / MPI implementations,
+    polrootsreal/polsturm
+  Bruno HAIBLE: micro assembly implementations, DOS/Windows support
+  Guillaume HANROT: thue, zncoppersmith, initial polrootsreal implementation
+  Hamish IVEY-LAW: ellisogeny, ellisogenyapply, ellissupersingular, Sutherland
+  algorithms for class and modular polynomials (polclass, polmodular),
+  Flj_ functions family.
+  Pascal LETARD: basic number fields (round2, initial round4)
+  Jean-Francois MESTRE: original elliptic curves implementation
+  Pascal MOLIN: Lfun package, numerical integration
+  Gerhard NIKLASCH: binary powering, integer extended gcd and rational
+    reconstruction, primality and compositeness test, integer factorization,
+    documentation layout, AIX and Solaris support, first PARI web site.
+  Michel OLIVIER: 68k multiprecision kernel, number fields, original polgalois
+    and nfsubfields implementation
+  Aurel PAGE: Associative and central simple algebras package, linear algebra
+  over Z/NZ
+  Thomas PAPANIKOlAOU: MPQS integration, Pari-Lidia project
+  Xavier ROBLOT: MPQS integration, Stark, original nffactor, padicfields
+  Denis SIMON: Norm equations, S-units, Hilbert symbols, original qfsolve
+    implementation
+  Nils SKORUPPA: gphtml script, Qt graphics driver
+  Michael STOLL: original 'ratpoints' code
+  Emmanuel TOLLIS: primedec, zetak
+  Ilya ZAKHAREVITCH: prime sieves, gphelp, tex2mail, rewrite of the
+    graphic engine (incl. splines and clipping), GP parser codes,
+    gnuplot support, readline support, OS/2 support, DOS/EMX support
+
+Other contributors: the 2 or 3 letter code refer to the CHANGES file. Please,
+kindly remind us if you have been forgotten!
+
+   = Karim Belabas (maintainer)
+AF = Aurimas Fiseras
+AM = Alex V. Myltsev
+AMe= Anton Mellit
+AP = Aurel Page
+AS = Andy Stubbs
+AW = Aleksander Wittlin
+BA = Bill Allombert
+BD = Bill Daly
+BG = Brian Gladman
+BH = Bruno Haible
+BK = Bruce Kaskel
+BP = Bernadette Perrin-Riou
+CB = Cliff Bergman
+CG = Charles Greathouse
+CW = Carl Witty
+DB = Dominique Bernardi
+DCa= David Carlisle
+DC = Dan Christensen
+DE = Denis Excoffier
+DF = David Ford
+DS = Denis Simon
+EB = Erik Bray
+ED = Eric Driver
+EP = Esa Peuha
+FB = Francois Bissey
+GH = Guillaume Hanrot
+GN = Gerhard Niklasch
+GT = Glenn Thobe
+GTo= Gonzalo Tornaria
+HC = Henri Cohen
+HIL= Hamish Ivey-Law
+HR = Harvey Rose
+IK = Iwao Kimura
+IM = Ivan Middleton
+IS = Igor Schein
+ISo= Ignat Soroko
+IZ = Ilya Zakharevich
+JA = Jared Asuncion
+JD = Jeroen Demeyer
+JJ = John Jones
+JK = Julien Keuffer
+JM = Jerome Milan
+JS = Juhana Sadeharju
+KO = Kiyoshi Ohgishi
+KPN= Klaus-Peter Nischke
+KR = Kevin Ryde
+LG = Louis Granboulan
+LGr= Loic Grenie
+LM = Lorenz Minder
+MA = Michael Abshoff
+MC = Marie-Angela Cornelie
+MD = Mark Dickinson
+MH = Marije Huizing
+MS = Michael Stoll
+MSo= Michael Somos
+MW = Mark Watkins
+NS = Nils Skoruppa
+OR = Olivier Ramare
+OV = Oliver Voigt
+PB = Peter Bruin
+PC = Phil Carmody
+PM = Peter Montgomery
+PMo= Pascal Molin
+PW = Paul van Wamelen
+RB = Remi Butel
+RM = Richard J. Mathar
+RS = Ralf Stephan
+RR = Randall Rathbun
+SC = Sylvain Chevillard
+SCh= Steven Charlton
+SG = Scott Garee
+TH = Teluhiko Hilano
+TP = Thomas Papanikolaou
+VB = Vasili Burdo
+VBr= Volker Braun
+VD = Vincent Delecroix
+VL = Vincent Lefevre
+XR = Xavier Roblot
+YU = Yoshiaki Uchikawa
+WH = William Hart

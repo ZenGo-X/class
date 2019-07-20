@@ -1,0 +1,21 @@
+Function: seralgdep
+Section: linear_algebra
+C-Name: seralgdep
+Prototype: GLL
+Help: seralgdep(s,p,r): find a linear relation between powers (1,s, ..., s^p)
+ of the series s, with polynomial coefficients of degree <= r.
+Doc: \sidx{algebraic dependence} finds a linear relation between powers $(1,s,
+ \dots, s^p)$ of the series $s$, with polynomial coefficients of degree
+ $\leq r$. In case no relation is found, return $0$.
+ \bprog
+ ? s = 1 + 10*y - 46*y^2 + 460*y^3 - 5658*y^4 + 77740*y^5 + O(y^6);
+ ? seralgdep(s, 2, 2)
+ %2 = -x^2 + (8*y^2 + 20*y + 1)
+ ? subst(%, x, s)
+ %3 = O(y^6)
+ ? seralgdep(s, 1, 3)
+ %4 = (-77*y^2 - 20*y - 1)*x + (310*y^3 + 231*y^2 + 30*y + 1)
+ ? seralgdep(s, 1, 2)
+ %5 = 0
+ @eprog\noindent The series main variable must not be $x$, so as to be able
+ to express the result as a polynomial in $x$.

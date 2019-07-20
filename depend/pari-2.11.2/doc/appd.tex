@@ -1,0 +1,97 @@
+% Copyright (c) 2000  The PARI Group
+%
+% This file is part of the PARI/GP documentation
+%
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU General Public License
+\appendix{PARI and threads}
+
+To use PARI in multi-threaded programs, you must configure it using
+\kbd{Configure --enable-tls}. Your system must implement the \kbd{\_\_thread}
+storage class. As a major side effect, this breaks the \kbd{libpari} ABI: the
+resulting library is not compatible with the old one, and \kbd{-tls} is
+appended to the PARI library \kbd{soname}. On the other hand, this library is
+now thread-safe.
+
+PARI provides some functions to set up PARI subthreads\sidx{threads}. In our
+model, each concurrent thread needs its own PARI stack. The following scheme
+is used:
+
+\noindent Child thread:
+\bprog
+void *child_thread(void *arg)
+{
+  GEN data = pari_thread_start((struct pari_thread*)arg);
+  GEN result = ...; /* Compute result from data */
+  pari_thread_close();
+  return (void*)result;
+}
+@eprog
+\noindent Parent thread:
+\bprog
+  pthread_t th;
+  struct pari_thread pth;
+  GEN data, result;
+
+  pari_thread_alloc(&pth, s, data);
+  pari_thread_sync();
+  pthread_create(&th, NULL, &child_thread, (void*)&pth); /* start child */
+  ... /* do stuff in parent */
+  pthread_join(th, (void*)&result); /* wait until child terminates */
+  result = gcopy(result); /* copy result from thread stack to main stack */
+  pari_thread_free(&pth); /* ... and clean up */
+@eprog
+
+\fun{void}{pari_thread_valloc}{struct pari_thread *pth, size_t s, size_t v, GEN arg}
+Allocate a PARI stack of size \kbd{s} which can grow to at most \kbd{v} (as
+with \kbd{parisize} and \kbd{parisizemax}) and associate it, together with the
+argument \kbd{arg}, with the PARI thread data \kbd{pth}.
+
+\fun{void}{pari_thread_alloc}{struct pari_thread *pth, size_t s, GEN arg}
+As above but the stack cannot grow beyond \kbd{s}.
+
+\fun{void}{pari_thread_free}{struct pari_thread *pth}
+Free the PARI stack attached to the PARI thread data \kbd{pth}. This
+is called after the child thread terminates, i.e.~after
+\tet{pthread_join} in the parent. Any \kbd{GEN} objects returned by the
+child in the thread stack need to be saved before running this command.
+
+\fun{void}{pari_thread_sync}{void}
+Record states from the main thread so that they are available to
+\kbd{pari\_thread\_start()}. Must be called in the main thread before
+the subthreads starts.
+
+\fun{void}{pari_thread_init}{void}
+Initialize the thread-local PARI data structures. This function is called by
+\kbd{pari\_thread\_start}.
+
+\fun{GEN}{pari_thread_start}{struct pari_thread *t}
+Initialize the thread-local PARI data structures and set up the thread stack
+using the PARI thread data \kbd{pth}. This function returns the thread
+argument \kbd{arg} that was given to \kbd{pari\_thread\_alloc}.
+
+\fun{void}{pari_thread_close}{void}
+Free the thread-local PARI data structures, but keeping the thread stack, so
+that a \kbd{GEN} returned by the thread remains valid.
+
+\noindent Under this model, some PARI states are reset in new threads. In
+particular
+
+\item the random number generator is reset to the starting seed;
+
+\item the system stack exhaustion checking code, meant to catch infinite
+recursions, is disabled (use \kbd{pari\_stackcheck\_init()} to reenable it);
+
+\item cached real constants (returned by \kbd{mppi}, \kbd{mpeuler} and
+\kbd{mplog2}) are not shared between threads and will be recomputed as
+needed;
+
+\noindent The following sample program can be compiled using
+\bprog
+    cc thread.c -o thread.o -lpari -lpthread
+@eprog\noindent
+(Add \kbd{-I/-L} paths as necessary.)
+
+\noindent\bprogfile{../examples/thread.c}
+
+\vfill\eject

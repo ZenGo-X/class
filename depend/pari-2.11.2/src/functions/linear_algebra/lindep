@@ -1,0 +1,60 @@
+Function: lindep
+Section: linear_algebra
+C-Name: lindep0
+Prototype: GD0,L,
+Help: lindep(v,{flag=0}): integral linear dependencies between components of v.
+ flag is optional, and can be 0: default, guess a suitable
+ accuracy, or positive: accuracy to use for the computation, in decimal
+ digits.
+Doc: \sidx{linear dependence} finds a small non-trivial integral linear
+ combination between components of $v$. If none can be found return an empty
+ vector.
+
+ If $v$ is a vector with real/complex entries we use a floating point
+ (variable precision) LLL algorithm. If $\fl = 0$ the accuracy is chosen
+ internally using a crude heuristic. If $\fl > 0$ the computation is done with
+ an accuracy of $\fl$ decimal digits. To get meaningful results in the latter
+ case, the parameter $\fl$ should be smaller than the number of correct
+ decimal digits in the input.
+
+ \bprog
+ ? lindep([sqrt(2), sqrt(3), sqrt(2)+sqrt(3)])
+ %1 = [-1, -1, 1]~
+ @eprog
+
+ If $v$ is $p$-adic, $\fl$ is ignored and the algorithm LLL-reduces a
+ suitable (dual) lattice.
+ \bprog
+ ? lindep([1, 2 + 3 + 3^2 + 3^3 + 3^4 + O(3^5)])
+ %2 = [1, -2]~
+ @eprog
+
+ If $v$ is a matrix (or a vector of column vectors, or a vector of row
+ vectors), $\fl$ is ignored and the function returns a non trivial kernel
+ vector if one exists, else an empty vector.
+ \bprog
+ ? lindep([1,2,3;4,5,6;7,8,9])
+ %3 = [1, -2, 1]~
+ ? lindep([[1,0], [2,0]])
+ %4 = [2, -1]~
+ ? lindep([[1,0], [0,1]])
+ %5 = []~
+ @eprog
+
+ If $v$ contains polynomials or power series over some base field, finds a
+ linear relation with coefficients in the field.
+ \bprog
+ ? lindep([x*y, x^2 + y, x^2*y + x*y^2, 1])
+ %4 = [y, y, -1, -y^2]~
+ @eprog\noindent For better control, it is preferable to use \typ{POL} rather
+ than \typ{SER} in the input, otherwise one gets a linear combination which is
+ $t$-adically small, but not necessarily $0$. Indeed, power series are first
+ converted to the minimal absolute accuracy occurring among the entries of $v$
+ (which can cause some coefficients to be ignored), then truncated to
+ polynomials:
+ \bprog
+ ? v = [t^2+O(t^4), 1+O(t^2)]; L=lindep(v)
+ %1 = [1, 0]~
+ ? v*L
+ %2 = t^2+O(t^4)  \\ small but not 0
+ @eprog

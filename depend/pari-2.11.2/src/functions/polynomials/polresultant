@@ -1,0 +1,50 @@
+Function: polresultant
+Section: polynomials
+C-Name: polresultant0
+Prototype: GGDnD0,L,
+Help: polresultant(x,y,{v},{flag=0}): resultant of the polynomials x and y,
+ with respect to the main variables of x and y if v is omitted, with respect
+ to the variable v otherwise. flag is optional, and can be 0: default,
+ uses either the subresultant algorithm, a modular algorithm or Sylvester's
+ matrix, depending on the inputs; 1 uses Sylvester's matrix (should always be
+ slower than the default).
+Doc: resultant of the two
+ polynomials $x$ and $y$ with exact entries, with respect to the main
+ variables of $x$ and $y$ if $v$ is omitted, with respect to the variable $v$
+ otherwise. The algorithm assumes the base ring is a domain. If you also need
+ the $u$ and $v$ such that $x*u + y*v = \text{Res}(x,y)$, use the
+ \tet{polresultantext} function.
+
+ If $\fl=0$ (default), uses the algorithm best suited to the inputs,
+ either the \idx{subresultant algorithm} (Lazard/Ducos variant, generic case),
+ a modular algorithm (inputs in $\Q[X]$) or Sylvester's matrix (inexact
+ inputs).
+
+ If $\fl=1$, uses the determinant of Sylvester's matrix instead; this should
+ always be slower than the default.
+
+ If $x$ or $y$ are multivariate with a huge \emph{polynomial} content, it
+ is advisable to remove it before calling this function. Compare:
+ \bprog
+ ? a = polcyclo(7) * ((t+1)/(t+2))^100;
+ ? b = polcyclo(11)* ((t+2)/(t+3))^100);
+ ? polresultant(a,b);
+ time = 3,833 ms.
+ ? ca = content(a); cb = content(b); \
+   polresultant(a/ca,b/cb)*ca^poldegree(b)*cb*poldegree(a); \\ instantaneous
+ @eprog\noindent The function only removes rational denominators and does
+ not compute automatically the content because it is generically small and
+ potentially \emph{very} expensive (e.g. in multivariate contexts).
+ The choice is yours, depending on your application.
+
+Function: _ZX_resultant_worker
+C-Name: ZX_resultant_worker
+Prototype: GGGG
+Section: programming/internals
+Help: worker for ZX_resultant
+
+Function: _ZX_ZXY_resultant_worker
+C-Name: ZX_ZXY_resultant_worker
+Prototype: GGGGG
+Section: programming/internals
+Help: worker for ZX_ZXY_resultant

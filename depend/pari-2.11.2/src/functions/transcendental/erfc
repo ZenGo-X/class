@@ -1,0 +1,9 @@
+Function: erfc
+Section: transcendental
+C-Name: gerfc
+Prototype: Gp
+Help: erfc(x): complementary error function.
+Doc: complementary error function, analytic continuation of
+ $(2/\sqrt\pi)\int_x^\infty e^{-t^2}\,dt = \kbd{incgam}(1/2,x^2)/\sqrt\pi$,
+ where the latter expression extends the function definition from real $x$ to
+ all complex $x \neq 0$.

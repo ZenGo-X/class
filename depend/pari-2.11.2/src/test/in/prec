@@ -1,0 +1,31 @@
+precision(0)
+bitprecision(0)
+precision(I,3)
+default(realprecision,38);
+t=(precision(1.,77)*x+1);
+precision(t)
+localprec(57);precision(1.)
+localbitprec(128);bitprecision(1.)
+bitprecision(1 + O(x), 10)
+bitprecision(1 + O(3^5), 10)
+bitprecision(1, 10)
+precision(1./t)
+precision(Qfb(1,0,-2));
+
+serprec(1,x)
+serprec(x+O(x^3),x)
+serprec(x+O(x^3),y)
+serprec((1+O(y^2))*x+y + O(y^3), y)
+
+padicprec(0,2)
+padicprec(0,"")
+padicprec(1,2)  == padicprec(0,2)
+padicprec(1/2,2)== padicprec(0,2)
+padicprec(Mod(1,9),3)
+padicprec(O(2^2),3)
+padicprec(O(2^2),2)
+t=1+O(2^3);
+padicprec(t,2)
+padicprec((x+2)*t, 2)
+padicprec((1+2*x+O(x^2))*t, 2)
+padicprec([2,4]*t, 2)

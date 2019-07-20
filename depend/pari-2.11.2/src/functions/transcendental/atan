@@ -1,0 +1,12 @@
+Function: atan
+Section: transcendental
+C-Name: gatan
+Prototype: Gp
+Help: atan(x): arc tangent of x.
+Doc: principal branch of $\text{tan}^{-1}(x) = \log ((1+ix)/(1-ix)) /
+ 2i$. In particular the real part of $\text{atan}(x)$ belongs to
+ $]-\pi/2,\pi/2[$.
+ The branch cut is in two pieces:
+ $]-i\infty,-i[$, continuous with quadrant IV, and $]i,+i \infty[$ continuous
+ with quadrant II. The function satisfies $\text{atan}(x) =
+ -i\text{atanh}(ix)$ for all $x\neq \pm i$.

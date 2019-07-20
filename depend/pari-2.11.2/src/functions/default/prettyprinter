@@ -1,0 +1,12 @@
+Function: _def_prettyprinter
+Class: default
+Section: default
+C-Name: sd_prettyprinter
+Prototype:
+Help:
+Doc: the name of an external prettyprinter to use when
+ \kbd{output} is~3 (alternate prettyprinter). Note that the default
+ \tet{tex2mail} looks much nicer than the built-in ``beautified
+ format'' ($\kbd{output} = 2$).
+
+ The default value is \kbd{"tex2mail -TeX -noindent -ragged -by\_par"}.

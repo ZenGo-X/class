@@ -1,0 +1,9 @@
+Function: serlaplace
+Section: polynomials
+C-Name: laplace
+Prototype: G
+Help: serlaplace(x): replaces the power series sum of a_n*x^n/n! by sum of
+ a_n*x^n. For the reverse operation, use serconvol(x,exp(X)).
+Doc: $x$ must be a power series with non-negative
+ exponents or a polynomial. If $x=\sum (a_k/k!)*X^k$ then the result is $\sum
+ a_k*X^k$.

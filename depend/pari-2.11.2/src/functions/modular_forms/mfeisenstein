@@ -1,0 +1,26 @@
+Function: mfeisenstein
+Section: modular_forms
+C-Name: mfeisenstein
+Prototype: LDGDG
+Help: mfeisenstein(k,{CHI1},{CHI2}): create the Eisenstein
+ E_k(CHI1,CHI2), where an omitted character is considered as trivial.
+Doc: create the Eisenstein series $E_k(\chi_1,\chi_2)$, where $k \geq 1$,
+ $\chi_i$ are Dirichlet characters and an omitted character is considered as
+ trivial.
+ \bprog
+ ? CHI = Mod(3,4);
+ ? E = mfeisenstein(3, CHI);
+ ? mfcoefs(E, 6)
+ %2 = [-1/4, 1, 1, -8, 1, 26, -8]
+ ? CHI2 = Mod(4,5);
+ ? mfcoefs(mfeisenstein(3,CHI,CHI2), 6)
+ %3 = [0, 1, -1, -10, 1, 25, 10]
+ ? mfcoefs(mfeisenstein(4,CHI,CHI), 6)
+ %4 = [0, 1, 0, -28, 0, 126, 0]
+ ? mfcoefs(mfeisenstein(4), 6)
+ %5 = [1/240, 1, 9, 28, 73, 126, 252]
+ @eprog\noindent Note that \kbd{meisenstein}$(k)$ is 0 for $k$ odd and
+ $-B_{k}/(2k) \cdot E_k$ for $k$ even, where
+ $$E_k(q) = 1 - (2k/B_k)\sum_{n\geq 1} \sigma_{k-1}(n) q^n$$
+ is the standard Eisenstein series. In other words it is normalized so that its
+ linear coefficient is $1$.

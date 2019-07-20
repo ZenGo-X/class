@@ -1,0 +1,11 @@
+Function: poltschirnhaus
+Section: number_fields
+C-Name: tschirnhaus
+Prototype: G
+Help: poltschirnhaus(x): random Tschirnhausen transformation of the
+ polynomial x.
+Doc: applies a random Tschirnhausen
+ transformation to the polynomial $x$, which is assumed to be non-constant
+ and separable, so as to obtain a new equation for the \'etale algebra
+ defined by $x$. This is for instance useful when computing resolvents,
+ hence is used by the \kbd{polgalois} function.

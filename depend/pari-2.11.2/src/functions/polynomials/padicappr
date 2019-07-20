@@ -1,0 +1,18 @@
+Function: padicappr
+Section: polynomials
+C-Name: padicappr
+Prototype: GG
+Help: padicappr(pol,a): p-adic roots of the polynomial pol congruent to a mod p.
+Doc: vector of $p$-adic roots of the polynomial \var{pol} congruent to the
+ $p$-adic number $a$ modulo $p$, and with the same $p$-adic precision as $a$.
+ The number $a$ can be an ordinary $p$-adic number (type \typ{PADIC}, i.e.~an
+ element of $\Z_p$) or can be an integral element of a finite
+ \emph{unramified} extension $\Q_p[X]/(T)$ of $\Q_p$, given as a \typ{POLMOD}
+ \kbd{Mod}$(A,T)$ at least one of whose coefficients is a \typ{PADIC} and $T$
+ irreducible modulo $p$. In this case, the result is the vector of roots
+ belonging to the same extension of $\Q_p$ as $a$. The polynomial \var{pol}
+ should have exact coefficients; if not, its coefficients are first rounded
+ to $\Q$ or $\Q[X]/(T)$ and this is the polynomial whose roots we consider.
+
+Variant: Also available is \fun{GEN}{Zp_appr}{GEN f, GEN a} when $a$ is a
+ \typ{PADIC}.

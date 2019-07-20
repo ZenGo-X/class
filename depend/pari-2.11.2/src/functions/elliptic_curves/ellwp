@@ -1,0 +1,54 @@
+Function: ellwp
+Section: elliptic_curves
+C-Name: ellwp0
+Prototype: GDGD0,L,p
+Help: ellwp(w,{z='x},{flag=0}): computes the value at z of the Weierstrass P
+ function attached to the lattice w, as given by ellperiods. Optional flag
+ means 0 (default), compute only P(z), 1 compute [P(z),P'(z)].
+Doc: Computes the value at $z$ of the Weierstrass $\wp$ function attached to
+ the lattice $w$ as given by \tet{ellperiods}. It is also possible to
+ directly input $w = [\omega_1,\omega_2]$, or an elliptic curve $E$ as given
+ by \kbd{ellinit} ($w = \kbd{E.omega}$).
+ \bprog
+ ? w = ellperiods([1,I]);
+ ? ellwp(w, 1/2)
+ %2 = 6.8751858180203728274900957798105571978
+ ? E = ellinit([1,1]);
+ ? ellwp(E, 1/2)
+ %4 = 3.9413112427016474646048282462709151389
+ @eprog\noindent One can also compute the series expansion around $z = 0$:
+ \bprog
+ ? E = ellinit([1,0]);
+ ? ellwp(E)              \\ 'x implicitly at default seriesprecision
+ %5 = x^-2 - 1/5*x^2 + 1/75*x^6 - 2/4875*x^10 + O(x^14)
+ ? ellwp(E, x + O(x^12)) \\ explicit precision
+ %6 = x^-2 - 1/5*x^2 + 1/75*x^6 + O(x^9)
+ @eprog
+
+ Optional \fl\ means 0 (default): compute only $\wp(z)$, 1: compute
+ $[\wp(z),\wp'(z)]$.
+
+ For instance, the Dickson elliptic functions \var{sm} and \var{sn} can be
+ implemented as follows
+ \bprog
+  smcm(z) =
+  { my(a, b, E = ellinit([0,-1/(4*27)])); \\ ell. invariants (g2,g3)=(0,1/27)
+    [a,b] = ellwp(E, z, 1);
+    [6*a / (1-3*b), (3*b+1)/(3*b-1)];
+  }
+  ? [s,c] = smcm(0.5);
+  ? s
+  %2 = 0.4898258757782682170733218609
+  ? c
+  %3 = 0.9591820206453842491187464098
+  ? s^3+c^3
+  %4 = 1.000000000000000000000000000
+  ? smcm('x + O('x^11))
+  %5 = [x - 1/6*x^4 + 2/63*x^7 - 13/2268*x^10 + O(x^11),
+        1 - 1/3*x^3 + 1/18*x^6 - 23/2268*x^9 + O(x^10)]
+  @eprog
+
+Variant: For $\fl = 0$, we also have
+ \fun{GEN}{ellwp}{GEN w, GEN z, long prec}, and
+ \fun{GEN}{ellwpseries}{GEN E, long v, long precdl} for the power series in
+ variable $v$.

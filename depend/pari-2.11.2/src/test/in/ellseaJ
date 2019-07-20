@@ -1,0 +1,5 @@
+default(datadir,"nonexistent"); \\ disable cache
+p=72057594037928017;
+ellap(ellinit([2,3],p))
+ellsea(ellinit([0,1],p)) \\ j=0
+ellsea(ellinit([1,0],p)) \\ j=1728

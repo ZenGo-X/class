@@ -1,0 +1,12 @@
+Function: nfeltmod
+Section: number_fields
+C-Name: nfmod
+Prototype: GGG
+Help: nfeltmod(nf,x,y): gives r such that r=x-qy is small with q algebraic
+ integer.
+Doc:
+ given two elements $x$ and $y$ in
+ \var{nf}, computes an element $r$ of $\var{nf}$ of the form $r=x-qy$ with
+ $q$ and algebraic integer, and such that $r$ is small. This is functionally
+ identical to
+ $$\kbd{x - nfmul(\var{nf},round(nfdiv(\var{nf},x,y)),y)}.$$

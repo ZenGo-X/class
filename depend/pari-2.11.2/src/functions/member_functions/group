@@ -1,0 +1,8 @@
+Function: _.group
+Help: _.group
+Section: member_functions
+C-Name: member_group
+Prototype: mG
+Description:
+ (gal):vec:copy        gal_get_group($1)
+ (gen):vec:copy        member_group($1)

@@ -1,0 +1,22 @@
+Function: nfsolvemodpr
+Section: number_fields
+C-Name: nfsolvemodpr
+Prototype: GGGG
+Obsolete: 2016-08-09
+Help: nfsolvemodpr(nf,a,b,P): this function is obsolete, use nfmodpr.
+Doc: this function is obsolete, use \kbd{nfmodpr}.
+
+ Let $P$ be a prime ideal in \key{modpr} format (see \kbd{nfmodprinit}),
+ let $a$ be a matrix, invertible over the residue field, and let $b$ be
+ a column vector or matrix. This function returns a solution of $a\cdot x =
+ b$; the coefficients of $x$ are lifted to \var{nf} elements.
+ \bprog
+ ? K = nfinit(y^2+1);
+ ? P = idealprimedec(K, 3)[1];
+ ? P = nfmodprinit(K, P);
+ ? a = [y+1, y; y, 0]; b = [1, y]~
+ ? nfsolvemodpr(K, a,b, P)
+ %5 = [1, 2]~
+ @eprog
+Variant: This function is normally useless in library mode. Project your
+ inputs to the residue field using \kbd{nfM\_to\_FqM}, then work there.

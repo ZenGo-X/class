@@ -1,0 +1,26 @@
+Function: setrand
+Section: programming/specific
+C-Name: setrand
+Prototype: vG
+Help: setrand(n): reset the seed of the random number generator to n.
+Doc: reseeds the random number generator using the seed $n$. No value is
+ returned. The seed is a small positive integer $0 < n < 2^{64}$ used to
+ generate deterministically a suitable state array. All gp session start
+ by an implicit \kbd{setrand(1)}, so resetting the seed to this value allows
+ to replay all computations since the session start. Alternatively,
+ running a randomized computation starting by \kbd{setrand}($n$)
+ twice with the same $n$ will generate the exact same output.
+
+ In the other direction, including a call to \kbd{setrand(getwalltime())}
+ from your gprc will cause GP to produce different streams of random numbers
+ in each session. (Unix users may want to use \kbd{/dev/urandom} instead
+ of \kbd{getwalltime}.)
+
+ For debugging purposes, one can also record a particular random state
+ using \kbd{getrand} (the value is encoded as a huge integer) and feed it to
+ \kbd{setrand}:
+ \bprog
+ ? state = getrand(); \\ record seed
+ ...
+ ? setrand(state); \\ we can now replay the exact same computations
+ @eprog

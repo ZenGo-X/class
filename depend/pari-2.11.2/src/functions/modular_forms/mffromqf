@@ -1,0 +1,42 @@
+Function: mffromqf
+Section: modular_forms
+C-Name: mffromqf
+Prototype: GDG
+Help: mffromqf(Q,{P}): Q being an even positive definite quadratic form
+ and P a homogeneous spherical polynomial for Q, computes a 3-component vector
+ [mf,F,coeffs], where F is the theta function corresponding to (Q, P), mf is
+ the corresponding space of modular forms from mfinit, and coeffs are the
+ coefficients of F on mfbasis(mf).
+Doc: $Q$ being an even integral positive definite quadratic form
+ and $P$ a homogeneous spherical polynomial for $Q$, computes
+ a 3-component vector $[\var{mf},F,v]$, where $F$ is the theta function
+ corresponding to $(Q,P)$, \var{mf} is the corresponding space of modular
+ forms (from \kbd{mfinit}), and $v$ gives the coefficients of $F$ on
+ \kbd{mfbasis(mf)}.
+ \bprog
+ ? [mf,F,v] = mffromqf(2*matid(10)); v
+ %1 = [64/5, 4/5, 32/5]~
+ ? mfcoefs(F, 5)
+ %2 = [1, 20, 180, 960, 3380, 8424]
+ ? mfcoef(F, 10000) \\ number of ways of writing 10000 as sum of 10 squares
+ %3 = 128205250571893636
+ ? mfcoefs(F, 10000);  \\ fast !
+ time = 220ms
+ ? [mf,F,v] = mffromqf([2,0;0,2],x^4-6*x^2*y^2+y^4);
+ ? mfcoefs(F,10)
+ %6 = [0, 4, -16, 0, 64, -56, 0, 0, -256, 324, 224]
+ ? mfcoef(F,100000)  \\ instantaneous
+ %7 = 41304367104
+ @eprog
+ Odd dimensions are supported, corresponding to forms of half-integral weight:
+ \bprog
+ ? [mf,F,v] = mffromqf(2*matid(3));
+ ? mfisequal(F, mfpow(mfTheta(),3))
+ %2 = 1
+ ? mfcoefs(F, 32) \\ illustrate Legendre's 3-square theorem
+ %3 = [ 1,
+        6, 12,  8, 6, 24, 24, 0, 12,
+       30, 24, 24, 8, 24, 48, 0, 6,
+       48, 36, 24,24, 48, 24, 0, 24,
+       30, 72, 32, 0, 72, 48, 0, 12]
+ @eprog

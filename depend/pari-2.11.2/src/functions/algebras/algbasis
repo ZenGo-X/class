@@ -1,0 +1,20 @@
+Function: algbasis
+Section: algebras
+C-Name: algbasis
+Prototype: mG
+Help: algbasis(al): basis of the stored order of the central simple algebra al.
+Doc: Given a central simple algebra \var{al} output by \tet{alginit}, returns
+ a $\Z$-basis of the order~${\cal O}_0$ stored in \var{al} with respect to the
+ natural order in \var{al}. It is a maximal order if one has been computed.
+ \bprog
+ A = alginit(nfinit(y), [-1,-1]);
+ ? algbasis(A)
+ %2 =
+ [1 0 0 1/2]
+
+ [0 1 0 1/2]
+
+ [0 0 1 1/2]
+
+ [0 0 0 1/2]
+ @eprog

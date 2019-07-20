@@ -1,0 +1,7 @@
+f(a,b)=
+{
+  forfactored(d = a, b,
+    D=quaddisc(d); if (D != quaddisc(d[1]), error(d)); print1(D," "));
+}
+f(-100,0)
+f(1,100)

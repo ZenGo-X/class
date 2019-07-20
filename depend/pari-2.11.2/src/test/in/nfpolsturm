@@ -1,0 +1,20 @@
+nf = nfinit(polsubcyclo(11,5,'y));
+t = x^2 - nf.zk[2];
+nfpolsturm(nf, t)
+nfpolsturm(nf, t, 1)
+nfpolsturm(nf, t, [1..4])
+nfpolsturm(nf, -1)
+nfpolsturm(nf, y)
+nfpolsturm(nf, Mod(y,nf.pol))
+
+nfpolsturm(nf, x^2-(y+950385237198502187979577282097391163977102921506573742575513/495253880608585631635195731645995689515566957889181807495428))
+
+
+nf=nfinit(a^2-2);
+for(n=1,100,if(nfpolsturm(nf,x^2-Mod(a+1,a^2-2)^n)!=[if (n%2,0,2),2],print(n)))
+
+\\ Errors
+nfpolsturm(nf, a, 3)
+nfpolsturm(nf, a, [-1..1])
+nfpolsturm(nf, a, [1..3])
+nfpolsturm(nf, 0, 1)

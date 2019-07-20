@@ -1,0 +1,51 @@
+Function: nfisisom
+Section: number_fields
+C-Name: nfisisom
+Prototype: GG
+Help: nfisisom(f,g): as nfisincl but tests whether f is isomorphic to g.
+Doc: as \tet{nfisincl}, but tests for isomorphism. More efficient if
+ $f$ or $g$ is a number field structure.
+ \bprog
+ ? f = x^6 + 30*x^5 + 495*x^4 + 1870*x^3 + 16317*x^2 - 22560*x + 59648;
+ ? g = x^6 + 42*x^5 + 999*x^4 + 8966*x^3 + 36117*x^2 + 21768*x + 159332;
+ ? h = x^6 + 30*x^5 + 351*x^4 + 2240*x^3 + 10311*x^2 + 35466*x + 58321;
+
+ ? #nfisisom(f,g)  \\ two isomorphisms
+ %3 = 2
+ ? nfisisom(f,h) \\ not isomorphic
+ %4 = 0
+ \\ comparative bench
+ ? K = nfinit(f); L = nfinit(g); B = 10^3;
+ ? for (i=1, B, nfisisom(f,g))
+ time = 6,124 ms.
+ ? for (i=1, B, nfisisom(K,g))
+ time = 3,356 ms.
+ ? for (i=1, B, nfisisom(f,L))
+ time = 3,204 ms.
+ ? for (i=1, B, nfisisom(K,L))
+ time = 3,173 ms.
+ @eprog\noindent
+ The function is usually very fast when the fields are non-isomorphic,
+ whenever the fields can be distinguished via a simple invariant such as
+ degree, signature or discriminant. It may be slower when the fields
+ share all invariants, but still faster than computing actual isomorphisms:
+ \bprog
+ \\ usually very fast when the answer is 'no':
+ ? for (i=1, B, nfisisom(f,h))
+ time = 32 ms.
+
+ \\ but not always
+ ? u = x^6 + 12*x^5 + 6*x^4 - 377*x^3 - 714*x^2 + 5304*x + 15379
+ ? v = x^6 + 12*x^5 + 60*x^4 + 166*x^3 + 708*x^2 + 6600*x + 23353
+ ? nfisisom(u,v)
+ %13 = 0
+ ? polsturm(u) == polsturm(v)
+ %14 = 1
+ ? nfdisc(u) == nfdisc(v)
+ %15 = 1
+ ? for(i=1,B, nfisisom(u,v))
+ time = 1,821 ms.
+ ? K = nfinit(u); L = nfinit(v);
+ ? for(i=1,B, nfisisom(K,v))
+ time = 232 ms.
+ @eprog

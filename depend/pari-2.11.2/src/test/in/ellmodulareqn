@@ -1,0 +1,8 @@
+\\package:seadata
+
+ellmodulareqn(2)
+ellmodulareqn(11)
+ellmodulareqn(3,y,z)
+\\ errors
+ellmodulareqn(1)
+ellmodulareqn(2,y,x)

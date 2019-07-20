@@ -1,0 +1,500 @@
+% Copyright (c) 2007-2016 Karim Belabas.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU General Public License
+
+% Reference Card for PARI-GP, Algebraic Number Theory.
+% Author:
+%  Karim Belabas
+%  Universite de Bordeaux, 351 avenue de la Liberation, F-33405 Talence
+%  email: Karim.Belabas@math.u-bordeaux.fr
+%
+% See refcard.tex for acknowledgements and thanks.
+\def\TITLE{Algebraic Number Theory}
+\input refmacro.tex
+\def\p{\goth{p}}
+
+\section{Binary Quadratic Forms}
+%
+\li{create $ax^2+bxy+cy^2$ (distance $d$) }{Qfb$(a,b,c,\{d\})$}
+\li{reduce $x$ ($s =\sqrt{D}$, $l=\floor{s}$)}
+   {qfbred$(x,\{\fl\},\{D\},\{l\},\{s\})$}
+\li{return $[y,g]$, $g\in \text{SL}_2(\ZZ)$, $y = g\cdot x$ reduced}
+   {qfbredsl2$(x)$}
+\li{composition of forms}{$x$*$y$ {\rm or }qfbnucomp$(x,y,l)$}
+\li{$n$-th power of form}{$x$\pow$n$ {\rm or }qfbnupow$(x,n)$}
+\li{composition without reduction}{qfbcompraw$(x,y)$}
+\li{$n$-th power without reduction}{qfbpowraw$(x,n)$}
+\li{prime form of disc. $x$ above prime $p$}{qfbprimeform$(x,p)$}
+\li{class number of disc. $x$}{qfbclassno$(x)$}
+\li{Hurwitz class number of disc. $x$}{qfbhclassno$(x)$}
+\li{solve $Q(x,y) = p$ in integers, $p$ prime}{qfbsolve$(Q,p)$}
+
+\section{Quadratic Fields}
+%
+\li{quadratic number $\omega=\sqrt x$ or $(1+\sqrt x)/2$}{quadgen$(x)$}
+\li{minimal polynomial of $\omega$}{quadpoly$(x)$}
+\li{discriminant of $\QQ(\sqrt{x})$}{quaddisc$(x)$}
+\li{regulator of real quadratic field}{quadregulator$(x)$}
+\li{fundamental unit in real $\QQ(\sqrt{D})$}{quadunit($D$,\{'w\})}
+\li{class group of $\QQ(\sqrt{D})$}{quadclassunit$(D,\{\fl\},\{t\})$}
+\li{Hilbert class field of $\QQ(\sqrt{D})$}{quadhilbert$(D,\{\fl\})$}
+\li{\dots using specific class invariant ($D<0$)}{polclass$(D,\{\var{inv}\})$}
+\li{ray class field modulo $f$ of $\QQ(\sqrt{D})$}{quadray$(D,f,\{\fl\})$}
+\bigskip
+
+\section{General Number Fields: Initializations}
+The number field $K = \QQ[X]/(f)$ is given by irreducible $f\in\QQ[X]$.
+We denote $\theta = \bar{X}$ the canonical root of $f$ in $K$.
+A \var{nf} structure contains a maximal order and allows operations on
+elements and ideals. A \var{bnf} adds class group and units. A \var{bnr} is
+attached to ray class groups and class field theory. A \var{rnf} is attached
+to relative extensions $L/K$.\hfill\break
+%
+\li{init number field structure \var{nf}}{nfinit$(f,\{\fl\})$}
+\beginindentedkeys
+  \li{known integer basis $B$}{nfinit$([f,B])$}
+  \li{order maximal at $\var{vp}=[p_1,\dots,p_k]$}{nfinit$([f,\var{vp}])$}
+  \li{order maximal at all $p \leq P$}{nfinit$([f,P])$}
+  \li{certify maximal order}{nfcertify$(\var{nf})$}
+\endindentedkeys
+\subsec{nf members:}
+\beginindentedkeys
+\li{a monic $F\in \ZZ[X]$ defining $K$}{\var{nf}.pol}
+\li{number of real/complex places}{\var{nf}.r1/r2/sign}
+\li{discriminant of \var{nf}}{\var{nf}.disc}
+\li{$T_2$ matrix}{\var{nf}.t2}
+\li{complex roots of $F$}{\var{nf}.roots}
+\li{integral basis of $\ZZ_K$ as powers of $\theta$}{\var{nf}.zk}
+\li{different/codifferent}{\var{nf}.diff{\rm, }\var{nf}.codiff}
+\li{index $[\ZZ_K:\ZZ[X]/(F)]$}{\var{nf}.index}
+\endindentedkeys
+\li{recompute \var{nf}\ using current precision}{nfnewprec$(nf)$}
+\li{init relative \var{rnf} $L = K[Y]/(g)$}{rnfinit$(\var{nf},g)$}
+%
+\li{init \var{bnf} structure}{bnfinit$(f,\{\fl\})$}
+\subsec{bnf members: {\rm same as \var{nf}, plus}}
+\beginindentedkeys
+\li{underlying \var{nf}}{\var{bnf}.nf}
+\li{classgroup}{\var{bnf}.clgp}
+\li{regulator}{\var{bnf}.reg}
+\li{fundamental/torsion units}{\var{bnf}.fu{\rm, }\var{bnf}.tu}
+\endindentedkeys
+\newcolumn
+\li{compress a \var{bnf}\ for storage}{bnfcompress$(\var{bnf})$}
+\li{recover a \var{bnf}\ from compressed \var{bnfz}}{bnfinit$(\var{bnfz})$}
+%
+\li{add $S$-class group and units, yield \var{bnf}S}{bnfsunit$(\var{bnf},S)$}
+
+\li{init class field structure \var{bnr}}{bnrinit$(\var{bnf},m,\{\fl\})$}
+%
+\subsec{bnr members: {\rm same as \var{bnf}, plus}}
+\beginindentedkeys
+\li{underlying \var{bnf}}{\var{bnr}.bnf}
+\li{big ideal structure}{\var{bnr}.bid}
+\li{modulus}{\var{bnr}.mod}
+\li{structure of $(\ZZ_K/m)^*$}{\var{bnr}.zkst}
+\endindentedkeys
+
+\smallskip
+\section{Fields, subfields, embeddings}
+\subsec{Defining polynomials, embeddings}
+\li{smallest poly defining $f=0$ (slow)}{polredabs$(f,\{\fl\})$}
+\li{small poly defining $f=0$ (fast)}{polredbest$(f,\{\fl\})$}
+\li{random Tschirnhausen transform of $f$}{poltschirnhaus$(f)$}
+\li{$\QQ[t]/(f) \subset \QQ[t]/(g)$ ? Isomorphic?}
+   {nfisincl$(f,g)$, \kbd{nfisisom}}
+\li{reverse polmod $a=A(t)\mod T(t)$}{modreverse$(a)$}
+\li{compositum of $\QQ[t]/(f)$, $\QQ[t]/(g)$}{polcompositum$(f,g,\{\fl\})$}
+\li{compositum of $K[t]/(f)$, $K[t]/(g)$}{nfcompositum$(\var{nf}, f,g,\{\fl\})$}
+\li{splitting field of $K$ (degree divides $d$)}
+   {nfsplitting$(\var{nf},\{d\})$}
+\li{signs of real embeddings of $x$}{nfeltsign$(\var{nf},x,\{pl\})$}
+\li{complex embeddings of $x$}{nfeltembed$(\var{nf},x,\{pl\})$}
+\li{$T\in K[t]$, \# of real roots of $\sigma(T)\in\R[t]$}{nfpolsturm$(\var{nf},T,\{pl\})$}
+
+\smallskip
+\subsec{Subfields, polynomial factorization}
+\li{subfields (of degree $d$) of \var{nf}}{nfsubfields$(\var{nf},\{d\})$}
+\li{$d$-th degree subfield of $\QQ(\zeta_n)$} {polsubcyclo$(n,d,\{v\})$}
+\li{roots of unity in \var{nf}}{nfrootsof1$(\var{nf}\,)$}
+\li{roots of $g$ belonging to \var{nf}}{nfroots$(\var{nf},g)$}
+\li{factor $g$ in \var{nf}}{nffactor$(\var{nf},g)$}
+\li{factor $g$ mod prime \var{pr} in \var{nf}}{nffactormod$(\var{nf},g,pr)$}
+
+\smallskip
+\subsec{Linear and algebraic relations}
+\li{poly of degree $\le k$ with root $x\in\CC$}{algdep$(x,k)$}
+\li{alg. dep. with pol.~coeffs for series $s$}{seralgdep$(s,x,y)$}
+\li{small linear rel.\ on coords of vector $x$}{lindep$(x)$}
+
+\section{Basic Number Field Arithmetic (nf)}
+Number field elements are \typ{INT}, \typ{FRAC}, \typ{POL}, \typ{POLMOD}, or
+\typ{COL} (on integral basis \kbd{\var{nf}.zk}).
+\smallskip
+\subsec{Basic operations}
+\li{$x+y$}{nfeltadd$(\var{nf},x,y)$}
+\li{$x\times y$}{nfeltmul$(\var{nf},x,y)$}
+\li{$x^n$, $n\in \ZZ$}{nfeltpow$(\var{nf},x,n)$}
+\li{$x / y$}{nfeltdiv$(\var{nf},x,y)$}
+\li{$q = x$\kbd{\bs/}$y := $\kbd{round}$(x/y)$}{nfeltdiveuc$(\var{nf},x,y)$}
+\li{$r = x$\kbd{\%}$y := x - (x$\kbd{\bs/}$y)y$}{nfeltmod$(\var{nf},x,y)$}
+\li{\dots $[q,r]$ as above}{nfeltdivrem$(\var{nf},x,y)$}
+\li{reduce $x$ modulo ideal $A$}{nfeltreduce$(\var{nf},x,A)$}
+\li{absolute trace $\text{Tr}_{K/\QQ} (x)$}{nfelttrace$(\var{nf},x)$}
+\li{absolute norm $\text{N}_{K/\QQ} (x)$}{nfeltnorm$(\var{nf},x)$}
+
+\smallskip
+\subsec{Multiplicative structure of $K^*$; $K^*/(K^*)^n$}
+\li{valuation $v_\p(x)$}{nfeltval$(\var{nf},x,\p)$}
+\li{\dots write $x = \pi^{v_\p(x)} y$}{nfeltval$(\var{nf},x,\p,\&y)$}
+\li{quadratic Hilbert symbol (at $\p$)}
+   {nfhilbert$(\var{nf},a,b,\{\p\})$}
+\li{$b$ such that $x b^n = v$ is small}{idealredmodpower$(\var{nf},x,n)$}
+
+\smallskip
+\subsec{Maximal order and discriminant}
+\li{integral basis of field $\QQ[x]/(f)$}{nfbasis$(f)$}
+\li{field discriminant of field $f=0$}{nfdisc$(f)$}
+\li{express $x$ on integer basis}{nfalgtobasis$(\var{nf},x)$}
+\li{express element\ $x$ as a polmod}{nfbasistoalg$(\var{nf},x)$}
+
+\smallskip
+\subsec{Dedekind Zeta Function $\zeta_K$, Hecke $L$ series}
+$R = [c,w,h]$ in initialization means we restrict $s\in \CC$
+to domain $|\Re(s)-c| < w$, $|\Im(s)| < h$; $R = [w,h]$ encodes $[1/2,w,h]$
+and $[h]$ encodes $R = [1/2,0,h]$ (critical line up to height $h$).\hfil\break
+\li{$\zeta_K$ as Dirichlet series, $N(I)<b$}{dirzetak$(\var{nf},b)$}
+\li{init $\zeta_K^{(k)}(s)$ for $k \leq n$}
+   {L = lfuninit$(\var{bnf}, R, \{n = 0\})$}
+\li{compute $\zeta_K(s)$ ($n$-th derivative)}{lfun$(L, s, \{n=0\})$}
+\li{compute $\Lambda_K(s)$ ($n$-th derivative)}{lfunlambda$(L, s, \{n=0\})$}
+\smallskip
+
+\li{init $L_K^{(k)}(s, \chi)$ for $k \leq n$}
+   {L = lfuninit$([\var{bnr},\var{chi}], R, \{n = 0\})$}
+\li{compute $L_K(s, \chi)$ ($n$-th derivative)}{lfun$(L, s, \{n\})$}
+\li{Artin root number of $K$}{bnrrootnumber$(\var{bnr},\var{chi},\{\fl\})$}
+\li{$L(1,\chi)$, for all $\chi$ trivial on $H$}
+   {bnrL1$(\var{bnr},\{H\},\{\fl\})$}
+
+\section{Class Groups \& Units (bnf, bnr)}
+Class field theory data $a_1,\{a_2\}$ is usually \var{bnr} (ray class field),
+$\var{bnr},H$ (congruence subgroup) or $\var{bnr},\chi$ (character on
+\kbd{bnr.clgp}). Any of these define a unique abelian extension of $K$.
+
+\li{remove GRH assumption from \var{bnf}}{bnfcertify$(\var{bnf})$}
+\li{expo.~of ideal $x$ on class gp}{bnfisprincipal$(\var{bnf},x,\{\fl\})$}
+\li{expo.~of ideal $x$ on ray class gp}{bnrisprincipal$(\var{bnr},x,\{\fl\})$}
+\li{expo.~of $x$ on fund.~units}{bnfisunit$(\var{bnf},x)$}
+\li{as above for $S$-units}{bnfissunit$(\var{bnfs},x)$}
+\li{signs of real embeddings of \kbd{\var{bnf}.fu}}{bnfsignunit$(\var{bnf})$}
+\li{narrow class group}{bnfnarrow$(\var{bnf})$}
+
+\smallskip
+\subsec{Class Field Theory}
+\li{ray class number for modulus $m$}{bnrclassno$(\var{bnf},m)$}
+\li{discriminant of class field}{bnrdisc$(a_1,\{a_2\})$}
+\li{ray class numbers, $l$ list of moduli}{bnrclassnolist$(\var{bnf},l)$}
+\li{discriminants of class fields}{bnrdisclist$(\var{bnf},l,\{arch\},\{\fl\})$}
+\li{decode output from \kbd{bnrdisclist}}{bnfdecodemodule$(\var{nf},fa)$}
+\li{is modulus the conductor?}{bnrisconductor$(a_1,\{a_2\})$}
+\li{is class field $(\var{bnr},H)$ Galois over $K^G$}
+   {bnrisgalois$(\var{bnr},G,H)$}
+\li{action of automorphism on \kbd{bnr.gen}}
+   {bnrgaloismatrix$(\var{bnr},\var{aut})$}
+\li{apply \kbd{bnrgaloismatrix} $M$ to $H$}
+   {bnrgaloisapply$(\var{bnr},M,H)$}
+\li{characters on \kbd{bnr.clgp} s.t. $\chi(g_i) = e(v_i)$}
+   {bnrchar$(\var{bnr},g,\{v\})$}
+\li{conductor of character $\chi$}{bnrconductor$(\var{bnr},\var{chi})$}
+\li{conductor of extension}{bnrconductor$(a_1,\{a_2\},\{\fl\})$}
+\li{conductor of extension $K[Y]/(g)$}{rnfconductor$(\var{bnf},g)$}
+\li{Artin group of extension $K[Y]/(g)$}{rnfnormgroup$(\var{bnr},g)$}
+\li{subgroups of \var{bnr}, index $<=b$}{subgrouplist$(\var{bnr},b,\{\fl\})$}
+\li{rel.\ eq.\ for class field def'd by $sub$}{rnfkummer$(\var{bnr},sub,\{d\})$}
+\li{same, using Stark units (real field)}{bnrstark$(\var{bnr},sub,\{\fl\})$}
+\li{is $a$ an $n$-th power in $K_v$ ?}{nfislocalpower$(\var{nf},v,a,n)$}
+\li{cyclic $L/K$ satisf. local conditions}
+   {nfgrunwaldwang$(\var{nf},P,D,\var{pl})$}
+\smallskip
+\subsec{Logarithmic class group}
+\li{logarithmic $\ell$-class group}{bnflog$(\var{bnf},\ell)$}
+\li{$[\tilde{e}(F_v/\Q_p),\tilde{f}(F_v/\Q_p)]$}
+   {bnflogef$(\var{bnf},\var{pr})$}
+\li{$\exp \deg_F(A)$}{bnflogdegree$(\var{bnf}, A, \ell)$}
+\li{is $\ell$-extension $L/K$ locally cyclotomic}{rnfislocalcyclo$(\var{rnf})$}
+
+\shortcopyrightnotice
+\newcolumn
+
+\section{Ideals: {\rm elements, primes, or matrix of generators in HNF}}
+\li{is $id$ an ideal in \var{nf} ?}{nfisideal$(\var{nf},id)$}
+\li{is $x$ principal in \var{bnf} ?}{bnfisprincipal$(\var{bnf},x)$}
+\li{give $[a,b]$, s.t.~ $a\ZZ_K+b\ZZ_K = x$}{idealtwoelt$(\var{nf},x,\{a\})$}
+\li{put ideal $a$ ($a\ZZ_K+b\ZZ_K$) in HNF form}{idealhnf$(\var{nf},a,\{b\})$}
+\li{norm of ideal $x$}{idealnorm$(\var{nf},x)$}
+\li{minimum of ideal $x$ (direction $v$)}{idealmin$(\var{nf},x,v)$}
+\li{LLL-reduce the ideal $x$ (direction $v$)}{idealred$(\var{nf},x,\{v\})$}
+
+\smallskip
+\subsec{Ideal Operations}
+\li{add ideals $x$ and $y$}{idealadd$(\var{nf},x,y)$}
+\li{multiply ideals $x$ and $y$}{idealmul$(\var{nf},x,y,\{\fl\})$}
+\li{intersection of ideals $x$ and $y$}{idealintersect$(\var{nf},x,y,\{\fl\})$}
+\li{$n$-th power of ideal $x$}{idealpow$(\var{nf},x,n,\{\fl\})$}
+\li{inverse of ideal $x$}{idealinv$(\var{nf},x)$}
+\li{divide ideal $x$ by $y$}{idealdiv$(\var{nf},x,y,\{\fl\})$}
+\li{Find $(a,b)\in x\times y$, $a+b=1$}{idealaddtoone$(\var{nf},x,\{y\})$}
+\li{coprime integral $A,B$ such that $x=A/B$}{idealnumden$(\var{nf},x)$}
+
+\smallskip
+\subsec{Primes and Multiplicative Structure}
+\li{factor ideal $x$ in $\ZZ_K$}{idealfactor$(\var{nf},x)$}
+\li{expand ideal factorization in $K$}{idealfactorback$(\var{nf},f,\{e\})$}
+\li{is ideal $A$ an $n$-th power ?}{idealispower$(\var{nf},A,n)$}
+\li{expand elt factorization in $K$}{nffactorback$(\var{nf},f,\{e\})$}
+\li{decomposition of prime $p$ in $\ZZ_K$}{idealprimedec$(\var{nf},p)$}
+\li{valuation of $x$ at prime ideal \var{pr}}{idealval$(\var{nf},x,\var{pr})$}
+\li{weak approximation theorem in \var{nf}}{idealchinese$(\var{nf},x,y)$}
+\li{$a\in K$, s.t. $v_{\p}(a) = v_{\p}(x)$ if
+   $v_{\p}(x)\neq 0$}
+   {idealappr$(\var{nf},x)$}
+\li{$a\in K$ such that $(a\cdot x, y) = 1$}{idealcoprime$(\var{nf},x,y)$}
+\li{give $bid=$structure of $(\ZZ_K/id)^*$}{idealstar$(\var{nf},id,\{\fl\})$}
+\li{structure of $(1+\p) / (1+\p^k)$}
+   {idealprincipalunits$(\var{nf},\var{pr},k)$}
+\li{discrete log of $x$ in $(\ZZ_K/bid)^*$}{ideallog$(\var{nf},x,bid)$}
+\li{\kbd{idealstar} of all ideals of norm $\le b$}{ideallist$(\var{nf},b,\{\fl\})$}
+\li{add Archimedean places}{ideallistarch$(\var{nf},b,\{ar\},\{\fl\})$}
+
+\li{init \kbd{modpr} structure}{nfmodprinit$(\var{nf},\var{pr})$}
+\li{project $t$ to $\ZZ_K/\var{pr}$}{nfmodpr$(\var{nf},t,\var{modpr})$}
+\li{lift from $\ZZ_K/\var{pr}$}{nfmodprlift$(\var{nf},t,\var{modpr})$}
+
+\section{Galois theory over $\QQ$}
+\li{conjugates of a root $\theta$ of \var{nf}}{nfgaloisconj$(\var{nf},\{\fl\})$}
+\li{apply Galois automorphism $s$ to $x$}{nfgaloisapply$(\var{nf},s,x)$}
+\li{Galois group of field $\QQ[x]/(f)$}{polgalois$(f)$}
+\li{initializes a Galois group structure $G$}{galoisinit$(\var{pol},\{den\})$}
+\li{character table of $G$}{galoischartable$(G)$}
+\li{conjugacy classes of $G$}{galoisconjclasses$(G)$}
+\li{$\det(1 - \rho(g)T)$, $\chi$ character of $\rho$}
+   {galoischarpoly$(G,\chi,\{o\})$}
+\li{$\det(\rho(g))$, $\chi$ character of $\rho$}
+   {galoischardet$(G,\chi,\{o\})$}
+\li{action of $p$ in nfgaloisconj form}{galoispermtopol$(G,\{p\})$}
+\li{identify as abstract group}{galoisidentify$(G)$}
+\li{export a group for GAP/MAGMA}{galoisexport$(G,\{\fl\})$}
+\li{subgroups of the Galois group $G$}{galoissubgroups$(G)$}
+\li{is subgroup $H$ normal?}{galoisisnormal$(G,H)$}
+\li{subfields from subgroups}{galoissubfields$(G,\{\fl\},\{v\})$}
+\li{fixed field}{galoisfixedfield$(G,\var{perm},\{\fl\},\{v\})$}
+\li{Frobenius at maximal ideal $P$}{idealfrobenius$(\var{nf},G,P)$}
+\li{ramification groups at $P$}{idealramgroups$(\var{nf},G,P)$}
+\li{is $G$ abelian?}{galoisisabelian$(G,\{\fl\})$}
+\li{abelian number fields/$\QQ$}{galoissubcyclo(N,H,\{\fl\},\{v\})}
+
+\newcolumn
+\title{\TITLE}
+
+\centerline{(PARI-GP version \PARIversion)}
+
+\medskip
+\subsec{The \kbd{galpol} package}
+\li{query the package: polynomial}{galoisgetpol(a,b,\{s\})}
+\li{\dots : permutation group}{galoisgetgroup(a,{b})}
+\li{\dots : group description}{galoisgetname(a,b)}
+
+\section{Relative Number Fields (rnf)}
+Extension $L/K$ is defined by $T\in K[x]$.
+\hfill\break
+%
+\li{absolute equation of $L$}{rnfequation$(\var{nf},T,\{\fl\})$}
+\li{is $L/K$ abelian?}{rnfisabelian$(\var{nf},T)$}
+\li{relative {\tt nfalgtobasis}}{rnfalgtobasis$(\var{rnf},x)$}
+\li{relative {\tt nfbasistoalg}}{rnfbasistoalg$(\var{rnf},x)$}
+\li{relative {\tt idealhnf}}{rnfidealhnf$(\var{rnf},x)$}
+\li{relative {\tt idealmul}}{rnfidealmul$(\var{rnf},x,y)$}
+\li{relative {\tt idealtwoelt}}{rnfidealtwoelt$(\var{rnf},x)$}
+
+\smallskip
+\subsec{Lifts and Push-downs}
+\li{absolute $\rightarrow$ relative representation for $x$}
+  {rnfeltabstorel$(\var{rnf},x)$}
+\li{relative $\rightarrow$ absolute representation for $x$}
+  {rnfeltreltoabs$(\var{rnf},x)$}
+\li{lift $x$ to the relative field}{rnfeltup$(\var{rnf},x)$}
+\li{push $x$ down to the base field}{rnfeltdown$(\var{rnf},x)$}
+\leavevmode idem for $x$ ideal:
+\kbd{$($rnfideal$)$reltoabs}, \kbd{abstorel}, \kbd{up}, \kbd{down}\hfill
+
+\smallskip
+\subsec{Norms and Trace}
+\li{relative norm of element $x\in L$}{rnfeltnorm$(\var{rnf},x)$}
+\li{relative trace of element $x\in L$}{rnfelttrace$(\var{rnf},x)$}
+\li{absolute norm of ideal $x$}{rnfidealnormabs$(\var{rnf},x)$}
+\li{relative norm of ideal $x$}{rnfidealnormrel$(\var{rnf},x)$}
+\li{solutions of $N_{K/\QQ}(y)=x\in \ZZ$}{bnfisintnorm$(\var{bnf},x)$}
+\li{is $x\in\QQ$ a norm from $K$?}{bnfisnorm$(\var{bnf},x,\{\fl\})$}
+\li{initialize $T$ for norm eq.~solver}{rnfisnorminit$(K,pol,\{\fl\})$}
+\li{is $a\in K$ a norm from $L$?}{rnfisnorm$(T,a,\{\fl\})$}
+\li{initialize $t$ for Thue equation solver}{thueinit$(f)$}
+\li{solve Thue equation $f(x,y)=a$}{thue$(t,a,\{sol\})$}
+\li{characteristic poly.\ of $a$ mod $T$}{rnfcharpoly$(\var{nf},T,a,\{v\})$}
+
+\smallskip
+\subsec{Factorization}
+\li{factor ideal $x$ in $L$}{rnfidealfactor$(\var{rnf},x)$}
+\li{$[S,T] \colon T_{i,j} \mid S_i$; $S$ primes of $K$ above $p$}
+   {rnfidealprimedec$(\var{rnf},p)$}
+
+\smallskip
+\subsec{Maximal order $\ZZ_L$ as a $\ZZ_K$-module}
+\li{relative {\tt polredbest}}{rnfpolredbest$(\var{nf},T)$}
+\li{relative {\tt polredabs}}{rnfpolredabs$(\var{nf},T)$}
+\li{relative Dedekind criterion, prime $pr$}{rnfdedekind$(\var{nf},T,pr)$}
+\li{discriminant of relative extension}{rnfdisc$(\var{nf},T)$}
+\li{pseudo-basis of $\ZZ_L$}{rnfpseudobasis$(\var{nf},T)$}
+
+\smallskip
+\subsec{General $\ZZ_K$-modules:
+  {\rm $M = [{\rm matrix}, {\rm vec.~of~ideals}] \subset L$}}
+\li{relative HNF / SNF}{nfhnf$(\var{nf},M)${\rm, }nfsnf}
+\li{multiple of $\det M$}{nfdetint$(\var{nf},M)$}
+\li{HNF of $M$ where $d = \kbd{nfdetint}(M)$}{nfhnfmod$(x,d)$}
+\li{reduced basis for $M$}{rnflllgram$(\var{nf},T,M)$}
+\li{determinant of pseudo-matrix $M$}{rnfdet$(\var{nf},M)$}
+\li{Steinitz class of $M$}{rnfsteinitz$(\var{nf},M)$}
+\li{$\ZZ_K$-basis of $M$ if $\ZZ_K$-free, or $0$}{rnfhnfbasis$(\var{bnf},M)$}
+\li{$n$-basis of $M$, or $(n+1)$-generating set}{rnfbasis$(\var{bnf},M)$}
+\li{is $M$ a free $\ZZ_K$-module?}{rnfisfree$(\var{bnf},M)$}
+
+\section{Associative Algebras}
+$A$ is a general associative algebra given by a multiplication table \var{mt}
+(over $\QQ$ or $\FF_p$); represented by \var{al} from \kbd{algtableinit}.
+
+\li{create \var{al} from \var{mt} (over $\FF_p$)}
+   {algtableinit$(\var{mt},\{p=0\})$}
+\li{group algebra $\QQ[G]$ (or $\FF_p[G]$)}{alggroup$(G,\{p = 0\})$}
+\li{center of group algebra}{alggroupcenter$(G,\{p = 0\})$}
+
+\smallskip
+\subsec{Properties}
+\li{is $(\var{mt},p)$ OK for algtableinit?}
+   {algisassociative$(\var{mt},\{p=0\})$}
+\li{multiplication table \var{mt}}{algmultable$(\var{al})$}
+\li{dimension of $A$ over prime subfield}{algdim$(\var{al})$}
+\li{characteristic of $A$}{algchar$(\var{al})$}
+\li{is $A$ commutative?}{algiscommutative$(\var{al})$}
+\li{is $A$ simple?}{algissimple$(\var{al})$}
+\li{is $A$ semi-simple?}{algissemisimple$(\var{al})$}
+\li{center of $A$}{algcenter$(\var{al})$}
+\li{Jacobson radical of $A$}{algradical$(\var{al})$}
+\li{radical $J$ and simple factors of $A/J$}{algsimpledec$(\var{al})$}
+
+\smallskip
+\subsec{Operations on algebras}
+\li{create $A/I$, $I$ two-sided ideal}{algquotient$(\var{al},I)$}
+\li{create $A_1\otimes A_2$}{algtensor$(\var{al1}, \var{al2})$}
+\li{create subalgebra from basis $B$}{algsubalg$(\var{al}, B)$}
+\li{quotients by ortho. central idempotents $e$}
+   {algcentralproj$(\var{al}, e)$}
+\li{isomorphic alg. with integral mult. table}{algmakeintegral(\var{mt})}
+\li{prime subalgebra of semi-simple $A$ over $\FF_p$}
+   {algprimesubalg$(\var{al})$}
+\li{find isomorphism~$A\cong M_d(\FF_q)$}{algsplit(\var{al})}
+
+\smallskip
+\subsec{Operations on lattices in algebras}
+\li{lattice generated by cols. of $M$}{alglathnf$(\var{al},M)$}
+\li{\dots by the products~$xy$, $x\in lat1$, $y\in lat2$}{alglatmul$(\var{al},\var{lat1},\var{lat2})$}
+\li{sum $lat1+lat2$ of the lattices}{alglatadd$(\var{al},\var{lat1},\var{lat2})$}
+\li{intersection $lat1\cap lat2$}{alglatinter$(\var{al},\var{lat1},\var{lat2})$}
+\li{test~$lat1\subset lat2$}{alglatsubset$(\var{al},\var{lat1},\var{lat2})$}
+\li{generalized index~$(lat2:lat1)$}{alglatindex$(\var{al},\var{lat1},\var{lat2})$}
+\li{$\{x\in al\mid x\cdot lat1\subset lat2\}$}{alglatlefttransporter$(\var{al},\var{lat1},\var{lat2})$}
+\li{$\{x\in al\mid lat1\cdot x\subset lat2\}$}{alglatrighttransporter$(\var{al},\var{lat1},\var{lat2})$}
+\li{test~$x\in lat$ (set~$c =$ coord. of~$x$)}{alglatcontains$(\var{al},\var{lat},x,\{\& c\})$}
+\li{element of~$lat$ with coordinates~$c$}{alglatelement$(\var{al},\var{lat},c)$}
+
+\smallskip
+\subsec{Operations on elements}
+\li{$a+b$, $a-b$, $-a$}{algadd$(\var{al},a,b)${\rm, }algsub{\rm, }algneg}
+\li{$a\times b$, $a^2$}{algmul$(\var{al},a,b)${\rm, }algsqr}
+\li{$a^n$, $a^{-1}$}{algpow$(\var{al},a,n)${\rm, }alginv}
+\li{is $x$ invertible ? (then set $z=x^{-1}$)}{algisinv$(\var{al},x,\{\&z\})$}
+\li{find $z$ such that $x\times z = y$}{algdivl$(\var{al},x,y)$}
+\li{find $z$ such that $z\times x = y$}{algdivr$(\var{al},x,y)$}
+\li{does $z$ s.t. $x\times z = y$ exist? (set it)}
+   {algisdivl$(\var{al},x,y,\{\&z\})$}
+\li{matrix of $v\mapsto x\cdot v$}{algtomatrix$(\var{al}, x)$}
+\li{absolute norm}{algnorm$(\var{al},x)$}
+\li{absolute trace}{algtrace$(\var{al},x)$}
+\li{absolute char. polynomial}{algcharpoly$(\var{al},x)$}
+\li{given $a\in A$ and polynomial $T$, return $T(a)$}
+   {algpoleval$(\var{al},T,a)$}
+\li{random element in a box}{algrandom$(\var{al}, b)$}
+
+\vfill
+\copyrightnotice
+
+\section{Central Simple Algebras}
+$A$ is a central simple algebra over a number field $K$; represented by
+\var{al} from \kbd{alginit}; $K$ is given by a \var{nf} structure.
+
+\li{create CSA from data}
+   {alginit$(B,C,\{v\},\{maxord=1\})$}
+\beginindentedkeys
+  \li{multiplication table over $K$}{$B = K${\rm, }$C = \var{mt}$}
+  \li{cyclic algebra $(L/K,\sigma,b)$}
+     {$B = \var{rnf}${\rm, }$C = [\var{sigma},b]$}
+  \li{quaternion algebra $(a,b)_K$}{$B = K$, $C = [a,b]$}
+  \li{matrix algebra $M_d(K)$}{$B = K$, $C = d$}
+  \li{local Hasse invariants over $K$}
+     {$B = K$, $C = [d, [\var{PR}, \var{HF}], \var{HI}]$}
+\endindentedkeys
+
+\smallskip
+\subsec{Properties}
+\li{type of \var{al} (\var{mt}, CSA)}{algtype$(\var{al})$}
+\li{dimension of $A$ over~$\QQ$}{algdim$(\var{al},1)$}
+\li{dimension of \var{al} over its center~$K$}{algdim$(\var{al})$}
+\li{degree of $A$ ($=\sqrt{\dim_K A}$)}{algdegree$(\var{al})$}
+\li{\var{al} a cyclic algebra $(L/K,\sigma,b)$; return $\sigma$}
+   {algaut$(\var{al})$}
+\li{\dots return $b$}{algb$(\var{al})$}
+\li{\dots return $L/K$, as an \var{rnf}}
+   {algsplittingfield$(\var{al})$}
+\li{split $A$ over an extension of $K$}{algsplittingdata$(\var{al})$}
+\li{splitting field of $A$ as an \var{rnf} over center}
+   {algsplittingfield$(\var{al})$}
+\li{multiplication table over center}{algrelmultable$(\var{al})$}
+\li{places of $K$ at which $A$ ramifies}{algramifiedplaces$(\var{al})$}
+\li{Hasse invariants at finite places of $K$}{alghassef$(\var{al})$}
+\li{Hasse invariants at infinite places of $K$}{alghassei$(\var{al})$}
+\li{Hasse invariant at place $v$}{alghasse$(\var{al},v)$}
+\li{index of $A$ over $K$ (at place $v$)}{algindex$(\var{al},\{v\})$}
+\li{is \var{al} a division algebra? (at place $v$)}
+   {algisdivision$(\var{al},\{v\})$}
+\li{is $A$ ramified? (at place $v$)}{algisramified$(\var{al},\{v\})$}
+\li{is $A$ split? (at place $v$)}{algissplit$(\var{al},\{v\})$}
+
+\smallskip
+\subsec{Operations on elements}
+\li{reduced norm}{algnorm$(\var{al},x)$}
+\li{reduced trace}{algtrace$(\var{al},x)$}
+\li{reduced char. polynomial}{algcharpoly$(\var{al},x)$}
+\li{express $x$ on integral basis}{algalgtobasis$(\var{al},x)$}
+\li{convert $x$ to algebraic form}{algbasistoalg$(\var{al},x)$}
+\li{map $x\in A$ to $M_d(L)$, $L$ split. field} {algtomatrix$(\var{al},x)$}
+
+\smallskip
+\subsec{Orders}
+\li{$\ZZ$-basis of order ${\cal O}_0$}{algbasis$(\var{al})$}
+\li{discriminant of order ${\cal O}_0$}{algdisc$(\var{al})$}
+\li{$\ZZ$-basis of natural order in terms ${\cal O}_0$'s basis}
+   {alginvbasis$(\var{al})$}
+
+\vfill
+\copyrightnotice
+\bye

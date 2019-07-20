@@ -1,0 +1,7 @@
+Function: psplothraw
+Section: graphic
+C-Name: psplothraw
+Prototype: GGD0,L,
+Obsolete: 2018-02-01
+Help: psplothraw(listx,listy,{flag=0}): obsolete function.
+Doc: This function is obsolete, use plothrawexport and write the result to file.

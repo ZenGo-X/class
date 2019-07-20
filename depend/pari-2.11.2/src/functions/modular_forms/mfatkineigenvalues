@@ -1,0 +1,30 @@
+Function: mfatkineigenvalues
+Section: modular_forms
+C-Name: mfatkineigenvalues
+Prototype: GLp
+Help: mfatkineigenvalues(mf,Q): given a modular form space mf
+ and a primitive divisor Q of the level of mf, outputs the corresponding
+ Atkin-Lehner eigenvalues on the new space, grouped by orbit.
+Doc: Given a modular form space \kbd{mf} of integral weight $k$ and a primitive
+ divisor $Q$ of the level $N$ of \kbd{mf}, outputs the Atkin--Lehner
+ eigenvalues of $w_Q$ on the new space, grouped by orbit. If $\chi$ is a
+ (trivial or) quadratic character defined modulo $N/Q$, the result is rounded
+ and the eigenvalues are $\pm i^k$.
+ \bprog
+ ? mf = mfinit([35,2],0); mffields(mf)
+ %1 = [y, y^2 - y - 4] \\ two orbits, dimension 1 and 2
+ ? mfatkineigenvalues(mf,5)
+ %2 = [[1], [-1, -1]]
+ ? mf = mfinit([12,7,Mod(3,4)],0);
+ ? mfatkineigenvalues(mf,3)
+ %4 = [[I, -I, -I, I, I, -I]]  \\ one orbit
+ @eprog
+ If you want the eigenvalues on a larger space than the new space,
+ e.g. the full space, you can directly call \kbd{[mfB,M,C]=mfatkininit} and
+ compute the eigenvalues as the roots of the characteristic polynomial of
+ $M/C$, i.e. by dividing the roots of \kbd{charpoly(M)} by $C$. Note that the
+ characteristic polynomial is computed exactly since $M$ has coefficients in
+ $\Q(\chi)$, whereas $C$ may be given by a complex number. If the coefficients
+ of the characteristic polynomial are polmods modulo $T$ they must be embedded
+ to $\C$ first using \kbd{subst(lift(), t, exp(2*I*Pi/n))}, when $T$ is
+ \kbd{poliscyclo(n)}; note that $T = \kbd{mf.mod}$.

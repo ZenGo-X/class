@@ -1,0 +1,85 @@
+Function: polcompositum
+Section: number_fields
+C-Name: polcompositum0
+Prototype: GGD0,L,
+Help: polcompositum(P,Q,{flag=0}): vector of all possible compositums
+ of the number fields defined by the polynomials P and Q; flag is
+ optional, whose binary digits mean 1: output for each compositum, not only
+ the compositum polynomial pol, but a vector [R,a,b,k] where a (resp. b) is a
+ root of P (resp. Q) expressed as a polynomial modulo R, and a small integer k
+ such that al2+k*al1 is the chosen root of R; 2: assume that the number
+ fields defined by P and Q are linearly disjoint.
+
+Doc: \sidx{compositum} $P$ and $Q$
+ being squarefree polynomials in $\Z[X]$ in the same variable, outputs
+ the simple factors of the \'etale $\Q$-algebra $A = \Q(X, Y) / (P(X), Q(Y))$.
+ The factors are given by a list of polynomials $R$ in $\Z[X]$, attached to
+ the number field $\Q(X)/ (R)$, and sorted by increasing degree (with respect
+ to lexicographic ordering for factors of equal degrees). Returns an error if
+ one of the polynomials is not squarefree.
+
+ Note that it is more efficient to reduce to the case where $P$ and $Q$ are
+ irreducible first. The routine will not perform this for you, since it may be
+ expensive, and the inputs are irreducible in most applications anyway. In
+ this case, there will be a single factor $R$ if and only if the number
+ fields defined by $P$ and $Q$ are linearly disjoint (their intersection is
+ $\Q$).
+
+ Assuming $P$ is irreducible (of smaller degree than $Q$ for efficiency), it
+ is in general much faster to proceed as follows
+ \bprog
+ nf = nfinit(P); L = nffactor(nf, Q)[,1];
+ vector(#L, i, rnfequation(nf, L[i]))
+ @eprog\noindent
+ to obtain the same result. If you are only interested in the degrees of the
+ simple factors, the \kbd{rnfequation} instruction can be replaced by a
+ trivial \kbd{poldegree(P) * poldegree(L[i])}.
+
+ The binary digits of $\fl$ mean
+
+ 1: outputs a vector of 4-component vectors $[R,a,b,k]$, where $R$
+ ranges through the list of all possible compositums as above, and $a$
+ (resp. $b$) expresses the root of $P$ (resp. $Q$) as an element of
+ $\Q(X)/(R)$. Finally, $k$ is a small integer such that $b + ka = X$ modulo
+ $R$.
+
+ 2: assume that $P$ and $Q$ define number fields which are linearly disjoint:
+ both polynomials are irreducible and the corresponding number fields
+ have no common subfield besides $\Q$. This allows to save a costly
+ factorization over $\Q$. In this case return the single simple factor
+ instead of a vector with one element.
+
+ A compositum is often defined by a complicated polynomial, which it is
+ advisable to reduce before further work. Here is an example involving
+ the field $\Q(\zeta_5, 5^{1/5})$:
+ \bprog
+ ? L = polcompositum(x^5 - 5, polcyclo(5), 1); \\@com list of $[R,a,b,k]$
+ ? [R, a] = L[1];  \\@com pick the single factor, extract $R,a$ (ignore $b,k$)
+ ? R               \\@com defines the compositum
+ %3 = x^20 + 5*x^19 + 15*x^18 + 35*x^17 + 70*x^16 + 141*x^15 + 260*x^14\
+ + 355*x^13 + 95*x^12 - 1460*x^11 - 3279*x^10 - 3660*x^9 - 2005*x^8    \
+ + 705*x^7 + 9210*x^6 + 13506*x^5 + 7145*x^4 - 2740*x^3 + 1040*x^2     \
+ - 320*x + 256
+ ? a^5 - 5         \\@com a fifth root of $5$
+ %4 = 0
+ ? [T, X] = polredbest(R, 1);
+ ? T     \\@com simpler defining polynomial for $\Q[x]/(R)$
+ %6 = x^20 + 25*x^10 + 5
+ ? X     \\ @com root of $R$ in $\Q[y]/(T(y))$
+ %7 = Mod(-1/11*x^15 - 1/11*x^14 + 1/22*x^10 - 47/22*x^5 - 29/11*x^4 + 7/22,\
+ x^20 + 25*x^10 + 5)
+ ? a = subst(a.pol, 'x, X)  \\@com \kbd{a} in the new coordinates
+ %8 = Mod(1/11*x^14 + 29/11*x^4, x^20 + 25*x^10 + 5)
+ ? a^5 - 5
+ %9 = 0
+ @eprog\noindent In the above example, $x^5-5$ and the $5$-th cyclotomic
+ polynomial are irreducible over $\Q$; they have coprime degrees so
+ define linearly disjoint extensions and we could have started by
+ \bprog
+ ? [R,a] = polcompositum(x^5 - 5, polcyclo(5), 3); \\@com $[R,a,b,k]$
+ @eprog
+Variant: Also available are
+ \fun{GEN}{compositum}{GEN P, GEN Q} ($\fl = 0$) and
+ \fun{GEN}{compositum2}{GEN P, GEN Q} ($\fl = 1$).
+
+

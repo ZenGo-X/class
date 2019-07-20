@@ -1,0 +1,47 @@
+Function: listput
+Section: programming/specific
+C-Name: listput0
+Prototype: WGD0,L,
+Help: listput(list,x,{n}): sets n-th element of list equal to x. If n is
+ omitted or greater than the current list length, appends x.
+Description:
+ (list, gen, small):gen        listput($1, $2, $3)
+Doc:
+ sets the $n$-th element of the list
+ \var{list} (which must be of type \typ{LIST}) equal to $x$. If $n$ is omitted,
+ or greater than the list length, appends $x$. The function returns the
+ inserted element.
+ \bprog
+ ? L = List();
+ ? listput(L, 1)
+ %2 = 1
+ ? listput(L, 2)
+ %3 = 2
+ ? L
+ %4 = List([1, 2])
+ @eprog
+
+ You may put an element into an occupied cell (not changing the
+ list length), but it is easier to use the standard \kbd{list[n] = x}
+ construct.
+ \bprog
+ ? listput(L, 3, 1) \\ insert at position 1
+ %5 = 3
+ ? L
+ %6 = List([3, 2])
+ ? L[2] = 4 \\ simpler
+ %7 = List([3, 4])
+ ? L[10] = 1  \\ can't insert beyond the end of the list
+  ***   at top-level: L[10]=1
+  ***                  ^------
+  ***   non-existent component: index > 2
+ ? listput(L, 1, 10) \\ but listput can
+ %8 = 1
+ ? L
+ %9 = List([3, 2, 1])
+ @eprog
+
+ This function runs in time $O(\#L)$ in the worst case (when the list must
+ be reallocated), but in time $O(1)$ on average: any number of successive
+ \kbd{listput}s run in time $O(\#L)$, where $\#L$ denotes the list
+ \emph{final} length.

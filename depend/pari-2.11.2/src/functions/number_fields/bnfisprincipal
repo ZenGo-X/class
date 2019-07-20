@@ -1,0 +1,63 @@
+Function: bnfisprincipal
+Section: number_fields
+C-Name: bnfisprincipal0
+Prototype: GGD1,L,
+Help: bnfisprincipal(bnf,x,{flag=1}): bnf being output by bnfinit (with
+ flag<=2), gives [v,alpha], where v is the vector of exponents on
+ the class group generators and alpha is the generator of the resulting
+ principal ideal. In particular x is principal if and only if v is the zero
+ vector. flag is optional, whose binary digits mean 1: output [v,alpha] (only v
+ if unset); 2: increase precision until alpha can be computed (do not insist
+ if unset).
+Doc: $\var{bnf}$ being the \sidx{principal ideal}
+ number field data output by \kbd{bnfinit}, and $x$ being an ideal, this
+ function tests whether the ideal is principal or not. The result is more
+ complete than a simple true/false answer and solves general discrete
+ logarithm problem. Assume the class group is $\oplus (\Z/d_i\Z)g_i$
+ (where the generators $g_i$ and their orders $d_i$ are respectively given by
+ \kbd{bnf.gen} and \kbd{bnf.cyc}). The routine returns a row vector $[e,t]$,
+ where $e$ is a vector of exponents $0 \leq e_i < d_i$, and $t$ is a number
+ field element such that
+ $$ x = (t) \prod_i  g_i^{e_i}.$$
+ For \emph{given} $g_i$ (i.e. for a given \kbd{bnf}), the $e_i$ are unique,
+ and $t$ is unique modulo units.
+
+ In particular, $x$ is principal if and only if $e$ is the zero vector. Note
+ that the empty vector, which is returned when the class number is $1$, is
+ considered to be a zero vector (of dimension $0$).
+ \bprog
+ ? K = bnfinit(y^2+23);
+ ? K.cyc
+ %2 = [3]
+ ? K.gen
+ %3 = [[2, 0; 0, 1]]          \\ a prime ideal above 2
+ ? P = idealprimedec(K,3)[1]; \\ a prime ideal above 3
+ ? v = bnfisprincipal(K, P)
+ %5 = [[2]~, [3/4, 1/4]~]
+ ? idealmul(K, v[2], idealfactorback(K, K.gen, v[1]))
+ %6 =
+ [3 0]
+
+ [0 1]
+ ? % == idealhnf(K, P)
+ %7 = 1
+ @eprog
+
+ \noindent The binary digits of \fl mean:
+
+ \item $1$: If set, outputs $[e,t]$ as explained above, otherwise returns
+ only $e$, which is much easier to compute. The following idiom only tests
+ whether an ideal is principal:
+ \bprog
+   is_principal(bnf, x) = !bnfisprincipal(bnf,x,0);
+ @eprog
+
+ \item $2$: It may not be possible to recover $t$, given the initial accuracy
+ to which the \kbd{bnf} structure was computed. In that case, a warning is
+ printed and $t$ is set equal to the empty vector \kbd{[]\til}. If this bit is
+ set, increase the precision and recompute needed quantities until $t$ can be
+ computed. Warning: setting this may induce \emph{lengthy} computations.
+Variant: Instead of the above hardcoded numerical flags, one should
+ rather use an or-ed combination of the symbolic flags \tet{nf_GEN} (include
+ generators, possibly a place holder if too difficult) and \tet{nf_FORCE}
+ (insist on finding the generators).

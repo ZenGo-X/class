@@ -1,0 +1,11 @@
+Function: quit
+Class: gp
+Section: programming/specific
+C-Name: gp_quit
+Prototype: vD0,L,
+Help: quit({status = 0}): quit, return to the system with exit status
+ 'status'.
+Doc: exits \kbd{gp} and return to the system with exit status
+ \kbd{status}, a small integer. A non-zero exit status normally indicates
+ abnormal termination. (Note: the system actually sees only
+ \kbd{status} mod $256$, see your man pages for \kbd{exit(3)} or \kbd{wait(2)}).

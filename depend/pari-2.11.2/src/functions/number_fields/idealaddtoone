@@ -1,0 +1,17 @@
+Function: idealaddtoone
+Section: number_fields
+C-Name: idealaddtoone0
+Prototype: GGDG
+Help: idealaddtoone(nf,x,{y}): if y is omitted, when the sum of the ideals
+ in the number field K defined by nf and given in the vector x is equal to
+ Z_K, gives a vector of elements of the corresponding ideals who sum to 1.
+ Otherwise, x and y are ideals, and if they sum up to 1, find one element in
+ each of them such that the sum is 1.
+Doc: $x$ and $y$ being two co-prime
+ integral ideals (given in any form), this gives a two-component row vector
+ $[a,b]$ such that $a\in x$, $b\in y$ and $a+b=1$.
+
+ The alternative syntax $\kbd{idealaddtoone}(\var{nf},v)$, is supported, where
+ $v$ is a $k$-component vector of ideals (given in any form) which sum to
+ $\Z_K$. This outputs a $k$-component vector $e$ such that $e[i]\in x[i]$ for
+ $1\le i\le k$ and $\sum_{1\le i\le k}e[i]=1$.

@@ -1,0 +1,32 @@
+Function: mffields
+Section: modular_forms
+C-Name: mffields
+Prototype: G
+Help: mffields(mf): If mf is output by mfinit, gives the
+ vector of polynomials defining each Galois orbit of the new space.
+Doc: Given \kbd{mf} as output by \kbd{mfinit} with parameters
+ $(N,k,\chi)$, returns the vector of polynomials defining each Galois orbit of
+ newforms over $\Q(\chi)$.
+ \bprog
+ ? mf = mfinit([35,2],0); mffields(mf)
+ %1 = [y, y^2 - y - 4]
+ @eprog\noindent Here the character is trivial so $\Q(\chi) = \Q)$ and there
+ are 3 newforms: one is rational (corresponding to $y$), the other two are
+ conjugate and defined over the quadratic field $\Q[y]/(y^2-y-4)$.
+
+ \bprog
+ ? [G,chi] = znchar(Mod(3,35));
+ ? zncharconductor(G,chi)
+ %2 = 35
+ ? charorder(G,chi)
+ %3 = 12
+ ? mf = mfinit([35, 2, [G,chi]],0); mffields(mf)
+ %4 = [y, y]
+ @eprog Here the character is primitive of order 12 and the two newforms are
+ defined over $\Q(\chi) = \Q(\zeta_{12})$.
+
+ \bprog
+ ? mf = mfinit([35, 2, Mod(13,35)],0); mffields(mf)
+ %3 = [y^2 + Mod(5*t, t^2 + 1)]
+ @eprog This time the character has order 4 and there are two conjugate
+ newforms over $\Q(\chi) = Q(i)$.

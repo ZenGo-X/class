@@ -1,0 +1,81 @@
+Function: znconreychar
+Section: number_theoretical
+C-Name: znconreychar
+Prototype: GG
+Help: znconreychar(G,m): Dirichlet character attached to m in (Z/qZ)*
+ in Conrey's notation, where G is znstar(q,1).
+Doc: Given a \var{znstar} $G$ attached to $(\Z/q\Z)^*$ (as per
+ \kbd{G = znstar(q,1)}), this function returns the Dirichlet character
+ attached to $m \in (\Z/q\Z)^*$ via Conrey's logarithm, which
+ establishes a ``canonical'' bijection between $(\Z/q\Z)^*$ and its dual.
+
+ Let $q = \prod_p p^{e_p}$ be the factorization of $q$ into distinct primes.
+ For all odd  $p$ with $e_p > 0$, let $g_p$ be the element in $(\Z/q\Z)^*$
+ which is
+
+ \item congruent to $1$ mod $q/p^{e_p}$,
+
+ \item congruent mod $p^{e_p}$ to the smallest positive integer that generates
+ $(\Z/p^2\Z)^*$.
+
+ For $p = 2$, we let $g_4$ (if $2^{e_2} \geq 4$) and $g_8$ (if furthermore
+ ($2^{e_2} \geq 8$) be the elements in $(\Z/q\Z)^*$ which are
+
+ \item congruent to $1$ mod $q/2^{e_2}$,
+
+ \item $g_4 = -1 \mod 2^{e_2}$,
+
+ \item $g_8 = 5 \mod 2^{e_2}$.
+
+ Then the $g_p$ (and the extra $g_4$ and $g_8$ if $2^{e_2}\geq 2$) are
+ independent generators of $(\Z/q\Z)^*$, i.e. every $m$ in $(\Z/q\Z)^*$ can be
+ written uniquely as $\prod_p g_p^{m_p}$, where $m_p$ is defined modulo the
+ order $o_p$ of $g_p$ and $p \in S_q$, the set of prime divisors of $q$
+ together with $4$ if $4 \mid q$ and $8$ if $8 \mid q$. Note that the $g_p$
+ are in general \emph{not} SNF generators as produced by \kbd{znstar} whenever
+ $\omega(q) \geq 2$, although their number is the same. They however allow
+ to handle the finite abelian group $(\Z/q\Z)^*$ in a fast and elegant way.
+ (Which unfortunately does not generalize to ray class groups or Hecke
+ characters.)
+
+ The Conrey logarithm of $m$ is the vector $(m_p)_{p\in S_q}$, obtained
+ via \tet{znconreylog}. The Conrey character $\chi_q(m,\cdot)$  attached to
+ $m$ mod $q$ maps
+ each $g_p$, $p\in S_q$ to $e(m_p / o_p)$, where $e(x) = \exp(2i\pi x)$.
+ This function returns the Conrey character expressed in the standard PARI
+ way in terms of the SNF generators \kbd{G.gen}.
+
+ \bprog
+ ? G = znstar(8,1);
+ ? G.cyc
+ %2 = [2, 2]  \\ Z/2 x Z/2
+ ? G.gen
+ %3 = [7, 3]
+ ? znconreychar(G,1)  \\ 1 is always the trivial character
+ %4 = [0, 0]
+ ? znconreychar(G,2)  \\ 2 is not coprime to 8 !!!
+   ***   at top-level: znconreychar(G,2)
+   ***                 ^-----------------
+   *** znconreychar: elements not coprime in Zideallog:
+     2
+     8
+   ***   Break loop: type 'break' to go back to GP prompt
+ break>
+
+ ? znconreychar(G,3)
+ %5 = [0, 1]
+ ? znconreychar(G,5)
+ %6 = [1, 1]
+ ? znconreychar(G,7)
+ %7 = [1, 0]
+ @eprog\noindent We indeed get all 4 characters of $(\Z/8\Z)^*$.
+
+ For convenience, we allow to input the \emph{Conrey logarithm} of $m$
+ instead of $m$:
+ \bprog
+ ? G = znstar(55, 1);
+ ? znconreychar(G,7)
+ %2 = [7, 0]
+ ? znconreychar(G, znconreylog(G,7))
+ %3 = [7, 0]
+ @eprog

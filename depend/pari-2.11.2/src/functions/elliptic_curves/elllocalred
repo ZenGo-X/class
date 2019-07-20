@@ -1,0 +1,25 @@
+Function: elllocalred
+Section: elliptic_curves
+C-Name: elllocalred
+Prototype: GDG
+Help: elllocalred(E,{p}): E being an elliptic curve, returns
+ [f,kod,[u,r,s,t],c], where f is the conductor's exponent, kod is the Kodaira
+ type for E at p, [u,r,s,t] is the change of variable needed to make E
+ minimal at p, and c is the local Tamagawa number c_p.
+Doc:
+ calculates the \idx{Kodaira} type of the local fiber of the elliptic curve
+ $E$ at $p$. $E$ must be an \kbd{ell} structure as output by
+ \kbd{ellinit}, over $\Q_\ell$ ($p$ better left omitted, else equal to $\ell$)
+ over $\Q$ ($p$ a rational prime) or a number field $K$ ($p$
+ a maximal ideal given by a \kbd{prid} structure).
+ The result is a 4-component vector $[f,kod,v,c]$. Here $f$ is the exponent of
+ $p$ in the arithmetic conductor of $E$, and $kod$ is the Kodaira type which
+ is coded as follows:
+
+ 1 means good reduction (type I$_0$), 2, 3 and 4 mean types II, III and IV
+ respectively, $4+\nu$ with $\nu>0$ means type I$_\nu$;
+ finally the opposite values $-1$, $-2$, etc.~refer to the starred types
+ I$_0^*$, II$^*$, etc. The third component $v$ is itself a vector $[u,r,s,t]$
+ giving the coordinate changes done during the local reduction;
+ $u = 1$ if and only if the given equation was already minimal at $p$.
+ Finally, the last component $c$ is the local \idx{Tamagawa number} $c_p$.

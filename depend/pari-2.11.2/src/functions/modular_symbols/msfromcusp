@@ -1,0 +1,55 @@
+Function: msfromcusp
+Section: modular_symbols
+C-Name: msfromcusp
+Prototype: GG
+Help: msfromcusp(M, c): returns the modular symbol attached to the cusp
+ c, where M is a modular symbol space of level N.
+Doc: returns the modular symbol attached to the cusp
+ $c$, where $M$ is a modular symbol space of level $N$, attached to
+ $G = \Gamma_0(N)$. The cusp $c$ in $\P^1(\Q)/G$ is given either as \kbd{oo}
+ ($=(1:0)$) or as a rational number $a/b$ ($=(a:b)$). The attached symbol maps
+ the path $[b] - [a] \in \text{Div}^0 (\P^1(\Q))$ to $E_c(b) - E_c(a)$, where
+ $E_c(r)$ is $0$ when $r \neq c$ and $X^{k-2} \mid \gamma_r$ otherwise, where
+ $\gamma_r \cdot r = (1:0)$. These symbols span the Eisenstein subspace
+ of $M$.
+ \bprog
+ ? M = msinit(2,8);  \\  M_8(Gamma_0(2))
+ ? E =  mseisenstein(M);
+ ? E[1] \\ two-dimensional
+ %3 =
+ [0 -10]
+
+ [0 -15]
+
+ [0  -3]
+
+ [1   0]
+
+ ? s = msfromcusp(M,oo)
+ %4 = [0, 0, 0, 1]~
+ ? mseval(M, s)
+ %5 = [1, 0]
+ ? s = msfromcusp(M,1)
+ %6 = [-5/16, -15/32, -3/32, 0]~
+ ? mseval(M,s)
+ %7 = [-x^6, -6*x^5 - 15*x^4 - 20*x^3 - 15*x^2 - 6*x - 1]
+ @eprog
+ In case $M$ was initialized with a non-zero \emph{sign}, the symbol is given
+ in terms of the fixed basis of the whole symbol space, not the $+$ or $-$
+ part (to which it need not belong).
+ \bprog
+ ? M = msinit(2,8, 1);  \\  M_8(Gamma_0(2))^+
+ ? E =  mseisenstein(M);
+ ? E[1] \\ still two-dimensional, in a smaller space
+ %3 =
+ [ 0 -10]
+
+ [ 0   3]
+
+ [-1   0]
+
+ ? s = msfromcusp(M,oo) \\ in terms of the basis for M_8(Gamma_0(2)) !
+ %4 = [0, 0, 0, 1]~
+ ? mseval(M, s) \\ same symbol as before
+ %5 = [1, 0]
+ @eprog

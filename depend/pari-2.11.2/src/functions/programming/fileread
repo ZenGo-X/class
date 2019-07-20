@@ -1,0 +1,35 @@
+Function: fileread
+Section: programming/specific
+C-Name: gp_fileread
+Prototype: L
+Help: fileread(n): read a logical line from the file attached to the
+ descriptor n, opened for reading with fileopen. Return 0 at end of file.
+Doc: read a logical line from the file attached to the descriptor $n$, opened
+ for reading with \kbd{fileopen}. Return 0 at end of file.
+
+ A logical line is a full command as it is prepared by gp's
+ preprocessor (skipping blanks and comments or assembling multiline commands
+ between braces) before being fed to the interpreter. The function
+ \kbd{filereadstr} would read a \emph{raw} line exactly as input, up to the
+ next carriage return \kbd{\bs n}.
+
+ Compare raw lines
+ \bprog
+ ? n = fileopen("examples/bench.gp");
+ ? while(l = filereadstr(n), print(l));
+ {
+   u=v=p=q=1;
+   for (k=1, 2000,
+     [u,v] = [v,u+v];
+     p *= v; q = lcm(q,v);
+     if (k%50 == 0,
+       print(k, " ", log(p)/log(q))
+     )
+   )
+ }
+ @eprog\noindent and logical lines
+ \bprog
+ ? n = fileopen("examples/bench.gp");
+ ? while(l = fileread(n), print(l));
+ u=v=p=q=1;for(k=1,2000,[u,v]=[v,u+v];p*=v;q=lcm(q,v);[...]
+ @eprog

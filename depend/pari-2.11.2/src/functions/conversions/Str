@@ -1,0 +1,28 @@
+Function: Str
+Section: conversions
+C-Name: Str
+Prototype: s*
+Help: Str({x}*): concatenates its (string) argument into a single string.
+Description:
+ (gen):genstr:copy:parens      $genstr:1
+ (gen,gen):genstr              Str(mkvec2($1, $2))
+ (gen,gen,gen):genstr          Str(mkvec3($1, $2, $3))
+ (gen,gen,gen,gen):genstr      Str(mkvec4($1, $2, $3, $4))
+ (gen,...):genstr              Str(mkvecn($#, $2))
+
+Doc:
+ converts its argument list into a
+ single character string (type \typ{STR}, the empty string if $x$ is omitted).
+ To recover an ordinary \kbd{GEN} from a string, apply \kbd{eval} to it. The
+ arguments of \kbd{Str} are evaluated in string context, see \secref{se:strings}.
+
+ \bprog
+ ? x2 = 0; i = 2; Str(x, i)
+ %1 = "x2"
+ ? eval(%)
+ %2 = 0
+ @eprog\noindent
+ This function is mostly useless in library mode. Use the pair
+ \tet{strtoGEN}/\tet{GENtostr} to convert between \kbd{GEN} and \kbd{char*}.
+ The latter returns a malloced string, which should be freed after usage.
+ %\syn{NO}

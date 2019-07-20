@@ -1,0 +1,18 @@
+Function: hyperellpadicfrobenius
+Section: elliptic_curves
+C-Name: hyperellpadicfrobenius
+Prototype: GUL
+Help: hyperellpadicfrobenius(Q,p,n): Q being a  rational polynomial of degree
+ d and X being the curve defined by y^2=Q(x), return the matrix of the
+ Frobenius at p>=d in the standard basis of H^1_dR(X) to absolute p-adic
+ precision p^n.
+Doc:
+ Let $X$ be the curve defined by $y^2=Q(x)$, where  $Q$ is a polynomial of
+ degree $d$ over $\Q$ and $p\ge d$ a prime such that $X$ has good reduction
+ at $p$ return the matrix of the Frobenius endomorphism $\varphi$ on the
+ crystalline module $D_p(X) = \Q_p \otimes H^1_{dR}(X/\Q)$ with respect to the
+ basis of the given model $(\omega, x\*\omega,\ldots,x^{g-1}\*\omega)$, where
+ $\omega = dx/(2\*y)$ is the invariant differential, where $g$ is the genus of
+ $X$ (either $d=2\*g+1$ or $d=2\*g+2$).  The characteristic polynomial of
+ $\varphi$ is the numerator of the zeta-function of the reduction of the curve
+ $X$ modulo $p$. The matrix is computed to absolute $p$-adic precision $p^n$.

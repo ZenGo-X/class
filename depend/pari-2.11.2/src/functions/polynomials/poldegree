@@ -1,0 +1,16 @@
+Function: poldegree
+Section: polynomials
+C-Name: gppoldegree
+Prototype: GDn
+Help: poldegree(x,{v}): degree of the polynomial or rational function x with
+ respect to main variable if v is omitted, with respect to v otherwise.
+ For scalar x, return 0 if x is non-zero and -oo otherwise.
+Doc: degree of the polynomial $x$ in the main variable if $v$ is omitted, in
+ the variable $v$ otherwise.
+
+ The degree of $0$ is \kbd{-oo}. The degree of a non-zero scalar is $0$.
+ Finally, when $x$ is a non-zero polynomial or rational function, returns the
+ ordinary degree of $x$. Raise an error otherwise.
+Variant: Also available is
+ \fun{long}{poldegree}{GEN x, long v}, which returns \tet{-LONG_MAX} if $x = 0$
+ and the degree as a \kbd{long} integer.

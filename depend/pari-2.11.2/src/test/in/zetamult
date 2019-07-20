@@ -1,0 +1,55 @@
+default(parisize,"10M");
+default(realprecision,38);
+test(a,b)= if(a==b,oo, ceil(log(abs(a-b))/log(10)));
+test(zetamult([2,1]), zeta(3))
+test(zetamult([4,2]), (zeta(3)^2 - 4*zeta(6)/3))
+test(zetamult([4,4]), (zeta(4)^2 - zeta(8))/2)
+test(zetamult([2,2,2]), zeta(2)^3/6 + zeta(6)/3 - zeta(2)*zeta(4)/2)
+zetamult(2)
+zetamult([])
+
+default(realprecision,57);
+T=zetamultinit(30);
+for(k=1,10, print(Pi^(4*k) / zetamult(vector(2*k, j, 1+2*(j%2)))));
+
+v = [zeta(9),Pi^2*zeta(7),Pi^4*zeta(5),Pi^6*zeta(3)];
+LD=[2,2,2,2];
+{
+  for(i=1,4,
+    LE=LD; LE[i]=3;
+    z = lindep(concat(zetamult(LE),v));
+    if (z[1] < 0, z = -z); print(z);
+  );
+}
+
+zetamultall(5)
+avec=[3,1,3,1];
+evec=[0,0,1,1,0,0,1,1];
+a=89;
+zetamultconvert(avec,0)
+zetamultconvert(avec,1)
+zetamultconvert(avec,2)
+zetamultconvert(evec,0)
+zetamultconvert(evec,1)
+zetamultconvert(evec,2)
+zetamultconvert(a,0)
+zetamultconvert(a,1)
+zetamultconvert(a,2)
+
+{
+for (i = 1, 2^10,
+  a = zetamultconvert(i);
+  if (zetamultconvert(a,2) != i, error(i))
+);
+}
+
+\\ Errors, keep at end of file
+zetamult([1,2])
+zetamult("a")
+zetamultall(0)
+zetamultall(64)
+zetamult([0,2,1])
+zetamult([0,1,0])
+zetamult([0,-1,1])
+zetamult([1,-1,1])
+zetamult([1,0,1])

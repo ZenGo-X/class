@@ -1,0 +1,283 @@
+f(x) = 1/x;
+g(N) = for(i = -N, N, f(i));
+g(10)
+print();
+
+f=matsolve;
+f(Mat(0), Col(1))
+print();
+
+(matsolve)(Mat(0), Col(1))
+print();
+
+a.foo=1/(1+a^2);
+g(x)=[x.foo];
+g(I)
+print();
+
+(x->1/x)(0)
+print();
+
+ecm(N,t,B)=
+{
+  for(a=1,t,
+     iferr(
+       my(E=ellinit([0,0,0,a,1]*Mod(1,N)));
+       ellmul(E,[0,1]*Mod(1,N),B),
+       err,if(errname(err)=="e_INV",return(gcd(lift(component(err,2)),N))
+            ,error(err))));
+}
+ecm(2^64+1,10,200!)
+ecm2(N,t,B)=
+{
+  for(a=1,t,
+     iferr(
+       my(E=ellinit([0,0,0,a,1]*Mod(1,N)));
+       ellmul(E,[0,1]*Mod(1,N),B),
+       err,return(gcd(lift(component(err,2)),N))
+          ,errname(err)=="e_INV"));
+}
+ecm2(2^64+1,10,200!)
+
+rev(A) = my(B=Ser(A)); serreverse(B);
+iferr(rev([0,0,0,2,2,4,8,4,16,12]),E,0);
+\\ e_COPRIME
+T=t^2-2;p=2;A=x^2+1;B=[x+t,x+t];r=polhensellift(A,B,[p,T],6)
+\\ e_DIM / e_TYPE
+M = matid(2);
+M[,1] = 1
+M[,3] = 1
+M[,1] = [1,2]
+M[,1] = [1,2,3]~
+M[1,] = 1
+M[3,] = 1
+M[1,] = [1,2]~
+M[1,] = [1,2,3]
+
+[;][1,]
+[;][,1]
+1[1]
+issquare(1,&v[1])
+1[1,1]
+1[,1]
+issquare(1,&v[,1])
+1[1,]
+issquare(1,&v[1,])
+
+v=Vecsmall([1]);
+v[2] = 1
+v[1] = Pi
+v[1] = 2^64
+v[Pi] = 1
+
+\\ RgM_check_ZM
+M = [1.,0;0,1]; qflll(M,1)
+\\ RgV_check_ZV
+addprimes(1.)
+
+\\e_MODULUS
+nfalgtobasis(nfinit(t^3-2),Mod(t,t^2+1))
+\\e_DIM
+vector(-1,i,0)
+vectorv(-1,i,0)
+vectorsmall(-1,i,0)
+matrix(-1,1,i,j,0)
+matrix(1,-1,i,j,0)
+
+next(-1)
+break(-1)
+v[-1]
+v[#v+1]
+subst(x,1,0)
+exp(1e40)
+exp(-1e40)
+exp(1/x)
+cos(1/x)
+sin(1/x)
+tan(1/x)
+cotan(1/x)
+atan(1/x)
+asin(1/x)
+acos(1/x)
+asinh(1/x)
+acosh(1/x)
+atanh(1/x)
+lngamma(x)
+besselj(2,1/x)
+besseljh(2,1/x)
+besselk(2,1/x)
+besselk(1/3,O(x))
+besseln(2,1/x)
+besseln(1/3,O(x))
+polylog(2,1/x)
+sqrt(x)
+sqrt(2+O(2^2))
+sqrtn(x,3)
+sqrtn(2+O(2^2),3)
+log(x)
+log(0)
+abs(x+O(x^2))
+real(Vecsmall([]))
+imag(Vecsmall([]))
+vecmax(Vecsmall([]))
+vecmax([])
+vecmax([], &i)
+vecmin(Vecsmall([]))
+vecmin([])
+vecmmin([], &i)
+vecmax(matrix(0,2))
+L=List();
+listput(L, x, -1)
+listinsert(L,x,-1)
+listinsert(L,x,10)
+listpop(L)
+ellj(Mod(1,2))
+ellj(Qfb(1,1,1))
+eta(1+O(2))
+eta(1/x)
+K = nfinit(y^2+1);
+idealhnf(K, Qfb(1,1,1))
+idealfactor(K, [;])
+idealval(K, [;], idealprimedec(K,2)[1]);
+idealdiv(K,2,0, 1);
+valuation(Pi,2)
+x^Pi
+x^x
+0^0.
+agm([],[])
+sin(1/2+O(2^1))
+cos(1/9+O(3^1))
+exp(1/9+O(3^1))
+G=[[Vecsmall([6,11,14,16,17,1,21,24,26,27,2,29,30,3,31,4,5,34,36,37,7,39,40,8,41,9,10,42,12,13,15,44,45,18,46,19,20,47,22,23,25,28,48,32,33,35,38,43]),Vecsmall([5,10,13,15,1,17,20,23,25,2,27,28,3,30,4,31,6,33,35,7,37,38,8,40,9,41,11,12,42,14,16,43,18,45,19,46,21,22,47,24,26,29,32,48,34,36,39,44]),Vecsmall([15,25,28,1,4,31,35,38,2,9,41,3,12,42,5,6,16,43,7,19,46,8,22,47,10,11,26,13,14,29,17,18,32,48,20,21,36,23,24,39,27,30,33,34,44,37,40,45]),Vecsmall([30,40,1,42,14,13,45,2,47,24,23,4,5,6,29,28,3,7,48,34,33,9,10,11,39,38,8,15,16,17,12,19,20,21,44,43,18,25,26,27,22,31,35,36,37,32,41,46]),Vecsmall([7,1,44,18,37,20,2,29,3,17,5,35,43,48,45,33,21,39,8,27,10,15,28,42,30,13,6,36,19,32,34,25,38,47,40,23,11,16,4,12,14,46,26,9,22,24,31,41])],Vecsmall([2,2,2,2,3])]; galoissubgroups(G)
+bnrstark(bnrinit(bnfinit(y^2+1),2))
+bnrstark(bnrinit(bnfinit(y^2-2),[4,[1,1]]))
+quadray(-16,1)
+quadray(bnfinit(x^3-2),1)
+galoissubcyclo(-1)
+galoissubcyclo(6,Mod(1,3))
+galoissubcyclo(6,[;])
+galoissubcyclo(6,Mat(1))
+galoissubcyclo(znstar(5),matid(2))
+galoissubcyclo( [3, [3], [3]], Mat(3))
+galoissubcyclo(bnrinit(bnfinit(y^2+1),1), 2)
+polsubcyclo(-1,2);
+polsubcyclo(2,-1);
+random(-1)
+znprimroot(0)
+sqrtint(-1)
+sqrtnint(-1,2)
+sqrtnint(2,-2)
+znprimroot(8)
+polroots(x^2+Mod(1,2))
+polroots(0)
+polroots(Mod(1,2))
+polrootsmod(x,x)
+prime(-2)
+addprimes(-1)
+padicappr(x^2+1+O(3^5), 1+O(5))
+factorpadic(x^2+1,2,-1)
+polrootspadic(x^2+1,2,-1)
+ellinit([1+O(3),1+O(5)])
+ellwp([1,I],I)
+ellsigma([1,I],x,1)
+ellsigma([1,I],1,1)
+E=ellinit([1,1]);
+ellap(E)
+ellap(E,1)
+ellap(E,'x)
+ellissupersingular(x,1)
+elltaniyama(E,-1)
+ellheight(E,[2,2])
+Qfb(0,0,0)
+quadpoly(2)
+qfbprimeform(2,5)
+qfbcomp(Qfb(1,1,1),Qfb(1,0,2))
+\\qfbcompraw(Qfb(21,1,2),Qfb(112,0,2))
+galoisinit(x^2)
+galoisinit(2*x)
+ellL1(1,-1)
+ellheegner(ellinit([0,-1,1,-10,-20]))
+ellheegner(ellinit([0,0,1,-7,6]))
+substpol(x+O(x^2),x^3,x)
+intformal(1/(x^2+1))
+component(x,-1)
+component(O(x),2)
+component(Vecsmall([]),1)
+component(x->x,6)
+polcoef(O(x),2)
+polcoef(x+O(x^2),2)
+polcoef([],2)
+matcompanion(0*x)
+matrixqz(Mat([1,2]))
+matrixqz(Mat(0))
+vecextract([1],[-1]);
+vecextract([1],[2]);
+idealfrobenius(K,galoisinit(K),idealprimedec(K,2)[1])
+nfisincl(x^2,x^2)
+polcompositum(x^2,x)
+rnfdedekind(K, x^2+x-1/3)
+hilbert(Mod(1,2),1)
+hilbert(Mod(1,3),Mod(1,5))
+hilbert(Mod(1,3),2,0)
+znorder(0)
+znorder(Mod(2,4))
+contfrac(1e100)
+contfrac(1.,[1],10)
+contfrac(1,,-1)
+contfracpnqn(matrix(3,1));
+divisors(1/2)
+idealstar(K,0)
+idealstar(K,1/2)
+idealaddtoone(K,[[;]])
+idealdiv(K,1,2,1)
+idealred(K,matid(2),[])
+idealtwoelt(K,matid(2),1/2)
+rnf=rnfinit(K,x^2-y); rnfeltdown(rnf, x)
+matid(-1)
+polinterpolate([1,1],[2,3],Pi)
+modreverse(Mod(-x^3+9*x,x^4-10*x^2+1))
+rnfnormgroup(bnrinit(bnfinit(K),9), x^3-2)
+concat([1,2],[3,4]~)
+concat([])
+concat(List())
+mathnfmod([1;2],2)
+removeprimes(2)
+forstep(a=1,2,0,)
+e=ellinit([1,1+O(31^2)]);
+e.omega
+e.eta
+e.area
+e=ellinit([0,1]);
+e.tate
+ellorder(e, [0,0]*Mod(1,2))
+thue(x*(x^3-2),0);
+direuler(p=2, 10, 2/(1-p*X))
+solve(x=0,1,x^2+1)
+warning(1)
+iferr(1/0,E,1,errname(E)=="e_DOMAIN")
+iferr(1/0,E,return(4))
+iferr(1/0,E,1,break())
+\\ backward compatibility. Eventually remove
+inv(x) = trap (e_INV, INFINITY, 1/x)
+inv(2)
+inv(0)
+trap (e_INV, INFINITY, log(0))
+a=1;
+notafunc('a)
+a
+n=1<<10000;
+znlog(Mod(1,n),Mod(1,n+1))
+Mod(0,n)^(-1)
+a=Mod(1,7)*x+y; b=Mod(1,7*y^2+7)*x+4;
+a*b
+a%b
+(a*x^2+b)^2
+M=[Mod(1,7),1;0,Mod(x,7*x^2+7)];
+matrank(M)
+matimage(M)
+matker(M);
+default(plothsizes,"[")
+default(plothsizes,"1")
+default(plothsizes,"[2,")
+default(plothsizes,"[2,]")
+default(plothsizes,"[2,3]") \\ succeeds

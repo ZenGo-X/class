@@ -1,0 +1,18 @@
+Function: rnfelttrace
+Section: number_fields
+C-Name: rnfelttrace
+Prototype: GG
+Help: rnfelttrace(rnf,x): returns the relative trace Tr_{L/K}(x), as an element
+ of K.
+Doc: $\var{rnf}$ being a relative number field extension $L/K$ as output by
+ \kbd{rnfinit} and $x$ being an element of $L$, returns the relative trace
+ $Tr_{L/K}(x)$ as an element of $K$.
+ \bprog
+ ? K = nfinit(y^2+1); L = rnfinit(K, x^2-y);
+ ? rnfelttrace(L, Mod(x, L.pol))
+ %2 = 0
+ ? rnfelttrace(L, 2)
+ %3 = 4
+ ? rnfelttrace(L, Mod(x, x^2-y))
+ @eprog
+

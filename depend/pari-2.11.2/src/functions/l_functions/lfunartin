@@ -1,0 +1,78 @@
+Function: lfunartin
+Section: l_functions
+C-Name: lfunartin
+Prototype: GGGLb
+Help: lfunartin(nf,gal,rho,n): returns the Ldata structure attached to the
+ Artin L-function provided by the representation rho of the Galois group of the
+ extension K/Q, defined over the cyclotomic field Q(zeta_n), where nf is the
+ nfinit structure attached to K, gal is the galoisinit structure attached to
+ K/Q, and rho is given either by the values of its character on the conjugacy
+ classes or by the matrices that are the images of the generators. Cyclotomic
+ numbers in rho are represented by polynomials, whose variable is understood as
+ the complex number exp(2*I*Pi/n).
+Doc: returns the \kbd{Ldata} structure attached to the
+ Artin $L$-function provided by the representation $\rho$ of the Galois group
+ of the extension $K/\Q$, defined over the cyclotomic field $\Q(\zeta_n)$,
+ where \var{nf} is the nfinit structure attached to $K$,
+ \var{gal} is the galoisinit structure attached to $K/\Q$, and \var{rho} is
+ given either
+
+ \item by the values of its character on the conjugacy classes
+ (see \kbd{galoisconjclasses} and \kbd{galoischartable})
+
+ \item or by the matrices that are the images of the generators
+ \kbd{\var{gal}.gen}.
+
+ Cyclotomic numbers in \kbd{rho} are represented by polynomials, whose
+ variable is understood as the complex number $\exp(2\*i\*\pi/n)$.
+
+ In the following example we build the Artin $L$-functions attached to the two
+ irreducible degree $2$ representations of the dihedral group $D_{10}$ defined
+ over $\Q(\zeta_5)$, for the extension $H/\Q$ where $H$ is the Hilbert class
+ field of $\Q(\sqrt{-47})$.
+ We show numerically some identities involving Dedekind $\zeta$ functions and
+ Hecke $L$ series.
+ \bprog
+ ? P = quadhilbert(-47)
+ %1 = x^5 + 2*x^4 + 2*x^3 + x^2 - 1
+ ? N = nfinit(nfsplitting(P));
+ ? G = galoisinit(N); \\ D_10
+ ? [T,n] = galoischartable(G);
+ ? T  \\ columns give the irreducible characters
+ %5 =
+ [1  1              2              2]
+
+ [1 -1              0              0]
+
+ [1  1 -y^3 - y^2 - 1      y^3 + y^2]
+
+ [1  1      y^3 + y^2 -y^3 - y^2 - 1]
+ ? n
+ %6 = 5
+ ? L2 = lfunartin(N,G, T[,2], n);
+ ? L3 = lfunartin(N,G, T[,3], n);
+ ? L4 = lfunartin(N,G, T[,4], n);
+ ? s = 1 + x + O(x^4);
+ ? lfun(-47,s) - lfun(L2,s)
+ %11 ~ 0
+ ? lfun(1,s)*lfun(-47,s)*lfun(L3,s)^2*lfun(L4,s)^2 - lfun(N,s)
+ %12 ~ 0
+ ? lfun(1,s)*lfun(L3,s)*lfun(L4,s) - lfun(P,s)
+ %13 ~ 0
+ ? bnr = bnrinit(bnfinit(x^2+47),1,1);
+ ? bnr.cyc
+ %15 = [5] \\ Z/5Z: 4 non-trivial ray class characters
+ ? lfun([bnr,[1]], s) - lfun(L3, s)
+ %16 ~ 0
+ ? lfun([bnr,[2]], s) - lfun(L4, s)
+ %17 ~ 0
+ ? lfun([bnr,[3]], s) - lfun(L3, s)
+ %18 ~ 0
+ ? lfun([bnr,[4]], s) - lfun(L4, s)
+ %19 ~ 0
+ @eprog
+ The first identity identifies the non-trivial abelian character with
+ $(-47,\cdot)$; the second is the factorization of the regular representation of
+ $D_{10}$; the third is the factorization of the natural representation of
+ $D_{10}\subset S_5$; and the final four are the expressions of the degree $2$
+ representations as induced from degree $1$ representations.

@@ -1,0 +1,35 @@
+Function: galoisexport
+Section: number_fields
+C-Name: galoisexport
+Prototype: GD0,L,
+Help: galoisexport(gal,{flag}): gal being a Galois group as output by
+ galoisinit, output a string representing the underlying permutation group in
+ GAP notation (default) or Magma notation (flag = 1).
+Doc: \var{gal} being be a Galois group as output by \tet{galoisinit},
+ export the underlying permutation group as a string suitable
+ for (no flags or $\fl=0$) GAP or ($\fl=1$) Magma. The following example
+ compute the index of the underlying abstract group in the GAP library:
+ \bprog
+ ? G = galoisinit(x^6+108);
+ ? s = galoisexport(G)
+ %2 = "Group((1, 2, 3)(4, 5, 6), (1, 4)(2, 6)(3, 5))"
+ ? extern("echo \"IdGroup("s");\" | gap -q")
+ %3 = [6, 1]
+ ? galoisidentify(G)
+ %4 = [6, 1]
+ @eprog\noindent
+ This command also accepts subgroups returned by \kbd{galoissubgroups}.
+
+ To \emph{import} a GAP permutation into gp (for \tet{galoissubfields} for
+ instance), the following GAP function may be useful:
+ \bprog
+ PermToGP := function(p, n)
+   return Permuted([1..n],p);
+ end;
+
+ gap> p:= (1,26)(2,5)(3,17)(4,32)(6,9)(7,11)(8,24)(10,13)(12,15)(14,27)
+   (16,22)(18,28)(19,20)(21,29)(23,31)(25,30)
+ gap> PermToGP(p,32);
+ [ 26, 5, 17, 32, 2, 9, 11, 24, 6, 13, 7, 15, 10, 27, 12, 22, 3, 28, 20, 19,
+   29, 16, 31, 8, 30, 1, 14, 18, 21, 25, 23, 4 ]
+ @eprog

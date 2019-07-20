@@ -1,0 +1,48 @@
+Function: charpow
+Section: number_theoretical
+C-Name: charpow0
+Prototype: GGG
+Help: charpow(cyc, a,n): given a finite abelian group (by its elementary
+ divisors cyc) a character a and an integer n return the character a^n.
+Doc: let \var{cyc} represent a finite abelian group by its elementary
+ divisors, i.e. $(d_j)$ represents $\sum_{j \leq k} \Z/d_j\Z$ with $d_k
+ \mid \dots \mid d_1$; any object which has a \kbd{.cyc} method is also
+ allowed, e.g.~the output of \kbd{znstar} or \kbd{bnrinit}. A character
+ on this group is given by a row vector $a = [a_1,\ldots,a_n]$ such that
+ $\chi(\prod g_j^{n_j}) = \exp(2\pi i\sum a_j n_j / d_j)$, where $g_j$ denotes
+ the generator (of order $d_j$) of the $j$-th cyclic component.
+
+ Given $n\in \Z$ and a character $a$, return the character $a^n$.
+ \bprog
+ ? cyc = [15,5]; a = [1,1];
+ ? charpow(cyc, a, 3)
+ %2 = [3, 3]
+ ? charpow(cyc, a, 5)
+ %2 = [5, 0]
+ ? bnf = bnfinit(x^2+23);
+ ? bnf.cyc
+ %4 = [3]
+ ? charpow(bnf, [1], 3)
+ %5 = [0]
+ @eprog\noindent For Dirichlet characters on  $(\Z/N\Z)^*$, additional
+ representations are available (Conrey labels, Conrey logarithm), see
+ \secref{se:dirichletchar} or \kbd{??character} and the output uses the
+ same format as the input.
+ \bprog
+ ? G = znstar(100, 1);
+ ? G.cyc
+ %2 = [20, 2]
+ ? a = [10, 1]; \\ standard representation for characters
+ ? b = 7; \\ Conrey label;
+ ? c = znconreylog(G, 11); \\ Conrey log
+ ? charpow(G, a,3)
+ %6 = [10, 1]   \\ standard representation
+ ? charpow(G, b,3)
+ %7 = 43   \\ Conrey label
+ ? charpow(G, c,3)
+ %8 = [1, 8]~  \\ Conrey log
+ @eprog
+
+Variant: Also available is
+ \fun{GEN}{charpow}{GEN cyc, GEN a, GEN n}, when \kbd{cyc} is known to
+ be a vector of elementary divisors (no check).

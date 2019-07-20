@@ -1,0 +1,125 @@
+weil(E,P,Q,m,p)=lift(ellweilpairing(E,P,Q,m));
+tate(E,P,Q,m,p)=if(p%m!=1,return(0));lift(elltatepairing(E,P,Q,m)^((p-1)/m));
+check(v,P,Q,m,p)=
+{
+  my (E=ellinit(v*Mod(1,p)));
+  P*=Mod(1,p); Q*=Mod(1,p);
+  print([weil(E,P,Q,m,p),tate(E,P,Q,m,p),ellgroup(E)]);
+}
+
+check([0,0,1,0,0],[0,0],[57,46],3,103)
+check([0,0,1,0,0],[64,63],[0,0],3,109)
+check([0,0,1,0,0],[0,0],[150,32],3,151)
+check([0,0,1,0,0],[0,156],[13,144],3,157)
+check([0,0,1,0,0],[0,0],[59,58],3,163)
+check([0,0,1,0,0],[192,84],[0,192],3,193)
+check([0,0,1,0,0],[198,92],[0,0],3,199)
+check([0,0,0,1,0],[1,51],[72,9],4,113)
+check([0,0,0,1,0],[88,56],[1,31],4,137)
+check([1,0,0,0,3],[13,6],[147,89],4,149)
+check([0,0,1,0,0],[5,58],[36,128],4,157)
+check([0,0,1,0,3],[30,1],[26,1],5,31)
+check([0,0,1,0,0],[58,107],[22,76],6,109)
+check([0,0,1,0,0],[90,4],[32,1],6,127)
+check([0,0,1,0,0],[138,60],[62,155],6,157)
+check([0,0,0,1,0],[47,53],[160,147],7,197)
+check([0,0,0,1,0],[50,80],[16,65],8,113)
+check([1,0,0,0,3],[25,82],[23,49],8,149)
+check([0,0,1,0,0],[10,67],[88,35],9,127)
+check([0,0,1,0,0],[102,32],[87,55],9,163)
+check([0,0,1,0,0],[12,11],[17,5],9,19)
+check([0,0,1,0,0],[190,47],[194,169],9,199)
+check([0,0,0,1,0],[28,34],[22,11],10,137)
+check([0,0,0,1,0],[94,84],[10,142],10,157)
+check([0,0,0,1,0],[159,29],[115,100],14,197)
+check([0,0,0,1,0],[154,21],[58,126],15,157)
+check([0,0,0,1,0],[121,63],[121,64],16,127);
+check([0,0,0,1,0],[18,104],[177,153],16,191);
+check([0,0,1,0,0],[16,56],[16,56],2,113);
+check([0,0,1,0,0],[66,63],[66,63],2,127);
+check([0,0,1,0,0],[126,78],[89,78],2,157);
+check([0,0,1,0,0],[150,89],[150,89],2,179);
+check([0,0,1,0,0],[22,95],[22,95],2,191);
+check([0,0,0,1,3],[4,1],[4,6],6,7);
+check([0,0,0,0,2],[3,1],[3,1], 3,7);
+
+t=ffgen(Mod(1,2)*(t^6+t^5+t^3+t^2+1));
+E=ellinit([0,0,1,0,0],t);
+P=[t^2+t+1,t+1];
+Q=[t^5+t^3+t^2,t^5+t^4+t^3+t^2+t+1];
+ellweilpairing(E,P,Q,3)
+elltatepairing(E,P,Q,3)
+elltatepairing(E,P,P,3)
+elltatepairing(E,Q,Q,3)
+
+t=ffgen(ffinit(3,6),'t);
+E=ellinit([0,0,0,1,0],t);
+P=[2*t^5+2*t^4+t^2+2*t+2,2*t^5+t^4+t^3+2*t^2+1];
+Q=[t^4+t^3+t^2+t+2,t^5+2*t^4+2*t^2+t];
+ellweilpairing(E,P,Q,28)
+elltatepairing(E,P,Q,28)
+elltatepairing(E,P,P,28)
+elltatepairing(E,Q,Q,28)
+
+t=ffgen(ffinit(5,6),'t);
+E=ellinit([0,0,1,0,0],t);
+P=[4*t^5+4*t^4+3*t^3+2*t^2+2*t,4*t^5+4*t^4+2*t^3+2*t^2+4];
+Q=[t^5+2*t^4+4*t^3+2*t^2+4*t+1,2*t^5+t^4+3*t+1];
+ellweilpairing(E,P,Q,126)
+elltatepairing(E,P,Q,126)
+elltatepairing(E,P,P,126)
+elltatepairing(E,Q,Q,126)
+
+t=ffgen(2^4,'t);
+E=ellinit([1,0,0,0,t^3+t^2+t+1]);
+Q=[t^3+t^2,t+1];
+elltatepairing(E,Q,Q,5)^3
+
+t=ffgen(3^6,'t);
+E=ellinit([0,2*t^5+2*t^3+t^2+t+1,0,0,t^3+2*t^2+t]);
+Q=[2*t^5+2*t^4+t^3+2*t^2+2*t+1,2*t^5+t^2];
+elltatepairing(E,Q,Q,8)^91
+
+t=ffgen(5^4,'t);
+E=ellinit([0,0,0,4*t^3+4*t^2+4*t+1,3*t^3+2]);
+Q=[3*t^3+2*t^2+1,3*t^2+4*t];
+elltatepairing(E,Q,Q,48)^13
+
+p=nextprime(2^65);
+t=ffgen(p^2,'t);
+E=ellinit([t^2,0]);
+[N]=ellgroup(E)
+d=(p^2-1)/N;
+P=[14078684373865444404*t+24675141949190748313,34082614562121616748*t+9184592839883218620];
+Q=[3606608601291892434*t+22502667145150289531,23709671617839429105*t+22495649567796533868];
+ellweilpairing(E,P,Q,N)
+elltatepairing(E,P,Q,N)^d
+
+test(p) =
+{
+  forvec(v=vector(5,i,[0,p-1]),
+    E=ellinit(v*Mod(1,p));
+    if (!#E, next);
+    G=ellgroup(E);if(#G>1,print(v,":",G)),
+  );
+}
+test(3);
+test(5);
+
+check2(E)=
+{
+  E=ellinit(E);
+  my([n,D,G] = ellgroup(E,,1));
+  my(o = D[1], [P,Q] = G);
+  my(z = ellweilpairing(E,P,Q,o));
+  forvec(v=vector(4,i,[0,o-1]),
+    my(Pk, Qj, d, w);
+    Pk = elladd(E, ellmul(E,P,v[1]),ellmul(E,Q,v[2]));
+    Qj = elladd(E, ellmul(E,P,v[3]),ellmul(E,Q,v[4]));
+    d = v[1]*v[4]-v[2]*v[3];
+    w = ellweilpairing(E,Pk,Qj,o);
+    if(w != z^d, error(v,[Pk,Qj],[w,z^d])));
+}
+a=ffgen(2^4,'a);
+check2([0, a^2, a^3, 0, 0]);
+check2([0, a^2, a^3, a^4, 0]);

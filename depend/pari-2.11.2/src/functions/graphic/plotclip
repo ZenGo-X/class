@@ -1,0 +1,10 @@
+Function: plotclip
+Section: graphic
+C-Name: plotclip
+Prototype: vL
+Help: plotclip(w): clip the contents of the rectwindow to the bounding box
+ (except strings).
+Doc: `clips' the content of rectwindow $w$, i.e remove all parts of the
+ drawing that would not be visible on the screen. Together with
+ \tet{plotcopy} this function enables you to draw on a scratchpad before
+ committing the part you're interested in to the final picture.

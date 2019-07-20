@@ -1,0 +1,6 @@
+Function: nfelttrace
+Section: number_fields
+C-Name: nftrace
+Prototype: GG
+Help: nfelttrace(nf,x): trace of x.
+Doc: returns the absolute trace of $x$.

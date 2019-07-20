@@ -1,0 +1,26 @@
+Function: _def_debugmem
+Class: default
+Section: default
+C-Name: sd_debugmem
+Prototype:
+Help:
+Doc: memory debugging level (see \b{gm}). If this is non-zero, \kbd{gp} will
+ print increasingly precise notifications about memory use:
+
+ \item $\kbd{debugmem} > 0$, notify when \kbd{parisize} changes (within the
+ boundaries set by \kbd{parisizemax});
+
+ \item $\kbd{debugmem} > 1$, indicate any important garbage collection and the
+ function it is taking place in;
+
+ \item $\kbd{debugmem} > 2$, indicate the creation/destruction of
+ ``blocks'' (or clones); expect lots of messages.
+
+ \noindent {\bf Important Note:}
+ if you are running a version compiled for debugging (see Appendix~A) and
+ $\kbd{debugmem} > 1$, \kbd{gp} will further regularly print information on
+ memory usage, notifying whenever stack usage goes up or down by 1 MByte.
+ This functionality is disabled on non-debugging builds as it noticeably
+ slows down the performance.
+
+ The default value is \kbd{1}.

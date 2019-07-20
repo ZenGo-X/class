@@ -1,0 +1,11 @@
+Function: poldiscreduced
+Section: polynomials
+C-Name: reduceddiscsmith
+Prototype: G
+Help: poldiscreduced(f): vector of elementary divisors of Z[a]/f'(a)Z[a],
+ where a is a root of the polynomial f.
+Doc: reduced discriminant vector of the
+ (integral, monic) polynomial $f$. This is the vector of elementary divisors
+ of $\Z[\alpha]/f'(\alpha)\Z[\alpha]$, where $\alpha$ is a root of the
+ polynomial $f$. The components of the result are all positive, and their
+ product is equal to the absolute value of the discriminant of~$f$.

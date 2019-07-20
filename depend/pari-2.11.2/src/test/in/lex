@@ -1,0 +1,36 @@
+v = [0, 2, [1,2], [1,2;3,4], [1,0;1,2], [1,2,3]~, [1,2,3;4,5,6]];
+
+isvec(x) = type(x) == "t_VEC" || type(x) == "t_COL";
+{
+  for (i = 1, #v,
+    for (j = i, #v,
+      s = lex(v[i],v[j]);
+      print([i,j,s]);
+      if (s != -lex(v[j], v[i]), error(2));
+      if (isvec(v[i]) && lex(Vecsmall(v[i]), v[j]) != s, error(3));
+      if (isvec(v[j]) && lex(v[i], Vecsmall(v[j])) != s, error(4));
+
+    )
+  );
+}
+lex(1,[1])
+lex(1,[2])
+lex(1,[0])
+lex([1],Mat(1))
+lex([1],Mat([1,0]~))
+
+v = Vecsmall([1,2,3]);
+lex(v, [1,2,3])
+lex(v, [1,2])
+lex(v, Vecsmall([1,2]))
+lex(v, Vecsmall([1,2,3,4]))
+lex(v, Vecsmall([1,2,4]))
+lex(v, Vecsmall([1,2,2]))
+lex(v, [1,2,4])
+lex(v, [4,2,3])
+lex(v, [0,2,3])
+lex(v, [[1,2,3],2,3])
+lex(v, [[0,2,3],2,3])
+lex(v, [[],2,3])
+lex(v, [Vecsmall([]),2,3])
+lex(v, [Vecsmall(1),2,3])

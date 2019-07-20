@@ -1,0 +1,25 @@
+Function: ideallog
+Section: number_fields
+C-Name: ideallog
+Prototype: DGGG
+Help: ideallog({nf},x,bid): if bid is a big ideal, as given by
+ idealstar(nf,D,...), gives the vector of exponents on the generators bid.gen
+ (even if these generators have not been explicitly computed).
+Doc: $\var{nf}$ is a number field,
+ \var{bid} is as output by \kbd{idealstar(nf, D, \dots)} and $x$ a
+ non-necessarily integral element of \var{nf} which must have valuation
+ equal to 0 at all prime ideals in the support of $\kbd{D}$. This function
+ computes the discrete logarithm of $x$ on the generators given in
+ \kbd{\var{bid}.gen}. In other words, if $g_i$ are these generators, of orders
+ $d_i$ respectively, the result is a column vector of integers $(x_i)$ such
+ that $0\le x_i<d_i$ and
+ $$x \equiv \prod_i g_i^{x_i} \pmod{\ ^*D}\enspace.$$
+ Note that when the support of \kbd{D} contains places at infinity, this
+ congruence implies also sign conditions on the attached real embeddings.
+ See \tet{znlog} for the limitations of the underlying discrete log algorithms.
+
+ When \var{nf} is omitted, take it to be the rational number field. In that
+ case, $x$ must be a \typ{INT} and \var{bid} must have been initialized by
+ \kbd{znstar(N,1)}.
+Variant: Also available is
+ \fun{GEN}{Zideallog}{GEN bid, GEN x} when \kbd{nf} is \kbd{NULL}.

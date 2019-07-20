@@ -1,0 +1,41 @@
+Function: subgrouplist
+Section: number_fields
+C-Name: subgrouplist0
+Prototype: GDGD0,L,
+Help: subgrouplist(bnr,{bound},{flag=0}): bnr being as output by bnrinit or
+ a list of cyclic components of a finite Abelian group G, outputs the list of
+ subgroups of G (of index bounded by bound, if not omitted), given as HNF
+ left divisors of the SNF matrix corresponding to G. If flag=0 (default) and
+ bnr is as output by bnrinit, gives only the subgroups for which the modulus
+ is the conductor.
+Doc: \var{bnr} being as output by \kbd{bnrinit} or a list of cyclic components
+ of a finite Abelian group $G$, outputs the list of subgroups of $G$. Subgroups
+ are given as HNF left divisors of the SNF matrix corresponding to $G$.
+
+ If $\fl=0$ (default) and \var{bnr} is as output by \kbd{bnrinit}, gives
+ only the subgroups whose modulus is the conductor. Otherwise, the modulus is
+ not taken into account.
+
+ If \var{bound} is present, and is a positive integer, restrict the output to
+ subgroups of index less than \var{bound}. If \var{bound} is a vector
+ containing a single positive integer $B$, then only subgroups of index
+ exactly equal to $B$ are computed. For instance
+ \bprog
+ ? subgrouplist([6,2])
+ %1 = [[6, 0; 0, 2], [2, 0; 0, 2], [6, 3; 0, 1], [2, 1; 0, 1], [3, 0; 0, 2],
+ [1, 0; 0, 2], [6, 0; 0, 1], [2, 0; 0, 1], [3, 0; 0, 1], [1, 0; 0, 1]]
+ ? subgrouplist([6,2],3)    \\@com index less than 3
+ %2 = [[2, 1; 0, 1], [1, 0; 0, 2], [2, 0; 0, 1], [3, 0; 0, 1], [1, 0; 0, 1]]
+ ? subgrouplist([6,2],[3])  \\@com index 3
+ %3 = [[3, 0; 0, 1]]
+ ? bnr = bnrinit(bnfinit(x), [120,[1]], 1);
+ ? L = subgrouplist(bnr, [8]);
+ @eprog\noindent
+ In the last example, $L$ corresponds to the 24 subfields of
+ $\Q(\zeta_{120})$, of degree $8$ and conductor $120\infty$ (by setting \fl,
+ we see there are a total of $43$ subgroups of degree $8$).
+ \bprog
+ ? vector(#L, i, galoissubcyclo(bnr, L[i]))
+ @eprog\noindent
+ will produce their equations. (For a general base field, you would
+ have to rely on \tet{bnrstark}, or \tet{rnfkummer}.)

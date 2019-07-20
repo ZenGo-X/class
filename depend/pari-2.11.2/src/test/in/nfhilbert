@@ -1,0 +1,58 @@
+nf=nfinit(y^3-1009);
+P = primes(20);
+
+pr = idealprimedec(nf,1009)[1]; a = y^11*(y+1)*101; b = y^5*(y+3)*19;
+vector(#P, i, nfhilbert(nf, a, P[i]*b, pr))
+
+pr = idealprimedec(nf,19)[1]; a = 19^11*(y+1)*101; b = 19^5*(y+3)*19;
+vector(#P, i, nfhilbert(nf, a, (1+P[i]*y)*b, pr))
+
+/* old regression cases: */
+nf=nfinit(y^2+1); pr=idealprimedec(nf,2)[1];
+nfhilbert(nf, [1,1]~, 3, pr)
+
+nfhilbert(nf, Mod(0,3), 3, pr)
+nfhilbert(nf, 3, 0., pr)
+
+nfhilbert(nf,[1,-2]~,[1,-2]~, pr)
+
+nf=nfinit(y^2+3);
+nfhilbert(nf,[3,0]~,[3,0]~,idealprimedec(nf,2)[1])
+
+
+\\ #1147
+K = nfinit(x^5-23);
+p = idealprimedec(K, 2)[1];
+nfhilbert(K,x,-x^2-5*x,p)
+
+K = nfinit(x^8 + 2*x^7 + 3*x^6 + 3*x^4 + 3*x^2 + 2*x + 3);
+p = idealprimedec(K, 2)[1];
+{
+for (j = 1,10,
+  setrand(j);
+  a = vectorv(8,i,random(7));
+  b = vectorv(8,i,random(7));
+  c = vectorv(8,i,random(7));
+  d = nfeltmul(K,b,c);
+  if (nfhilbert(K, a,b,p) * nfhilbert(K, a,c,p) != nfhilbert(K, a,d,p),
+    error([a,b,c]))
+)
+}
+
+L = [2, 3, 1.0, Mod(1,2), Mod(1,4), Mod(1,8), Mod(1,3), Mod(0,5), 1 + O(2^2), 1 + O(2^3), 1 + O(5)];
+for (i=1,#L, for(j=i+1,#L, print([i,j], ": ", iferr(hilbert(L[i],L[j]), E, E))))
+print("p = 0:");
+for (i=1,#L, print(i, ": ", iferr(hilbert(L[i],L[i], 0), E, E)))
+print("p = 2:");
+for (i=1,#L, print(i, ": ", iferr(hilbert(L[i],L[i], 2), E, E)))
+print("p = 5:");
+for (i=1,#L, print(i, ": ", iferr(hilbert(L[i],L[i], 5), E, E)))
+\\#1251
+hilbert(-1,-1,0)
+\\#1261
+K=nfinit(y^2+5); P=idealprimedec(K,2)[1];
+nfhilbert(K,2*y,2,P)
+
+\\#1569
+K=nfinit(x^3-4*x+2);
+nfhilbert(K,2,-2, idealprimedec(K,2)[1])

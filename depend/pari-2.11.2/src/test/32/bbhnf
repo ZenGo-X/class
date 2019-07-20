@@ -1,0 +1,345 @@
+bb hermite Z/NZ
+imagemod
+
+[900 130 117 275 85]
+
+[  0   4   0   0  0]
+
+[  0   0   9   0  0]
+
+[  0   0   0  25  0]
+
+[  0   0   0   0 10]
+
+
+[870 11 1603 1016]
+
+[ 15  2    1    8]
+
+[  0  5    3    0]
+
+[  0  0    8    3]
+
+[  0  0    0    3]
+
+kermod
+
+[1]
+
+[;]
+
+[3]
+
+[;]
+
+[3]
+
+
+[1]
+
+
+[2]
+
+[;]
+
+[3]
+
+[;]
+[;]
+
+[3]
+
+
+[0]
+
+[1]
+
+
+[1]
+
+[0]
+
+
+[3 0]
+
+[0 1]
+
+
+[3]
+
+[1]
+
+
+[1 0]
+
+[0 2]
+
+
+[3 0]
+
+[0 2]
+
+
+[0]
+
+[1]
+
+
+[3 0]
+
+[0 2]
+
+[;]
+
+[3 2]
+
+[0 2]
+
+
+[3 1]
+
+[0 1]
+
+
+[2]
+
+[1]
+
+invmod
+
+[12 4 10]
+
+[ 0 1  0]
+
+[ 0 0  1]
+
+
+[3 0 2]
+
+[0 3 1]
+
+[0 0 1]
+
+
+[30 29 2]
+
+[ 0  1 0]
+
+[ 0  0 1]
+
+
+[4 2 1 1]
+
+[0 1 0 0]
+
+[0 0 1 0]
+
+[0 0 0 1]
+
+
+[30 11]
+
+[ 0  1]
+
+
+[512   0  38  89]
+
+[  0 512 414 178]
+
+[  0   0   1   0]
+
+[  0   0   0   1]
+
+0
+[1]~
+[]~
+[]~
+0
+[]~
+[]~
+0
+0
+[1]~
+[-1, 1]~
+[;]
+0
+0
+[;]
+
+[0 0]
+
+[0 0]
+
+
+[0 0 0]
+
+[0 0 0]
+
+[[0]~, Mat(1)]
+
+[1 0]
+
+[0 2]
+
+
+[5 1]
+
+[3 4]
+
+
+[1 0]
+
+[0 2]
+
+
+[1 2 3]
+
+[5 1 4]
+
+
+[2 1]
+
+[2 1]
+
+[0 3]
+
+
+[0 0]
+
+[0 0]
+
+
+[1 1 3]
+
+[2 3 5]
+
+[1 0 5]
+
+
+[1 0 0]
+
+[0 1 0]
+
+[0 0 1]
+
+18
+8
+8
+6
+
+[2 1]
+
+[0 2]
+
+
+[2 1]
+
+[0 4]
+
+
+[0 0]
+
+[2 1]
+
+[]~
+[]~
+[]~
+[[]~, [;]]
+[0]~
+[0]~
+[[0]~, [;]]
+0
+[[21, -4]~, [-110; 21]]
+1
+1
+  ***   at top-level: matimagemod([],1)
+  ***                 ^-----------------
+  *** matimagemod: incorrect type in matimagemod (t_VEC).
+  ***   at top-level: matimagemod([;],'x)
+  ***                 ^-------------------
+  *** matimagemod: incorrect type in matimagemod (t_POL).
+  ***   at top-level: matimagemod([0,'x;1,0],1)
+  ***                 ^-------------------------
+  *** matimagemod: incorrect type in matimagemod (t_MAT).
+  ***   at top-level: matkermod([],1)
+  ***                 ^---------------
+  *** matkermod: incorrect type in matkermod (t_VEC).
+  ***   at top-level: matkermod([;],'x)
+  ***                 ^-----------------
+  *** matkermod: incorrect type in matkermod (t_POL).
+  ***   at top-level: matkermod([0,'x;1,0],1)
+  ***                 ^-----------------------
+  *** matkermod: incorrect type in matkermod (t_MAT).
+  ***   at top-level: matinvmod([],1)
+  ***                 ^---------------
+  *** matinvmod: incorrect type in matinvmod (t_VEC).
+  ***   at top-level: matinvmod([;],'x)
+  ***                 ^-----------------
+  *** matinvmod: incorrect type in matinvmod (t_POL).
+  ***   at top-level: matinvmod([0,'x;1,0],1)
+  ***                 ^-----------------------
+  *** matinvmod: incorrect type in matinvmod (t_MAT).
+  ***   at top-level: matdetmod([],1)
+  ***                 ^---------------
+  *** matdetmod: incorrect type in matdetmod (t_VEC).
+  ***   at top-level: matdetmod(Mat([1,2]),1)
+  ***                 ^-----------------------
+  *** matdetmod: inconsistent dimensions in matdetmod.
+  ***   at top-level: matdetmod(Mat(1/2),3)
+  ***                 ^---------------------
+  *** matdetmod: incorrect type in matdetmod (t_MAT).
+  ***   at top-level: matimagemod(Mat(1),-1)
+  ***                 ^----------------------
+  *** matimagemod: domain error in matimagemod: d <= 0
+  ***   at top-level: matdetmod(Mat(1),0)
+  ***                 ^-------------------
+  *** matdetmod: domain error in matdetmod: d <= 0
+  ***   at top-level: matkermod(Mat(1),0)
+  ***                 ^-------------------
+  *** matkermod: domain error in makermod: d <= 0
+  ***   at top-level: matinvmod(Mat(1),0)
+  ***                 ^-------------------
+  *** matinvmod: domain error in matinvmod: d <= 0
+  ***   at top-level: matinvmod([1,2,3;4,5,6],1)
+  ***                 ^--------------------------
+  *** matinvmod: impossible inverse in matinvmod: [1, 2, 3; 4, 5, 6].
+  ***   at top-level: matsolvemod([;],[2,2]~,[1,2,3]~)
+  ***                 ^--------------------------------
+  *** matsolvemod: inconsistent dimensions in matsolvemod [2].
+  ***   at top-level: matsolvemod(Mat(1),[1,2]~,1)
+  ***                 ^----------------------------
+  *** matsolvemod: inconsistent dimensions in matsolvemod [1].
+  ***   at top-level: matsolvemod(Mat(1),2,[1,2]~)
+  ***                 ^----------------------------
+  *** matsolvemod: inconsistent dimensions in matsolvemod [2].
+  ***   at top-level: matsolvemod(Mat(1),[2],1)
+  ***                 ^-------------------------
+  *** matsolvemod: incorrect type in matsolvemod (D) (t_VEC).
+  ***   at top-level: matsolvemod(Mat(1),2,[1])
+  ***                 ^-------------------------
+  *** matsolvemod: incorrect type in matsolvemod (Y) (t_VEC).
+  ***   at top-level: matsolvemod("a",2,1)
+  ***                 ^--------------------
+  *** matsolvemod: incorrect type in matsolvemod (M) (t_STR).
+  ***   at top-level: matsolvemod(Mat(1),-2,1)
+  ***                 ^------------------------
+  *** matsolvemod: domain error in matsolvemod: D < 0
+  ***   at top-level: matsolvemod([1,2;3,4],[2,-3]~,1)
+  ***                 ^--------------------------------
+  *** matsolvemod: domain error in matsolvemod: D[i] < 0
+  ***   at top-level: matsolvemod(Mat(1/2),1,1)
+  ***                 ^-------------------------
+  *** matsolvemod: incorrect type in matsolvemod (M) (t_MAT).
+  ***   at top-level: matsolvemod(Mat(1),1/2,1)
+  ***                 ^-------------------------
+  *** matsolvemod: incorrect type in matsolvemod (D) (t_FRAC).
+  ***   at top-level: matsolvemod(Mat(1),1,1/2)
+  ***                 ^-------------------------
+  *** matsolvemod: incorrect type in matsolvemod (Y) (t_FRAC).
+  ***   at top-level: matsolvemod(Mat(1),[1/2]~,1)
+  ***                 ^----------------------------
+  *** matsolvemod: incorrect type in matsolvemod (D) (t_COL).
+  ***   at top-level: matsolvemod(Mat(1),1,[1/2]~)
+  ***                 ^----------------------------
+  *** matsolvemod: incorrect type in matsolvemod (Y) (t_COL).
+Total time spent: 683

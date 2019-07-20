@@ -1,0 +1,47 @@
+Function: ellsearch
+Section: elliptic_curves
+C-Name: ellsearch
+Prototype: G
+Help: ellsearch(N): returns all curves in the elldata database matching
+ constraint N:  given name (N = "11a1" or [11,0,1]),
+ given isogeny class (N = "11a" or [11,0]), or
+ given conductor (N = 11, "11", or [11]).
+Doc: This function finds all curves in the \tet{elldata} database satisfying
+ the constraint defined by the argument $N$:
+
+ \item if $N$ is a character string, it selects a given curve, e.g.
+ \kbd{"11a1"}, or curves in the given isogeny class, e.g. \kbd{"11a"}, or
+ curves with given conductor, e.g. \kbd{"11"};
+
+ \item if $N$ is a vector of integers, it encodes the same constraints
+ as the character string above, according to the \tet{ellconvertname}
+ correspondance, e.g. \kbd{[11,0,1]} for \kbd{"11a1"}, \kbd{[11,0]} for
+ \kbd{"11a"} and \kbd{[11]} for \kbd{"11"};
+
+ \item if $N$ is an integer, curves with conductor $N$ are selected.
+
+ If $N$ codes a full curve name, for instance \kbd{"11a1"} or \kbd{[11,0,1]},
+ the output format is $[N, [a_1,a_2,a_3,a_4,a_6], G]$ where
+ $[a_1,a_2,a_3,a_4,a_6]$ are the coefficients of the Weierstrass equation of
+ the curve and $G$ is a $\Z$-basis of the free part of the
+ \idx{Mordell-Weil group} attached to the curve.
+ \bprog
+ ? ellsearch("11a3")
+ %1 = ["11a3", [0, -1, 1, 0, 0], []]
+ ? ellsearch([11,0,3])
+ %2 = ["11a3", [0, -1, 1, 0, 0], []]
+ @eprog\noindent
+
+ If $N$ is not a full curve name, then the output is a vector of all matching
+ curves in the above format:
+ \bprog
+ ? ellsearch("11a")
+ %1 = [["11a1", [0, -1, 1, -10, -20], []],
+       ["11a2", [0, -1, 1, -7820, -263580], []],
+       ["11a3", [0, -1, 1, 0, 0], []]]
+ ? ellsearch("11b")
+ %2 = []
+ @eprog
+
+Variant: Also available is \fun{GEN}{ellsearchcurve}{GEN N} that only
+ accepts complete curve names (as \typ{STR}).

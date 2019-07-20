@@ -1,0 +1,49 @@
+Function: _header_sums
+Class: header
+Section: sums
+Doc:
+ \section{Sums, products, integrals and similar functions}
+ \label{se:sums}
+
+ Although the \kbd{gp} calculator is programmable, it is useful to have
+ a number of preprogrammed loops, including sums, products, and a certain
+ number of recursions. Also, a number of functions from numerical analysis
+ like numerical integration and summation of series will be described here.
+
+ One of the parameters in these loops must be the control variable, hence a
+ simple variable name. In the descriptions, the letter $X$ will always denote
+ any simple variable name, and represents the formal parameter used in the
+ function. The expression to be summed, integrated, etc. is any legal PARI
+ expression, including of course expressions using loops.
+
+ \misctitle{Library mode}
+ Since it is easier to program directly the loops in library mode, these
+ functions are mainly useful for GP programming. On the other hand, numerical
+ routines code a function (to be integrated, summed, etc.) with two parameters
+ named
+ \bprog
+   GEN (*eval)(void*,GEN)
+   void *E;  \\ context: eval(E, x) must evaluate your function at x.
+ @eprog\noindent
+ see the Libpari manual for details.
+
+ \misctitle{Numerical integration}\sidx{numerical integration}
+ Starting with version 2.2.9 the ``double exponential'' univariate
+ integration method is implemented in \tet{intnum} and its variants. Romberg
+ integration is still available under the name \kbd{intnumromb}, but
+ superseded. It is possible to compute numerically integrals to thousands of
+ decimal places in reasonable time, as long as the integrand is regular. It is
+ also reasonable to compute numerically integrals in several variables,
+ although more than two becomes lengthy. The integration domain may be
+ non-compact, and the integrand may have reasonable singularities at
+ endpoints. To use \kbd{intnum}, you must split the integral into a sum
+ of subintegrals where the function has no singularities except at the
+ endpoints. Polynomials in logarithms are not considered singular, and
+ neglecting these logs, singularities are assumed to be algebraic (asymptotic
+ to $C(x-a)^{-\alpha}$ for some $\alpha > -1$ when $x$ is
+ close to $a$), or to correspond to simple discontinuities of some (higher)
+ derivative of the function. For instance, the point $0$ is a singularity of
+ $\text{abs}(x)$.
+
+ See also the discrete summation methods below, sharing the prefix \kbd{sum}.
+

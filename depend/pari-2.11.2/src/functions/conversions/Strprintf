@@ -1,0 +1,10 @@
+Function: Strprintf
+Section: programming/specific
+C-Name: Strprintf
+Prototype: ss*
+Help: Strprintf(fmt,{x}*): returns a string built from the remaining
+ arguments according to the format fmt.
+Doc: returns a string built from the remaining arguments according to the
+ format fmt. The format consists of ordinary characters (not \%), printed
+ unchanged, and conversions specifications. See \kbd{printf}.
+ %\syn{NO}

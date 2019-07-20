@@ -1,0 +1,103 @@
+Function: qfeval
+Section: linear_algebra
+C-Name: qfeval0
+Prototype: DGGDG
+Help: qfeval({q},x,{y}): evaluate the quadratic form q (symmetric matrix) at x;
+ if y is present, evaluate the polar form at (x,y);
+ if q omitted, use the standard Euclidean form.
+Doc: evaluate the quadratic form $q$ (given by a symmetric matrix)
+ at the vector $x$; if $y$ is present, evaluate the polar form at $(x,y)$;
+ if $q$ omitted, use the standard Euclidean scalar product, corresponding to
+ the identity matrix.
+
+ Roughly equivalent to \kbd{x\til * q * y}, but a little faster and
+ more convenient (does not distinguish between column and row vectors):
+ \bprog
+ ? x = [1,2,3]~; y = [-1,3,1]~; q = [1,2,3;2,2,-1;3,-1,9];
+ ? qfeval(q,x,y)
+ %2 = 23
+ ? for(i=1,10^6, qfeval(q,x,y))
+ time = 661ms
+ ? for(i=1,10^6, x~*q*y)
+ time = 697ms
+ @eprog\noindent The speedup is noticeable for the quadratic form,
+ compared to \kbd{x\til * q * x}, since we save almost half the
+ operations:
+ \bprog
+ ? for(i=1,10^6, qfeval(q,x))
+ time = 487ms
+ @eprog\noindent The special case $q = \text{Id}$ is handled faster if we
+ omit $q$ altogether:
+ \bprog
+ ? qfeval(,x,y)
+ %6 = 8
+ ? q = matid(#x);
+ ? for(i=1,10^6, qfeval(q,x,y))
+ time = 529 ms.
+ ? for(i=1,10^6, qfeval(,x,y))
+ time = 228 ms.
+ ? for(i=1,10^6, x~*y)
+ time = 274 ms.
+ @eprog
+
+ We also allow \typ{MAT}s of compatible dimensions for $x$,
+ and return \kbd{x\til * q * x} in this case as well:
+ \bprog
+ ? M = [1,2,3;4,5,6;7,8,9]; qfeval(,M) \\ Gram matrix
+ %5 =
+ [66  78  90]
+
+ [78  93 108]
+
+ [90 108 126]
+
+ ? q = [1,2,3;2,2,-1;3,-1,9];
+ ? for(i=1,10^6, qfeval(q,M))
+ time = 2,008 ms.
+ ? for(i=1,10^6, M~*q*M)
+ time = 2,368 ms.
+
+ ? for(i=1,10^6, qfeval(,M))
+ time = 1,053 ms.
+ ? for(i=1,10^6, M~*M)
+ time = 1,171 ms.
+ @eprog
+
+ If $q$ is a \typ{QFI} or \typ{QFR}, it is implicitly converted to the
+ attached symmetric \typ{MAT}. This is done more
+ efficiently than by direct conversion, since we avoid introducing a
+ denominator $2$ and rational arithmetic:
+ \bprog
+ ? q = Qfb(2,3,4); x = [2,3];
+ ? qfeval(q, x)
+ %2 = 62
+ ? Q = Mat(q)
+ %3 =
+  [  2 3/2]
+
+  [3/2   4]
+ ? qfeval(Q, x)
+ %4 = 62
+ ? for (i=1, 10^6, qfeval(q,x))
+ time = 758 ms.
+ ? for (i=1, 10^6, qfeval(Q,x))
+ time = 1,110 ms.
+ @eprog
+ Finally, when $x$ is a \typ{MAT} with \emph{integral} coefficients, we allow
+ a \typ{QFI} or \typ{QFR} for $q$ and return the binary
+ quadratic form $q \circ M$. Again, the conversion to \typ{MAT} is less
+ efficient in this case:
+ \bprog
+ ? q = Qfb(2,3,4); Q = Mat(q); x = [1,2;3,4];
+ ? qfeval(q, x)
+ %2 = Qfb(47, 134, 96)
+ ? qfeval(Q,x)
+ %3 =
+ [47 67]
+
+ [67 96]
+ ? for (i=1, 10^6, qfeval(q,x))
+ time = 701 ms.
+ ? for (i=1, 10^6, qfeval(Q,x))
+ time = 1,639 ms.
+ @eprog

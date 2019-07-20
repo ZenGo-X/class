@@ -1,0 +1,18 @@
+Function: mfTheta
+Section: modular_forms
+C-Name: mfTheta
+Prototype: DG
+Help: mfTheta({psi=1}): the unary theta function corresponding to the primitive
+ Dirichlet character psi, hence of weight 1/2 if psi is even, of weight 3/2
+ if psi is odd.
+Doc: the unary theta function corresponding to the primitive Dirichlet
+ character $\psi$, hence of weight $1/2$ if $\psi$ is even, of weight $3/2$
+ if $\psi$ is odd.
+ \bprog
+ ? Ser(mfcoefs(mfTheta(),30))
+ %1 = 1 + 2*x + 2*x^4 + 2*x^9 + 2*x^16 + 2*x^25 + O(x^31)
+ ? Ser(mfcoefs(mfTheta(8),30))
+ %2 = 2*x - 2*x^9 - 2*x^25 + O(x^31)
+ ? Ser(mfcoefs(mfTheta(-8),30))
+ %3 = 2*x + 6*x^9 - 10*x^25 + O(x^31)
+ @eprog

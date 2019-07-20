@@ -1,0 +1,27 @@
+Function: rnfidealfactor
+Section: number_fields
+C-Name: rnfidealfactor
+Prototype: GG
+Help: rnfidealfactor(rnf,x): factor the ideal x into
+ prime ideals in the number field nfinit(rnf).
+Doc: factor into prime ideal powers the
+ ideal $x$ in the attached absolute number field $L = \kbd{nfinit}(\var{rnf})$.
+ The output format is similar to the \kbd{factor} function, and the prime
+ ideals are represented in the form output by the \kbd{idealprimedec}
+ function for $L$.
+ \bprog
+ ? rnf = rnfinit(nfinit(y^2+1), x^2-y+1);
+ ? rnfidealfactor(rnf, y+1)  \\ P_2^2
+ %2 =
+ [[2, [0,0,1,0]~, 4, 1, [0,0,0,2;0,0,-2,0;-1,-1,0,0;1,-1,0,0]] 2]
+
+ ? rnfidealfactor(rnf, x) \\ P_2
+ %3 =
+ [[2, [0,0,1,0]~, 4, 1, [0,0,0,2;0,0,-2,0;-1,-1,0,0;1,-1,0,0]] 1]
+
+ ? L = nfinit(rnf);
+ ? id = idealhnf(L, idealhnf(L, 25, (x+1)^2));
+ ? idealfactor(L, id) == rnfidealfactor(rnf, id)
+ %6 = 1
+ @eprog\noindent Note that ideals of the base field $K$ must be explicitly
+ lifted to $L$ via \kbd{rnfidealup} before they can be factored.

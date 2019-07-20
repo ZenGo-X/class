@@ -1,0 +1,23 @@
+Function: nffactorback
+Section: number_fields
+C-Name: nffactorback
+Prototype: GGDG
+Help: nffactorback(nf,f,{e}): given a factorization f, returns
+ the factored object back as an nf element.
+Doc: gives back the \var{nf} element corresponding to a factorization.
+ The integer $1$ corresponds to the empty factorization.
+
+ If $e$ is present, $e$ and $f$ must be vectors of the same length ($e$ being
+ integral), and the corresponding factorization is the product of the
+ $f[i]^{e[i]}$.
+
+ If not, and $f$ is vector, it is understood as in the preceding case with $e$
+ a vector of 1s: we return the product of the $f[i]$. Finally, $f$ can be a
+ regular factorization matrix.
+ \bprog
+ ? nf = nfinit(y^2+1);
+ ? nffactorback(nf, [3, y+1, [1,2]~], [1, 2, 3])
+ %2 = [12, -66]~
+ ? 3 * (I+1)^2 * (1+2*I)^3
+ %3 = 12 - 66*I
+ @eprog

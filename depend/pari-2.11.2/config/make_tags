@@ -1,0 +1,90 @@
+eval 'exec perl "$0" "$1" "$2"'
+  if $running_under_some_shell;
+use File::Find 'find';
+
+# Build a (sorted) EMACS / VI(M) tags file including GP functions
+#
+$emacs_mode = ($ARGV[0] eq "--emacs");
+$src = $ARGV[1];
+
+if ($emacs_mode)
+{ $tags = "$src/TAGS"; }
+else
+# Case sensitive?
+{ $tags = $^O eq 'os2' ? "$src/ctags" : "$src/tags"; }
+$tmptags = "$tags.tmp";
+
+my (%gp);
+getnames("$src/gp/gp_init.h");
+getnames("$src/language/init.h");
+
+my (@files) = (); find \&filter_c, $src;
+@tags = "";
+if ($emacs_mode) {
+  system('exuberant-ctags', '-e', '-f', $tmptags, @files)
+    && system('ctags-exuberant', '-e', '-f', $tmptags, @files)
+    && system('etags', '-f', $tmptags, @files)
+    && die("etags failed");
+  open(T,"$tmptags");
+
+  while(<T>) {
+    my ($a,$b);
+    $a = $_;
+    if (/^(\w+)\(/ && ($b = $gp{$1}) && $b ne $1)
+    {
+      $a =~ s/\x7F.*\x01/\x7F$b\x01/;
+      push(@tags,$a);
+    }
+    push(@tags,$_);
+  }
+} else {
+  system('exuberant-ctags', '-f', $tmptags, @files)
+    && system('ctags-exuberant', '-f', $tmptags, @files)
+    && system('ctags', '-dT', '-o', $tmptags, @files) # gctags
+    && system('ctags', '-f', $tmptags, @files)
+    && die("ctags failed");
+  open(T,"$tmptags");
+
+  # Assume ctags outputs sorted tags (e.g Exuberant Ctags)
+  my ($old) = "";
+  for (sort(keys %gp)) {
+    my ($a) = $_;
+    my ($b) = $gp{$a};
+    if ($a eq $old) { push(@tags,"$b$rest\n"); next; }
+    $old = $a;
+    while(<T>)
+    {
+      push(@tags,$_);
+      if (/^$a(.*)/) { $rest="$1"; push(@tags,"$b$rest\n"); last; }
+    }
+  }
+  while(<T>) { push(@tags,$_); }
+  @tags = sort(@tags);
+}
+close(T);
+open(OUT,">$tags");
+print OUT @tags;
+unlink $tmptags;
+
+# $gp{GP_function} = C_function
+sub getnames
+{
+  open(A,$_[0]);
+  while (<A>) {
+    if (/^entree functions_/../^$/) {
+      if (/[^"]*"([^"]*)".*\(void\*\) *([^,]*)/)
+      {
+        my ($gpfun, $cfun) = ($1,$2);
+        $gpfun =~ s/_\.//g; # member functions
+        $gp{$cfun} = $gpfun;
+      }
+    }
+  }
+  close(A);
+}
+
+sub filter_c {
+  return unless /\.[chy]\Z/ && -f;
+  return if (/(dummy|tune|kerntest|parse)\.c/);
+  push @files, "$File::Find::name";
+}

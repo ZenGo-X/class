@@ -1,0 +1,21 @@
+Function: alghasse
+Section: algebras
+C-Name: alghasse
+Prototype: GG
+Help: alghasse(al,pl): the hasse invariant of the central simple algebra al at
+ the place pl.
+Doc: Given a central simple algebra \var{al} output by \tet{alginit} and a prime
+ ideal or an integer between $1$ and $r_1+r_2$, returns a \typ{FRAC} $h$ : the
+ local Hasse invariant of \var{al} at the place specified by \var{pl}.
+ \bprog
+ ? nf = nfinit(y^2-5);
+ ? A = alginit(nf, [-1,y]);
+ ? alghasse(A, 1)
+ %3 = 1/2
+ ? alghasse(A, 2)
+ %4 = 0
+ ? alghasse(A, idealprimedec(nf,2)[1])
+ %5 = 1/2
+ ? alghasse(A, idealprimedec(nf,5)[1])
+ %6 = 0
+ @eprog

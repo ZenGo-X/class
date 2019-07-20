@@ -1,0 +1,31 @@
+Function: nfrootsof1
+Section: number_fields
+C-Name: rootsof1
+Prototype: G
+Help: nfrootsof1(nf): number of roots of unity and primitive root of unity
+ in the number field nf.
+Doc: Returns a two-component vector $[w,z]$ where $w$ is the number of roots of
+ unity in the number field \var{nf}, and $z$ is a primitive $w$-th root
+ of unity.
+ \bprog
+ ? K = nfinit(polcyclo(11));
+ ? nfrootsof1(K)
+ %2 = [22, [0, 0, 0, 0, 0, -1, 0, 0, 0, 0]~]
+ ? z = nfbasistoalg(K, %[2])   \\ in algebraic form
+ %3 = Mod(-x^5, x^10 + x^9 + x^8 + x^7 + x^6 + x^5 + x^4 + x^3 + x^2 + x + 1)
+ ? [lift(z^11), lift(z^2)]     \\ proves that the order of z is 22
+ %4 = [-1, -x^9 - x^8 - x^7 - x^6 - x^5 - x^4 - x^3 - x^2 - x - 1]
+ @eprog
+ This function guesses the number $w$ as the gcd of the $\#k(v)^*$ for
+ unramified $v$ above odd primes, then computes the roots in \var{nf}
+ of the $w$-th cyclotomic polynomial: the algorithm is polynomial time with
+ respect to the field degree and the bitsize of the multiplication table in
+ \var{nf} (both of them polynomially bounded in terms of the size of the
+ discriminant). Fields of degree up to $100$ or so should require less than
+ one minute.
+Variant: Also available is \fun{GEN}{rootsof1_kannan}{GEN nf}, that computes
+ all algebraic integers of $T_2$ norm equal to the field degree
+ (all roots of $1$, by Kronecker's theorem). This is in general a little
+ faster than the default when there \emph{are} roots of $1$ in the field
+ (say twice faster), but can be much slower (say, \emph{days} slower), since
+ the algorithm is a priori exponential in the field degree.

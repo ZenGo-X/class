@@ -1,0 +1,170 @@
+default(parisize, "50M");
+
+{
+elldata= Map([
+  \\ rank 0
+  "11a1",[0,-1,1,-10,-20];
+  "14a1",[1,0,1,4,-6];
+  "15a1",[1,1,1,-10,-10];
+  "17a1",[1,-1,1,-1,-14];
+  "19a1",[0,1,1,-9,-15];
+  "26b1",[1,-1,1,-3,3];
+  "33a1",[1,1,0,-11,0];
+  "43a1",[0,1,1,0,0];
+  \\ rank 1
+  "37a1",[0,0,1,-1,0];
+  "53a1",[1,-1,1,0,0];
+  \\ rank 2
+  "389a1",[0,1,1,-2,0]
+]);
+}
+myellinit(s)= ellinit(if(type(s)=="t_STR",mapget(elldata,s),s));
+
+\\ a2 = 0
+e=myellinit("19a1");
+ellpadicL(e, 2, 5)
+
+\\ a3 = 0
+e=myellinit("17a1");p=3;
+L=ellpadicL(e,p,4)
+F=[0,-p;1,ellap(e,p)];
+(1-p^{-1}*F)^-2*L / bestappr(ellL1(e)/e.omega[1])
+
+\\ a5 = -2
+p=5;
+L=ellpadicL(e,p,4)
+al=polrootspadic(x^2-ellap(e,p)*x+p,p,7)[2];
+(1-al^(-1))^(-2)*L / bestappr(ellL1(e)/e.omega[1])
+
+\\ a3 = -3 != 0
+e=myellinit("26b1");p=3;
+L=ellpadicL(e,p,4);
+F=[0,-p;1,ellap(e,p)];
+(1-p^{-1}*F)^-2*L / bestappr(ellL1(e)/e.omega[1])
+
+\\ huge memory 1001a1
+e=ellinit([0,-1,1,-15881,778423]);p=2;n=3;
+ellpadicL(e,p,n)
+
+E=myellinit("53a1");P=[0,0];
+ellpadicL(E,2,10,,2)
+ellpadicL(E,3,10)
+ellpadicL(E,3,10,,1)
+ellpadicL(E,5,5,,2)
+
+testord(s, p, n, D = 1) =
+{
+  my(e = myellinit(s));
+  my([M,xp] = msfromell(e,1));
+  Wp = mspadicinit(M, p, n, 0);
+  mspadicmoments(Wp, xp, D);
+}
+testss(s, p, n) =
+{
+  my(e = myellinit(s));
+  my([M,xp] = msfromell(e,1));
+  Wp = mspadicinit(M, p, n);
+  mspadicmoments(Wp,xp);
+}
+
+testord("11a1", 7, 4)
+testord("17a1", 7, 4)
+testss("17a1", 3, 4)
+testord("14a1", 7, 4)
+testord("43a1", 3, 4, 29)
+
+e=myellinit("11a1");
+[M,phi]=msfromell(e,1);
+Wp = mspadicinit(M, 3, 4, 0);
+mspadicmoments(Wp, phi, 5)
+Wp = mspadicinit(M, 5, 4, 0);
+mspadicmoments(Wp, phi, -3)
+
+vchar = [0,-2,[0,1],[1,0],[2,0]];
+test(M,phi,p)=
+{ my(Wp, mu, ap);
+  ap = mshecke(M,p,phi)[1,1];
+  Wp = mspadicinit(M,p,10, valuation(ap,p));
+  mu=mspadicmoments(Wp,phi);
+  for (i=1,#vchar,
+    print(vchar[i],":");
+    for(r=0,3, print(mspadicL(mu,vchar[i],r)));
+  );
+}
+test(M,phi,3);
+test(M,phi,2);
+test(M,phi,7);
+
+e=myellinit("33a1");
+[M,phi]=msfromell(e,1);
+test(M,phi,3)
+test(M,phi,11)
+
+e=myellinit("389a1");
+[M,phi]=msfromell(e,1);
+test(M,phi,2)
+
+[M,phi]=msfromell(e,-1);
+Wp = mspadicinit(M, 3, 4, 0);
+mspadicmoments(Wp, phi, 5)
+Wp = mspadicinit(M, 5, 4, 0);
+mspadicmoments(Wp, phi, -3)
+
+\\====
+
+W = msinit(50,4,1);
+phi = mssplit(W, msnew(W), 1)[1];
+Wp = mspadicinit(W, 3, 6, 0);
+mspadicmoments(Wp, phi)
+
+Wp=mspadicinit(msinit(25,2,1),5,4, 1); \\ must fail p^2 | N
+
+M=msinit(4,6,1);
+phi=-[1,8,1,-32]~; \\ v_p(ap) = 1
+Wp=mspadicinit(M,3,5, 2);
+oms=mspadicmoments(Wp, phi); \\ must fail
+Wp=mspadicinit(M,3,5, 1);
+PHI=mstooms(Wp,phi);
+msomseval(Wp,PHI,[1/2,1/3])
+msomseval(Wp,PHI,[0,oo])
+oms=mspadicmoments(Wp, PHI); \\ now succeeds
+mspadicL(oms)
+
+msnewsymb(N,k,s=1) = {
+ my(xpm,M); M=msinit(N,k,s);
+ xpm = mssplit(M,msnew(M),1)[1]; [M,xpm];
+};
+
+testmspadicL(N,k,p,signe=1,D=1) = {
+  my([M,xpm]=msnewsymb(N,k,signe));
+  my(ap = mshecke(M,p,xpm)[1,1]);
+  my(Wp,oms);
+  Wp = mspadicinit(M,p,10, if(ap,valuation(ap,p), k-1));
+  oms = mspadicmoments(Wp, xpm, D);
+  vector(k-1,j, mspadicL(oms,j-1));
+}
+\\ ordinary
+testmspadicL(3,6,3)
+testmspadicL(3,6,3,-1)
+testmspadicL(3,6,5)
+testmspadicL(3,6,5,-1)
+testmspadicL(3,6,5,-1, -3)
+testmspadicL(3,8,7)
+testmspadicL(3,8,7,-1)
+testmspadicL(5,4,3)
+testmspadicL(5,4,7)
+testmspadicL(5,4,7,-1)
+testmspadicL(5,4,7,1, 5)
+testmspadicL(11,6,7)
+testmspadicL(11,6,7,-1)
+testmspadicL(14,6,7)
+testmspadicL(14,6,7,-1)
+
+\\supersingular
+testmspadicL(4,6,3)  \\ ap=12
+testmspadicL(9,4,5)  \\ ap=0
+testmspadicL(17,6,3) \\ ap=-18
+testmspadicL(3,8,2) \\
+testmspadicL(5,8,2)
+testmspadicL(10,8,2)
+testmspadicL(3,10,7) \\ ap=9128, valuation 1

@@ -1,0 +1,71 @@
+checkfeq(P,q)=
+{
+  for(i=0,poldegree(P),if (type(polcoeff(P,i))!="t_INT",error(dbg_x(P))));
+  my(M=minpoly(Mod(x+q/x,P)));
+  if(poldegree(M)!=poldegree(P)/2,error([P,q,M]));
+  M;
+}
+{
+  for(g=1,6,
+    for(n=1,2*g,
+      H=hyperellcharpoly(n*(x^(2*g+1)-2*x^n+1)*Mod(1,19));
+      printsep(":",g,n,checkfeq(H,19))))
+}
+
+{
+  for(g=1,5,
+    for(n=1,2*g+1,
+      H=hyperellcharpoly(n*(x^(2*g+2)-3*x^n+1)*Mod(1,29));
+      printsep(":",g,n,checkfeq(H,29))))
+}
+
+{
+  forprime(p=3,7,
+    H=hyperellcharpoly((x^6+x+1)*Mod(1,p));
+    print(checkfeq(H,p)));
+  forprime(p=3,11,
+    H=hyperellcharpoly((x^10+x+1)*Mod(1,p));
+    print(checkfeq(H,p)));
+  forprime(p=3,7,
+    g=ffgen(ffinit(p,3),'g);
+    H=hyperellcharpoly((x^6+g*x+1));
+    print(checkfeq(H,p^3)));
+}
+
+{
+  my(a,P,Q,E);
+  a=ffgen([5,5],'a);
+  setrand(3);
+  for (i=1, 10,
+    P=random(a*x^3); H=hyperellcharpoly(P);
+    E=ellinit(ellfromeqn('y^2-P));
+    if(ellap(E)!=-polcoeff(H,1),error(H)));
+}
+
+P=hyperellcharpoly(Mod(1,3)*(x^10+x^4+x^3+2*x^2+x));checkfeq(P,3)
+P=hyperellcharpoly(Mod(1,3)*(x^12+x^4+1));checkfeq(P,3)
+P=hyperellcharpoly(Mod(1,3)*(x^14+x^4+2));checkfeq(P,3)
+
+g=ffgen(ffinit(79,2),'g);
+P=hyperellcharpoly(x^5+g*x^3+2*x+5);checkfeq(P,79^2)
+P=hyperellcharpoly(g*(x^5+g*x^3+2*x+5));checkfeq(P,79^2)
+P=hyperellcharpoly(x^5+Mod('g,g.mod*Mod(1,79))*x^3+2*x+5);checkfeq(P,79^2)
+P=hyperellcharpoly(x^6+g*x^3+2*x+5);checkfeq(P,79^2)
+P=hyperellcharpoly(g*(x^6+g*x^3+2*x+5));checkfeq(P,79^2)
+P=hyperellcharpoly((x^7+x^3+2*x+5)*Mod(1,79));checkfeq(P,79)
+P=hyperellcharpoly((x^8+x^3+2*x+5)*Mod(1,79));checkfeq(P,79)
+P=hyperellcharpoly([x^5+x+1,x]*Mod(1,79));checkfeq(P,79)
+P=hyperellcharpoly((x^3+x+1)*ffgen(3^2)^0);checkfeq(P,9)
+P=hyperellcharpoly([x^5+x+1,x+1]*Mod(1,2));checkfeq(P,2)
+P=hyperellcharpoly([x^5+x+1,x^2+x+1]*Mod(1,2));checkfeq(P,2)
+P=hyperellcharpoly([x^5+x+1,x^3]*Mod(1,2));checkfeq(P,2)
+P=hyperellcharpoly([x^6+x^5+x^4+1,x+1]*Mod(1,2));checkfeq(P,2)
+P=hyperellcharpoly([x^6+x+1,x^2]*Mod(1,2));checkfeq(P,2)
+P=hyperellcharpoly([x^6+x+1,x^3]*Mod(1,2));checkfeq(P,2)
+P=hyperellcharpoly([x^2+x+1,x^3]*Mod(1,2));checkfeq(P,2)
+P=hyperellcharpoly([x^3+x+1,x^3]*Mod(1,2));checkfeq(P,2)
+P=hyperellcharpoly([x^4+x+1,x^3]*Mod(1,2));checkfeq(P,2)
+g=ffgen(ffinit(7,3),'g);P=hyperellcharpoly(x^5+g);checkfeq(P,7^3)
+
+hyperellcharpoly((256*a^5+5)*Mod(1,5))
+hyperellcharpoly((256*a^5+5)*ffgen(5^2))

@@ -1,0 +1,18 @@
+Function: primepi
+Section: number_theoretical
+C-Name: primepi
+Prototype: G
+Help: primepi(x): the prime counting function pi(x) = #{p <= x, p prime}.
+Description:
+ (gen):int        primepi($1)
+Doc: the prime counting function. Returns the number of
+ primes $p$, $p \leq x$.
+ \bprog
+ ? primepi(10)
+ %1 = 4;
+ ? primes(5)
+ %2 = [2, 3, 5, 7, 11]
+ ? primepi(10^11)
+ %3 = 4118054813
+ @eprog\noindent Uses checkpointing and a naive $O(x)$ algorithm;
+ make sure to start gp with \kbd{primelimit} at least $\sqrt{x}$.

@@ -1,0 +1,22 @@
+Function: matdetmod
+Section: linear_algebra
+C-Name: matdetmod
+Prototype: GG
+Help: matdetmod(x,d): determinant of the matrix x modulo d.
+Doc: Given a matrix $x$ with \typ{INT} entries and $d$ an arbitrary positive
+ integer, return the determinant of $x$ modulo $d$.
+
+ \bprog
+ ? A = [4,2,3; 4,5,6; 7,8,9]
+
+ ? matdetmod(A,27)
+ %2 = 9
+ @eprog Note that using the generic function \kbd{matdet} on a matrix with
+ \typ{INTMOD} entries uses Gaussian reduction and will fail in general when
+ the modulus is not prime.
+ \bprog
+ ? matdet(A * Mod(1,27))
+  ***   at top-level: matdet(A*Mod(1,27))
+  ***                 ^------------------
+  *** matdet: impossible inverse in Fl_inv: Mod(3, 27).
+ @eprog

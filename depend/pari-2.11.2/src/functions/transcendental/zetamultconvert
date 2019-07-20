@@ -1,0 +1,27 @@
+Function: zetamultconvert
+Section: transcendental
+C-Name: zetamultconvert
+Prototype: GD1,L,
+Help: zetamultconvert(a,{fl=1}): a being either an evec, avec, or index m,
+ converts into evec (fl=0), avec (fl=1), or index m (fl=2).
+Doc: \kbd{a} being either an \kbd{evec}, \kbd{avec}, or index \kbd{m},
+ converts into \kbd{evec} (\kbd{fl=0}), \kbd{avec} (\kbd{fl=1}, default), or
+ index \kbd{m} (\kbd{fl=2}); see \kbd{zetamult} for explanations.
+ \bprog
+ ? zetamultconvert(10)
+ %1 = Vecsmall([3, 2])
+ ? zetamultconvert(13)
+ %2 = Vecsmall([2, 2, 1])
+ ? zetamultconvert(10, 0)
+ %3 = Vecsmall([0, 0, 1, 0, 1])
+ ? zetamultconvert(13, 0)
+ %4 = Vecsmall([0, 1, 0, 1, 1])
+ @eprog\noindent The last two lines imply that $[3,2]$ and $[2,2,1]$
+ are dual (reverse order of bits and swap $0$ and $1$ in \kbd{evec} form).
+ Hence they have the same zeta value:
+ \bprog
+ ? zetamult([3,2])
+ %5 = 0.22881039760335375976874614894168879193
+ ? zetamult([2,2,1])
+ %6 = 0.22881039760335375976874614894168879193
+ @eprog

@@ -1,0 +1,8 @@
+Function: _.diff
+Help: _.diff
+Section: member_functions
+C-Name: member_diff
+Prototype: mG
+Description:
+ (nf):gen:copy                  nf_get_diff($1)
+ (gen):gen:copy                 member_diff($1)

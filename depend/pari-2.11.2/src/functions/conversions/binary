@@ -1,0 +1,24 @@
+Function: binary
+Section: conversions
+C-Name: binaire
+Prototype: G
+Help: binary(x): gives the vector formed by the binary digits of x (x
+ integer).
+Doc:
+ outputs the vector of the binary digits of $|x|$. Here $x$ can be an
+ integer, a real number (in which case the result has two components, one for
+ the integer part, one for the fractional part) or a vector/matrix.
+ \bprog
+ ? binary(10)
+ %1 = [1, 0, 1, 0]
+
+ ? binary(3.14)
+ %2 = [[1, 1], [0, 0, 1, 0, 0, 0, [...]]
+
+ ? binary([1,2])
+ %3 = [[1], [1, 0]]
+ @eprog\noindent By convention, $0$ has no digits:
+ \bprog
+ ? binary(0)
+ %4 = []
+ @eprog

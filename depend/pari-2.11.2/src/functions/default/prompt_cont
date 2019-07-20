@@ -1,0 +1,12 @@
+Function: _def_prompt_cont
+Class: default
+Section: default
+C-Name: sd_prompt_cont
+Prototype:
+Help:
+Doc: a string that will be printed
+ to prompt for continuation lines (e.g. in between braces, or after a
+ line-terminating backslash). Everything that applies to \kbd{prompt}
+ applies to \kbd{prompt\_cont} as well.
+
+ The default value is \kbd{""}.

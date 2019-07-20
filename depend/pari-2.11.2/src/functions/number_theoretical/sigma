@@ -1,0 +1,12 @@
+Function: sigma
+Section: number_theoretical
+C-Name: sumdivk
+Prototype: GD1,L,
+Help: sigma(x,{k=1}): sum of the k-th powers of the divisors of x. k is
+ optional and if omitted is assumed to be equal to 1.
+Description:
+ (gen, ?1):int           sumdiv($1)
+ (gen, 0):int            numdiv($1)
+Doc: sum of the $k^{\text{th}}$ powers of the positive divisors of $|x|$. $x$
+ and $k$ must be of type integer.
+Variant: Also available is \fun{GEN}{sumdiv}{GEN n}, for $k = 1$.

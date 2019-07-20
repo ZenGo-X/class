@@ -1,0 +1,43 @@
+W=
+{[
+[0, 0, 1, -79, 342],
+[1, 0, 0, -22, 219],
+[0, 0, 1, -247, 1476],
+[1, -1, 0, -415, 3481],
+[0, 0, 0, -532, 4420],
+[1, 1, 0, -2582, 48720],
+[0, 0, 1, -7077, 235516],
+[1, -1, 0, -2326, 43456],
+[1, -1, 0, -16249, 799549],
+[1, -1, 1, -63147, 6081915] ];
+}
+check(E)=
+{
+  E=ellinit(E);
+  L=ellratpoints(E,1000);
+  if(#L!=#Set(L),error([E,L]));
+  for(i=1,#L,if(!ellisoncurve(E,L[i]),error([E,L[i]])));
+  #L+1;
+}
+for(i=1,#W,print(check(W[i])))
+
+E=ellinit([-25,1]);ellratpoints(E,10,1)
+E=ellinit([-25,2]);ellratpoints(E,10,1)
+E=ellinit([0,0,1,-7,6]);ellratpoints(E,[10^5,1])
+E=ellinit([0,0,1,-7,6]);ellratpoints(E,[10^5,[5,10]])
+
+checkhyp(P,Q)=
+{
+  L=hyperellratpoints([P,Q],10000);
+  if(#L!=#Set(L),error([P,Q,L]));
+  for(i=1,#L,
+    my([x,y]=L[i]);
+    if(y^2+y*subst(Q,'x,x)!=subst(P,'x,x),error([P,Q,L[i]])));
+  #L;
+}
+P=82342800 *x^6 - 470135160 *x^5 + 52485681 *x^4 + 2396040466 *x^3 + 567207969 *x^2 - 985905640 *x + 247747600;
+hyperellratpoints(P,[10,1])
+checkhyp(P,0)
+checkhyp(-x^6+x^3+x+1,2*x^3)
+
+E=ellinit([0,0,1,-7,6]);ellratpoints(E,[10^5,[5]])

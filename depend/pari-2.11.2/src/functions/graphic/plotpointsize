@@ -1,0 +1,11 @@
+Function: plotpointsize
+Section: graphic
+C-Name: plotpointsize
+Prototype: vLG
+Obsolete: 2007-05-11
+Help: plotpointsize(w,size): change the "size" of following points in
+ rectwindow w. w=-1 changes global value.
+Doc: This function is obsolete. It is currently a no-op.
+
+ Changes the ``size'' of following points in rectwindow $w$. If $w = -1$,
+ change it in all rectwindows.

@@ -1,0 +1,57 @@
+Function: isprime
+Section: number_theoretical
+C-Name: gisprime
+Prototype: GD0,L,
+Help: isprime(x,{flag=0}): true(1) if x is a (proven) prime number, false(0)
+ if not. If flag is 0 or omitted, use a combination of algorithms. If flag is
+ 1, the primality is certified by the Pocklington-Lehmer Test. If flag is 2,
+ the primality is certified using the APRCL test. If flag is 3, use ECPP.
+Description:
+ (int, ?0):bool        isprime($1)
+ (gen, ?small):gen     gisprime($1, $2)
+Doc: true (1) if $x$ is a prime
+ number, false (0) otherwise. A prime number is a positive integer having
+ exactly two distinct divisors among the natural numbers, namely 1 and
+ itself.
+
+ This routine proves or disproves rigorously that a number is prime, which can
+ be very slow when $x$ is indeed a large prime integer. For instance
+ a $1000$ digits prime should require 15 to 30 minutes with default algorithms.
+ Use \tet{ispseudoprime} to quickly check for compositeness. Use
+ \tet{primecert} in order to obtain a primality proof instead of a yes/no
+ answer; see also \kbd{factor}.
+
+ The function accepts vector/matrices arguments, and is then
+ applied componentwise.
+
+ If $\fl=0$, use a combination of
+
+ \item Baillie-Pomerance-Selfridge-Wagstaff compositeness test
+ (see \tet{ispseudoprime}),
+
+ \item Selfridge ``$p-1$'' test if $x-1$ is smooth enough,
+
+ \item Adleman-Pomerance-Rumely-Cohen-Lenstra (APRCL) for general
+ medium-sized $x$ (less than 1500 bits),
+
+ \item Atkin-Morain's Elliptic Curve Primality Prover (ECPP) for general
+ large $x$.
+
+ If $\fl=1$, use Selfridge-Pocklington-Lehmer ``$p-1$'' test; this requires
+ partially factoring various auxilliary integers and is likely to be very slow.
+
+ If $\fl=2$, use APRCL only.
+
+ If $\fl=3$, use ECPP only.
+
+Function: _aprcl_step4_worker
+Section: programming/internals
+C-Name: aprcl_step4_worker
+Prototype: UGGG
+Help: worker for isprime (APRCL step 4)
+
+Function: _aprcl_step6_worker
+Section: programming/internals
+C-Name: aprcl_step6_worker
+Prototype: GLGGG
+Help: worker for isprime (APRCL step 6)

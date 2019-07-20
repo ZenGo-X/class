@@ -1,0 +1,317 @@
+Function: intnum
+Section: sums
+C-Name: intnum0
+Prototype: V=GGEDGp
+Help: intnum(X=a,b,expr,{tab}): numerical integration of expr from a to b with
+ respect to X. Plus/minus infinity is coded as +oo/-oo. Finally tab is
+ either omitted (let the program choose the integration step), a non-negative
+ integer m (divide integration step by 2^m), or data precomputed with
+ intnuminit.
+Wrapper: (,,G)
+Description:
+  (gen,gen,gen,?gen):gen:prec intnum(${3 cookie}, ${3 wrapper}, $1, $2, $4, $prec)
+Doc: numerical integration
+ of \var{expr} on $]a,b[$ with respect to $X$, using the
+ double-exponential method, and thus $O(D\log D)$ evaluation of
+ the integrand in precision $D$. The integrand may have values
+ belonging to a vector space over the real numbers; in particular, it can be
+ complex-valued or vector-valued. But it is assumed that the function is
+ regular on $]a,b[$. If the endpoints $a$ and $b$ are finite and the
+ function is regular there, the situation is simple:
+ \bprog
+ ? intnum(x = 0,1, x^2)
+ %1 = 0.3333333333333333333333333333
+ ? intnum(x = 0,Pi/2, [cos(x), sin(x)])
+ %2 = [1.000000000000000000000000000, 1.000000000000000000000000000]
+ @eprog\noindent
+ An endpoint equal to $\pm\infty$ is coded as \kbd{+oo} or \kbd{-oo}, as
+ expected:
+ \bprog
+ ? intnum(x = 1,+oo, 1/x^2)
+ %3 = 1.000000000000000000000000000
+ @eprog\noindent
+ In basic usage, it is assumed that the function does not decrease
+ exponentially fast at infinity:
+ \bprog
+ ? intnum(x=0,+oo, exp(-x))
+   ***   at top-level: intnum(x=0,+oo,exp(-
+   ***                 ^--------------------
+   *** exp: overflow in expo().
+ @eprog\noindent
+ We shall see in a moment how to avoid that last problem, after describing
+ the last \emph{optional} argument \var{tab}.
+
+ \misctitle{The \var{tab} argument}
+ The routine uses weights $w_i$, which are mostly independent of the function
+ being integrated, evaluated at many sampling points $x_i$ and
+ approximates the integral by $\sum w_i f(x_i)$. If \var{tab} is
+
+ \item a non-negative integer $m$, we multiply the number of sampling points
+ by $2^m$, hopefully increasing accuracy. Note that the running time
+ increases roughly by a factor $2^m$. One may try consecutive values of $m$
+ until they give the same value up to an accepted error.
+
+ \item a set of integration tables containing precomputed $x_i$ and $w_i$
+ as output by \tet{intnuminit}. This is useful if several integrations of
+ the same type are performed (on the same kind of interval and functions,
+ for a given accuracy): we skip a precomputation of $O(D\log D)$
+ elementary functions in accuracy $D$, whose running time has the same order
+ of magnitude as the evaluation of the integrand. This is in particular
+ useful for multivariate integrals.
+
+ \misctitle{Specifying the behavior at endpoints}
+ This is done as follows. An endpoint $a$ is either given as such (a scalar,
+ real or complex, \kbd{oo} or \kbd{-oo} for $\pm\infty$), or as a two
+ component vector $[a,\alpha]$, to indicate the behavior of the integrand in a
+ neighborhood of $a$.
+
+ If $a$ is finite, the code $[a,\alpha]$ means the function has a
+ singularity of the form $(x-a)^{\alpha}$, up to logarithms. (If $\alpha \ge
+ 0$, we only assume the function is regular, which is the default assumption.)
+ If a wrong singularity exponent is used, the result will lose decimals:
+ \bprog
+ ? c = -9/10;
+ ? intnum(x=0, 1, x^c)         \\@com assume $x^{-9/10}$ is regular at 0
+ %1 = 9.9999839078827082322596783301939063944
+ ? intnum(x=[0,c], 1, x^c)  \\@com no, it's not
+ %2 = 10.000000000000000000000000000000000000
+ ? intnum(x=[0,c/2], 1, x^c) \\@com using a wrong exponent is bad
+ %3 = 9.9999999997122749095442279375719919769
+ @eprog
+
+ If $a$ is $\pm\infty$, which is coded as \kbd{+oo} or \kbd{-oo},
+ the situation is more complicated, and $[\pm\kbd{oo},\alpha]$ means:
+
+ \item $\alpha=0$ (or no $\alpha$ at all, i.e. simply $\pm\kbd{oo}$)
+ assumes that the integrand tends to zero moderately quickly, at least as
+ $O(x^{-2})$ but not exponentially fast.
+
+ \item $\alpha>0$ assumes that the function tends to zero exponentially fast
+ approximately as $\exp(-\alpha x)$. This includes oscillating but quickly
+ decreasing functions such as $\exp(-x)\sin(x)$.
+ \bprog
+ ? intnum(x=0, +oo, exp(-2*x))
+   ***   at top-level: intnum(x=0,+oo,exp(-
+   ***                 ^--------------------
+   *** exp: exponent (expo) overflow
+ ? intnum(x=0, [+oo, 2], exp(-2*x))  \\@com OK!
+ %1 = 0.50000000000000000000000000000000000000
+ ? intnum(x=0, [+oo, 3], exp(-2*x))  \\@com imprecise exponent, still OK !
+ %2 = 0.50000000000000000000000000000000000000
+ ? intnum(x=0, [+oo, 10], exp(-2*x)) \\@com wrong exponent $\Rightarrow$ disaster
+ %3 = 0.49999999999952372962457451698256707393
+ @eprog\noindent As the last exemple shows, the exponential decrease rate
+ \emph{must} be indicated to avoid overflow, but the method is robust enough
+ for a rough guess to be acceptable.
+
+ \item $\alpha<-1$ assumes that the function tends to $0$ slowly, like
+ $x^{\alpha}$. Here the algorithm is less robust and it is essential to give a
+ sharp $\alpha$, unless $\alpha \le -2$ in which case we use
+ the default algorithm as if $\alpha$ were missing (or equal to $0$).
+ \bprog
+ ? intnum(x=1, +oo, x^(-3/2))         \\ default
+ %1 = 1.9999999999999999999999999999646391207
+ ? intnum(x=1, [+oo,-3/2], x^(-3/2))  \\ precise decrease rate
+ %2 = 2.0000000000000000000000000000000000000
+ ? intnum(x=1, [+oo,-11/10], x^(-3/2)) \\ worse than default
+ %3 = 2.0000000000000000000000000089298011973
+ @eprog
+
+ \smallskip The last two codes are reserved for oscillating functions.
+ Let $k > 0$ real, and $g(x)$ a non-oscillating function tending slowly to $0$
+ (e.g. like a negative power of $x$), then
+
+ \item $\alpha=k * I$ assumes that the function behaves like $\cos(kx)g(x)$.
+
+ \item $\alpha=-k* I$ assumes that the function behaves like $\sin(kx)g(x)$.
+
+ \noindent Here it is critical to give the exact value of $k$. If the
+ oscillating part is not a pure sine or cosine, one must expand it into a
+ Fourier series, use the above codings, and sum the resulting contributions.
+ Otherwise you will get nonsense. Note that $\cos(kx)$, and similarly
+ $\sin(kx)$, means that very function, and not a translated version such as
+ $\cos(kx+a)$.
+
+ \misctitle{Note} If $f(x)=\cos(kx)g(x)$ where $g(x)$ tends to zero
+ exponentially fast as $\exp(-\alpha x)$, it is up to the user to choose
+ between $[\pm\kbd{oo},\alpha]$ and $[\pm\kbd{oo},k* I]$, but a good rule of
+ thumb is that
+ if the oscillations are weaker than the exponential decrease, choose
+ $[\pm\kbd{oo},\alpha]$, otherwise choose $[\pm\kbd{oo},k*I]$, although the
+ latter can reasonably be used in all cases, while the former cannot. To take
+ a specific example, in most inverse Mellin transforms, the integrand is a
+ product of an exponentially decreasing and an oscillating factor. If we
+ choose the oscillating type of integral we perhaps obtain the best results,
+ at the expense of having to recompute our functions for a different value of
+ the variable $z$ giving the transform, preventing us to use a function such
+ as \kbd{intfuncinit}. On the other hand using the exponential type of
+ integral, we obtain less accurate results, but we skip expensive
+ recomputations. See \kbd{intfuncinit} for more explanations.
+
+ \misctitle{Power series limits}
+ The limits $a$ and $b$ can be power series of non-negative valuation,
+ giving a power series expansion for the integral -- provided it exists.
+ \bprog
+ ? intnum(t=0,X + O(X^3), exp(t))
+ %4 = 1.000...*X - 0.5000...*X^2 + O(X^3)
+ ? bestappr( intnum(t=0,X + O(X^17), exp(t)) )- exp(X) + 1
+ %5 = O(X^17)
+ @eprog\noindent The valuation of the limit cannot be negative
+ since $\int_0^{1/X}(1+t^2)^{-1}\, dt = \pi/2 - \kbd{sign}(X)+O(X^2)$.
+
+ Polynomials and rational functions are also allowed and
+ converted to power series using current \kbd{seriesprecision}:
+ \bprog
+ ? bestappr( intnum(t=1,1+X, 1/t) )
+ %6 = X - 1/2*X^2 + 1/3*X^3 - 1/4*X^4 + [...] + 1/15*X^15 + O(X^16)
+ @eprog\noindent
+ The function does not work if the integral is singular with the constant
+ coefficient of the series as limit:
+ \bprog
+ ? intnum(t=X^2+O(X^4),1, 1/sqrt(t))
+ %8 = 2.000... - 6.236608109630992528 E28*X^2 + O(X^4)
+ @eprog\noindent
+ however you can use
+ \bprog
+ ? intnum(t=[X^2+O(X^4),-1/2],1, 1/sqrt(t))
+ %10 = 2.000000000000000000000000000-2.000000000000000000000000000*X^2+O(X^4)
+ @eprog\noindent whis is translated internally to
+ \bprog
+ ? intnum(t=[0,-1/2],1, 1/sqrt(t))-intnum(t=[0,-1/2],X^2+O(X^4), 1/sqrt(t))
+ @eprog\noindent
+ For this form the argument \var{tab} can be used only as an integer, not a
+ table precomputed by \kbd{intnuminit}.
+
+ \smallskip
+
+ We shall now see many examples to get a feeling for what the various
+ parameters achieve. All examples below assume precision is set to $115$
+ decimal digits. We first type
+ \bprog
+ ? \p 115
+ @eprog
+
+ \misctitle{Apparent singularities} In many cases, apparent singularities
+ can be ignored. For instance, if $f(x) = 1
+ /(\exp(x)-1) - \exp(-x)/x$, then $\int_0^\infty f(x)\,dx=\gamma$, Euler's
+ constant \kbd{Euler}. But
+
+ \bprog
+ ? f(x) = 1/(exp(x)-1) - exp(-x)/x
+ ? intnum(x = 0, [oo,1],  f(x)) - Euler
+ %1 = 0.E-115
+ @eprog\noindent
+ But close to $0$ the function $f$ is computed with an enormous loss of
+ accuracy, and we are in fact lucky that it get multiplied by weights which are
+ sufficiently close to $0$ to hide this:
+ \bprog
+ ? f(1e-200)
+ %2 = -3.885337784451458142 E84
+ @eprog
+
+ A more robust solution is to define the function differently near special
+ points, e.g. by a Taylor expansion
+ \bprog
+ ? F = truncate( f(t + O(t^10)) ); \\@com expansion around t = 0
+ ? poldegree(F)
+ %4 = 7
+ ? g(x) = if (x > 1e-18, f(x), subst(F,t,x)); \\@com note that $7 \cdot 18 > 105$
+ ? intnum(x = 0, [oo,1],  g(x)) - Euler
+ %2 = 0.E-115
+ @eprog\noindent It is up to the user to determine constants such as the
+ $10^{-18}$ and $10$ used above.
+
+ \misctitle{True singularities} With true singularities the result is worse.
+ For instance
+
+ \bprog
+ ? intnum(x = 0, 1,  x^(-1/2)) - 2
+ %1 = -3.5... E-68 \\@com only $68$ correct decimals
+
+ ? intnum(x = [0,-1/2], 1,  x^(-1/2)) - 2
+ %2 = 0.E-114 \\@com better
+ @eprog
+
+ \misctitle{Oscillating functions}
+
+ \bprog
+ ? intnum(x = 0, oo, sin(x) / x) - Pi/2
+ %1 = 16.19.. \\@com nonsense
+ ? intnum(x = 0, [oo,1], sin(x)/x) - Pi/2
+ %2 = -0.006.. \\@com bad
+ ? intnum(x = 0, [oo,-I], sin(x)/x) - Pi/2
+ %3 = 0.E-115 \\@com perfect
+ ? intnum(x = 0, [oo,-I], sin(2*x)/x) - Pi/2  \\@com oops, wrong $k$
+ %4 = 0.06...
+ ? intnum(x = 0, [oo,-2*I], sin(2*x)/x) - Pi/2
+ %5 = 0.E-115 \\@com perfect
+
+ ? intnum(x = 0, [oo,-I], sin(x)^3/x) - Pi/4
+ %6 = -0.0008... \\@com bad
+ ? sin(x)^3 - (3*sin(x)-sin(3*x))/4
+ %7 = O(x^17)
+ @eprog\noindent
+ We may use the above linearization and compute two oscillating integrals with
+ endpoints \kbd{[oo, -I]} and \kbd{[oo, -3*I]} respectively, or
+ notice the obvious change of variable, and reduce to the single integral
+ ${1\over 2}\int_0^\infty \sin(x)/x\,dx$. We finish with some more complicated
+ examples:
+
+ \bprog
+ ? intnum(x = 0, [oo,-I], (1-cos(x))/x^2) - Pi/2
+ %1 = -0.0003... \\@com bad
+ ? intnum(x = 0, 1, (1-cos(x))/x^2) \
+ + intnum(x = 1, oo, 1/x^2) - intnum(x = 1, [oo,I], cos(x)/x^2) - Pi/2
+ %2 = 0.E-115 \\@com perfect
+
+ ? intnum(x = 0, [oo, 1], sin(x)^3*exp(-x)) - 0.3
+ %3 = -7.34... E-55 \\@com bad
+ ? intnum(x = 0, [oo,-I], sin(x)^3*exp(-x)) - 0.3
+ %4 = 8.9... E-103 \\@com better. Try higher $m$
+ ? tab = intnuminit(0,[oo,-I], 1); \\@com double number of sampling points
+ ? intnum(x = 0, oo, sin(x)^3*exp(-x), tab) - 0.3
+ %6 = 0.E-115 \\@com perfect
+ @eprog
+
+ \misctitle{Warning} Like \tet{sumalt}, \kbd{intnum} often assigns a
+ reasonable value to diverging integrals. Use these values at your own risk!
+ For example:
+
+ \bprog
+ ? intnum(x = 0, [oo, -I], x^2*sin(x))
+ %1 = -2.0000000000...
+ @eprog\noindent
+ Note the formula
+ $$ \int_0^\infty \sin(x)/x^s\,dx = \cos(\pi s/2) \Gamma(1-s)\;, $$
+ a priori valid only for $0 < \Re(s) < 2$, but the right hand side provides an
+ analytic continuation which may be evaluated at $s = -2$\dots
+
+ \misctitle{Multivariate integration}
+ Using successive univariate integration with respect to different formal
+ parameters, it is immediate to do naive multivariate integration. But it is
+ important to use a suitable \kbd{intnuminit} to precompute data for the
+ \emph{internal} integrations at least!
+
+ For example, to compute the double integral on the unit disc $x^2+y^2\le1$
+ of the function $x^2+y^2$, we can write
+ \bprog
+ ? tab = intnuminit(-1,1);
+ ? intnum(x=-1,1, intnum(y=-sqrt(1-x^2),sqrt(1-x^2), x^2+y^2, tab),tab) - Pi/2
+ %2 = -7.1... E-115 \\@com OK
+
+ @eprog\noindent
+ The first \var{tab} is essential, the second optional. Compare:
+
+ \bprog
+ ? tab = intnuminit(-1,1);
+ time = 4 ms.
+ ? intnum(x=-1,1, intnum(y=-sqrt(1-x^2),sqrt(1-x^2), x^2+y^2));
+ time = 3,092 ms. \\@com slow
+ ? intnum(x=-1,1, intnum(y=-sqrt(1-x^2),sqrt(1-x^2), x^2+y^2, tab), tab);
+ time = 252 ms.  \\@com faster
+ ? intnum(x=-1,1, intnum(y=-sqrt(1-x^2),sqrt(1-x^2), x^2+y^2, tab));
+ time = 261 ms.  \\@com the \emph{internal} integral matters most
+ @eprog
+
+ \synt{intnum}{void *E, GEN (*eval)(void*,GEN), GEN a,GEN b,GEN tab, long prec},
+ where an omitted \var{tab} is coded as \kbd{NULL}.

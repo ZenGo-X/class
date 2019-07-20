@@ -1,0 +1,113 @@
+Function: ellinit
+Section: elliptic_curves
+C-Name: ellinit
+Prototype: GDGp
+Help: ellinit(x,{D=1}): let x be a vector [a1,a2,a3,a4,a6], or [a4,a6] if
+ a1=a2=a3=0, defining the curve Y^2 + a1.XY + a3.Y = X^3 + a2.X^2 + a4.X +
+ a6; x can also be a string, in which case the curve with matching name is
+ retrieved from the elldata database, if available. This function initializes
+ an elliptic curve over the domain D (inferred from coefficients if omitted).
+Description:
+ (gen, gen, small):ell:prec  ellinit($1, $2, $prec)
+Doc:
+ initialize an \tet{ell} structure, attached to the elliptic curve $E$.
+ $E$ is either
+
+ \item a $5$-component vector $[a_1,a_2,a_3,a_4,a_6]$ defining the elliptic
+ curve with Weierstrass equation
+ $$ Y^2 + a_1 XY + a_3 Y = X^3 + a_2 X^2 + a_4 X + a_6, $$
+
+ \item a $2$-component vector $[a_4,a_6]$ defining the elliptic
+ curve with short Weierstrass equation
+ $$ Y^2 = X^3 + a_4 X + a_6, $$
+
+ \item a character string in Cremona's notation, e.g. \kbd{"11a1"}, in which
+ case the curve is retrieved from the \tet{elldata} database if available.
+
+ The optional argument $D$ describes the domain over which the curve is
+ defined:
+
+ \item the \typ{INT} $1$ (default): the field of rational numbers $\Q$.
+
+ \item a \typ{INT} $p$, where $p$ is a prime number: the prime finite field
+ $\F_p$.
+
+ \item an \typ{INTMOD} \kbd{Mod(a, p)}, where $p$ is a prime number: the
+ prime finite field $\F_p$.
+
+ \item a \typ{FFELT}, as returned by \tet{ffgen}: the corresponding finite
+ field $\F_q$.
+
+ \item a \typ{PADIC}, $O(p^n)$: the field $\Q_p$, where $p$-adic quantities
+ will be computed to a relative accuracy of $n$ digits. We advise to input a
+ model defined over $\Q$ for such curves. In any case, if you input an
+ approximate model with \typ{PADIC} coefficients, it will be replaced by a lift
+ to $\Q$ (an exact model ``close'' to the one that was input) and all quantities
+ will then be computed in terms of this lifted model, at the given accuracy.
+
+ \item a \typ{REAL} $x$: the field $\C$ of complex numbers, where floating
+ point quantities are by default computed to a relative accuracy of
+ \kbd{precision}$(x)$. If no such argument is given, the value of
+ \kbd{realprecision} at the time \kbd{ellinit} is called will be used.
+
+ \item a number field $K$, given by a \kbd{nf} or \kbd{bnf} structure; a
+ \kbd{bnf} is required for \kbd{ellminimalmodel}.
+
+ \item a prime ideal $\goth{p}$, given by a \kbd{prid} structure; valid if
+ $x$ is a curve defined over a number field $K$ and the equation is integral
+ and minimal at $\goth{p}$.
+
+ This argument $D$ is indicative: the curve coefficients are checked for
+ compatibility, possibly changing $D$; for instance if $D = 1$ and
+ an \typ{INTMOD} is found. If inconsistencies are detected, an error is
+ raised:
+ \bprog
+ ? ellinit([1 + O(5), 1], O(7));
+  ***   at top-level: ellinit([1+O(5),1],O
+  ***                 ^--------------------
+  *** ellinit: inconsistent moduli in ellinit: 7 != 5
+ @eprog\noindent If the curve coefficients are too general to fit any of the
+ above domain categories, only basic operations, such as point addition, will
+ be supported later.
+
+ If the curve (seen over the domain $D$) is singular, fail and return an
+ empty vector $[]$.
+ \bprog
+ ? E = ellinit([0,0,0,0,1]); \\ y^2 = x^3 + 1, over Q
+ ? E = ellinit([0,1]);       \\ the same curve, short form
+ ? E = ellinit("36a1");      \\ sill the same curve, Cremona's notations
+ ? E = ellinit([0,1], 2)     \\ over F2: singular curve
+ %4 = []
+ ? E = ellinit(['a4,'a6] * Mod(1,5));  \\ over F_5[a4,a6], basic support !
+ @eprog\noindent
+
+ The result of \tet{ellinit} is an \tev{ell} structure. It contains at least
+ the following information in its components:
+ %
+ $$ a_1,a_2,a_3,a_4,a_6,b_2,b_4,b_6,b_8,c_4,c_6,\Delta,j.$$
+ %
+ All are accessible via member functions. In particular, the discriminant is
+ \kbd{$E$.disc}, and the $j$-invariant is \kbd{$E$.j}.
+ \bprog
+ ? E = ellinit([a4, a6]);
+ ? E.disc
+ %2 = -64*a4^3 - 432*a6^2
+ ? E.j
+ %3 = -6912*a4^3/(-4*a4^3 - 27*a6^2)
+ @eprog
+ Further components contain domain-specific data, which are in general dynamic:
+ only computed when needed, and then cached in the structure.
+ \bprog
+ ? E = ellinit([2,3], 10^60+7);  \\ E over F_p, p large
+ ? ellap(E)
+ time = 4,440 ms.
+ %2 = -1376268269510579884904540406082
+ ? ellcard(E);  \\ now instantaneous !
+ time = 0 ms.
+ ? ellgenerators(E);
+ time = 5,965 ms.
+ ? ellgenerators(E); \\ second time instantaneous
+ time = 0 ms.
+ @eprog
+ See the description of member functions related to elliptic curves at the
+ beginning of this section.

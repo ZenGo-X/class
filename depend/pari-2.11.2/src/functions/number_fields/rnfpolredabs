@@ -1,0 +1,44 @@
+Function: rnfpolredabs
+Section: number_fields
+C-Name: rnfpolredabs
+Prototype: GGD0,L,
+Help: rnfpolredabs(nf,pol,{flag=0}): given an irreducible pol with coefficients
+ in nf, finds a canonical relative polynomial defining the same field.
+ Binary digits of flag mean: 1: return also the element whose characteristic
+ polynomial is the given polynomial, 2: return an absolute polynomial,
+ 16: partial reduction.
+Doc: Relative version of \kbd{polredabs}. Given an irreducible monic polynomial
+ \var{pol} with coefficients in $\var{nf}$, finds a canonical relative
+ polynomial defining the same field, hopefully with small coefficients.
+ Note that the equation is only canonical for a fixed \var{nf}, using a
+ different defining polynomial in the \var{nf} structure will produce a
+ different relative equation.
+
+ The binary digits of $\fl$ correspond to $1$: add information to convert
+ elements to the new representation, $2$: absolute polynomial, instead of
+ relative, $16$: possibly use a suborder of the maximal order. More precisely:
+
+ 0: default, return $P$
+
+ 1: returns $[P,a]$ where $P$ is the default output and $a$,
+ a \typ{POLMOD} modulo $P$, is a root of \var{pol}.
+
+ 2: returns \var{Pabs}, an absolute, instead of a relative, polynomial.
+ This polynomial is canonical and does not depend on the \var{nf} structure.
+ Same as but faster than
+ \bprog
+   polredabs(rnfequation(nf, pol))
+ @eprog
+
+ 3: returns $[\var{Pabs},a,b]$, where \var{Pabs} is an absolute polynomial
+ as above, $a$, $b$ are \typ{POLMOD} modulo \var{Pabs}, roots of \kbd{nf.pol}
+ and \var{pol} respectively.
+
+ 16: possibly use a suborder of the maximal order. This is slower than the
+ default when the relative discriminant is smooth, and much faster otherwise.
+ In this case the result is no longer canonical; see \secref{se:polredabs}.
+
+ \misctitle{Warning} The complexity of \kbd{rnfpolredabs}
+ is exponential in the absolute degree. The function \tet{rnfpolredbest} runs
+ in polynomial time, and  tends  to return polynomials with smaller
+ discriminants.

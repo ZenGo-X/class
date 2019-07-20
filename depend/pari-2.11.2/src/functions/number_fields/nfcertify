@@ -1,0 +1,19 @@
+Function: nfcertify
+Section: number_fields
+C-Name: nfcertify
+Prototype: G
+Help: nfcertify(nf): returns a vector of composite integers used to certify
+ nf.zk and nf.disc unconditionally (both are correct when the output
+ is the empty vector).
+Doc: $\var{nf}$ being as output by
+ \kbd{nfinit}, checks whether the integer basis is known unconditionally.
+ This is in particular useful when the argument to \kbd{nfinit} was of the
+ form $[T, \kbd{listP}]$, specifying a finite list of primes when
+ $p$-maximality had to be proven, or a list of coprime integers to which
+ Buchmann-Lenstra algorithm was to be applied.
+
+ The function returns a vector of coprime composite integers. If this vector
+ is empty, then \kbd{nf.zk} and \kbd{nf.disc} are correct. Otherwise, the
+ result is dubious. In order to obtain a certified result, one must completely
+ factor each of the given integers, then \kbd{addprime} each of their prime
+ factors, then check whether \kbd{nfdisc(nf.pol)} is equal to \kbd{nf.disc}.

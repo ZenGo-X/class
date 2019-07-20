@@ -1,0 +1,3 @@
+Function: local
+Section: programming/specific
+Help: local(x,...,z): declare x,...,z as (dynamically scoped) local variables.

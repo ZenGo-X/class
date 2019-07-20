@@ -1,0 +1,11 @@
+Function: idealinv
+Section: number_fields
+C-Name: idealinv
+Prototype: GG
+Help: idealinv(nf,x): inverse of the ideal x in the number field nf.
+Description:
+ (gen, gen):gen        idealinv($1, $2)
+Doc: inverse of the ideal $x$ in the
+ number field $\var{nf}$, given in HNF. If $x$ is an extended
+ ideal\sidx{ideal (extended)}, its principal part is suitably
+ updated: i.e. inverting $[I,t]$, yields $[I^{-1}, 1/t]$.

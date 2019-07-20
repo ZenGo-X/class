@@ -1,0 +1,74 @@
+default(realprecision,38);
+N = 1<<64;
+for(a=N-2, N+2, print(a))
+for(a=-N-2, -N+2, print(a))
+for(n=2,oo,if(n>10,break);print(n))
+
+forprime(p=2^32-50,2^32+30,print(p))
+forprime(p=2^64-70,2^64+50,print(p))
+forprime(n=2,,if(n>10,break);print(n)) /*backward compat */
+forprime(n=2,oo,if(n>10,break);print(n))
+forprime(n=2^100,,if(n>2^100+400,break);print(n))
+forprime(n=2^100,oo,if(n>2^100+400,break);print(n))
+
+forprimestep(a=1,10,Mod(2,4),print(a))
+forprimestep(a=3,10,Mod(2,4),print(a))
+forprimestep(a=0,1,Mod(2,4),print(a))
+forprimestep(a=1,10,Mod(3,6),print(a))
+forprimestep(p=2^32-50,2^32+30,Mod(1,3),print(p))
+forprimestep(p=2^64-70,2^64+50,Mod(2,3), print(p))
+forprimestep(n=2,,5,if(n>20,break);print(n)) /*backward compat */
+forprimestep(n=2,oo,5,if(n>20,break);print(n))
+forprimestep(n=2^100,,Mod(2,3),if(n>2^100+400,break);print(n))
+forprimestep(n=2^100,oo,Mod(2,3),if(n>2^100+400,break);print(n))
+p=18446744073709551533;
+forprimestep(i=p,p+400,10,print(i))
+
+for(a=0.5,3,print(a))
+for(a=1,10, print(a+=2))
+
+forstep(a=5,1,-2,print1(a," "))
+forstep(a=1,10,[1,3],print1(a," "))
+forstep(a=1,10,Mod(2,3),print1(a," "))
+my(s=1,a=0);forstep(i=1,20,s,s++;a+=i);a
+
+forprime(p=2,10,p=4)
+
+forcomposite(a=2,4,print(a))
+forcomposite(a=10,10,print(a))
+forcomposite(a=2,10,print(a))
+forcomposite(a=5,11,print(a))
+forcomposite(a=6,12,print(a))
+forcomposite(a=6,,print(a); if (a>8, break))
+forcomposite(a=6,oo,print(a); if(a>8,break))
+forcomposite(a=6,12,print(a); a=1)
+forcomposite(a=2,3,print(a))
+
+{
+for(i=1,4,for(j=5,8,
+  if ([i,j]==[2,6], next,
+      [i,j]==[3,6], next(2),
+      [i,j]==[4,6], next(3)); print([i,j])))
+}
+
+forfactored(N=10^5,10^5+10,print(N))
+c=0;forfactored(N=1,10^6, my([n,f]=N); if (factorback(f)!=n || c++!=n,error(N)))
+c=-10^6-1;forfactored(N=-10^6,-1, my([n,f]=N); if (factorback(f)!=n || c++!=n,error(N)))
+forfactored(x=-3,-1,print(x))
+forfactored(x=-3,-1, if (x[1]==-2,break); print(x))
+forfactored(x=-3,0,print(x))
+forfactored(x=-3,0, if (x[1]==-1, break); print(x))
+forfactored(x=-3,0, if (x[1]==0, break); print(x))
+forfactored(x=-3,2,print(x))
+forfactored(x=-3,2, if (x[1]==-1, break);print(x))
+forfactored(x=-3,2, if (x[1]==0, break);print(x))
+forfactored(x=-3,2, if (x[1]==1, break);print(x))
+forfactored(x=0,2,print(x))
+forfactored(x=0,2, if (x[1]==0, break);print(x))
+forfactored(x=0,2, if (x[1]==1, break);print(x))
+forfactored(x=1,-1,print(x))
+
+forsquarefree(N=10^5,10^5+10,print(N))
+forsquarefree(N=-10^5-10,-10^5,print(N))
+c=0;forsquarefree(N=1,10^6, my([n,f]=N); if (factorback(f)!=n,error(N)); c++);c
+c=0;forsquarefree(N=-10^6,-1, my([n,f]=N); if (factorback(f)!=n,error(N));c++);c

@@ -1,0 +1,42 @@
+Function: nfgrunwaldwang
+Section: number_fields
+C-Name: nfgrunwaldwang
+Prototype: GGGGDn
+Help: nfgrunwaldwang(nf,Lpr,Ld,pl,{v='x}): a polynomial in the variable v
+ defining a cyclic extension of nf (given in nf or bnf form) with local
+ behavior prescribed by Lpr, Ld and pl: the extension has local degree a
+ multiple of Ld[i] at the prime Lpr[i], and the extension is complex at the
+ i-th real place of nf if pl[i]=-1 (no condition if pl[i]=0). The extension
+ has degree the LCM of the local degrees.
+Doc: Given \var{nf} a number field in \var{nf} or \var{bnf} format,
+ a \typ{VEC} \var{Lpr} of primes of \var{nf} and a \typ{VEC} \var{Ld} of
+ positive integers of the same length, a \typ{VECSMALL} \var{pl} of length
+ $r_1$ the number of real places of \var{nf}, computes a polynomial with
+ coefficients in \var{nf} defining a cyclic extension of \var{nf} of
+ minimal degree satisfying certain local conditions:
+
+ \item at the prime~$Lpr[i]$, the extension has local degree a multiple
+ of~$Ld[i]$;
+
+ \item at the $i$-th real place of \var{nf}, it is complex if $pl[i]=-1$
+ (no condition if $pl[i]=0$).
+
+ The extension has degree the LCM of the local degrees. Currently, the degree
+ is restricted to be a prime power for the search, and to be prime for the
+ construction because of the \kbd{rnfkummer} restrictions.
+
+ When \var{nf} is $\Q$, prime integers are accepted instead of \kbd{prid}
+ structures. However, their primality is not checked and the behavior is
+ undefined if you provide a composite number.
+
+ \misctitle{Warning} If the number field \var{nf} does not contain the $n$-th
+ roots of unity where $n$ is the degree of the extension to be computed,
+ triggers the computation of the \var{bnf} of $nf(\zeta_n)$, which may be
+ costly.
+
+ \bprog
+ ? nf = nfinit(y^2-5);
+ ? pr = idealprimedec(nf,13)[1];
+ ? pol = nfgrunwaldwang(nf, [pr], [2], [0,-1], 'x)
+ %3 = x^2 + Mod(3/2*y + 13/2, y^2 - 5)
+ @eprog

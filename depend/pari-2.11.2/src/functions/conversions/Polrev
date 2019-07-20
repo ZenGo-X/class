@@ -1,0 +1,26 @@
+Function: Polrev
+Section: conversions
+C-Name: gtopolyrev
+Prototype: GDn
+Description:
+ (gen,?var):pol  gtopolyrev($1, $2)
+Help: Polrev(t,{v='x}): convert t (usually a vector or a power series) into a
+ polynomial with variable v, starting with the constant term.
+Doc:
+ transform the object $t$ into a polynomial
+ with main variable $v$. If $t$ is a scalar, this gives a constant polynomial.
+ If $t$ is a power series, the effect is identical to \kbd{truncate}, i.e.~it
+ chops off the $O(X^k)$.
+
+ The main use of this function is when $t$ is a vector: it creates the
+ polynomial whose coefficients are given by $t$, with $t[1]$ being the
+ constant term. \tet{Pol} can be used if one wants $t[1]$ to be the leading
+ coefficient:
+ \bprog
+ ? Polrev([1,2,3])
+ %1 = 3*x^2 + 2*x + 1
+ ? Pol([1,2,3])
+ %2 = x^2 + 2*x + 3
+ @eprog
+ The reciprocal function of \kbd{Pol} (resp.~\kbd{Polrev}) is \kbd{Vec} (resp.~
+ \kbd{Vecrev}).

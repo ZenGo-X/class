@@ -1,0 +1,35 @@
+Function: ellL1
+Section: elliptic_curves
+C-Name: ellL1_bitprec
+Prototype: GD0,L,b
+Help: ellL1(E, {r = 0}): returns the value at s=1 of the derivative of order r of the L-function of the elliptic curve E.
+Doc: returns the value at $s=1$ of the derivative of order $r$ of the
+ $L$-function of the elliptic curve $E$.
+ \bprog
+ ? E = ellinit("11a1"); \\ order of vanishing is 0
+ ? ellL1(E)
+ %2 = 0.2538418608559106843377589233
+ ? E = ellinit("389a1");  \\ order of vanishing is 2
+ ? ellL1(E)
+ %4 = -5.384067311837218089235032414 E-29
+ ? ellL1(E, 1)
+ %5 = 0
+ ? ellL1(E, 2)
+ %6 = 1.518633000576853540460385214
+ @eprog\noindent
+ The main use of this function, after computing at \emph{low} accuracy the
+ order of vanishing using \tet{ellanalyticrank}, is to compute the
+ leading term at \emph{high} accuracy to check (or use) the Birch and
+ Swinnerton-Dyer conjecture:
+ \bprog
+ ? \p18
+   realprecision = 18 significant digits
+ ? E = ellinit("5077a1"); ellanalyticrank(E)
+ time = 8 ms.
+ %1 = [3, 10.3910994007158041]
+ ? \p200
+   realprecision = 202 significant digits (200 digits displayed)
+ ? ellL1(E, 3)
+ time = 104 ms.
+ %3 = 10.3910994007158041387518505103609170697263563756570092797@com$[\dots]$
+ @eprog

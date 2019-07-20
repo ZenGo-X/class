@@ -1,0 +1,36 @@
+Function: mfcoefs
+Section: modular_forms
+C-Name: mfcoefs
+Prototype: GLD1,L,
+Help: mfcoefs(F,n,{d = 1}): Compute the vector of coefficients
+ [a[0],a[d],...,a[nd]] of the modular form F.
+Doc: Compute the vector of Fourier coefficients $[a[0],a[d],...,a[nd]]$ of the
+ generalized modular form $F$; $d$ must be positive and $d = 1$ by default.
+ \bprog
+ ? D = mfDelta();
+ ? mfcoefs(D,10)
+ %2 = [0, 1, -24, 252, -1472, 4830, -6048, -16744, 84480, -113643, -115920]
+ ? mfcoefs(D,5,2)
+ %3 = [0, -24, -1472, -6048, 84480, -115920]
+ ? mfcoef(D,10)
+ %4 = -115920
+ @eprog\noindent
+ This function also applies when $F$ is a modular form space as output by
+ \kbd{mfinit}; it then returns the matrix whose columns give the Fourier
+ expansions of the elements of \kbd{mfbasis}$(F)$:
+ \bprog
+ ? mf = mfinit([1,12]);
+ ? mfcoefs(mf,5)
+ %2 =
+ [691/65520     0]
+
+ [        1     1]
+
+ [     2049   -24]
+
+ [   177148   252]
+
+ [  4196353 -1472]
+
+ [ 48828126  4830]
+ @eprog

@@ -1,0 +1,13 @@
+Function: mfcusps
+Section: modular_forms
+C-Name: mfcusps
+Prototype: G
+Help: mfcusps(N): list of cusps of G_0(N) in the form a/b with b dividing N.
+ N can be either an integer or a modular form space.
+Doc: list of cusps of $\Gamma_0(N)$ in the form $a/b$ with $b\mid N$.
+ $N$ can be either an integer of a modular form space.
+ \bprog
+ ? mfcusps(24)
+ %1 = [0, 1/2, 1/3, 1/4, 1/6, 1/8, 1/12, 1/24]
+ @eprog
+

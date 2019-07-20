@@ -1,0 +1,13 @@
+Function: mfmul
+Section: modular_forms
+C-Name: mfmul
+Prototype: GG
+Help: mfmul(F,G): Multiply the two forms F and G.
+Doc: Multiply the two generalized modular forms $F$ and $G$.
+ \bprog
+ ? E4 = mfEk(4); G = mfmul(mfmul(E4,E4),E4);
+ ? mfcoefs(G, 4)
+ %2 = [1, 720, 179280, 16954560, 396974160]
+ ? mfcoefs(mfpow(E4,3), 4)
+ %3 = [1, 720, 179280, 16954560, 396974160]
+ @eprog

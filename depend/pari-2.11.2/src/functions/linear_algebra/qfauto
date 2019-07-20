@@ -1,0 +1,27 @@
+Function: qfauto
+Section: linear_algebra
+C-Name: qfauto0
+Prototype: GDG
+Help: qfauto(G,{fl}): automorphism group of the positive definite quadratic
+ form G.
+Doc:
+ $G$ being a square and symmetric matrix with integer entries representing a
+ positive definite quadratic form, outputs the automorphism group of the
+ associate lattice.
+ Since this requires computing the minimal vectors, the computations can
+ become very lengthy as the dimension grows. $G$ can also be given by an
+ \kbd{qfisominit} structure.
+ See \kbd{qfisominit} for the meaning of \var{fl}.
+
+ The output is a two-components vector $[o,g]$ where $o$ is the group order
+ and $g$ is the list of generators (as a vector). For each generator $H$,
+ the equality $G={^t}H\*G\*H$ holds.
+
+ The interface of this function is experimental and will likely change in the
+ future.
+
+ This function implements an algorithm of Plesken and Souvignier, following
+ Souvignier's implementation.
+
+Variant: The function \fun{GEN}{qfauto}{GEN G, GEN fl} is also available
+ where $G$ is a vector of \kbd{zm} matrices.

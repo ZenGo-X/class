@@ -1,0 +1,20 @@
+Function: algpoleval
+Section: algebras
+C-Name: algpoleval
+Prototype: GGG
+Help: algpoleval(al,T,b): T in K[X] evaluate T(b) in al.
+Doc: Given an element $b$ in \var{al} and a polynomial $T$ in $K[X]$,
+ computes~$T(b)$ in~\var{al}. Also accepts as input a \typ{VEC}~$[b,mb]$
+ where~$mb$ is the left multiplication table of~$b$.
+
+ \bprog
+ ? nf = nfinit(y^2-5);
+ ? al = alginit(nf,[y,-1]);
+ ? b = [1..8]~;
+ ? pol = algcharpoly(al,b,,1);
+ ? algpoleval(al,pol,b)==0
+ %5 = 1
+ ? mb = algtomatrix(al,b,1);
+ ? algpoleval(al,pol,[b,mb])==0
+ %7 = 1
+ @eprog

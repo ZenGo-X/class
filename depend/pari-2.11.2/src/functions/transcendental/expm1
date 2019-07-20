@@ -1,0 +1,27 @@
+Function: expm1
+Section: transcendental
+C-Name: gexpm1
+Prototype: Gp
+Help: expm1(x): exp(x)-1.
+Description:
+ (real):real         mpexpm1($1)
+Doc: return $\exp(x)-1$, computed in a way that is also accurate
+ when the real part of $x$ is near $0$.
+ A naive direct computation would suffer from catastrophic cancellation;
+ PARI's direct computation of $\exp(x)$ alleviates this well known problem at
+ the expense of computing $\exp(x)$ to a higher accuracy when $x$ is small.
+ Using \kbd{expm1} is recommended instead:
+ \bprog
+ ? default(realprecision, 10000); x = 1e-100;
+ ? a = expm1(x);
+ time = 4 ms.
+ ? b = exp(x)-1;
+ time = 4 ms.
+ ? default(realprecision, 10040); x = 1e-100;
+ ? c = expm1(x);  \\ reference point
+ ? abs(a-c)/c  \\ relative error in expm1(x)
+ %7 = 1.4027986153764843997 E-10019
+ ? abs(b-c)/c  \\ relative error in exp(x)-1
+ %8 = 1.7907031188259675794 E-9919
+ @eprog\noindent As the example above shows, when $x$ is near $0$,
+ \kbd{expm1} is more accurate than \kbd{exp(x)-1}.

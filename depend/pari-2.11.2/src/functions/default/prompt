@@ -1,0 +1,31 @@
+Function: _def_prompt
+Class: default
+Section: default
+C-Name: sd_prompt
+Prototype:
+Help:
+Doc: a string that will be printed as
+ prompt. Note that most usual escape sequences are available there: \b{e} for
+ Esc, \b{n} for Newline, \dots, \kbd{\bs\bs} for \kbd{\bs}. Time expansion is
+ performed.
+
+ This string is sent through the library function \tet{strftime} (on a
+ Unix system, you can try \kbd{man strftime} at your shell prompt). This means
+ that \kbd{\%} constructs have a special meaning, usually related to the time
+ and date. For instance, \kbd{\%H} = hour (24-hour clock) and \kbd{\%M} =
+ minute [00,59] (use \kbd{\%\%} to get a real \kbd{\%}).
+
+ If you use \kbd{readline}, escape sequences in your prompt will result in
+ display bugs. If you have a relatively recent \kbd{readline} (see the comment
+ at the end of \secref{se:def,colors}), you can brace them with special sequences
+ (\kbd{\bs[} and \kbd{\bs]}), and you will be safe. If these just result in
+ extra spaces in your prompt, then you'll have to get a more recent
+ \kbd{readline}. See the file \kbd{misc/gprc.dft} for an example.
+
+ \emacs {\bf Caution}: PariEmacs needs to know about the prompt pattern to
+ separate your input from previous \kbd{gp} results, without ambiguity. It is
+ not a trivial problem to adapt automatically this regular expression to an
+ arbitrary prompt (which can be self-modifying!). See PariEmacs's
+ documentation.
+
+ The default value is \kbd{"? "}.

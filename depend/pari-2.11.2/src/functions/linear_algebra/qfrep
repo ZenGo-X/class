@@ -1,0 +1,28 @@
+Function: qfrep
+Section: linear_algebra
+C-Name: qfrep0
+Prototype: GGD0,L,
+Help: qfrep(q,B,{flag=0}): vector of (half) the number of vectors of norms
+ from 1 to B for the integral and definite quadratic form q. If flag is 1,
+ count vectors of even norm from 1 to 2B.
+Doc:
+ $q$ being a square and symmetric matrix with integer entries representing a
+ positive definite quadratic form, count the vectors representing successive
+ integers.
+
+ \item If $\fl = 0$, count all vectors. Outputs the vector whose $i$-th
+ entry, $1 \leq i \leq B$ is half the number of vectors $v$ such that $q(v)=i$.
+
+ \item If $\fl = 1$, count vectors of even norm. Outputs the vector
+ whose $i$-th entry, $1 \leq i \leq B$ is half the number of vectors such
+ that $q(v) = 2i$.
+
+ \bprog
+ ? q = [2, 1; 1, 3];
+ ? qfrep(q, 5)
+ %2 = Vecsmall([0, 1, 2, 0, 0]) \\ 1 vector of norm 2, 2 of norm 3, etc.
+ ? qfrep(q, 5, 1)
+ %3 = Vecsmall([1, 0, 0, 1, 0]) \\ 1 vector of norm 2, 0 of norm 4, etc.
+ @eprog\noindent
+ This routine uses a naive algorithm based on \tet{qfminim}, and
+ will fail if any entry becomes larger than $2^{31}$ (or $2^{63}$).

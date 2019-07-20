@@ -1,0 +1,37 @@
+Function: charorder
+Section: number_theoretical
+C-Name: charorder0
+Prototype: GG
+Help: charorder(cyc,chi): given a finite abelian group (by its elementary
+ divisors cyc) and a character chi, return the order of chi.
+Doc: let \var{cyc} represent a finite abelian group by its elementary
+ divisors, i.e. $(d_j)$ represents $\sum_{j \leq k} \Z/d_j\Z$ with $d_k
+ \mid \dots \mid d_1$; any object which has a \kbd{.cyc} method is also
+ allowed, e.g.~the output of \kbd{znstar} or \kbd{bnrinit}. A character
+ on this group is given by a row vector $\chi = [a_1,\ldots,a_n]$ such that
+ $\chi(\prod g_j^{n_j}) = \exp(2\pi i\sum a_j n_j / d_j)$, where $g_j$ denotes
+ the generator (of order $d_j$) of the $j$-th cyclic component.
+
+ This function returns the order of the character \kbd{chi}.
+ \bprog
+ ? cyc = [15,5]; chi = [1,1];
+ ? charorder(cyc, chi)
+ %2 = 15
+ ? bnf = bnfinit(x^2+23);
+ ? bnf.cyc
+ %4 = [3]
+ ? charorder(bnf, [1])
+ %5 = 3
+ @eprog\noindent For Dirichlet characters (when \kbd{cyc} is
+ \kbd{znstar(q, 1)}), characters in Conrey representation are available,
+ see \secref{se:dirichletchar} or \kbd{??character}:
+ \bprog
+ ? G = znstar(100, 1); \\ (Z/100Z)^*
+ ? charorder(G, 7)   \\ Conrey label
+ %2 = 4
+ @eprog
+
+Variant: Also available is
+ \fun{GEN}{charorder}{GEN cyc, GEN chi}, when \kbd{cyc} is known to
+ be a vector of elementary divisors and \kbd{chi} a compatible character
+ (no checks).

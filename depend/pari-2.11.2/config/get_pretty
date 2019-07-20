@@ -1,0 +1,17 @@
+pretty="$prettya running $osname"
+
+case "$kernlvl1" in
+  gmp) if test -n "$gmp_version"; then
+         prettyk="$prettyk0/GMP-${gmp_version}"
+       else
+         prettyk="$prettyk0/GMP"
+       fi;;
+  none) prettyk="$prettyk0";;
+  *) prettyk="$prettyk0/$kernlvl1";;
+esac
+
+case "$sizeof_long" in
+  4) pretty="$pretty ($prettyk kernel) 32-bit version";;
+  8) pretty="$pretty ($prettyk kernel) 64-bit version";;
+esac;
+

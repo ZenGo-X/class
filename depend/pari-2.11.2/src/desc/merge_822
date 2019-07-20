@@ -1,0 +1,12 @@
+#!/usr/bin/perl -w
+BEGIN { @INC=(".",@INC); }
+use PARI::822;
+
+open(IN, $ARGV[0]) || die "cannot find $ARGV[0]";
+for (<IN>) { s/^\d+\s+\d+\s+//; PARI::822::read(\%funcs,$_,1) }
+
+for (keys %funcs)
+{
+  $funcs{$_}->{'Class'} = 'basic' if (!defined($funcs{$_}->{'Class'}));
+}
+PARI::822::write(\%funcs);

@@ -1,0 +1,70 @@
+Function: _header_programming/control
+Class: header
+Section: programming/control
+Doc:
+ \section{Programming in GP: control statements}
+ \sidx{programming}\label{se:programming}
+
+   A number of control statements are available in GP. They are simpler and
+ have a syntax slightly different from their C counterparts, but are quite
+ powerful enough to write any kind of program. Some of them are specific to
+ GP, since they are made for number theorists. As usual, $X$ will denote any
+ simple variable name, and \var{seq} will always denote a sequence of
+ expressions, including the empty sequence.
+
+ \misctitle{Caveat} In constructs like
+ \bprog
+     for (X = a,b, seq)
+ @eprog\noindent
+ the variable \kbd{X} is lexically scoped to the loop, leading to possibly
+ unexpected behavior:
+ \bprog
+     n = 5;
+     for (n = 1, 10,
+       if (something_nice(), break);
+     );
+     \\ @com at this point \kbd{n} is 5 !
+ @eprog\noindent
+ If the sequence \kbd{seq} modifies the loop index, then the loop
+ is modified accordingly:
+ \bprog
+     ? for (n = 1, 10, n += 2; print(n))
+     3
+     6
+     9
+     12
+ @eprog
+
+Function: _header_programming/specific
+Class: header
+Section: programming/specific
+Doc:
+ \section{Programming in GP: other specific functions}
+ \label{se:gp_program}
+
+   In addition to the general PARI functions, it is necessary to have some
+ functions which will be of use specifically for \kbd{gp}, though a few of these
+ can be accessed under library mode. Before we start describing these, we recall
+ the difference between \emph{strings} and \emph{keywords} (see
+ \secref{se:strings}): the latter don't get expanded at all, and you can type
+ them without any enclosing quotes. The former are dynamic objects, where
+ everything outside quotes gets immediately expanded.
+
+
+Function: _header_programming/parallel
+Class: header
+Section: programming/parallel
+Doc:
+ \section{Parallel programming}
+
+ These function are only available if PARI was configured using
+ \kbd{Configure --mt=\dots}. Two multithread interfaces are supported:
+
+ \item POSIX threads
+
+ \item Message passing interface (MPI)
+
+ As a rule, POSIX threads are well-suited for single systems, while MPI is used
+ by most clusters. However the parallel GP interface does not depend on the
+ chosen multithread interface: a properly written GP program will work
+ identically with both.

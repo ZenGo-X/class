@@ -1,0 +1,17 @@
+Function: sumdigits
+Section: number_theoretical
+C-Name: sumdigits0
+Prototype: GDG
+Help: sumdigits(n,{B=10}): sum of digits in the integer |n|, when written in
+ base B.
+Doc: sum of digits in the integer $|n|$, when written in base $B > 1$.
+ \bprog
+ ? sumdigits(123456789)
+ %1 = 45
+ ? sumdigits(123456789, 2)
+ %1 = 16
+ @eprog\noindent Note that the sum of bits in $n$ is also returned by
+ \tet{hammingweight}. This function is much faster than
+ \kbd{vecsum(digits(n,B))} when $B$ is $10$ or a power of $2$, and only
+ slightly faster in other cases.
+Variant: Also available is \fun{GEN}{sumdigits}{GEN n}, for $B = 10$.

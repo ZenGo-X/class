@@ -1,0 +1,12 @@
+Function: ellisoncurve
+Section: elliptic_curves
+C-Name: ellisoncurve
+Prototype: GG
+Help: ellisoncurve(E,z): true(1) if z is on elliptic curve E, false(0) if not.
+Doc: gives 1 (i.e.~true) if the point $z$ is on the elliptic curve $E$, 0
+ otherwise. If $E$ or $z$ have imprecise coefficients, an attempt is made to
+ take this into account, i.e.~an imprecise equality is checked, not a precise
+ one. It is allowed for $z$ to be a vector of points in which case a vector
+ (of the same type) is returned.
+Variant: Also available is \fun{int}{oncurve}{GEN E, GEN z} which does not
+ accept vectors of points.

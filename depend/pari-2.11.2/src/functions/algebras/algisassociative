@@ -1,0 +1,20 @@
+Function: algisassociative
+Section: algebras
+C-Name: algisassociative
+Prototype: iGD0,G,
+Help: algisassociative(mt,p=0): true (1) if the multiplication table mt is
+ suitable for algtableinit(mt,p), false (0) otherwise.
+Doc: Returns 1 if the multiplication table \kbd{mt} is suitable for
+ \kbd{algtableinit(mt,p)}, 0 otherwise. More precisely, \kbd{mt} should be
+ a \typ{VEC} of $n$ matrices in $M_n(K)$, giving the left multiplications
+ by the basis elements $e_1, \dots, e_n$ (structure constants).
+ We check whether the first basis element $e_1$ is $1$ and $e_i(e_je_k) =
+ (e_ie_j)e_k$ for all $i,j,k$.
+ \bprog
+  ? mt = [matid(3),[0,0,0;1,0,1;0,0,0],[0,0,0;0,0,0;1,0,1]];
+  ? algisassociative(mt)
+  %2 = 1
+ @eprog
+
+ May be used to check a posteriori an algebra: we also allow \kbd{mt} as
+ output by \tet{algtableinit} ($p$ is ignored in this case).

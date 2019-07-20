@@ -1,0 +1,32 @@
+Function: matdiagonal
+Section: linear_algebra
+C-Name: diagonal
+Prototype: G
+Help: matdiagonal(x): creates the diagonal matrix whose diagonal entries are
+ the entries of the vector x.
+Doc: $x$ being a vector, creates the diagonal matrix
+ whose diagonal entries are those of $x$.
+ \bprog
+ ? matdiagonal([1,2,3]);
+ %1 =
+ [1 0 0]
+
+ [0 2 0]
+
+ [0 0 3]
+ @eprog\noindent Block diagonal matrices are easily created using
+ \tet{matconcat}:
+ \bprog
+ ? U=[1,2;3,4]; V=[1,2,3;4,5,6;7,8,9];
+ ? matconcat(matdiagonal([U, V]))
+ %1 =
+ [1 2 0 0 0]
+
+ [3 4 0 0 0]
+
+ [0 0 1 2 3]
+
+ [0 0 4 5 6]
+
+ [0 0 7 8 9]
+ @eprog

@@ -1,0 +1,15 @@
+Function: elleta
+Section: elliptic_curves
+C-Name: elleta
+Prototype: Gp
+Help: elleta(w): w=[w1,w2], returns the vector [eta1,eta2] of quasi-periods
+ attached to [w1,w2].
+Doc: returns the quasi-periods $[\eta_1,\eta_2]$
+ attached to the lattice basis $\var{w} = [\omega_1, \omega_2]$.
+ Alternatively, \var{w} can be an elliptic curve $E$ as output by
+ \kbd{ellinit}, in which case, the quasi periods attached to the period
+ lattice basis \kbd{$E$.omega} (namely, \kbd{$E$.eta}) are returned.
+ \bprog
+ ? elleta([1, I])
+ %1 = [3.141592653589793238462643383, 9.424777960769379715387930149*I]
+ @eprog

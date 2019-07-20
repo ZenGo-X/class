@@ -1,0 +1,33 @@
+Function: mfkohneneigenbasis
+Section: modular_forms
+C-Name: mfkohneneigenbasis
+Prototype: GG
+Help: mfkohneneigenbasis(mf,bij): mf being a cuspidal space of half-integral
+ weight k >= 3/2 and bij being the output of mfkohnenbijection(mf), outputs
+ a 3-component vector [mf0,BNEW,BEIGEN], where BNEW and BEIGEN are two
+ matrices whose columns are the coefficients of a basis of the Kohnen new
+ space and of the eigenforms on the basis of mf respectively, and mf0 is
+ the corresponding new space of integral weight 2k - 1.
+Doc: \kbd{mf} being a cuspidal space of half-integral weight $k\ge3/2$ and
+ \kbd{bij} being the output of \kbd{mfkohnenbijection(mf)}, outputs a
+ $3$-component vector \kbd{[mf0,BNEW,BEIGEN]}, where \kbd{BNEW} and
+ \kbd{BEIGEN} are two matrices whose columns are the coefficients
+ of a basis of the Kohnen new space and of the eigenforms on the basis of
+ \kbd{mf} respectively, and \kbd{mf0} is the corresponding new space of
+ integral weight $2k-1$.
+ \bprog
+ ? mf=mfinit([44,5/2],1);bij=mfkohnenbijection(mf);
+ ? [mf0,BN,BE]=mfkohneneigenbasis(mf,bij);
+ ? BN~
+ %2 =
+ [2 0 0 -2  2 0  -8]
+
+ [2 0 0  4 14 0 -32]
+
+ ? BE~
+ %3 = [Mod(1, y^2 - 3) Mod(0, y^2 - 3) Mod(0, y^2 - 3) Mod(y - 1, y^2 - 3)\
+       Mod(2*y + 1, y^2 - 3) Mod(0, y^2 - 3) Mod(-4*y - 4, y^2 - 3)]
+ ? lift(mfcoefs(mf,20)*BE[,1])
+ %4 = [0, 1, 0, 0, y - 1, 2*y + 1, 0, 0, 0, -4*y - 4, 0, 0,\
+       -5*y + 3, 0, 0, 0, -6, 0, 0, 0, 7*y + 9]~
+ @eprog

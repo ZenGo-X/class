@@ -1,0 +1,9 @@
+Function: nfeltdivrem
+Section: number_fields
+C-Name: nfdivrem
+Prototype: GGG
+Help: nfeltdivrem(nf,x,y): gives [q,r] such that r=x-qy is small.
+Doc: given two elements $x$ and $y$ in
+ \var{nf}, gives a two-element row vector $[q,r]$ such that $x=qy+r$, $q$ is
+ an algebraic integer in $\var{nf}$, and the components of $r$ are
+ reasonably small.

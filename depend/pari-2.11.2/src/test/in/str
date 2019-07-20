@@ -1,0 +1,12 @@
+v=Vecsmall("hello world!")
+Strchr(v)
+Strtex(Mat(1/2))
+Strtex((x+y)^3/(x-y)^2)
+Str(x)
+Str(1/2)
+Str("a","b",1)
+v = Vecsmall([1..255]);
+Vecsmall(Strchr(v)) == v
+
+\\ Errors, keep at end of file
+Strchr(-1)

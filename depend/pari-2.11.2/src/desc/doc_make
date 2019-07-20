@@ -1,0 +1,159 @@
+#!/usr/bin/perl
+BEGIN { @INC=(".",@INC); }
+use warnings FATAL => 'all';
+use strict;
+use PARI::822;
+
+my (%funcs, %Fun_by_sec, %sec_header, @SECTIONS);
+PARI::822::read(\%funcs, "pari.desc");
+@SECTIONS = qw(
+  programming/control
+  programming/specific
+  programming/parallel
+  default
+  operators
+  conversions
+  combinatorics
+  number_theoretical
+  polynomials
+  linear_algebra
+  transcendental
+  sums
+  number_fields
+  algebras
+  elliptic_curves
+  l_functions
+  modular_forms
+  modular_symbols
+  graphic
+);
+
+for (keys %funcs)
+{ 
+  my ($s) = $funcs{$_}->{Section};
+  next if (!$s);
+  my ($c) = $funcs{$_}->{Class};
+  if ($c eq 'header')
+  { $sec_header{$s} = $funcs{$_}->{Doc} }
+  else
+  { push(@{$Fun_by_sec{$s}}, $_); }
+}
+for (@SECTIONS)
+{
+  my ($sec) = $_;
+  my ($head) = $sec_header{$sec};
+  print "$head\n" if defined($head);
+  next if (!$Fun_by_sec{$sec});
+  for ( sort @{$Fun_by_sec{$sec}} ) {
+    my ($fun) = $funcs{$_};
+    my ($doc) = $fun->{Doc};
+    next if (!defined($doc));
+
+    my ($args)  = $fun->{Help};
+    my ($v);
+    $doc =~ s/^[\n\t ]*(.)/uc($1)/e;
+    $args =~ s/ *:.*//s;
+    # sanity checks
+    if ($args =~ /([_a-zA-Z0-9]*)\(/ && $fun->{Function} ne $1)
+    { die "fix $fun->{Function} Help" }
+    if ($fun->{Help} =~ /\$/) { die "\$ in $fun->{Function}"; }
+    die "double parenthesis in $fun->{Function} proto" if ($args =~ /\)\)/);
+    # ok
+    if (!$args || $args =~ /^\w+=\w+\(\)/) { $args = $v = ''; }
+    else
+    {
+      $args =~ s/^[^(]*\((.*)\)/$1/; # args proper
+      $v = $args;
+      $v =~ s/([{}&])/\\$1/g;
+      $v =~ s/\^(\d+)/^{$1}/g;
+      $v =~ s/\[\]/[\\,]/g;
+      $v =~ s/([a-zA-Z]\w+)/\\var{$1}/g;
+      $v =~ s/\^([a-z])/\\hbox{\\kbd{\\pow}}$1/g;
+      $v =~ s/\\var\{flag\}/\\fl/g;
+      $v =~ s/\\var\{(\d+)\}/{$1}/g;
+      $v =~ s/_/\\_/g; # don't merge with first subst: \var{} rule kills it
+
+      $v = "\$($v)\$";
+    }
+    if ($doc !~ /\\syn\w*\{/ && $sec !~ /programming\/control/) {
+      $doc .= library_syntax($fun, $args);
+    }
+    s/_def_//;
+    my ($secname) = $_;
+    my ($l) = ($fun->{Section} =~ 'default')? "def,$_": $_;
+    my ($idx) = ($secname =~ s/_/\\_/g)? $l: $secname;
+    print "\n\\subsec{$secname$v}\\kbdsidx{$idx}\\label{se:$l}\n$doc\n";
+  }
+}
+print '\vfill\eject';
+
+sub library_syntax { my ($fun, $args) = @_;
+  return '' if ($fun->{Class} =~ /^(gp|default|gp_default)$/);
+  my ($Cname) = $fun->{'C-Name'};
+  return '' if (!$Cname);
+  my ($Variant) = $fun->{Variant};
+  my ($Proto) = $fun->{Prototype};
+  $Proto =~ s/\\n.*//; # delete Mnemonics
+  my (@proto) = split(//, $Proto);
+  $args =~ s/[{}&]//g;
+  $args =~ s/ *=[^,\)]*//g; # delete default values
+  my (@ARGS) = split(/[,^] */, $args); # ^ for O(p^e)
+  my ($type) = "GEN";
+  my (@vars)=();
+  $args = '';
+  for (my $i = 0; $i <= $#proto; )
+  {
+    my ($c) = $proto[$i++];
+    if ($c eq 'l') { $type = "long"; next; }
+    if ($c eq 'v') { $type = "void"; next; }
+    if ($c =~ /^[GWIJE]$/) {$args .= ", GEN " . shift(@ARGS); next;}
+    if ($c eq 'U') {$args .= ", ulong " . shift(@ARGS); next;}
+    if ($c eq 'L') {$args .= ", long " . shift(@ARGS); next;}
+    if ($c eq 'n') {my ($v) = shift(@ARGS); push @vars,"\\kbd{$v}";
+                    $args .= ", long " . $v; next;}
+    if ($c =~ /^[rs]$/) {$args .= ", const char *" . shift(@ARGS); next;}
+
+    if ($c eq 'p') {$args .= ", long prec"; next;}
+    if ($c eq 'b') {$args .= ", long bitprec"; next;}
+    if ($c eq 'P') {$args .= ", long precdl"; next;}
+    if ($c eq 'C') {$args .= ", GEN ctx"; next;}
+    if ($c eq '') { next; }
+    if ($c eq 'D') {
+      $c = $proto[$i++];
+      if ($c eq 'G') {$args .= ", GEN " . shift(@ARGS) ." = NULL"; next;}
+      if ($c =~ /^[rs]$/) {$args .= ", const char *" . shift(@ARGS) ." = NULL"; next;}
+      if ($c eq '&') {$args .= ", GEN *". shift(@ARGS) ." = NULL"; next;}
+      if ($c eq 'P') {$args .= ", long precdl"; next;}
+      if ($c eq 'n') {
+        my ($v) = shift(@ARGS);
+        $args .= ", long $v = -1";
+        push @vars,"\\kbd{$v}";
+        next;
+      }
+      if ($c eq 'V') {
+        next;
+      }
+      if ($c =~ /^[EI]$/) {
+        $args .= ", GEN ". shift(@ARGS) ." = NULL"; next;
+      }
+      while (($c = $proto[$i++]) ne ',') {}
+    }
+  }
+  $args =~ s/^, //;
+
+  my ($post);
+  my ($l)=scalar @vars;
+  if    ($l==0) { $post=''; }
+  elsif ($l==1)
+  {
+    $post = " where $vars[0] is a variable number";
+  }
+  else
+  {
+    my ($vl)=join(", ",@vars);
+    $post = " where $vl are variable numbers";
+  }
+  my ($txt) = "\n\nThe library syntax is \\fun{$type}{$Cname}{$args}$post.";
+  $txt .= "\n$Variant" if ($Variant);
+  return $txt;
+}

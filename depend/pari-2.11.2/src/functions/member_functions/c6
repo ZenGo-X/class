@@ -1,0 +1,8 @@
+Function: _.c6
+Section: member_functions
+C-Name: member_c6
+Prototype: mG
+Help: _.c6
+Description:
+ (ell):gen:copy        ell_get_c6($1)
+

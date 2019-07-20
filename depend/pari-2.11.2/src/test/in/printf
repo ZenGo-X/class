@@ -1,0 +1,81 @@
+default(realprecision,38);
+aa=[1.0,2.0]
+bb=2.5
+str="string"
+ii=10^100+1
+
+/* d conversions */
+printf("%%0.12ld for 1 : %0.12ld\n", 1)
+printf("%%ld for medium : %ld\n", 10^40+10^20+1)
+printf("%%ld for big : %ld\n", 7^1000)
+printf("%%ld for very big : %ld\n", 7^10000)
+
+/* x conversions */
+printf("31 in base 16 == %x\n", 31)
+printf("%%X for medium : %X\n", 10^40+10^20+1)
+printf("%%#X for medium : %#X\n", 10^40+10^20+1)
+printf("%%x for 0: %x\n", 0)
+printf("%%#X for 0: %#X\n", 0)
+
+/* s conversion */
+printf("%%10s for \"string\" : %10s\n", str)
+printf("%%.4s for \"string\" : %.4s\n", str)
+printf("%%*.*s for \"string\" : %*.*s\n", 10,2, str)
+
+printf("%%s for 1 : %s\n", 1)
+printf("%%s for aa : %s\n", aa) /* same as %Z */
+printf("%%s for 4/3 : %s\n", 4/3)
+printf("%%s inter %%.2s %%4.2f for aa, bb, aa : %4s inter %.2s %4.2f\n", aa, bb, aa)
+
+Strprintf("%%s inter %%.2s %%4.2f for aa, bb, aa : %4s inter %.2s %4.2f\n", aa, bb, aa)
+
+printf("%%10.5s for 3.5 : %10.5s", 3.5)
+
+
+/* f conversion */
+printf("%%10f for Pi     : %.10f|\n", Pi)
+printf("%%20.10f for 2.7 : %20.10f|\n", 2.7)
+printf("%%+20.10f for 2.7: %+20.10f|\n", 2.7)
+printf("%%-20.10f for 2.7: %-20.10f|\n", 2.7)
+printf("%%-*.*f for 2.7: %-*.*f|\n", 20, 10, 2.7)
+
+/* e conversion */
+printf("%%20.10e for 2.7 : %20.10e|\n", 2.7)
+printf("%%+20.10E for 2.7: %+20.10E|\n", 2.7)
+printf("%%-20.10e for 2.7: %-20.10e|\n", 2.7)
+printf("%%-20.10E for ii : %-20.10E|\n", ii)
+printf("%%e for 1+0*I    : %E\n", 1+0*I)
+
+/* g conversion */
+printf("%%8.3g for 3.14159: %8.3g\n", 3.14159)
+printf("%%8.3G for ii     : %8.3G\n", ii)
+printf("%%8.3g for ii     : %8.3g\n", ii)
+printf("%%-20.10g for 4/3 : %-20.10g|\n", 4/3)
+printf("%%20.13e for 4/3  : %20.13e|\n", 4/3)
+printf("%%e for 4/3       : %e|\n", 4/3)
+
+/* error tests */
+printf("%missing argument to format\n") /* ERROR : %m is not a valid format */
+
+printf("%d missing argument to format\n") /* ERROR : missing argument(s) to format */
+
+printf("%%-20.10g for aa : %-20.10g\n", aa) /* ERROR : aa is not a t_REAL */
+
+\\regression tests
+10^38 + 1.
+printf("%.100f",1.)
+printf("%1.0f",0)
+printf("%.6f",5e-5)
+
+\\ conversions using gtolong()
+printf("%c",97.5)
+printf("%c",97+1/2)
+printf("%c",97 + 0.*I)
+printf("%c",97 +0*quadgen(5))
+printf("%1.2f",Mat([1.,2.]))
+printf("%c",'x)
+
+default(format,"f.5")
+-0.00000000000000000000000000000000000000293873587705572
+
+printf("%d",factor(2*3*5*7))

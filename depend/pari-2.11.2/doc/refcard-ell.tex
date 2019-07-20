@@ -1,0 +1,202 @@
+% Copyright (c) 2007-2016 Karim Belabas.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU General Public License
+
+% Reference Card for PARI-GP, Algebraic Number Theory.
+% Author:
+%  Karim Belabas
+%  Universite de Bordeaux, 351 avenue de la Liberation, F-33405 Talence
+%  email: Karim.Belabas@math.u-bordeaux.fr
+%
+% See refcard.tex for acknowledgements and thanks.
+
+\def\TITLE{Elliptic Curves}
+\input refmacro.tex
+
+An elliptic curve is initially given by 5-tuple
+$v=\kbd{[}a_1,a_2,a_3,a_4,a_6\kbd{]}$ attached to Weierstrass model
+or simply $\kbd{[}a_4,a_6\kbd{]}$. It must be converted to an \var{ell} struct.
+\hfil\break
+\li{Initialize \var{ell} struct over domain $D$}{E = ellinit$(v,\{D=1\})$}
+\beginindentedkeys
+  \li{over $\QQ$}{$D = 1$}
+  \li{over $\FF_p$}{$D = p$}
+  \li{over $\FF_q$, $q = p^f$}{$D =\, $\kbd{ffgen([}$p,f$\kbd{])}}
+  \li{over $\QQ_p$, precision $n$}{$D = O(p^n)$}
+  \li{over $\CC$, current bitprecision}{$D = \kbd{1.0}$}
+  \li{over number field $K$}{$D = \var{nf}$}
+\endindentedkeys
+\leavevmode
+Points are \kbd{[x,y]}, the origin is \kbd{[0]}.
+Struct members accessed as \kbd{E.}\var{member}:\hfill\break
+$\bullet$ All domains:
+\kbd{E.a1},\kbd{a2},\kbd{a3},\kbd{a4},\kbd{a6},
+\kbd{b2},\kbd{b4},\kbd{b6},\kbd{b8},
+\kbd{c4},\kbd{c6}, \kbd{disc}, \kbd{j}\hfill\break
+\li{$\bullet$ $E$ defined over $\RR$ or $\CC$}{}
+\beginindentedkeys
+  \li{$x$-coords. of points of order $2$}{E.roots}
+  \li{periods / quasi-periods}{E.omega{,\rm }E.eta}
+  \li{volume of complex lattice}{E.area}
+\endindentedkeys
+\li{$\bullet$ $E$ defined over $\QQ_p$}{}
+\beginindentedkeys
+  \li{residual characteristic}{E.p}
+  \li{If $|j|_p>1$: Tate's $[u^2, u, q, [a,b], {\cal L}]$}{E.tate}
+\endindentedkeys
+\li{$\bullet$ $E$ defined over $\FF_q$}{}
+\beginindentedkeys
+  \li{characteristic}{E.p}
+  \li{$\#E(\FF_q)$/cyclic structure/generators}{E.no{\rm, }E.cyc{\rm, }E.gen}
+\endindentedkeys
+\li{$\bullet$ $E$ defined over $\QQ$}{}
+\beginindentedkeys
+  \li{generators of $E(\QQ)$ (require \kbd{elldata})}{E.gen}
+\endindentedkeys
+
+\li{$[a_1,a_2,a_3,a_4,a_6]$ from $j$-invariant}{ellfromj$(j)$}
+\li{cubic/quartic/biquadratic to Weierstrass}
+   {ellfromeqn$(\var{eq})$}
+\li{add points $P+Q$ / $P-Q$}{elladd$(E,P,Q)${\rm, }ellsub}
+\li{negate point}{ellneg$(E,P)$}
+\li{compute $n\cdot P$}{ellmul$(E,P,n)$}
+\li{check if $P$ is on $E$}{ellisoncurve$(E,P)$}
+\li{order of torsion point $P$}{ellorder$(E,P)$}
+\li{$y$-coordinates of point(s) for $x$}{ellordinate$(E,x)$}
+\li{$[\wp(z),\wp'(z)]\in E(\CC)$ attached to $z\in\CC$}{ellztopoint$(E,z)$}
+\li{$z\in\CC$ such that $P=[\wp(z),\wp'(z)]$}{ellpointtoz$(E,P)$}
+\li{$z\in \bar{\QQ}^*/q^{\ZZ}$ to $P\in E(\bar{\QQ_p})$}{ellztopoint$(E,z)$}
+\li{$P\in E(\bar{\QQ_p})$ to $z\in \bar{\QQ}^*/q^{\ZZ}$}{ellpointtoz$(E,P)$}
+
+\subsec{Change of Weierstrass models, using $v = [u,r,s,t]$}
+\li{change curve $E$ using $v$}{ellchangecurve$(E,v)$}
+\li{change point $P$ using $v$}{ellchangepoint$(P,v)$}
+\li{change point $P$ using inverse of $v$}{ellchangepointinv$(P,v)$}
+
+\subsec{Twists and isogenies}
+\li{quadratic twist}{elltwist$(E,d)$}
+\li{$n$-division polynomial $f_n(x)$}{elldivpol$(E,n,\{x\})$}
+\li{$[n]P =(\phi_n\psi_n\colon \omega_n\colon \psi_n^3)$;
+   return $(\phi_n, \psi_n^2)$}{ellxn$(E,n,\{x\})$}
+\li{isogeny from $E$ to $E/G$}{ellisogeny$(E,G)$}
+\li{apply isogeny to $g$ (point or isogeny)}{ellisogenyapply$(f,g)$}
+\li{torsion subgroup with generators}{elltors$(E)$}
+\subsec{Formal group}
+\li{formal exponential, $n$ terms}{ellformalexp$(E,\{n\},\{x\})$}
+\li{formal logarithm, $n$ terms}{ellformallog$(E,\{n\},\{x\})$}
+\li{$log_E(-x(P)/y(P))\in\QQ_p$; $P\in E(\QQ_p)$}{ellpadiclog$(E,p,n,P)$}
+\li{$P$ in the formal group}{ellformalpoint$(E,\{n\},\{x\})$}
+\li{$[\omega/dt,x\omega/dt]$}{ellformaldifferential$(E,\{n\},\{x\})$}
+\li{$w = -1/y$ in parameter $-x/y$}{ellformalw$(E,\{n\},\{x\})$}
+
+\section{Curves over finite fields, Pairings}
+\li{random point on $E$}{random$(E)$}
+\li{$\#E(\FF_q)$}{ellcard$(E)$}
+\li{$\#E(\FF_q)$ with almost prime order}{ellsea$(E, \{\var{tors}\})$}
+\li{structure $\ZZ/d_1\ZZ\times \ZZ/d_2\ZZ$ of $E(\FF_q)$}{ellgroup$(E)$}
+\li{is $E$ supersingular?}{ellissupersingular$(E)$}
+\li{Weil pairing of $m$-torsion pts $P,Q$}{ellweilpairing$(E,P,Q, m)$}
+\li{Tate pairing of $P,Q$; $P$ $m$-torsion}{elltatepairing$(E,P,Q, m)$}
+\li{Discrete log, find $n$ s.t. $P=[n]Q$}{elllog$(E,P,Q,\{ord\})$}
+
+\section{Curves over $\QQ$}
+\subsec{Reduction, minimal model}
+\li{minimal model of $E/\QQ$} {ellminimalmodel$(E,\{$\&$v\})$}
+\li{quadratic twist of minimal conductor}{ellminimaltwist$(E)$}
+\li{$[k]P$ with good reduction}{ellnonsingularmultiple$(E,P)$}
+\li{$E$ supersingular at $p$?}{ellissupersingular$(E, p)$}
+\li{affine points of na\"\i ve height $\leq h$}{ellratpoints$(E, h)$}
+
+\subsec{Complex heights}
+\li{canonical height of $P$}{ellheight$(E,P)$}
+\li{canonical bilinear form taken at $P$, $Q$}{ellheight$(E,P,Q)$}
+\li{height regulator matrix for pts in $L$}{ellheightmatrix$(E,L)$}
+\subsec{$p$-adic heights}
+\li{cyclotomic $p$-adic height of $P\in E(\QQ)$}{ellpadicheight$(E,p,n,P)$}
+\li{\dots bilinear form at $P,Q\in E(\QQ)$}{ellpadicheight$(E,p,n,P,Q)$}
+\li{\dots matrix at vector for pts in $L$}{ellpadicheightmatrix$(E,p,n,L)$}
+\li{\dots regulator for canonical height}{ellpadicregulator$(E,p,n, Q)$}
+\li{Frobenius on $\QQ_p \otimes H^1_{dR}(E/\QQ)$}{ellpadicfrobenius$(E,p,n)$}
+\li{slope of unit eigenvector of Frobenius}{ellpadics2$(E,p,n)$}
+
+\subsec{Isogenous curves}
+\li{matrix of isogeny degrees for $\QQ$-isog. curves}{ellisomat$(E)$}
+\li{tree of prime degree isogenies}{ellisotree$(E)$}
+\li{a modular equation of prime degree $N$}{ellmodulareqn$(N)$}
+
+\subsec{$L$-function}
+\li{$p$-th coeff $a_p$ of $L$-function, $p$ prime}{ellap$(E,p)$}
+\li{$k$-th coeff $a_k$ of $L$-function}{ellak$(E,k)$}
+\li{$L(E,s)$ (using less memory than \kbd{lfun})}{elllseries$(E,s)$}
+\li{$L^{(r)}(E,1)$ (using less memory than \kbd{lfun})}{ellL1$(E,r)$}
+%
+\li{a Heegner point on $E$ of rank $1$}{ellheegner$(E)$}
+\li{order of vanishing at $1$}{ellanalyticrank$(E,\{\var{eps}\})$}
+\li{root number for $L(E,.)$ at $p$}{ellrootno$(E,\{p\})$}
+\li{modular parametrization of $E$}{elltaniyama$(E)$}
+\li{degree of modular parametrization}{ellmoddegree$(E)$}
+\li{compare with $H^1(X_0(N),\ZZ)$ (for $E'\to E$)}
+    {ellweilcurve$(E)$}
+\li{$p$-adic $L$ function $L_p^{(r)}(E,d,\chi^s)$}
+   {ellpadicL$(E,p,n,\{s\},\{r\},\{d\})$}
+\li{BSD conjecture for $L_p^{(r)}(E_D,\chi^0)$}
+   {ellpadicbsd$(E,p,n,\{D=1\})$}
+
+\subsec{Elldata package, Cremona's database:}
+\li{db code \kbd{"11a1"} $\leftrightarrow$ $[\var{conductor}, \var{class}, \var{index}]$}{ellconvertname$(s)$}
+\li{generators of Mordell-Weil group}{ellgenerators$(E)$}
+\li{look up $E$ in database}{ellidentify$(E)$}
+\li{all curves matching criterion}{ellsearch$(N)$}
+\li{loop over curves with cond.~from $a$ to $b$}{forell$(E, a,b,\seq)$}
+
+\section{Curves over number field $K$}
+\li{coeff $a_{\goth{p}}$ of $L$-function}{ellap$(E,\goth{p})$}
+\li{Kodaira type of $\goth{p}$-fiber of $E$}{elllocalred$(E,\goth{p})$}
+\li{integral model of $E/K$} {ellintegralmodel$(E,\{$\&$v\})$}
+\li{minimal model of $E/K$} {ellminimalmodel$(E,\{$\&$v\})$}
+\li{minimal discriminant of $E/K$}{ellminimaldisc$(E)$}
+\li{cond, min mod, Tamagawa num \kbd{[}$N,v,c$\kbd{]}}{ellglobalred$(E)$}
+\li{global Tamagawa number}{elltamagawa$(E)$}
+\li{$P\in E(K)$ $n$-divisible? $[n]Q=P$}{ellisdivisible$(E,P,n,\{\&Q\})$}
+\subsec{$L$-function}
+A domain $D = [c,w,h]$ in initialization mean we restrict $s\in \CC$
+to domain $|\Re(s)-c| < w$, $|\Im(s)| < h$; $D = [w,h]$ encodes $[1/2,w,h]$
+and $[h]$ encodes $D = [1/2,0,h]$ (critical line up to height $h$).\hfil\break
+\li{vector of first $n$ $a_k$'s in $L$-function}{ellan$(E,n)$}
+\li{init $L^{(k)}(E,s)$ for $k \leq n$}{L = lfuninit$(E, D, \{n = 0\})$}
+\li{compute $L(E,s)$ ($n$-th derivative)}{lfun$(L, s, \{n=0\})$}
+\li{$L(E,1,r)/(r! \cdot R\cdot \#Sha)$ assuming BSD}{ellbsd$(E)$}
+
+\section{Other curves of small genus}
+A hyperelliptic curve is given by a pair $[P,Q]$ ($y^2+Qy = P$ with $Q^2+4P$
+squarefree) or a single squarefree polynomial $P$ ($y^2 = P$).\hfil\break
+\li{reduction of $y^2+Qy = P$ (genus $2$)}{genus2red$([P,Q],\{p\})$}
+\li{affine rational points of height $\leq h$}{hyperellratpoints$([P,Q], h)$}
+\li{find a rational point on a conic, $^t x G x = 0$}{qfsolve$(G)$}
+\li{quadratic Hilbert symbol (at $p$)}{hilbert$(x,y,\{p\})$}
+\li{all solutions in $\QQ^3$ of ternary form}{qfparam$(G,x)$}
+\li{$P,Q\in\FF_q[X]$; char. poly. of Frobenius}{hyperellcharpoly$([P,Q])$}
+\li{matrix of Frobenius on $\QQ_p\otimes H^1_{dR}$}{hyperellpadicfrobenius}
+\medskip
+
+\section{Elliptic \& Modular Functions}
+$w = [\omega_1,\omega_2]$ or \var{ell} struct (\kbd{E.omega}), $\tau=\omega_1/\omega_2$.\hfill\break
+%
+\li{arithmetic-geometric mean}{agm$(x,y)$}
+\li{elliptic $j$-function $1/q+744+\cdots$}{ellj$(x)$}
+\li{Weierstrass $\sigma$/$\wp$/$\zeta$ function}
+   {ellsigma$(w,z)${\rm, }ellwp{\rm, }ellzeta}
+\li{periods/quasi-periods}{ellperiods$(E,\{\fl\})${\rm, }elleta$(w)$}
+\li{$(2i\pi/\omega_2)^k E_k(\tau)$}{elleisnum$(w,k,\{\fl\})$}
+\li{modified Dedekind $\eta$ func. $\prod(1-q^n)$}{eta$(x,\{\fl\})$}
+\li{Dedekind sum $s(h,k)$}{sumdedekind$(h,k)$}
+\li{Jacobi sine theta function}{theta$(q,z)$}
+\li{k-th derivative at z=0 of \kbd{theta}$(q,z)$}{thetanullk$(q,k)$}
+\li{Weber's $f$ functions}{weber$(x,\{\fl\})$}
+\li{modular pol.~of level $N$}{polmodular$(N,\{\var{inv = j}\})$}
+\li{Hilbert class polynomial for $\QQ(\sqrt{D})$}
+   {polclass$(D,\{\var{inv = j}\})$}
+%
+\vfill
+\copyrightnotice
+\bye

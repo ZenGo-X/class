@@ -1,0 +1,34 @@
+Function: fordivfactored
+Section: programming/control
+C-Name: fordivfactored
+Prototype: vGVI
+Help: fordivfactored(n,X,seq): the sequence is evaluated, X running over the
+ [d, factor(d)], d a divisor of n.
+Doc: evaluates \var{seq}, where
+ the formal variable $X$ ranges through $[d, \kbd{factor}(d)]$,
+ where $d$ is a divisors of $n$
+ (see \tet{divisors}, which is used as a subroutine). Note that such a pair
+ is accepted as argument to all multiplicative functions.
+
+ It is assumed that
+ \kbd{factor} can handle $n$, without negative exponents. Instead of $n$,
+ it is possible to input a factorization matrix, i.e. the output of
+ \kbd{factor(n)}. This routine uses \kbd{divisors}$(,1)$ as a subroutine,
+ then loops over the divisors. In particular, if $n$ is an integer, divisors
+ are sorted by increasing size.
+
+ This function is particularly useful when $n$ is hard to factor and one
+ must evaluate multiplicative function on its divisors: we avoid
+ refactoring each divisor in turn. It also provides a small speedup
+ when $n$ is easy to factor; compare
+ \bprog
+ ? A = 10^8; B = A + 10^5;
+ ? for (n = A, B, fordiv(n, d, eulerphi(d)));
+ time = 2,091 ms.
+ ? for (n = A, B, fordivfactored(n, d, eulerphi(d)));
+ time = 1,298 ms. \\ avoid refactoring the divisors
+ ? forfactored (n = A, B, fordivfactored(n, d, eulerphi(d)));
+ time = 1,270 ms. \\ also avoid factoring the consecutive n's !
+ @eprog
+
+

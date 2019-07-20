@@ -1,0 +1,5 @@
+default(realprecision,38);
+log(1+10^-30)
+lngamma(1+10^-30)
+lngamma(10^-30)
+iferr(log(2+O(33)),E,E)

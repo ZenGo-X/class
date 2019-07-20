@@ -1,0 +1,40 @@
+# Major version number
+VersionMajor='2'
+
+# minor version number
+VersionMinor='11'
+
+# Patch level
+patch='2'
+
+# Version code
+version_code=`expr $VersionMajor \\* 65536 + $VersionMinor \\* 256 + $patch`
+
+# Status: alpha, beta, released, development. Rewritten by config/settar !
+stat='released'
+
+# soname of stable libpari.so is libpari.so.$soname_num
+status="$stat"
+patchlevel_verbose=
+
+case "$stat" in # $stat rewritten by config/settar ?
+  *git-*) patchlevel_verbose="[ $stat ]";;
+  *) if test -d "$TOP/.git"; then
+       t=`git rev-list HEAD 2>/dev/null | wc -l` # ~ svn revision number
+       t=`echo $t | sed -e 's/ //g'` # some broken wc prepend spaces
+       T=`git log -1 --pretty=format:%h` # commit hash
+       if test -z "$t"; then t=0; fi
+       vcsversion=$t-$T
+       status="$stat $vcsversion"
+       patchlevel_verbose="[ $status ]"
+     fi
+esac
+version=$VersionMajor.$VersionMinor
+pari_release="$version.$patch"
+if test `expr $VersionMinor % 2` = 1; then
+  pari_release_verbose="$pari_release (STABLE)"
+  soname_num=`expr '(' $VersionMinor '+' 1 ')' / 2`
+else
+  pari_release_verbose="$pari_release (DEVELOPMENT VERSION)"
+  soname_num=$patch
+fi

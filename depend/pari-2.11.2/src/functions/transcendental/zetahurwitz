@@ -1,0 +1,36 @@
+Function: zetahurwitz
+Section: transcendental
+C-Name: zetahurwitz
+Prototype: GGD0,L,b
+Help: zetahurwitz(s,x,{der=0}): Hurwitz zeta function at s, x, with s not 1 and
+ x not a negative or zero integer. s can be a scalar, polynomial, rational
+ function, or power series. If der>0, compute the der'th derivative with
+ respect to s.
+Doc: Hurwitz zeta function $\zeta(s,x)=\sum_{n\ge0}(n+x)^{-s}$ and
+ analytically continued, with $s\ne1$ and $x$ not a negative or zero
+ integer. Note that $\zeta(s,1) = \zeta(s)$. $s$ can also be a polynomial,
+ rational function, or power series. If \kbd{der} is positive, compute the
+ \kbd{der}'th derivative with respect to $s$. Note that the derivative
+ with respect to $x$ is simply $-s\zeta(s+1,x)$.
+ \bprog
+ ? zetahurwitz(Pi,Pi)
+ %1 = 0.056155444497585099925180502385781494484
+ ? zetahurwitz(2,1) - zeta(2)
+ %2 = -2.350988701644575016 E-38
+ ? zetahurwitz(Pi,3) - (zeta(Pi)-1-1/2^Pi)
+ %3 = -2.2040519077917890774 E-39
+ ? zetahurwitz(-7/2,1) - zeta(-7/2)
+ %4 = -2.295887403949780289 E-41
+ ? zetahurwitz(-2.3,Pi+I*log(2))
+ %5 = -5.1928369229555125820137832704455696057\
+     - 6.1349660138824147237884128986232049582*I
+ ? zetahurwitz(-1+x^2+O(x^3),1)
+ %6 = -0.083333333333333333333333333333333333333\
+      - 0.16542114370045092921391966024278064276*x^2 + O(x^3)
+ ? zetahurwitz(1+x+O(x^4),2)
+ %7 = 1.0000000000000000000000000000000000000*x^-1\
+    - 0.42278433509846713939348790991759756896\
+    + 0.072815845483676724860586375874901319138*x + O(x^2)
+ ? zetahurwitz(2,1,2) \\ zeta''(2)
+ %8 = 1.9892802342989010234208586874215163815
+ @eprog

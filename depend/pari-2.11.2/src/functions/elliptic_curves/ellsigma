@@ -1,0 +1,24 @@
+Function: ellsigma
+Section: elliptic_curves
+C-Name: ellsigma
+Prototype: GDGD0,L,p
+Help: ellsigma(L,{z='x},{flag=0}): computes the value at z of the Weierstrass
+ sigma function attached to the lattice L, as given by ellperiods(,1).
+ If flag = 1, returns an arbitrary determination of the logarithm of sigma.
+Doc: Computes the value at $z$ of the Weierstrass $\sigma$ function attached to
+ the lattice $L$ as given by \tet{ellperiods}$(,1)$: including quasi-periods
+ is useful, otherwise there are recomputed from scratch for each new $z$.
+ $$ \sigma(z, L) = z \prod_{\omega\in L^*} \left(1 -
+ \dfrac{z}{\omega}\right)e^{\dfrac{z}{\omega} + \dfrac{z^2}{2\omega^2}}.$$
+ It is also possible to directly input $L = [\omega_1,\omega_2]$,
+ or an elliptic curve $E$ as given by \kbd{ellinit} ($L = \kbd{E.omega}$).
+ \bprog
+ ? w = ellperiods([1,I], 1);
+ ? ellsigma(w, 1/2)
+ %2 = 0.47494937998792065033250463632798296855
+ ? E = ellinit([1,0]);
+ ? ellsigma(E) \\ at 'x, implicitly at default seriesprecision
+ %4 = x + 1/60*x^5 - 1/10080*x^9 - 23/259459200*x^13 + O(x^17)
+ @eprog
+
+ If $\fl=1$, computes an arbitrary determination of $\log(\sigma(z))$.

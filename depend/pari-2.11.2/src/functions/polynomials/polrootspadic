@@ -1,0 +1,22 @@
+Function: polrootspadic
+Section: polynomials
+C-Name: rootpadic
+Prototype: GGL
+Help: polrootspadic(x,p,r): p-adic roots of the polynomial x to precision r.
+Doc: vector of $p$-adic roots of the polynomial \var{pol}, given to
+ $p$-adic precision $r$; the integer $p$ is assumed to be a prime.
+ Multiple roots are
+ \emph{not} repeated. Note that this is not the same as the roots in
+ $\Z/p^r\Z$, rather it gives approximations in $\Z/p^r\Z$ of the true roots
+ living in $\Q_p$.
+ \bprog
+ ? polrootspadic(x^3 - x^2 + 64, 2, 5)
+ %1 = [2^3 + O(2^5), 2^3 + 2^4 + O(2^5), 1 + O(2^5)]~
+ @eprog
+ If \var{pol} has inexact \typ{PADIC} coefficients, this is not always
+ well-defined; in this case, the polynomial is first made integral by dividing
+ out the $p$-adic content, then lifted
+ to $\Z$ using \tet{truncate} coefficientwise. Hence the roots given are
+ approximations of the roots of an exact polynomial which is $p$-adically
+ close to the input. To avoid pitfalls, we advise to only factor polynomials
+ with exact rational coefficients.

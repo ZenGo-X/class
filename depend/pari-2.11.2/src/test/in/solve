@@ -1,0 +1,4 @@
+default(realprecision,38);
+hardy(x)=real(zeta(1/2+I*x)*exp(I*(arg(gamma((1/2+I*x)/2))-log(Pi)/2*x)));
+solve(x=1,20,hardy(x))
+solvestep(x=1,100,1,hardy(x))

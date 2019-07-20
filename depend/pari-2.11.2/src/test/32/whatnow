@@ -1,0 +1,24 @@
+This function no longer exists
+
+New syntax: char(x,y) ===> charpoly(x,y)
+
+charpoly(A,{v='x},{flag=5}): det(v*Id-A)=characteristic polynomial of the 
+matrix or polmod A. flag is optional and ignored unless A is a matrix; it ma
+y 
+be set to 0 (Le Verrier), 1 (Lagrange interpolation), 2 (Hessenberg form), 3
+ 
+(Berkowitz), 4 (modular) if A is integral, or 5 (default, choose best method
+). 
+Algorithms 0 (Le Verrier) and 1 (Lagrange) assume that n! is invertible, whe
+re 
+n is the dimension of the matrix.
+
+This function did not change
+
+As far as I can recall, this function never existed
+
+New syntax: compimag(x,y) ===> x*y
+
+x*y: product of x and y.
+
+Total time spent: 0

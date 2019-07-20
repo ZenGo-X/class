@@ -1,0 +1,10 @@
+Function: incgamc
+Section: transcendental
+C-Name: incgamc
+Prototype: GGp
+Help: incgamc(s,x): complementary incomplete gamma function.
+Doc: complementary incomplete gamma function.
+ The arguments $x$ and $s$ are complex numbers such that $s$ is not a pole of
+ $\Gamma$ and $|x|/(|s|+1)$ is not much larger than 1 (otherwise the
+ convergence is very slow). The result returned is $\int_0^x
+ e^{-t}t^{s-1}\,dt$.

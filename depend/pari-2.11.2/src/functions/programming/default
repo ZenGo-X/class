@@ -1,0 +1,32 @@
+Function: default
+Section: programming/specific
+C-Name: default0
+Prototype: DrDs
+Help: default({key},{val}): returns the current value of the
+ default key. If val is present, set opt to val first. If no argument is
+ given, print a list of all defaults as well as their values.
+Description:
+ ("realprecision"):small:prec              getrealprecision()
+ ("realprecision",small):small:prec        setrealprecision($2, &$prec)
+ ("seriesprecision"):small                 precdl
+ ("seriesprecision",small):small:parens    precdl = $2
+ ("debug"):small                           DEBUGLEVEL
+ ("debug",small):small:parens              DEBUGLEVEL = $2
+ ("debugmem"):small                        DEBUGMEM
+ ("debugmem",small):small:parens           DEBUGMEM = $2
+ ("debugfiles"):small                      DEBUGFILES
+ ("debugfiles",small):small:parens         DEBUGFILES = $2
+ ("factor_add_primes"):small               factor_add_primes
+ ("factor_add_primes",small):small         factor_add_primes = $2
+ ("factor_proven"):small                   factor_proven
+ ("factor_proven",small):small             factor_proven = $2
+ ("new_galois_format"):small               new_galois_format
+ ("new_galois_format",small):small         new_galois_format = $2
+Doc: returns the default corresponding to keyword \var{key}. If \var{val} is
+ present, sets the default to \var{val} first (which is subject to string
+ expansion first). Typing \kbd{default()} (or \b{d}) yields the complete
+ default list as well as their current values. See \secref{se:defaults} for an
+ introduction to GP defaults, \secref{se:gp_defaults} for a
+ list of available defaults, and \secref{se:meta} for some shortcut
+ alternatives. Note that the shortcuts are meant for interactive use and
+ usually display more information than \kbd{default}.

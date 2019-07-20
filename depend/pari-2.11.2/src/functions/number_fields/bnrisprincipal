@@ -1,0 +1,42 @@
+Function: bnrisprincipal
+Section: number_fields
+C-Name: bnrisprincipal
+Prototype: GGD1,L,
+Help: bnrisprincipal(bnr,x,{flag=1}): bnr being output by bnrinit and x
+ being an ideal coprime to bnr.mod, returns [v,alpha], where v is the vector
+ of exponents on the ray class group generators and alpha is the generator of
+ the resulting principal ideal. If (optional) flag is set to 0, output only v.
+Doc: let \var{bnr} be the ray class group data output by
+ \kbd{bnrinit}$(,,1)$ and let $x$ be an ideal in any form, coprime
+ to the modulus $f = \kbd{bnr.mod}$. Solves the discrete logarithm problem
+ in the ray class group, with respect to the generators \kbd{bnr.gen},
+ in a way similar to \tet{bnfisprincipal}. If $x$ is not coprime to the
+ modulus of \var{bnr} the result is undefined.
+
+ If $\fl = 1$, returns a 2-component vector $v$ where $v[1]$ is the
+ vector of components of $x$ on the ray class group generators, $v[2]$ is
+ an element $\alpha$ congruent to $1~\text{mod}^* f$ such that
+ $x = \alpha \prod_i g_i^{x_i}$.
+
+ If $\fl=0$, outputs only $v_1$. In that case, \var{bnr} need not contain the
+ ray class group generators, i.e.~it may be created with
+ \kbd{bnrinit}$(,,0)$; in that case, although \kbd{bnr.gen} is undefined, we
+ can still define canonical generators attached to the \kbd{bnr} and compute
+ with respect to them.
+ \bprog
+ ? K = bnfinit(x^2 - 30); bnr = bnrinit(K, [4, [1,1]]);
+ ? bnr.clgp \\ ray class group is isomorphic to Z/4 x Z/2 x Z/2
+ %2 = [16, [4, 2, 2]]
+ ? P = idealprimedec(K, 3)[1]; \\ a prime ideal above 3
+ ? bnrisprincipal(bnr,P)
+ %4 = [[1, 0, 0]~, 1]
+ ? bnrisprincipal(bnr,P, 0) \\ omit the principal part
+ %4 = [1, 0, 0]~
+ @eprog
+
+Variant: Instead of hardcoded  numerical flags,  one should rather use
+ \fun{GEN}{isprincipalray}{GEN bnr, GEN x} for $\kbd{flag} = 0$, and if you
+ want generators:
+ \bprog
+   bnrisprincipal(bnr, x, nf_GEN)
+ @eprog

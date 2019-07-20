@@ -1,0 +1,9 @@
+Function: write1
+Section: programming/specific
+C-Name: write1
+Prototype: vss*
+Help: write1(filename,{str}*): appends the remaining arguments (same output as
+ print1) to filename.
+Doc: writes (appends) to \var{filename} the remaining arguments without a
+ trailing newline (same output as \kbd{print1}).
+ %\syn{NO}

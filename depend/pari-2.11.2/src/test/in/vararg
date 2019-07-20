@@ -1,0 +1,24 @@
+myprintsep(s,v[..])=if(#v>0,print1(v[1]);for(i=2,#v,print1(s,v[i])));print();
+print(myprintsep)
+?myprintsep
+print1(":");myprintsep()
+print1(":");myprintsep(", ")
+myprintsep(", ",a,b,c,d)
+myprintsep(", ",a,,c,)
+myprintsep(,a,b,c,d)
+
+myprintf = printf;
+myprintf("x=%d\n",5)
+myprintf("x=%d y=%d\n",5,7)
+myprintf("x=%d y=%d z=%d\n",5,7,9)
+
+default(strictargs,1)
+myprintsep(s,v[..])=if(#v>0,print1(v[1]);for(i=2,#v,print1(s,v[i])));print();
+print1(":");myprintsep()
+print1(":");myprintsep(", ")
+myprintsep(", ",a,b,c,d)
+myprintsep(,a,b,c,d)
+myprintsep(", ",a,,c,)
+make_function(a) = (b,c)->123;
+f=make_function(456);
+f(1)

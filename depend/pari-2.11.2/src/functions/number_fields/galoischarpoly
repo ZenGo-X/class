@@ -1,0 +1,32 @@
+Function: galoischarpoly
+Section: number_fields
+C-Name: galoischarpoly
+Prototype: GGD1,L,
+Help: galoischarpoly(gal, chi, {o=1}): return the list of characteristic
+ polynomials of the representation attached to the character chi.
+Doc: Let $G$ be the group attached to the \kbd{galoisinit}
+ structure~\var{gal}, and
+ let $\chi$ be the character of some representation $\rho$ of the group
+ $G$, where a polynomial variable is to be interpreted as an $o$-th root of
+ 1, e.g., if \kbd{[T,o] = galoischartable(gal)} and $\chi$ is a column of
+ \kbd{T}.
+ Return the list of characteristic polynomials $\det(1 - \rho(g)T)$,
+ where $g$ runs through representatives of the conjugacy classes
+ in \kbd{galoisconjclasses(gal)}, with the same ordering.
+ \bprog
+ ? T = x^5 - x^4 - 5*x^3 + 4*x^2 + 3*x - 1;
+ ? polgalois(T)
+ %2 = [10, 1, 1, "D(5) = 5:2"]
+ ? K = nfsplitting(T);
+ ? gal = galoisinit(K);  \\ dihedral of order 10
+ ? [T,o] = galoischartable(gal);
+ ? o
+ %5 = 5
+ ? galoischarpoly(gal, T[,1], o)  \\ T[,1] is the trivial character
+ %6 = [-x + 1, -x + 1, -x + 1, -x + 1]~
+ ? galoischarpoly(gal, T[,3], o)
+ %7 = [x^2 - 2*x + 1,
+       x^2 + (y^3 + y^2 + 1)*x + 1,
+       -x^2 + 1,
+       x^2 + (-y^3 - y^2)*x + 1]~
+ @eprog

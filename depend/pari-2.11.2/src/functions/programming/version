@@ -1,0 +1,49 @@
+Function: version
+Section: programming/specific
+C-Name: pari_version
+Prototype:
+Help: version(): returns the PARI version as [major,minor,patch] or [major,minor,patch,VCSversion].
+Doc: returns the current version number as a \typ{VEC} with three integer
+ components (major version number, minor version number and patchlevel);
+ if your sources were obtained through our version control system, this will
+ be followed by further more precise arguments, including
+ e.g.~a~\kbd{git} \emph{commit hash}.
+
+ This function is present in all versions of PARI following releases 2.3.4
+ (stable) and 2.4.3 (testing).
+
+ Unless you are working with multiple development versions, you probably only
+ care about the 3 first numeric components. In any case, the \kbd{lex} function
+ offers a clever way to check against a particular version number, since it will
+ compare each successive vector entry, numerically or as strings, and will not
+ mind if the vectors it compares have different lengths:
+ \bprog
+    if (lex(version(), [2,3,5]) >= 0,
+      \\ code to be executed if we are running 2.3.5 or more recent.
+    ,
+      \\ compatibility code
+    );
+ @eprog\noindent On a number of different machines, \kbd{version()} could return either of
+ \bprog
+  %1 = [2, 3, 4]    \\ released version, stable branch
+  %1 = [2, 4, 3]    \\ released version, testing branch
+  %1 = [2, 6, 1, 15174, ""505ab9b"] \\ development
+ @eprog
+
+ In particular, if you are only working with released versions, the first
+ line of the gp introductory message can be emulated by
+ \bprog
+    [M,m,p] = version();
+    printf("GP/PARI CALCULATOR Version %s.%s.%s", M,m,p);
+  @eprog\noindent If you \emph{are} working with many development versions of
+  PARI/GP, the 4th and/or 5th components can be profitably included in the
+  name of your logfiles, for instance.
+
+  \misctitle{Technical note} For development versions obtained via \kbd{git},
+  the 4th and 5th components are liable to change eventually, but we document
+  their current meaning for completeness. The 4th component counts the number
+  of reachable commits in the branch (analogous to \kbd{svn}'s revision
+  number), and the 5th is the \kbd{git} commit hash. In particular, \kbd{lex}
+  comparison still orders correctly development versions with respect to each
+  others or to released versions (provided we stay within a given branch,
+  e.g. \kbd{master})!

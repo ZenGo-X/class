@@ -1,0 +1,33 @@
+#!/bin/sh
+dir=$1;
+status=$2; # true status (probably 'snapshot')
+STATUS=$3; # status we're being coerced into
+
+case "$STATUS" in
+  alpha|beta) dir="$dir.$STATUS";;
+  snapshot) STATUS="development git-"`git log -1 --pretty=format:%h`;
+            dir=`git describe`
+            case $dir in
+            pari-*);;
+            *) dir=pari-$dir;;
+            esac
+            ;;
+esac
+if test -d $dir; then
+  echo "Remove $dir before building a new release"; exit 1
+fi
+
+tarfile=$dir.tar
+tar cf $tarfile `config/get_MANIFEST`
+mkdir $dir && mv $tarfile $dir
+cd $dir && tar xf $tarfile && rm -f $tarfile && cd ..
+if test "$status" != "$STATUS"; then
+  v=$dir/config/version
+  mv $v $v.old
+  sed -e "s/^stat=.*/stat=\'$STATUS\'/" $v.old > $v
+  rm -f $v.old
+fi
+tar cf $tarfile $dir
+rm -rf $dir
+rm -f $tarfile.gz
+gzip $tarfile

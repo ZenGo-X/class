@@ -1,0 +1,122 @@
+Function: _header_transcendental
+Class: header
+Section: transcendental
+Doc:
+ \section{Transcendental functions}\label{se:trans}
+
+ Since the values of transcendental functions cannot be exactly represented,
+ these functions will always return an inexact object: a real number,
+ a complex number, a $p$-adic number or a power series.  All these objects
+ have a certain finite precision.
+
+ As a general rule, which of course in some cases may have exceptions,
+ transcendental functions operate in the following way:
+
+ \item If the argument is either a real number or an inexact complex number
+ (like \kbd{1.0 + I} or \kbd{Pi*I} but not \kbd{2 - 3*I}), then the
+ computation is done with the precision of the argument.
+ In the example below, we see that changing the precision to $50$ digits does
+ not matter, because $x$ only had a precision of $19$ digits.
+ \bprog
+ ? \p 15
+    realprecision = 19 significant digits (15 digits displayed)
+ ? x = Pi/4
+ %1 = 0.785398163397448
+ ? \p 50
+    realprecision = 57 significant digits (50 digits displayed)
+ ? sin(x)
+ %2 = 0.7071067811865475244
+ @eprog
+
+ Note that even if the argument is real, the result may be complex
+ (e.g.~$\text{acos}(2.0)$ or $\text{acosh}(0.0)$). See each individual
+ function help for the definition of the branch cuts and choice of principal
+ value.
+
+ \item If the argument is either an integer, a rational, an exact complex
+ number or a quadratic number, it is first converted to a real
+ or complex number using the current \idx{precision}, which can be
+ view and manipulated using the defaults \tet{realprecision} (in decimal
+ digits) or \tet{realbitprecision} (in bits). This precision can be changed
+ indifferently
+
+ \item in decimal digits: use \b{p} or \kbd{default(realprecision,...)}.
+
+ \item in bits: use \b{pb} or \kbd{default(realbitprecision,...)}.
+
+ After this conversion, the computation proceeds as above for real or complex
+ arguments.
+
+ In library mode, the \kbd{realprecision} does not matter; instead the
+ precision is taken from the \kbd{prec} parameter which every transcendental
+ function has. As in \kbd{gp}, this \kbd{prec} is not used when the argument
+ to a function is already inexact. Note that the argument \var{prec} stands
+ for the length in words of a real number, including codewords. Hence we must
+ have $\var{prec} \geq 3$. (Some functions allow a \kbd{bitprec} argument
+ instead which allow finer granularity.)
+
+ Some accuracies attainable on 32-bit machines cannot be attained
+ on 64-bit machines for parity reasons. For example the default \kbd{gp} accuracy
+ is 28 decimal digits on 32-bit machines, corresponding to \var{prec} having
+ the value 5, but this cannot be attained on 64-bit machines.
+
+ \item If the argument is a polmod (representing an algebraic number),
+ then the function is evaluated for every possible complex embedding of that
+ algebraic number.  A column vector of results is returned, with one component
+ for each complex embedding.  Therefore, the number of components equals
+ the degree of the \typ{POLMOD} modulus.
+
+ \item If the argument is an intmod or a $p$-adic, at present only a
+ few functions like \kbd{sqrt} (square root), \kbd{sqr} (square), \kbd{log},
+ \kbd{exp}, powering, \kbd{teichmuller} (Teichm\"uller character) and
+ \kbd{agm} (arithmetic-geometric mean) are implemented.
+
+ Note that in the case of a $2$-adic number, $\kbd{sqr}(x)$ may not be
+ identical to $x*x$: for example if $x = 1+O(2^5)$ and $y = 1+O(2^5)$ then
+ $x*y = 1+O(2^5)$ while $\kbd{sqr}(x) = 1+O(2^6)$. Here, $x * x$ yields the
+ same result as $\kbd{sqr}(x)$ since the two operands are known to be
+ \emph{identical}. The same statement holds true for $p$-adics raised to the
+ power $n$, where $v_p(n) > 0$.
+
+ \misctitle{Remark} If we wanted to be strictly consistent with
+ the PARI philosophy, we should have $x*y = (4 \mod 8)$ and $\kbd{sqr}(x) =
+ (4 \mod 32)$ when both $x$ and $y$ are congruent to $2$ modulo $4$.
+ However, since intmod is an exact object, PARI assumes that the modulus
+ must not change, and the result is hence $(0\, \mod\, 4)$ in both cases. On
+ the other hand, $p$-adics are not exact objects, hence are treated
+ differently.
+
+ \item If the argument is a polynomial, a power series or a rational function,
+ it is, if necessary, first converted to a power series using the current
+ series precision, held in the default \tet{seriesprecision}. This precision
+ (the number of significant terms) can be changed using \b{ps} or
+ \kbd{default(seriesprecision,...)}. Then the Taylor series expansion of the
+ function around $X=0$ (where $X$ is the main variable) is computed to a
+ number of terms depending on the number of terms of the argument and the
+ function being computed.
+
+ Under \kbd{gp} this again is transparent to the user. When programming in
+ library mode, however, it is \emph{strongly} advised to perform an explicit
+ conversion to a power series first, as in
+ \bprog
+   x = gtoser(x, gvar(x), seriesprec)
+ @eprog\noindent
+ where the number of significant terms \kbd{seriesprec} can be specified
+ explicitly. If you do not do this, a global variable \kbd{precdl} is used
+ instead, to convert polynomials and rational functions to a power series with
+ a reasonable number of terms; tampering with the value of this global
+ variable is \emph{deprecated} and strongly discouraged.
+
+
+ \item If the argument is a vector or a matrix, the result is the
+ componentwise evaluation of the function. In particular, transcendental
+ functions on square matrices, which are not implemented in the present
+ version \vers, will have a different name if they are implemented some day.
+
+ \subseckbd{\pow} If $y$ is not of type integer, \kbd{x\pow y} has the same
+ effect as \kbd{exp(y*log(x))}. It can be applied to $p$-adic numbers as well
+ as to the more usual types.\sidx{powering}
+
+ The library syntax is \fun{GEN}{gpow}{GEN x, GEN n, long prec}
+ for $x\hbox{\kbd{\pow}}n$.
+

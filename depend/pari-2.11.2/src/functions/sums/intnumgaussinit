@@ -1,0 +1,33 @@
+Function: intnumgaussinit
+Section: sums
+C-Name: intnumgaussinit
+Prototype: D0,L,p
+Help: intnumgaussinit({n}): initialize tables for n-point Gauss-Legendre
+ integration on a compact interval.
+Doc: initialize tables for $n$-point Gauss-Legendre integration of
+ a smooth function $f$ lon a compact
+ interval $[a,b]$ at current \kbd{realprecision}. If $n$ is omitted, make a
+ default choice $n \approx \kbd{realprecision}$, suitable for analytic
+ functions on $[-1,1]$. The error is bounded by
+ $$
+    \dfrac{(b-a)^{2n+1} (n!)^4}{(2n+1)[(2n)!]^3} f^{(2n)} (\xi) ,
+    \qquad a < \xi < b
+ $$
+ so, if the interval length increases, $n$ should be increased as well.
+ \bprog
+ ? T = intnumgaussinit();
+ ? intnumgauss(t=-1,1,exp(t), T) - exp(1)+exp(-1)
+ %1 = -5.877471754111437540 E-39
+ ? intnumgauss(t=-10,10,exp(t), T) - exp(10)+exp(-10)
+ %2 = -8.358367809712546836 E-35
+ ? intnumgauss(t=-1,1,1/(1+t^2), T) - Pi/2
+ %3 = -9.490148553624725335 E-22
+
+ ? T = intnumgaussinit(50);
+ ? intnumgauss(t=-1,1,1/(1+t^2), T) - Pi/2
+ %5 = -1.1754943508222875080 E-38
+ ? intnumgauss(t=-5,5,1/(1+t^2), T) - 2*atan(5)
+ %6 = -1.2[...]E-8
+ @eprog
+ On the other hand, we recommend to split the integral and change variables
+ rather than increasing $n$ too much, see \tet{intnumgauss}.

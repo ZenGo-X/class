@@ -1,0 +1,49 @@
+Function: nfgaloisapply
+Section: number_fields
+C-Name: galoisapply
+Prototype: GGG
+Help: nfgaloisapply(nf,aut,x): apply the Galois automorphism aut to the object
+ x (element or ideal) in the number field nf.
+Doc: let $\var{nf}$ be a
+ number field as output by \kbd{nfinit}, and let \var{aut} be a \idx{Galois}
+ automorphism of $\var{nf}$ expressed by its image on the field generator
+ (such automorphisms can be found using \kbd{nfgaloisconj}). The function
+ computes the action of the automorphism \var{aut} on the object $x$ in the
+ number field; $x$ can be a number field element, or an ideal (possibly
+ extended). Because of possible confusion with elements and ideals, other
+ vector or matrix arguments are forbidden.
+  \bprog
+  ? nf = nfinit(x^2+1);
+  ? L = nfgaloisconj(nf)
+  %2 = [-x, x]~
+  ? aut = L[1]; /* the non-trivial automorphism */
+  ? nfgaloisapply(nf, aut, x)
+  %4 = Mod(-x, x^2 + 1)
+  ? P = idealprimedec(nf,5); /* prime ideals above 5 */
+  ? nfgaloisapply(nf, aut, P[2]) == P[1]
+  %6 = 0 \\ !!!!
+  ? idealval(nf, nfgaloisapply(nf, aut, P[2]), P[1])
+  %7 = 1
+ @eprog\noindent The surprising failure of the equality test (\kbd{\%7}) is
+ due to the fact that although the corresponding prime ideals are equal, their
+ representations are not. (A prime ideal is specified by a uniformizer, and
+ there is no guarantee that applying automorphisms yields the same elements
+ as a direct \kbd{idealprimedec} call.)
+
+ The automorphism can also be given as a column vector, representing the
+ image of \kbd{Mod(x, nf.pol)} as an algebraic number. This last
+ representation is more efficient and should be preferred if a given
+ automorphism must be used in many such calls.
+ \bprog
+  ? nf = nfinit(x^3 - 37*x^2 + 74*x - 37);
+  ? aut = nfgaloisconj(nf)[2]; \\ @com an automorphism in basistoalg form
+  %2 = -31/11*x^2 + 1109/11*x - 925/11
+  ? AUT = nfalgtobasis(nf, aut); \\ @com same in algtobasis form
+  %3 = [16, -6, 5]~
+  ? v = [1, 2, 3]~; nfgaloisapply(nf, aut, v) == nfgaloisapply(nf, AUT, v)
+  %4 = 1 \\ @com same result...
+  ? for (i=1,10^5, nfgaloisapply(nf, aut, v))
+  time = 463 ms.
+  ? for (i=1,10^5, nfgaloisapply(nf, AUT, v))
+  time = 343 ms.  \\ @com but the latter is faster
+ @eprog

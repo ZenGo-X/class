@@ -1,0 +1,15 @@
+Function: permorder
+Section: combinatorics
+C-Name: permorder
+Prototype: lG
+Help: permorder(x): order of the permutation x.
+Doc: given a permutation $x$ on $n$ elements, return its order.
+ \bprog
+ ? p = Vecsmall([3,1,4,2,5]);
+ ? p^2
+ %2 = Vecsmall([4,3,2,1,5])
+ ? p^4
+ %3 = Vecsmall([1,2,3,4,5])
+ ? permorder(p)
+ %4 = 4
+ @eprog

@@ -1,0 +1,13 @@
+Function: _def_new_galois_format
+Class: default
+Section: default
+C-Name: sd_new_galois_format
+Prototype:
+Help:
+Doc: this toggle is either 1 (on) or 0 (off). If on,
+ the \tet{polgalois} command will use a different, more
+ consistent, naming scheme for Galois groups. This default is provided to
+ ensure that scripts can control this behavior and do not break unexpectedly.
+
+ The default value is \kbd{0}. This value will change to $1$ (set) in the next
+ major version.

@@ -1,0 +1,33 @@
+default(realprecision,38);
+default(parisize,100M);
+
+do(name, test) = {
+ setrand(1);
+ print(name,": ", iferr(test(), E, E));
+}
+gusuite(name, tests) = print("Suite: ", name); tests();
+
+nfcompo() = gusuite("compositum of relative extensions", ()->{
+  my(nf, pol, ii);
+  pol = y^2+1;
+  nf = nfinit(pol);
+  ii = Mod(y,pol);
+
+  do("compositum of degrees 2 and 3 over quadratic field", (()->my(L=nfcompositum(nf,x^2-ii,x^3-5,3), a=Mod(L[2],L[1]), b=Mod(L[3],L[1])); polisirreducible(L[1]) && a^2-ii==0 && b^3-5==0 && b+L[4]*a==Mod(x,L[1])));
+  do("compositum of degrees 2 and 4 over quadratic field", (()->my(L=nfcompositum(nf,x^2-ii,x^4-5,3), a=Mod(L[2],L[1]), b=Mod(L[3],L[1])); polisirreducible(L[1]) && a^2-ii==0 && b^4-5==0 && b+L[4]*a==Mod(x,L[1])));
+  do("compositum of degrees 5 and 7 over quadratic field", (()->my(L=nfcompositum(nf,x^5+ii*x+1,x^7-5*x+ii,3), a=Mod(L[2],L[1]), b=Mod(L[3],L[1])); polisirreducible(L[1]) && a^5+ii*a+1==0 && b^7-5*b+ii==0 && b+L[4]*a==Mod(x,L[1])));
+
+  pol = y^5-2;
+  nf = nfinit(pol);
+  ii = Mod(y,pol);
+
+  do("compositum of degrees 2 and 3 over degree 5 field", (()->my(L=nfcompositum(nf,x^2-ii,x^3-5,3), a=Mod(L[2],L[1]), b=Mod(L[3],L[1])); polisirreducible(L[1]) && a^2-ii==0 && b^3-5==0 && b+L[4]*a==Mod(x,L[1])));
+  do("compositum of degrees 2 and 4 over degree 5 field", (()->my(L=nfcompositum(nf,x^2-ii,x^4-5,3), a=Mod(L[2],L[1]), b=Mod(L[3],L[1])); polisirreducible(L[1]) && a^2-ii==0 && b^4-5==0 && b+L[4]*a==Mod(x,L[1])));
+  do("compositum of degrees 5 and 4 over degree 5 field", (()->my(L=nfcompositum(nf,x^5+ii*x+1,x^4-5*x+ii,3), a=Mod(L[2],L[1]), b=Mod(L[3],L[1])); polisirreducible(L[1]) && a^5+ii*a+1==0 && b^4-5*b+ii==0 && b+L[4]*a==Mod(x,L[1])));
+});
+
+nfcompo();
+
+\\bad input
+nfcompositum(nfinit(x),w^2+1,w^2+1)
+nfcompositum(x,w^2+1,w^2+1)

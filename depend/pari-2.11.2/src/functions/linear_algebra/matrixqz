@@ -1,0 +1,53 @@
+Function: matrixqz
+Section: linear_algebra
+C-Name: matrixqz0
+Prototype: GDG
+Help: matrixqz(A,{p=0}): if p>=0, transforms the rational or integral mxn (m>=n)
+ matrix A into an integral matrix with gcd of maximal determinants coprime to
+ p. If p=-1, finds a basis of the intersection with Z^n of the lattice spanned
+ by the columns of A. If p=-2, finds a basis of the intersection with Z^n of
+ the Q-vector space spanned by the columns of A.
+Doc: $A$ being an $m\times n$ matrix in $M_{m,n}(\Q)$, let
+ $\text{Im}_\Q A$ (resp.~$\text{Im}_\Z A$) the $\Q$-vector space
+ (resp.~the $\Z$-module) spanned by the columns of $A$. This function has
+ varying behavior depending on the sign of $p$:
+
+ If $p \geq 0$, $A$ is assumed to have maximal rank $n\leq m$. The function
+ returns a matrix $B\in M_{m,n}(\Z)$, with $\text{Im}_\Q B = \text{Im}_\Q A$,
+ such that the GCD of all its $n\times n$ minors is coprime to
+ $p$; in particular, if $p = 0$ (default), this GCD is $1$.
+ \bprog
+ ? minors(x) = vector(#x[,1], i, matdet(x[^i,]));
+ ? A = [3,1/7; 5,3/7; 7,5/7]; minors(A)
+ %1 = [4/7, 8/7, 4/7]   \\ determinants of all 2x2 minors
+ ? B = matrixqz(A)
+ %2 =
+ [3 1]
+
+ [5 2]
+
+ [7 3]
+ ? minors(%)
+ %3 = [1, 2, 1]   \\ B integral with coprime minors
+ @eprog
+
+ If $p=-1$, returns the HNF basis of the lattice $\Z^n \cap \text{Im}_\Z A$.
+
+ If $p=-2$, returns the HNF basis of the lattice $\Z^n \cap \text{Im}_\Q A$.
+ \bprog
+ ? matrixqz(A,-1)
+ %4 =
+ [8 5]
+
+ [4 3]
+
+ [0 1]
+
+ ? matrixqz(A,-2)
+ %5 =
+ [2 -1]
+
+ [1 0]
+
+ [0 1]
+ @eprog

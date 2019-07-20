@@ -1,0 +1,107 @@
+Function: primecert
+Section: number_theoretical
+C-Name: primecert
+Prototype: GD0,L,
+Help: primecert(N, {flag=0}): If N is a prime, return a Primality Certificate.
+ Return 0 otherwise. If flag = 0 return an ECPP certificate (Atkin-Morain);
+ if flag = 1 return an N-1 certificate (Pocklington-Lehmer)
+Doc:
+ If N is a prime, return a PARI Primality Certificate for the prime $N$,
+ as described below. Otherwise, return 0. A Primality Certificate
+ $c$ can be checked using \tet{primecertisvalid}$(c)$.
+
+ If $\fl = 0$ (default), return an ECPP certificate (Atkin-Morain)
+
+ A PARI ECPP Primality Certificate for the prime $N$ is either a prime
+ integer $N < 2^{64}$ or a vector \kbd{C} of length $\ell$ whose $i$th
+ component \kbd{C[i]} is a vector of length $5$ containing $N_i$, $t_i$,
+ $s_i$, $a_i$, $P_i$ (in that order) where $N_1 = N$. It is said to be valid
+ if for each $i = 1, \ldots, \ell$, all of the following conditions are
+ satisfied
+
+ \item $N_i$ is a positive integer
+
+ \item $t_i$ is an integer such that $t_i < 4N_i^2$
+
+ \item $s_i$ is a positive integer which divides $m_i$ where
+  $m_i = N_i + 1 - t_i$
+
+ \item If we set $q_i = \dfrac{m_i}{s_i}$, then
+
+ \quad\item $q_i > (N_i^{1/4}+1)^2$
+
+ \quad\item $q_i = N_{i+1}$ if $1 \leq i < l$
+
+ \quad\item $q_\ell \leq 2^{64}$ is prime
+
+ \item $a_i$ is an integer
+
+ \quad\item \kbd{P[i]} is a vector of length $2$ representing the affine
+ point $P_i = (x_i, y_i)$ on the elliptic curve $E: y^2 = x^3 + a_ix + b_i$
+ modulo $N_i$ where $b_i = y_i^2 - x_i^3 - a_ix_i$ satisfying the following:
+
+ \quad\item $m_i P_i = \infty$
+
+ \quad\item $s_i P_i \neq \infty$
+
+ \misctitle{Theorem} If $N$ is an integer and there exist positive integers
+ $m, q$ and a point $P$ on the elliptic curve $E: y^2 = x^3 + ax + b$ defined
+ modulo $N$ such that $q > (N^{1/4} + 1)^2$, $q$ is a prime divisor of $m$,
+ $mP = \infty$ and $\dfrac{m}{q}P \neq \infty$, then $N$ is prime.
+
+ Using the above theorem, the data in the vector \kbd{C} can be used to
+ certify the primality of $N$ assuming $q_\ell$ is prime.
+
+ \bprog
+ ? primecert(10^35 + 69)
+ %1 = [[100000000000000000000000000000000069, 5468679110354
+ 52074, 2963504668391148, 0, [60737979324046450274283740674
+ 208692, 24368673584839493121227731392450025]], [3374383076
+ 4501150277, -11610830419, 734208843, 0, [26740412374402652
+ 72 4, 6367191119818901665]], [45959444779, 299597, 2331, 0
+ , [18022351516, 9326882 51]]]
+ ? primecert(nextprime(2^64))
+ %2 = [[18446744073709551629, -8423788454, 160388, 1, [1059
+ 8342506117936052, 2225259013356795550]]]
+ ? primecert(6)
+ %3 = 0
+ ? primecert(41)
+ %4 = 41
+ @eprog\smallskip
+
+ If $\fl = 1$ (very slow), return an $N-1$ certificate (Pocklington Lehmer)
+
+ A PARI $N-1$ Primality Certificate for the prime $N$ is either a prime
+ integer $N < 2^{64}$ or a pair $[N, C]$, where $C$ is a vector with $\ell$
+ elements which are either a single integer $p_i < 2^{64}$ or a
+ triple $[p_i,a_i,C_i]$ with $p_i > 2^{64}$ satisfying the following
+ properties:
+
+ \item $p_i$ is a prime divisor of $N - 1$;
+
+ \item $a_i$ is an integer such that $a_i^{N-1} \equiv 1 \pmod{N}$ and
+ $a_i^{(N-1)/p_i} - 1$ is coprime with $N$;
+
+ \item $C_i$ is an $N-1$ Primality Certificate for $p_i$
+
+ \item The product $F$ of the $p_i^{v_{p_i}(N-1)}$ is strictly larger than
+ $N^{1/3}$. Provided that all $p_i$ are indeed primes, this implies that any
+ divisor of $N$ is congruent to $1$ modulo $F$.
+
+ \item The Billhart, Lehmer, Selfridge criterion is satisfied: when we write
+ $N = 1 + c_1 F + c_2 F^2$ in base $F$ the polynomial $1 + c_1 X + c_2 X^2$
+ is irreducible over $\Z$, i.e. $c_1^2 - 4c_2$ is not a square. This
+ implies that $N$ is prime.
+
+ This algorithm requires factoring partially $p-1$ for various prime integers
+ $p$ with an unfactored parted $\leq p^{2/3}$ and this may be exceedingly
+ slow compared to the default.
+
+ The algorithm fails if one of the pseudo-prime factors is not prime, which is
+ exceedingly unlikely and well worth a bug report. Note that if you monitor
+ the algorithm at a high enough debug level, you may see warnings about
+ untested integers being declared primes. This is normal: we ask for partial
+ factorizations (sufficient to prove primality if the unfactored part is not
+ too large), and \kbd{factor} warns us that the cofactor hasn't been tested.
+ It may or may not be tested later, and may or may not be prime. This does
+ not affect the validity of the whole Primality Certificate.

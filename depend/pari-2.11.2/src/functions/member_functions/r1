@@ -1,0 +1,8 @@
+Function: _.r1
+Section: member_functions
+C-Name: member_r1
+Prototype: mG
+Help: _.r1
+Description:
+ (nf):small                     nf_get_r1($1)
+ (gen):int:copy                 member_r1($1)

@@ -1,0 +1,8 @@
+default(parisize,"20M");
+tauvec(N) = Vec(q*eta(q + O(q^N))^24);
+N = 10^3; vector(N, n, ramanujantau(n)) == tauvec(N)
+ramanujantau(10^6+3)
+ramanujantau(-1)
+ramanujantau(factor(-1))
+ramanujantau(factor(0))
+ramanujantau(factor(6))

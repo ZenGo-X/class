@@ -1,0 +1,16 @@
+Function: mfisequal
+Section: modular_forms
+C-Name: mfisequal
+Prototype: lGGD0,L,
+Help: mfisequal(F,G,{lim=0}): Checks whether the modular forms F and G
+ are equal. If lim is nonzero, only check equality of the first lim+1 Fourier
+ coefficients.
+Doc:  Checks whether the modular forms $F$ and $G$ are equal. If \kbd{lim}
+ is nonzero, only check equality of the first $lim+1$ Fourier coefficients
+ and the function then also applies to generalized modular forms.
+ \bprog
+ ? D = mfDelta(); F = mfderiv(D);
+ ? G = mfmul(mfEk(2), D);
+ ? mfisequal(F, G)
+ %2 = 1
+ @eprog

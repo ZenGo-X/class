@@ -1,0 +1,41 @@
+Function: sumpos
+Section: sums
+C-Name: sumpos0
+Prototype: V=GED0,L,p
+Help: sumpos(X=a,expr,{flag=0}): sum of positive (or negative) series expr,
+ the formal
+ variable X starting at a. flag is optional, and can be 0: default, or 1:
+ uses a slightly different method using Zagier's polynomials.
+Wrapper: (,G)
+Description:
+  (gen,gen,?0):gen:prec sumpos(${2 cookie}, ${2 wrapper}, $1, $prec)
+  (gen,gen,1):gen:prec sumpos2(${2 cookie}, ${2 wrapper}, $1, $prec)
+Doc: numerical summation of the series \var{expr}, which must be a series of
+ terms having the same sign, the formal variable $X$ starting at $a$. The
+ algorithm used is Van Wijngaarden's trick for converting such a series into
+ an alternating one, then we use \tet{sumalt}. For regular functions, the
+ function \kbd{sumnum} is in general much faster once the initializations
+ have been made using \kbd{sumnuminit}.
+
+ The routine is heuristic and assumes that \var{expr} is more or less a
+ decreasing function of $X$. In particular, the result will be completely
+ wrong if \var{expr} is 0 too often. We do not check either that all terms
+ have the same sign. As \tet{sumalt}, this function should be used to
+ try and guess the value of an infinite sum.
+
+ If $\fl=1$, use \kbd{sumalt}$(,1)$ instead of \kbd{sumalt}$(,0)$, see
+ \secref{se:sumalt}. Requiring more stringent analytic properties for
+ rigorous use, but allowing to compute fewer series terms.
+
+ To reach accuracy $10^{-p}$, both algorithms require $O(p^2)$ space;
+ furthermore, assuming the terms decrease polynomially (in $O(n^{-C})$), both
+ need to compute $O(p^2)$ terms. The \kbd{sumpos}$(,1)$ variant has a smaller
+ implied constant (roughly 1.5 times smaller). Since the \kbd{sumalt}$(,1)$
+ overhead is now small compared to the time needed to compute series terms,
+ this last variant should be about 1.5 faster. On the other hand, the
+ achieved accuracy may be much worse: as for \tet{sumalt}, since
+ conditions for rigorous use are hard to check, the routine is best used
+ heuristically.
+
+ \synt{sumpos}{void *E, GEN (*eval)(void*,GEN),GEN a,long prec}. Also
+ available is \tet{sumpos2} with the same arguments ($\fl = 1$).

@@ -1,0 +1,20 @@
+Function: matker
+Section: linear_algebra
+C-Name: matker0
+Prototype: GD0,L,
+Help: matker(x,{flag=0}): basis of the kernel of the matrix x. flag is
+ optional, and may be set to 0: default; non-zero: x is known to have
+ integral entries.
+Description:
+ (gen, ?0):vec           ker($1)
+ (gen, 1):vec            ZM_ker($1)
+ (gen, #small)           $"incorrect flag in matker"
+ (gen, small):vec        matker0($1, $2)
+Doc: gives a basis for the kernel of the matrix $x$ as columns of a matrix.
+ The matrix can have entries of any type, provided they are compatible with
+ the generic arithmetic operations ($+$, $\times$ and $/$).
+
+ If $x$ is known to have integral entries, set $\fl=1$.
+
+Variant: Also available are \fun{GEN}{ker}{GEN x} ($\fl=0$),
+ \fun{GEN}{ZM_ker}{GEN x} ($\fl=1$).

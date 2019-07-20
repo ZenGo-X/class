@@ -1,0 +1,13 @@
+Function: plotscale
+Section: graphic
+C-Name: plotscale
+Prototype: vLGGGG
+Help: plotscale(w,x1,x2,y1,y2): scale the coordinates in rectwindow w so
+ that x goes from x1 to x2 and y from y1 to y2 (y2<y1 is allowed).
+Doc: scale the local coordinates of the rectwindow $w$ so that $x$ goes from
+ $x1$ to $x2$ and $y$ goes from $y1$ to $y2$ ($x2<x1$ and $y2<y1$ being
+ allowed). Initially, after the initialization of the rectwindow $w$ using
+ the function \kbd{plotinit}, the default scaling is the graphic pixel count,
+ and in particular the $y$ axis is oriented downwards since the origin is at
+ the upper left. The function \kbd{plotscale} allows to change all these
+ defaults and should be used whenever functions are graphed.

@@ -1,0 +1,12 @@
+Mod(x, x^2 + 1)
+Mod(x, x^4 - 1)
+Mod(2, 3)*x^2 + Mod(1, 6)*x + Mod(1, 6)
+[Mod(1, 4), Mod(1, 6)]
+  ***   at top-level: chinese(1)
+  ***                 ^----------
+  *** chinese: incorrect type in association (t_INT).
+Mod(0, 1)
+Mod(x + 1, x^2)
+Mod(x + 1, 2*x^2)
+Mod(x + 1, x^2)
+Total time spent: 0

@@ -1,0 +1,22 @@
+Function: _def_threadsizemax
+Class: default
+Section: default
+C-Name: sd_threadsizemax
+Prototype:
+Help:
+Doc: This default is specific to the \emph{parallel} version of PARI and gp
+ (built via \kbd{Configure --mt=pthread} or \kbd{mpi}) and is ignored
+ otherwise. In parallel mode,
+ each threads allocates its own private \tev{stack} for
+ its computations, see \kbd{parisize} and \kbd{parisizemax}. The
+ values of \kbd{threadsize} and \kbd{threadsizemax} determine the usual
+ and maximal size in bytes of the stacks of each thread, so the total memory
+ allocated will
+ be between $\kbd{parisize}+\kbd{nbthreads}\times\kbd{threadsize}$. and
+ $\kbd{parisizemax}+\kbd{nbthreads}\times\kbd{threadsizemax}$.
+
+ If set to $0$, the value used is the same as \kbd{threadsize}. We strongy
+ recommend to set both \kbd{parisizemax} and \kbd{threadsizemax} to a
+ non-zero value.
+
+ The default value is $0$.

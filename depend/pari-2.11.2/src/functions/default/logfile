@@ -1,0 +1,10 @@
+Function: _def_logfile
+Class: default
+Section: default
+C-Name: sd_logfile
+Prototype:
+Help:
+Doc: name of the log file to be used when the \kbd{log} toggle is on.
+ Environment and time expansion are performed.
+
+ The default value is \kbd{"pari.log"}.

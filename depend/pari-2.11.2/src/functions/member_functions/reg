@@ -1,0 +1,9 @@
+Function: _.reg
+Help: _.reg
+Section: member_functions
+C-Name: member_reg
+Prototype: mG
+Description:
+ (bnr):real             $"ray regulator not implemented"
+ (bnf):real:copy        bnf_get_reg($1)
+ (gen):real:copy        member_reg($1)

@@ -1,0 +1,19 @@
+Function: sqrt
+Section: transcendental
+C-Name: gsqrt
+Prototype: Gp
+Help: sqrt(x): square root of x.
+Description:
+ (real):gen           sqrtr($1)
+ (gen):gen:prec       gsqrt($1, $prec)
+Doc: principal branch of the square root of $x$, defined as $\sqrt{x} =
+ \exp(\log x / 2)$. In particular, we have
+ $\text{Arg}(\text{sqrt}(x))\in{} ]-\pi/2, \pi/2]$, and if $x\in \R$ and $x<0$,
+ then the result is complex with positive imaginary part.
+
+ Intmod a prime $p$, \typ{PADIC} and \typ{FFELT} are allowed as arguments. In
+ the first 2 cases (\typ{INTMOD}, \typ{PADIC}), the square root (if it
+ exists) which is returned is the one whose first $p$-adic digit is in the
+ interval $[0,p/2]$. For other arguments, the result is undefined.
+Variant: For a \typ{PADIC} $x$, the function
+ \fun{GEN}{Qp_sqrt}{GEN x} is also available.

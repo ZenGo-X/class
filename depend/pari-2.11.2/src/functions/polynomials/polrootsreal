@@ -1,0 +1,38 @@
+Function: polrootsreal
+Section: polynomials
+C-Name: realroots
+Prototype: GDGp
+Help: polrootsreal(T, {ab}): real roots of the polynomial T with real
+ coefficients, using Uspensky's method. In interval ab = [a,b] if present.
+Doc: real roots of the polynomial $T$ with real coefficients, multiple
+ roots being included according to their multiplicity. If the polynomial
+ does not have rational coefficients, it is first rescaled and rounded.
+ The roots are given to a relative accuracy of \kbd{realprecision}.
+ If argument \var{ab} is
+ present, it must be a vector $[a,b]$ with two components (of type
+ \typ{INT}, \typ{FRAC} or \typ{INFINITY}) and we restrict to roots belonging
+ to that closed interval.
+ \bprog
+ ? \p9
+ ? polrootsreal(x^2-2)
+ %1 = [-1.41421356, 1.41421356]~
+ ? polrootsreal(x^2-2, [1,+oo])
+ %2 = [1.41421356]~
+ ? polrootsreal(x^2-2, [2,3])
+ %3 = []~
+ ? polrootsreal((x-1)*(x-2), [2,3])
+ %4 = [2.00000000]~
+ @eprog\noindent
+ The algorithm used is a modification of Uspensky's method (relying on
+ Descartes's rule of sign), following Rouillier and Zimmerman's article
+ ``Efficient isolation of a polynomial real roots''
+ (\url{http://hal.inria.fr/inria-00072518/}). Barring bugs, it is guaranteed
+ to converge and to give the roots to the required accuracy.
+
+ \misctitle{Remark} If the polynomial $T$ is of the
+ form $Q(x^h)$ for some $h\geq 2$ and \var{ab} is omitted, the routine will
+ apply the algorithm to $Q$ (restricting to non-negative roots when $h$ is
+ even), then take $h$-th roots. On the other hand, if you want to specify
+ \var{ab}, you should apply the routine to $Q$ yourself and a suitable
+ interval $[a',b']$ using approximate $h$-th roots adapted to your problem:
+ the function will not perform this change of variables if \var{ab} is present.

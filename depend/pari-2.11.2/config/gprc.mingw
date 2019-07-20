@@ -1,0 +1,6 @@
+lines  = 25
+colors = "brightfg"
+prompt = "(%H:%M) gp > "
+histfile = "gp_history.txt"
+breakloop = 0
+help = "@ perl\\perl gphelp.pl -detex -ch 10 -cb 11 -cu 12"

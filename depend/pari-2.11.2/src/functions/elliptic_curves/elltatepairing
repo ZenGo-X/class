@@ -1,0 +1,8 @@
+Function: elltatepairing
+Section: elliptic_curves
+C-Name: elltatepairing
+Prototype: GGGG
+Help: elltatepairing(E, P, Q, m): computes the Tate pairing of the two points
+ P and Q on the elliptic curve E. The point P must be of m-torsion.
+Doc: Computes the Tate pairing of the two points $P$ and $Q$ on the elliptic
+ curve $E$. The point $P$ must be of $m$-torsion.

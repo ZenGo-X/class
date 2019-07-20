@@ -1,0 +1,13 @@
+Function: Qfb
+Section: conversions
+C-Name: Qfb0
+Prototype: GGGDGp
+Help: Qfb(a,b,c,{D=0.}): binary quadratic form a*x^2+b*x*y+c*y^2. D is
+ optional (0.0 by default) and initializes Shanks's distance if b^2-4*a*c>0.
+Doc: creates the binary quadratic form\sidx{binary quadratic form}
+ $ax^2+bxy+cy^2$. If $b^2-4ac>0$, initialize \idx{Shanks}' distance
+ function to $D$. Negative definite forms are not implemented,
+ use their positive definite counterpart instead.
+Variant: Also available are
+ \fun{GEN}{qfi}{GEN a, GEN b, GEN c} (assumes $b^2-4ac<0$) and
+ \fun{GEN}{qfr}{GEN a, GEN b, GEN c, GEN D} (assumes $b^2-4ac>0$).

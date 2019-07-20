@@ -1,0 +1,37 @@
+Function: direuler
+Section: number_theoretical
+C-Name: direuler0
+Prototype: V=GGEDG
+Help: direuler(p=a,b,expr,{c}): Dirichlet Euler product of expression expr
+ from p=a to p=b, limited to b terms. Expr should be a polynomial or rational
+ function in p and X, and X is understood to mean p^(-s). If c is present,
+ output only the first c terms.
+Wrapper: (,,G)
+Description:
+  (gen,gen,closure,?gen):gen direuler(${3 cookie}, ${3 wrapper}, $1, $2, $4)
+Doc: computes the \idx{Dirichlet series} attached to the
+ \idx{Euler product} of expression \var{expr} as $p$ ranges through the primes
+ from $a$
+ to $b$. \var{expr} must be a polynomial or rational function in another
+ variable than $p$ (say $X$) and $\var{expr}(X)$ is understood as the local
+ factor $\var{expr}(p^{-s})$.
+
+ The series is output as a vector of coefficients. If $c$ is omitted, output
+ the first $b$ coefficients of the series; otherwise, output the first $c$
+ coefficients. The following command computes the \teb{sigma} function,
+ attached to $\zeta(s)\zeta(s-1)$:
+ \bprog
+ ? direuler(p=2, 10, 1/((1-X)*(1-p*X)))
+ %1 = [1, 3, 4, 7, 6, 12, 8, 15, 13, 18]
+
+ ? direuler(p=2, 10, 1/((1-X)*(1-p*X)), 5) \\ fewer terms
+ %2 = [1, 3, 4, 7, 6]
+ @eprog\noindent Setting $c < b$ is useless (the same effect would be
+ achieved by setting $b = c)$. If $c > b$, the computed coefficients are
+ ``missing'' Euler factors:
+ \bprog
+ ? direuler(p=2, 10, 1/((1-X)*(1-p*X)), 15) \\ more terms, no longer = sigma !
+ %3 = [1, 3, 4, 7, 6, 12, 8, 15, 13, 18, 0, 28, 0, 24, 24]
+ @eprog
+
+ \synt{direuler}{void *E, GEN (*eval)(void*,GEN), GEN a, GEN b}

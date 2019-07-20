@@ -1,0 +1,28 @@
+Function: bnflog
+Section: number_fields
+C-Name: bnflog
+Prototype: GG
+Help: bnflog(bnf, l): let bnf be attached to a number field F and let l be
+ a prime number. Return the logarithmic l-class group Cl~_F.
+Doc: let \var{bnf} be a \var{bnf} structure attached to the number field $F$ and let $l$ be
+ a prime number (hereafter denoted $\ell$ for typographical reasons). Return
+ the logarithmic $\ell$-class group $\widetilde{Cl}_F$
+ of $F$. This is an abelian group, conjecturally finite (known to be finite
+ if $F/\Q$ is abelian). The function returns if and only if
+ the group is indeed finite (otherwise it would run into an infinite loop).
+ Let $S = \{ \goth{p}_1,\dots, \goth{p}_k\}$ be the set of $\ell$-adic places
+ (maximal ideals containing $\ell$).
+ The function returns $[D, G(\ell), G']$, where
+
+ \item $D$ is the vector of elementary divisors for $\widetilde{Cl}_F$.
+
+ \item $G(\ell)$ is the vector of elementary divisors for
+ the (conjecturally finite) abelian group
+ $$\widetilde{\Cl}(\ell) =
+ \{ \goth{a} = \sum_{i \leq k} a_i \goth{p}_i :~\deg_F \goth{a} = 0\},$$
+ where the $\goth{p}_i$ are the $\ell$-adic places of $F$; this is a
+ subgroup of $\widetilde{\Cl}$.
+
+ \item $G'$ is the vector of elementary divisors for the $\ell$-Sylow $Cl'$
+ of the $S$-class group of $F$; the group $\widetilde{\Cl}$ maps to $Cl'$
+ with a simple co-kernel.

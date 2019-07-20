@@ -1,0 +1,2 @@
+echo $cmd >&5
+eval $cmd >&5 2>&1

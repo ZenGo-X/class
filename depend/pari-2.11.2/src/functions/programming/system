@@ -1,0 +1,9 @@
+Function: system
+Section: programming/specific
+C-Name: gpsystem
+Prototype: vs
+Help: system(str): str being a string, execute the system command str.
+Doc: \var{str} is a string representing a system command. This command is
+ executed, its output written to the standard output (this won't get into your
+ logfile), and control returns to the PARI system. This simply calls the C
+ \kbd{system} command.

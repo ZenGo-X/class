@@ -1,0 +1,40 @@
+test2(p)=
+{
+  ffgen(x*Mod(1,p));
+  g = ffprimroot(ffgen((x+1)*Mod(1,p)), &o);
+  print([g, o]);
+  fflog(g^17, g, o);
+}
+test2(2)
+test2(3)
+test2(precprime(1<<32))
+test2(nextprime(1<<64))
+
+t = ffgen(7^4); fflog(t^6,t^2)
+t = ffprimroot(ffgen(2^61)); fflog(t^1234567891012345678,t)
+t = ffprimroot(ffgen(2^65)); fflog(t^1234567891012345678,t)
+t = ffprimroot(ffgen(3^23)); fflog(t^12345678910,t)
+t = ffprimroot(ffgen(3^33)); fflog(t^2739979050900541,t)
+t = ffprimroot(ffgen(5^23)); fflog(t^1234567891012345,t)
+t = ffprimroot(ffgen(5^17)); fflog(t^123456789101,t)
+
+test(P,p,ord)=
+{
+  my(a,b,u,l);
+  a=ffgen(P*Mod(1,p),'a);
+  b=ffprimroot(a);
+  u=random(a);
+  l=if(ord,fflog(u,b,ord),fflog(u,b));
+  b^l==u;
+}
+test(x^2+1,1073742623)
+test(x^2+1,1152921504606849707)
+test(x^4+699*x^2+107,1129)
+test(polcyclo(5),1073749723)
+test(polcyclo(7),1073741833)
+test(ffinit(5,24),5,5^24-1)
+
+p=2^64+13; g=ffprimroot(ffgen(p^2), &o); a=2*g^0;
+g^fflog(a,g,o) == a
+v=[I,-1,Mat(1),matid(2)/2];
+for(i=1,#v, print(iferr(fflog(a,g,v[i]),E,E)));

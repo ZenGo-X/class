@@ -1,0 +1,38 @@
+[53835600, 29]
+[5, 0; 0, 1]
+[10, 0; 0, 1]
+[[12, 0; 0, 1]]
+[]
+[]
+  ***   at top-level: forsubgroup(h=[2,3],2,print(h))
+  ***                                       ^---------
+  ***   incorrect type in forsubgroup [not a group] (t_VEC).
+[]
+
+group: 1  1  1  1 
+  alpha_lambda(mu,p) = 1
+  countsub = 1
+  alpha_lambda(mu,p) = 15
+  subgroup: 1 
+  countsub = 15
+  alpha_lambda(mu,p) = 35
+  subgroup: 1  1 
+  countsub = 35
+  alpha_lambda(mu,p) = 15
+  subgroup: 1  1  1 
+  countsub = 15
+  alpha_lambda(mu,p) = 1
+  subgroup: 1  1  1  1 
+  countsub = 1
+nb subgroup = 67
+67
+  ***   at top-level: subgrouplist(1)
+  ***                 ^---------------
+  *** subgrouplist: incorrect type in subgrouplist (t_INT).
+  ***   at top-level: subgrouplist([2,2],[2]~)
+  ***                 ^------------------------
+  *** subgrouplist: sorry, exact type in subgrouplist is not yet implemented.
+  ***   at top-level: subgrouplist([2,2],-1)
+  ***                 ^----------------------
+  *** subgrouplist: domain error in subgroup: index bound <= 0
+Total time spent: 0

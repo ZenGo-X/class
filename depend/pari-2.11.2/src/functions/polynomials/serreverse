@@ -1,0 +1,14 @@
+Function: serreverse
+Section: polynomials
+C-Name: serreverse
+Prototype: G
+Help: serreverse(s): reversion of the power series s.
+Doc: reverse power series of $s$, i.e. the series $t$ such that $t(s) = x$;
+ $s$ must be a power series whose valuation is exactly equal to one.
+ \bprog
+ ? \ps 8
+ ? t = serreverse(tan(x))
+ %2 = x - 1/3*x^3 + 1/5*x^5 - 1/7*x^7 + O(x^8)
+ ? tan(t)
+ %3 = x + O(x^8)
+ @eprog

@@ -1,0 +1,31 @@
+Function: mfmanin
+Section: modular_forms
+C-Name: mfmanin
+Prototype: Gb
+Help: mfmanin(FS): Given the modular symbol FS associated to an eigenform F
+ by mfsymbol(mf,F), computes the even and odd special polynomials as well as
+ the even and odd periods om+ and om- as a vector [[P+,P-],[om+,om-,r]],
+ where r = imag(om+*conj(om-))/<F,F>.
+ If F has several embeddings into C, give the vector of results corresponding
+ to each embedding.
+Doc: Given the modular symbol $FS$ associated to an eigenform $F$ by
+ \kbd{mfsymbol(mf,F)}, computes the even and odd special polynomials as well
+ as the even and odd periods $\omega^+$ and $\omega^-$ as a vector
+ $[[P^+,P^-],[\omega^+,\omega^-,r]]$, where
+ $r=\Im(\omega^+\overline{\omega^-})/<F,F>$. If $F$ has several embeddings
+ into $\C$, give the vector of results corresponding to each embedding.
+ \bprog
+ ? D=mfDelta(); mf=mfinit(D); DS=mfsymbol(mf,D);
+ ? [pols,oms]=mfmanin(DS); pols
+ %2 = [[4*x^9 - 25*x^7 + 42*x^5 - 25*x^3 + 4*x],\
+       [-36*x^10 + 691*x^8 - 2073*x^6 + 2073*x^4 - 691*x^2 + 36]]
+ ? oms
+ %3 = [0.018538552324740326472516069364750571812,\
+      -0.00033105361053212432521308691198949874026*I, 4096/691]
+ ? mf=mfinit([11,2],0); F=mfeigenbasis(mf)[1]; FS=mfsymbol(mf,F);
+ ? [pols,oms]=mfmanin(FS);pols
+ %5 = [[0, 0, 0, 1, 1, 0, 0, -1, -1, 0, 0, 0],\
+       [2, 0, 10, 5, -5, -10, -10, -5, 5, 10, 0, -2]]
+ ? oms[3]
+ %6 = 24/5
+ @eprog

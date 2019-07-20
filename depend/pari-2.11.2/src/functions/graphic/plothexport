@@ -1,0 +1,24 @@
+Function: plothexport
+Section: graphic
+C-Name: plothexport0
+Wrapper: (,,G)
+Description:
+  (gen,gen,gen,gen,?0,?0):gen:prec plothexport($1, ${4 cookie}, ${4 wrapper}, $2, $3, $5, $6, $prec)
+Prototype: GV=GGED0,M,D0,L,p\nParametric|1; Recursive|2; no_Rescale|4; no_X_axis|8; no_Y_axis|16; no_Frame|32; no_Lines|64; Points_too|128; Splines|256; no_X_ticks|512; no_Y_ticks|1024; Same_ticks|2048; Complex|4096
+Help: plothexport(fmt, X=a,b,expr,{flags=0},{n=0}): plot of expression expr,
+ X goes from a to b in high resolution, returning the resulting picture as
+ a character string which can then be written to a file.
+Doc: plot of expression \var{expr}, $X$ goes from $a$ to $b$ in high
+ resolution, returning the resulting picture as a character string which can
+ then be written to a file.
+
+ The format \kbd{fmt} is either \kbd{"ps"} (PostScript output) or \kbd{"svg"}
+ (Scalable Vector Graphics). All other parameters and flags are as in
+ \kbd{ploth}.
+
+ \bprog
+  ? s = plothexport("svg", x=1,10, x^2+3);
+  ? write("graph.svg", s);
+ @eprog
+
+ \synt{plothexport}{GEN fmt, void *E, GEN (*eval)(void*, GEN), GEN a, GEN b, long flags, long n, long prec},

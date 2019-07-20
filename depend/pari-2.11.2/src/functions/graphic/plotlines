@@ -1,0 +1,24 @@
+Function: plotlines
+Section: graphic
+C-Name: plotlines
+Prototype: vLGGD0,L,
+Help: plotlines(w,X,Y,{flag=0}): draws an open polygon in rectwindow
+ w where X and Y contain the x (resp. y) coordinates of the vertices.
+ If X and Y are both single values (i.e not vectors), draw the
+ corresponding line (and move cursor). If (optional) flag is non-zero, close
+ the polygon.
+Doc: draw on the rectwindow $w$
+ the polygon such that the (x,y)-coordinates of the vertices are in the
+ vectors of equal length $X$ and $Y$. For simplicity, the whole
+ polygon is drawn, not only the part of the polygon which is inside the
+ rectwindow. If $\fl$ is non-zero, close the polygon. In any case, the
+ virtual cursor does not move.
+
+ $X$ and $Y$ are allowed to be scalars (in this case, both have to).
+ There, a single segment will be drawn, between the virtual cursor current
+ position and the point $(X,Y)$. And only the part thereof which
+ actually lies within the boundary of $w$. Then \emph{move} the virtual cursor
+ to $(X,Y)$, even if it is outside the window. If you want to draw a
+ line from $(x1,y1)$ to $(x2,y2)$ where $(x1,y1)$ is not necessarily the
+ position of the virtual cursor, use \kbd{plotmove(w,x1,y1)} before using this
+ function.

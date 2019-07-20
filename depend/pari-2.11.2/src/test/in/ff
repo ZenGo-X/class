@@ -1,0 +1,166 @@
+default(parisize,"10M")
+jell(x)=if(#x,x.j,[]);
+{
+test(p,f) = setrand(1); a = ffgen([p,f], 'a); [
+ffgen(a^2+a+3),
+a^2+3*a+1,
+a/(1+a),
+2*(a+1)/3,
+1/5+a,
+if (6*a, 5/6/(a+1)),
+if (6*a, 5/6*(a+1)),
+shiftmul(a+1,10),
+if (2*a, shiftmul(a+1,-10)),
+a^-1,
+-a,
+sqr(a),
+sqrt(a^(2^10)),
+sqrtn((a^2+a+1)^3,3),
+sqrtn((a^2+a+1)^3,3,&z),
+z,
+if (ispower(a,3), a^(2/3)),
+norm(a^2+1),
+trace(a),
+charpoly(a),
+minpoly(a),
+conjvec(a),
+factor(x^6-a*x^3+1),
+jell(ellinit([a,1])),
+a/x,
+(x+a)/(x-a),
+if(1,setrand(1);b=ffprimroot(a)),
+fforder(a),
+b^fflog(a,b),
+factormod(x^2+x+a),
+polrootsmod(x^2+x+a)
+];
+}
+default(echo,1);
+
+test(2, 20)
+test(7, 7)
+test(precprime(2^32), 3)
+test(nextprime(2^32), 3)
+
+default(echo,0);
+ftest(p,n,r)=
+{
+  my(a=ffgen(ffinit(p,n),'a)^r);
+  if(sqrtn(a,r)^r!=a,error([p,n,r]));
+}
+default(echo,1);
+
+ftest(2,1005,7);
+ffgen(ffinit(2^32-5,101),'a)^10000
+ffgen(ffinit(2^64-59,101),'a)^10000
+
+for(i=1,10,print(ffnbirred(11,i)));
+for(i=1,10,print(ffnbirred(11,i,1)));
+
+t = ffgen(2^64)^((2^64-1)\5);1/t
+
+sqrt(Mod(-1,4296540161))
+sqrt(Mod(-1,18446744073944432641))
+centerlift(factorcantor(prod(i=-10,10,(x^2-i)),2^64+13)[,1])
+conjvec(Mod(x, x^2+Mod(1,3)))
+
+default(echo,0);
+test(q)=
+{
+  my(t = ffgen(q,'t), m=[t,t^2,1+t^3; 1+t,1+t^2,1+t^3]);
+  print(matker(m));
+  print(matimage(m));
+  print(matrank(m));
+  my(M = [t,2*t^0,3*t^0; t,t^2,1+t^3; 1+t,1+t^2,1+t^3]);
+  print(matdet(M));
+  print(M^(-1)*M);
+  my(v = [t^0, t^1, t^2]~);
+  print(M*v);
+  print(M*matsolve(M, v) == v);
+  print(M*matinverseimage(M, v) == v);
+  print(matsolve(M, matid(3)*t^0) == M^(-1));
+  print(matinverseimage(M, matid(3)*t^0) == M^(-1));
+  my(N = t*[0, 1; 0, 0]);
+  iferr(N^-1, e,, errname(e) == "e_INV");
+  iferr(matsolve(N, t*[0, 1]~), e,, errname(e) == "e_INV");
+  print(matinverseimage(N, t*[1, 0]~));
+  print(matinverseimage(N, t*[0, 1]~));
+  print(matinverseimage(N, N^0));
+  print(matindexrank(N));
+  print(matsupplement(t*[0; 1]));
+  print(lindep(t*[1; 1]));
+  print(lindep(t*[0, 0; 1, 1]));
+}
+default(echo,1);
+test(2^5)
+test(7^5)
+test((2^64+13)^5)
+
+default(echo,0);
+test(q, n=10)={
+  my(t = ffgen(q, 't), M = matrix(n, n, i, j, random(t)));
+  if(subst(charpoly(M), 'x, M) != 0, error("test:",[q,n]));
+}
+default(echo,1);
+test(nextprime(2^7)^5)
+test(nextprime(2^15)^5)
+test(nextprime(2^31)^5)
+test(nextprime(2^63)^5)
+test(nextprime(2^80)^5)
+test(nextprime(2^7)^5, 27)
+test(nextprime(2^15)^5, 27)
+test(nextprime(2^31)^5, 27)
+test(nextprime(2^63)^5, 27)
+test(nextprime(2^80)^2, 27)
+
+my(a=ffgen([2,100]));(0*a*x)*x
+
+default(echo,0);
+test(p=3,f=10,d=2,e=2)=
+{
+  my(Pa,Pb);
+  my(q = p^f);
+  my(a = ffgen([p,f],'a), b = ffgen([p,d*f],'b), c = ffgen([p,e*d*f],'c));
+  my(m = ffembed(a, b),   n = ffembed(b, c),     k = ffembed(a, c));
+  my(rm = ffinvmap(m), rn = ffinvmap(n), rk = ffinvmap(k));
+  my(nm = ffcompomap(n,m), rmrn =ffcompomap(rm,rn));
+  my(rnk = ffcompomap(rn,k), rkn = ffcompomap(rk,n));
+  my(rmm = ffcompomap(rm,m), mrm = ffcompomap(m,rm));
+  my(fr=fffrobenius(b,f));
+  my(z = b); for(i=1,d-1,z = b + ffmap(fr,z));
+  if (ffmap(m,ffmap(rm,z))!=z,error("fffrobenius"));
+  if (minpoly(ffmap(m,a),'a) != a.mod,error("minpoly"));
+  Pa = a^2+a+3;
+  Pb = ffmap(m,Pa);
+  if (ffmap(rm,Pb)!=Pa, error("ffmap"));
+  if (ffmap(rm,b)!=[],error("ffmap"));
+  my(Qa = [Pa,x^2+x*Pa+1], Qb = ffmap(m,Qa), Qc = ffmap(n,Qb));
+  if (ffmap(rm,Qb)!=Qa,error("ffmap: rm"));
+  if (ffmap(nm,Qa)!=Qc,error("ffmap: n o m"));
+  if (ffmap(rmm,Qa)!=Qa,error("ffmap: rm o m"));
+  if (ffmap(mrm,Qb)!=Qb,error("ffmap: m o m"));
+  if (ffmap(rmrn,Qc)!=Qa,error("ffmap: rm o rn"));
+  if (ffmap(rnk,Qa)!=ffmap(rn,ffmap(k,Qa)),error("ffmap: rn o k"));
+  if (ffmap(rkn,Qb)!=ffmap(rk,ffmap(n,Qb)),error("ffmap: rk o n"));
+  iferr(ffcompomap(m,n),E,print(E));
+  iferr(ffcompomap(rn,rm),E,print(E));
+  iferr(ffcompomap(m,rn),E,print(E));
+  iferr(ffcompomap(rm,n),E,print(E));
+  R=factor(b.mod*a^0)[1,1];
+  [d,l]=ffextend(a,R);
+  if(subst(ffmap(l,R),'b,d),error("ffextend"));
+  if(minpoly(ffmap(l,a))!=minpoly(a),error("ffextend"));
+  iferr(ffextend(a,x^2+b*x+1),E,print(E));
+}
+default(echo,1);
+test(2,1,5,3)
+test(2,5,5,3)
+test(3,1,2,3)
+test(3,10,2,3)
+test(nextprime(2^100),1,3,2)
+test(nextprime(2^100),3,3,2)
+
+/* error */
+ffgen(x^2+x+Mod(1,3))
+ffembed(ffgen([3,5],'b),ffgen([3,6],'a));
+a=ffgen(3^3,'a); ffinvmap(ffextend(a,x^2+x+a));

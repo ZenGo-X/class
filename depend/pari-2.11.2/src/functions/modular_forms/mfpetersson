@@ -1,0 +1,71 @@
+Function: mfpetersson
+Section: modular_forms
+C-Name: mfpetersson
+Prototype: GDG
+Help: mfpetersson(fs,{gs}): Petersson scalar product of the modular
+ forms f and g belonging to the same modular form space mf, given by
+ the corresponding "modular symbols" fs and gs output by mfsymbol
+ (also in weight 1 and half-integral weight). If gs is omitted
+ it is understood to be equal to fs. The scalar product is normalized by the
+ factor 1/[G:G_0(N)].
+Doc: Petersson scalar product of the modular forms $f$ and $g$ belonging to
+ the same modular form space \kbd{mf}, given by the corresponding
+ ``modular symbols'' \kbd{fs} and \kbd{gs} output by \kbd{mfsymbol}
+ (also in weight $1$ and half-integral weight, where symbols do not exist).
+ If \kbd{gs} is omitted it is understood to be equal to \kbd{fs}.
+ The scalar product is normalized by the factor $1/[\Gamma:\Gamma_0(N)]$.
+ Note that $f$ and $g$ can both be noncuspidal, in which case the program
+ returns an error if the product is divergent.
+ If the fields of definition $\Q(f)$ and $\Q(g)$ are equal to $\Q(\chi)$
+ the result is a scalar. If $[\Q(f):\Q(\chi)]=d>1$ and
+ $[\Q(g):\Q(\chi)]=e>1$ the result is a $d\times e$ matrix corresponding
+ to all the embeddings of $f$ and $g$. In the intermediate cases $d=1$ or
+ $e=1$ the result is a row or column vector.
+ \bprog
+ ? D=mfDelta(); mf=mfinit(D); DS=mfsymbol(mf,D); mfpetersson(DS)
+ %1 = 1.0353620568043209223478168122251645932 E-6
+ ? mf=mfinit([11,6],0);B=mfeigenbasis(mf);BS=vector(#B,i,mfsymbol(mf,B[i]));
+ ? mfpetersson(BS[1])
+ %3 = 1.6190120685220988139111708455305245466 E-5
+ ? mfpetersson(BS[1],BS[2])
+ %4 = [-3.826479006582967148 E-42 - 2.801547395385577002 E-41*I,\
+       1.6661127341163336125 E-41 + 1.1734725972345985061 E-41*I,\
+       0.E-42 - 6.352626992842664490 E-41*I]~
+ ? mfpetersson(BS[2])
+ %5 =
+ [  2.7576133733... E-5  2.0... E-42          6.3... E-43         ]
+
+ [ -4.1... E-42          6.77837030070... E-5 3.3...E-42          ]
+
+ [ -6.32...E-43          3.6... E-42          2.27268958069... E-5]
+
+ ? mf=mfinit([23,2],0); F=mfeigenbasis(mf)[1]; FS=mfsymbol(mf,F);
+ ? mfpetersson(FS)
+ %5 =
+ [0.0039488965740025031688548076498662860143 -3.56 ... E-40]
+
+ [ -3.5... E-40  0.0056442542987647835101583821368582485396]
+ @eprog
+
+ Noncuspidal example:
+ \bprog
+ ? E1=mfeisenstein(5,1,-3);E2=mfeisenstein(5,-3,1);
+ ? mf=mfinit([12,5,-3]); cusps=mfcusps(12);
+ ? apply(x->mfcuspval(mf,E1,x),cusps)
+ %3 = [0, 0, 1, 0, 1, 1]
+ ? apply(x->mfcuspval(mf,E2,x),cusps)
+ %4 = [1/3, 1/3, 0, 1/3, 0, 0]
+ ? E1S=mfsymbol(mf,E1);E2S=mfsymbol(mf,E2);
+ ? mfpetersson(E1S,E2S)
+ %6 = -1.884821671646... E-5 - 1.9... E-43*I
+ @eprog
+
+ Weight 1 and 1/2-integral weight example:
+ \bprog
+ ? mf=mfinit([23,1,-23],1);F=mfbasis(mf)[1];FS=mfsymbol(mf,F);
+ ? mfpetersson(mf,FS)
+ %2 = 0.035149946790370230814006345508484787443
+ ? mf=mfinit([4,9/2],1);F=mfbasis(mf)[1];FS=mfsymbol(mf,F);
+ ? mfpetersson(FS)
+ %4 = 0.00015577084407139192774373662467908966030
+ @eprog

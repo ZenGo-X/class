@@ -1,0 +1,15 @@
+Function: core
+Section: number_theoretical
+C-Name: core0
+Prototype: GD0,L,
+Help: core(n,{flag=0}): unique squarefree integer d
+ dividing n such that n/d is a square. If (optional) flag is non-null, output
+ the two-component row vector [d,f], where d is the unique squarefree integer
+ dividing n such that n/d=f^2 is a square.
+Doc: if $n$ is an integer written as
+ $n=df^2$ with $d$ squarefree, returns $d$. If $\fl$ is non-zero,
+ returns the two-element row vector $[d,f]$. By convention, we write $0 = 0
+ \times 1^2$, so \kbd{core(0, 1)} returns $[0,1]$.
+
+Variant: Also available are \fun{GEN}{core}{GEN n} ($\fl = 0$) and
+ \fun{GEN}{core2}{GEN n} ($\fl = 1$)

@@ -1,0 +1,16 @@
+Function: quadray
+Section: number_theoretical
+C-Name: quadray
+Prototype: GGp
+Help: quadray(D,f): relative equation for the ray class field of
+ conductor f for the quadratic field of discriminant D (which can also be a
+ bnf).
+Doc: relative equation for the ray
+ class field of conductor $f$ for the quadratic field of discriminant $D$
+ using analytic methods. A \kbd{bnf} for $x^2 - D$ is also accepted in place
+ of $D$.
+
+ For $D < 0$, uses the $\sigma$ function and Schertz's method.
+
+ For $D>0$, uses Stark's conjecture, and a vector of relative equations may be
+ returned. See \tet{bnrstark} for more details.

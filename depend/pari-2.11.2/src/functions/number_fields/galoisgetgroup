@@ -1,0 +1,20 @@
+Function: galoisgetgroup
+Section: number_fields
+C-Name: galoisgetgroup
+Prototype: LD0,L,
+Description:
+ (small):int               galoisnbpol($1)
+ (small,):int              galoisnbpol($1)
+ (small,small):vec         galoisgetgroup($1, $2)
+Help: galoisgetgroup(a,{b}): query the galpol package for a group of order a
+ with index b in the GAP4 Small Group library. If b is omitted, return the
+ number of isomorphism classes of groups of order a.
+Doc: Query the \kbd{galpol} package for a group of order $a$ with index $b$
+ in the GAP4 Small Group library, by Hans Ulrich Besche, Bettina Eick and
+ Eamonn O'Brien.
+
+ The current version of \kbd{galpol} supports groups of order $a\leq 143$.
+ If $b$ is omitted, return the number of isomorphism classes of
+ groups of order $a$.
+Variant: Also available is \fun{GEN}{galoisnbpol}{long a} when $b$
+ is omitted.

@@ -1,0 +1,929 @@
+# $Id$
+Bug numbers refer to the BTS at http://pari.math.u-bordeaux.fr/Bugs/
+
+Done for version 2.7.0 (released 21/03/2014):
+
+  Fixed
+    1- e = ellinit(E over Qp); ellztopoint(e, 3) --> SEGV
+    2- thue((x^2+1)^2*(x^2-2),-4) --> missing solutions [+-1, +-1]
+BA  3- spaces in directory names were not supported
+    4- silent overflow when inputing t_REAL of huge exponent [#1526]
+    5- zeta(2+10^-101*I) -> overflow
+    6- RgX_mullow(f,g,n) could return a result of degree n (instead of < n)
+       Same with RgX_sqrlow
+    7- ellrootno(E) could lead to a SEGV [#1527]
+    8- issquare(Mod(3,22)) -> 0 [#1528]
+JD  9- polcyclo(5, Mod(-1,3)) was the negative of correct value
+JD 10- elltors(ellinit("90c3")) returned Z/12 but a generator of order 6
+   11- thue(thueinit(x^3-x-1),1578191) => oo loop [#1532]
+   12- catastrophic cancellation in eint1 (x moderately large)
+   13- SEGV in ellweilpairing [#1535]
+   14- factor(Mod(1,2)*Pol(1)) -> [Mod(0, 2) 1]
+   15- Mod(Pol(0), 2) -> 0, instead of Mod(0,2)
+   16- QXQ_to_mod was called with t_POLMOD arguments
+   17- ellwp(E, 'z) had stopped working for E not defined over C
+   18- nfdisc(T, t_MAT=partial discriminant factorization) => corruption [#1542]
+   19- norm(Mod(z,T)) where z is not a t_POL or in a different variable than T
+       => wrong result [#1539]
+   20- polresultant(Pol(Mod(0,2)), x) -> 0 instead of Mod(0,2)
+   21- nffactor(T, pol) possibly wrong results when nfinit(T) is not rigorously
+       computed [#1545]
+   22- gmodgs(t_POLMOD,): incorrect implementation
+BA 23- library functions Fp_pow/Fp_pow mishandled negative basis
+   24- gcd(1/(2^64*y),Mod(x^2,2^64*x^3)) --> inconsistent gcd [#1541]
+   25- matadjoint([x,0,0;0,0,0;0,0,0]) => wrong variables [#1547]
+   26- ellordinate(e, exact t_COMPLEX) => either a wrong result (no solution)
+       or a solution computed at an incorrect accuracy (DEFAULTPREC) [#1548]
+   27- weber(1.0*I,1) => SEGV [#1549]
+   28- primepi(2^32) => oo loop [on 32-bit machine]
+   29- primepi(N >= 2^32 or 2^64) off by 1
+JD 30- [libpari] initprimetable(2^20): infinite recursion
+   31- very inefficient div_rfrac_pol() [#1537]
+   32- polresultantext(x+1,x^2) -> [-# + 1, 1, 1]
+   33- for(i=a, b, ) where a < 0, b < 0 : go through wrong indices if #a != #b
+   34- printf("%1.2f",Mat([1.,2.])) -> SEGV [#1550]
+
+  Added
+BA  1- library functions FlxX_to_FlxC, FlxXV_to_FlxM, polx_FlxX
+BA  2- library function Flx_lead
+    3- library function RgV_to_RgM
+
+Done for version 2.6.2 (released 30/01/2014):
+
+  Fixed
+    1- eulerphi(t_INT factorization) corrupted the input
+BA  2- 8bit chars were interpreted as end of input
+    3- Bernoulli numbers were no longer cached [2.6.0]
+    4- typo in Brillhart, Lehmer, Selfridge primality test [#1467]
+    5- [Configure] confusing error messages when C compiler doesn't work
+    6- scalar + t_SER = 0 => wrong valuation (1+O(x)-1 => O(x^2))
+BA  7- squaring of t_REAL was not faster than multiply
+    8- 1+O(2^(2^18)) => O(2^0) (silent overflow)
+PB  9- Mod(1, 2) - Mod(2, 4) => Mod(-1,2) [#1469]
+   10- memory corruption in subgrouplist: e.g. subgrouplist([53835600, 29], 5)
+   11- SEGV in zncoppersmith (when auxilliary polynomial was non-monic)
+   12- division by 0 in Fl_ellcard_Shanks [2.6.1, #1474]
+   13- ellwp([1,I]) -> stack overflow [2.6.0]
+   14- sumdedekind(h < 0, k < 0) wrong result; if gcd(h,k) > 0 as well
+   15- galoisexport(G, 1) -> SEGV
+   16- ??default(log) no longer worked
+   17- rnfalgtobasis, rnfbasistoalg, rnfeltup, rnfeltdown, rnfeltabstorel,
+       rnfeltreltoabs were not treating their inputs consistently, and
+       accepted (or crashed on) too many incorrect inputs.
+   18- rnfideal* did not handle correctly the 0 ideal
+   19- rnfidealtwoelt(non integral ideal) => crash
+   20- nfeltreducemodpr(K, non invertible elt mod pr,...) => wrong result
+       (now an e_INV error)
+   21- rnfbasis: wrong result due to a mistake in gen_if_principal
+       [2.6.0, revert d62f0de01]
+   22- nfsolvemodpr(nf,a,b,P): a must be invertible, as in matsolve
+       (was not documented, used to SEGV). Raise an error if not.
+   23- various bnrdisclist crashes
+   24- bnrclassno(bnf, prime ideal) -> SEGV
+   25- forpart(x=k,) raised an exception if k < 0 [ now empty loop ]
+   26- deriv(constant) now returns 0 in the base ring (not gen_0).
+   27- inconsistencies and mistakes in deriv / intformal of t_POLMOD: forbid
+       integration wrt the main variable of x.mod, deriv(Mod(x, x^2),x) was
+       Mod(1,x^2) and deriv(Mod(y,x^2),y) was 0 instead of respectively 0 and
+       Mod(1,x^2)
+   28- idealchinese with t_POLMOD inputs -> input error
+   29- idealchinese with denominators -> SEGV
+   30- qflll(Mat(0)) returned Mat(1)
+   31- infinite loop in sumpos: sumpos(n=1,-log(cos(1/n))) [#1481]
+BA 32- doing allocatemem in the break loop would corrupt the new break loop
+   33- relative error in eint1 was larger than expected
+   34- select(t_LIST,,1) [ indirect select ] didn't work
+   35- vecsort(List(),,4) -> SEGV
+   36- factorpadic / polrootspadic lost accuracy when converting output from
+       integers to t_PADICs (factorpadic(t^2 + 3^5, 3, 5) -> irreducible factor
+       (1 + O(3^5))*t^2 + O(3^5)*t + O(3^0)
+   37- Mod(0,0) is no longer valid => division by 0 (as Mod(x,0) for x != 0)
+   38- RgX_to_RgV no longer accepts other types than t_POL. Use Rg_to_RgV for
+       a more permissive function
+   39- broken Fq_sqrt when T != NULL and t_INT input
+   40- ispower(1009^11) -> 0 [2.6.0]
+   41- ellinit([0,1,1,0,1],2).group -> SEGV
+   42- nfroots(nf, deg 1 polynomial) -> wrong result
+   43- Configure --time=ftime: wrong reported timings
+   44- mateigen(rational matrix): inconsistent concatenation [#1489,2.6.0]
+   45- polroots(): wrong accuracy of (real) 0 components
+   46- randomprime(2) -> SEGV [#1493, 2.6.0]
+   47- forqfvec(v,[;],0,) -> SEGV [#1495]
+   48- poliscyclo(x^0) -> 2
+   49- truncation (precision) errors in bnfnarrow [#1491]
+   50- matadjoint assumed that n! is invertible. If this is not the case, now
+       use a safe algorithm
+   51- leading coefficient of elldivpol ignored the characteristic,e.g.
+       E=ellinit([a1,a2,a3,a4,a6*Mod(1,2)]); elldivpol(E,2)
+   52- gcd involving a t_FFELT -> SEGV
+   53- oo loop in ispower for huge arguments / oo loop in prime iterator
+       in congruence classes [#1498, 2.6.0]
+   54- L=[1,2,3]; apply(x->L=x,L) -> SEGV  ( idem select and [|x<-] operators )
+   55- (k+1.)/k - (2*k+1.)/k -> incorrect object
+   56- gcd(x,0.) -> 1 but gcd(x,Pol(0.)) -> x [ the former is correct, since 0.
+       is inexact and may represent an arbitrary small non-zero real number ]
+   57- eint1 misbehaved at large precision [#1499]
+   58- polredbest(T,1) incorrect if T non-monic or degree 1
+   59- nfcertify might miss a factor to be certified, e.g.
+       P=polcompositum(x^4+437*x+19,x^5-571*x+27)[1];
+       nfcertify(nfinit(P, [2,3,5])) was empty
+   60- polresultantext(t_POL in y, t_POL in y,y) -> U/V as t_POL in x [#1509]
+   61- inconsistent handling of t_POL "divided by" scalar among the variants
+       of Euclidean division (%, divrem, \, ...). E.g. x % 2 is OK, but
+       x % Mod(2,3) was not. We now follow the semantic of
+       grem/gdeuc/poldivrem: a scalar is understood as a t_POL of degree 0
+       in the proper variable [#1510]
+   62- incorrect rounding in mulur
+BA 63- Configure: --includedir was ignored
+   64- add GC in RgV_dotproduct / RgV_dotsquare
+   65- ZX equal was checking variables, contrary to the spirit of the
+       specification (and contrary to RgX_equal). Specify behaviour properly:
+       none of the internal .*[xX]_equal function check variable numbers.
+   66- arithmetic functions did not accept factorizations of negative integers
+       (whereas most of them are defined for negetive integers)
+BA 67- Configure --time=ftime actually tested times, not ftime. Remove ftime
+       from the default list of timer functions (reports wallclock time, not
+       CPU time) [#1523]
+   68- polredabs() could (find then) forget some polynomials [#1511]
+   69- poldisc(x^3 + Mod(2,3)*x^2) --> e_INV
+   70- (Mod(4.,y^2+1)*(1 + O(x)))^(1/2) -> junk (= [2.0+O(x)),2.0+O(x)]~).
+       Worse if other t_POLMOD coefficients. Now exception.
+   71- sin(O(p)) returned 1+O(p) instead of O(p)
+
+  Changed
+    1- default help text for a user function is now as in \u:
+       fun =
+         (args)->body
+    2- after addhelp(f,...), ?f no longer include default help text for a
+       user function (function code). Type 'f' to see the function code.
+    3- primes([a,b]) now returns the primes in the interval [a,b]
+    4- install: add symbol name in library and GP prototype to default help
+    5- the rnf structure format
+    6- library functions: rename rnfelementxxx -> rnfeltxxx,
+       rnfidealhermite -> rnfidealhnf
+    7- allow mathnf(t_VEC) [ apply Mat() automatically ], gives acces to the
+       ZV_gcdext() routine.
+    8- mathnf(,2) (generic vs integral t_MAT) is deprecated: we always test
+       the matrix entries and choose the appropriate routine
+    9- bnrclassno: allow all standard ways to define class fiels (A,B,C),
+       not only bnf + module
+   10- bnrinit(bnf,f): allow using idealstar(bnf,f) in place of f
+   11- Let Set(t_VECSMALL v) behave as Set(Vec(v))
+   12- ffgen(T) now checks whether T is squarefree (testing for
+       irreducibility is too expensive)
+   13- variable() no longer raises exceptions: if no variable can be
+       associated to the object, return 0. Thus "if (!variable(x), )" may be
+       used to test whether x has a "variable".
+JD 14- polcyclo(n, x) now works for all roots of 1
+   15- quadpoly no longer accepts vector/matrix arguments, see 2.6.0,C94
+   16- [libpari] renamed ZM_hnfremdiv -> ZM_hnfdivrem
+   17- x t_REAL * y t_INT: either convert y to t_REAL (as before) or use
+       integer multiplication (if lg(x) >> lg(y))
+   18- GP: all results are now stored in GP history, together with the time
+       to obtain them [ we used to only store non-gnil results, and no timings ]
+   19- chinese(t_POL,t_POL): allow polynomials of different degrees
+   20- deplin(): use FpM/Flm/F2m routines if possible (like all other generic
+       linear algebra routines)
+   21- FpM_gauss(a,b,) from modular kernel no longer allow all types of input:
+       split into FpM_FpC_gauss (b t_COL) and FpM_gauss (b t_MAT). Same for
+       all modular xxx_gauss functions
+   22- O(1/x^2) --> error [ now equivalent to O(x^-2) ]
+   23- faster evaluated polhermite/pollegendre
+   24- polhensellift / ZpX_liftfact: use quasi-linear ZXX_mul_Kronecker instead
+       of RgX_mul (~ Karatsuba)
+   25- [libpari] renamed gcmpX -> gequalX
+   26- [libpari] renamed ordred -> polredord
+   27- the prid structure returned by idealprimedec: the anti-uniformizer
+       tau (pr_get_tau) is now stored via its multiplication table
+   28- rnfpolredabs(x,3) did not conform to the documentation (which did not
+       make sense). Fix documentation and function, for rnfpolredbest as well.
+   29- [libpari] renamed recip -> serreverse
+   30- lift(x,'v) / centerlift(x,'v) now only lift t_POLMODs in variable v,
+       no longer (most) t_INTMOD / t_PADICs met along the way
+   31- lift / centerlift no longer raise an exception when they encounter
+       a non-arithmetic type (e.g. a t_REAL or even a t_STR) in a structure.
+       They just copy the offending sub-object as-is.
+   32- generic polynomial Euclidean division (grem, gmod, poldivrem): when
+       result is the zero polynomial, use RgX_get_0, not gen_0 / pol_0
+   33- rnf.pol (absolute defining polynomial / Q) is now called rnf.polabs,
+       rnf.pol is now the relative polynomial, defining the relative extension
+       over the base.
+BA 34- FpXYQQ_pow: change order of moduli to be consistent with FpXQXQ_pow.
+BA 35- FlxYqQ_pow: renamed to FlxYqq_pow, and moduli order changed.
+   36- idealstar(K,id), allow to input 'id' as a factorization into prime
+       ideals, as produced by idealfactor
+   37- define eulerphi(0) = 2 [ now eulerphi(n) = znstar(n).no for all n ]
+   38- allow subst(t_SER,x,exact 0): subst(2+O(x),x,Mod(0,3))->Mod(2,3) [#1513]
+   39- [libpari] rename gsh -> gsinh, gch -> gcosh, gth -> gtanh,
+       gash -> gasinh, gach -> gacosh, gath -> gatanh, ggamd -> ggammah
+       (follow GP names)
+   40- no longer naively use the Karatsuba/3M formula to multiply t_COMPLEX
+       of t_REALs: loss of accuracy is too important and unpredictable from the
+       user's point of view [ e.g. (1+ 1e-90*I)*(1e90+I) -> 1. E90 + 0.E52*I,
+       when the definition directly yields 1. E90 + 2*I ]. Could use it when
+       the exponents of real/imaginary parts are close, increasing the
+       precision by the exponent difference (increasing overhead...): not done
+       yet.
+   41- renamed mpexp1 -> mpexpm1, cxexp1 -> cxexpm1
+   42- change prototye of mpsincos1 and rename -> mpsincosm1
+
+  Added
+EP  1- Configure option for gcov/lcov support
+    2- libpari function FF_f, member function g.f for t_FFELT
+       (definition field has p^f elements)
+    3- libpari functions gprimepi_upper_bound, gprimepi_lower_bound,
+       primepi_lower_bound, primes_interval, primes_interval_zv,
+       primes_upto_zv, primes0
+    4- libpari functions rnf_get_absdegree, rnf_get_invzk, rnf_get_map,
+       rnf_get_nf, rnf_get_nfdegree, rnf_get_nfpol, rnf_get_nfvarn, rnf_get_pol,
+       rnf_get_polabs, rnf_get_zk, rnf_get_nfzk, rnf_get_varn, rnf_get_disc,
+       rnf_get_index, RgV_is_QV, RgX_equal_var
+    5- allow rnf.disc, rnf.index
+    6- functions rnfelttrace, rnfeltnorm
+    7- function ZV_gcdext, based on ZM_hnflll (simplified)
+    8- allow ffgen(p^f) instead of ffgen(ffinit(p,f))
+    9- [libpari] Fq_sqrtn
+   10- mathnfmodid(m, d): allow d an arbitrary vector of positive integers.
+       The old syntax (d an integer, representing a vector of equal integers)
+       is still allowed
+LGr11- GP function Colrev
+   12- GP operator %#n to recover time used to compute history result %n
+   13- GP function getabstime()
+   14- [libpari] Rg_to_F2, RgV_to_F2v, RgM_to_F2m, F2c_to_mod, F2m_to_mod,
+       Flc_to_mod, Flm_to_mod, F2m_F2c_invimage, F2m_invimage, F2m_suppl,
+       Flm_suppl, F2m_rank, Flm_rank, F2m_rowslice, F2v_slice, F2v_ei
+BA 15- Parallel GP support (parapply, pareval, parfor, parforprime, parselect,
+       parsum, parvector)
+   16- [libpari] residual_characteristic
+   17- GP function characteristic()
+   18- [libpari] muluui, diviuuexact
+   19- [libpari] Kronecker_to_ZXX, ZXX_mul_Kronecker
+BA 20- conversion from matrices of FFELTs to low level (Fq/Flxq/F2xq) kernels
+       for faster treatment.
+   21- FqM_det, FlxqM_det, FlxqM_inv, F2xqM_det, F2xqM_inv, F2xqM_image,
+       F2xqM_image, F2xqM_rank, FFM_det, FFM_image, FFM_ker, FFM_rank, FFM_inv
+   22- ZM_rank, ZM_indexrank, ZM_indeximage
+   23- GP function normlp
+BA 24- GP function vecsum
+   25- [libpari] pr_equal, ZC_nfval, ZC_nfvalrem, ZC_prdvd, ZV_Z_dvd
+   26- allow .p / .e / .f / .gen for modpr structures
+   27- function rnfpolredbest
+   28- functions qfnorm, qfbil
+   29- [libpari] ZM_multosym, RgM_multosym, RgMrow_RgC_mul, RgM_transmul,
+       RgM_transmultosym, ZM_transmultosym
+   30- [libpari] nf_rnfeq, nf_rnfeqsimple, eltreltoabs, eltabstorel,
+       eltabstorel_lift, nf_nfzk, nfeltup, QXV_QXQ_eval, QXX_QXQ_eval
+   31- [libpari] factor_pn_1_limit
+   32- [libpari] get_FpXQ_star, gener_FpXQ_local
+BA 33- move gpinstall to libpari
+   34- liftall() lifts recursively all t_INTMOD/t_PADIC/t_POLMOD components
+   35- liftint() lifts recursively all t_INTMOD/t_PADIC components
+   36- liftpol() lifts recursively all t_POLMOD components
+BA 37- GP function logint
+PB 38- [libpari] gen_matmul, gen_matcolmul, FFM_mul, FqM_FqC_mul, FqM_mul,
+       F2xqM_mul, F2xqM_F2xqC_mul, FlxqM_FlxqC_mul, FlxqM_mul.
+   39- [libpari] Flx_equal, F2x_equal
+BA 40- [libpari] FpM_powu/Flm_powu/F2m_powu
+   41- new GP function idealprincipalunits
+   42- [libpari] checkabgrp, abgrp_get_no, abgrp_get_cyc, abgrp_get_gen,
+       bid_get_grp, bid_get_no
+   43- [libpari] FpX_disc
+   44- [libpari] retmkcomplex
+   45- GP function expm1 (= exp - 1, avoiding cancellation)
+
+  Removed
+    1- optional flag to factorpadic() [ enabling Buchman-Lenstra + round2 ]
+       Use the default = round4
+    2- useless wrappers map_proto_GG, map_proto_GL, map_proto_lGG
+    3- [libpari] useless functions gand, gor
+    4- [libpari] useless function ratlift [ use Fp_ratlift ]
+
+Done for version 2.6.1 (released 20/09/2013):
+
+  Fixed
+    1- Allow compounding 1-letter flags to gp, e.g. qp -qf [ used to silently
+       ignore the 'f' ]
+    2- ellminimalmodel, followed by ellchangecurve ==> structure incorrectly
+       updated [wrong Q_MINIMALMODEL component] [2.6.0, #1416]
+    3- lift(1/2+O(2))=2/1 --> incorrect result + corrupt object [2.6.0, #1424]
+    4- local() could corrupt polynomial variable of the same name
+    5- write did not fclose() the output file handle [2.6.0, #1425]
+PB  6- issquare(Mod(1,2)) -> domain error [2.6.0, #1429]
+PB  7- issquare(Mod(0,2),&s); s -> Mod(2,0) error [2.6.0, #1430]
+    8- ellheight(E not given by minimal model,P) -> domain error [2.6.0, #1432]
+    9- ellchangecurve(E, [1,0,0,0]) lost Q_MINIMALMODEL ->SEGV later [2.6.0]
+   10- warning() would print "warning: user warning:"-> "user warning:" [2.6.0]
+   11- matinverseimage(A, t_MAT B) would treat individual columns B[,i]
+       independently and successively. Now use a single Gauss reduction.
+   12- Flm_Fl_mul returned a wrong result
+   13- ellinit(ellfromj(Mod(0,17))) -> curve defined over Z [2.6.0, #1436]
+   14- allocatemem: make sure fix_size() is called to avoid alignment
+       problems [#1437]
+   15- ellmodulareqn(2) did not clean the stack properly [2.6.0, #1442]
+   16- issquare(Mod(13,121)) --> not an n-th power residue in Qp_sqrt [2.6.0]
+   17- stack corruption in carberkowitz / charpoly(,,3) [ session crash ]
+   18- ellinit(E over Fp, t_FFELT) => error [2.6.0]
+   19- mateigen([5/3,7/45;0,21/10]) => precision error (missing eigenspace)
+   20- subst(O(x^2),x,0*x) => SEGV [#1447]
+   21- memory corruption in aprcl [2.6.0]
+   22- factormod(,2) => wrong result [2.6.0, #1451]
+   23- dirmul/dirdiv: incorrect result length when valuation > 1
+   24- x,y a t_PADIC, x === y always returned 0 [2.6.0]
+   25- bernpol(0) => memory corruption [2.6.0, #1458]
+   26- round((1e-40+x) / (1e-39+x)) would create the invalid object x/x
+   27- polgalois(x^11 + 627*x^4 - 584) -> F_110 instead of S_11 [#1460]
+   28- input lines with more than 2^31 characters (without \n) resulted in a
+       truncated read [#1461]
+   29- znlog(1,Mod(8,9)) -> division by 0 [#1463]
+   30- plot(x=1,2,x) gave a graph with 0<=y<=2, instead of ymin<=y<=ymax
+   31- ?= or even = would apparently hang GP (waiting for further input)
+
+  Added
+    1- genus2red: an implementation of Liu's algorithm to determine the
+       reduction of a genus 2 curve (at p > 2). Based on genus2reduction-0.3,
+         http://www.math.u-bordeaux1.fr/~liu/G2R/ (Cohen & Liu, 1994)
+       mostly rewritten from scratch:
+       - adapted to pari-2.*
+       - somewhat modularized
+       - fixes all known instances of 'bug27' and 'bug28' (at p = 3, reported
+         through Sage users).
+       - bench 'genus2red' contains a check of at least one instance of each
+         of Namikawa-Ueno's types + all cases on which the original
+         genus2reduction was known to fail. [CAVEAT: the interface will change]
+    2- allow to startup gp with flags --default key=val (or -D key=val):
+       execute default(key,val) on startup
+BA  3- functions Flm_center, Flv_center, zv_to_Flv, zm_to_Flm, zm_mul,
+       zm_zc_mul, scalar_Flm
+BA  4- function minim_raw
+    5- function QX_complex_roots
+PMo 6- function forpart for looping over partitions
+    7- [libpari] forcomposite_init / forcomposite_next, reimplement
+       forcomposite() using this iterator
+    8- Configure now generates a file 'config.log' to help debugging when it
+       makes a mistake (contains all messages from compilers)
+    9- [libpari] RgM_invimage, RgM_RgC_invimage, FpM_invimage,
+       FpM_FpC_invimage, Flm_invimage, Flm_Flc_invimage, Flm_neg
+   10- [libpari] serchop0, integser functions
+   11- psi(t_SER) using Luke's recursion, then lngamma, gamma, gammah
+       for t_SER arguments around an arbitrary complex z0 (was implemented
+       for z0 = 0,1 only)
+PB 12- PARI functions FlxqM_gauss, FlxqM_inv and FqM_gauss
+   13- PARI functions FpM_hess, FpM_charpoly, charpoly, RgM_Rg_sub,
+       RgM_Rg_sub_shallow
+   14- generic driver for GP's charpoly(): select appropriate algorith (flag)
+       depending on input type.
+BA 15- allow ellsearch(t_VEC) : search for curve with given name, in given
+       isogeny class or with given conductor; alias for the existing
+       ellsearch(t_STR) as per the ellconvertname correspondance
+   16- option flag to mateigen: also return the eigenvalues
+   17- [libpari] Z_lvalrem_stop, u_lvalrem_stop
+   18- [libpari] ZX_rescale_lt
+BA 19- Port of the program ISOM by Bernt Souvignier for computation of
+       automorphisms and isomorphisms of lattices.
+       New GP functions qfauto, qfisom, qfisominit, qfautoexport
+   20- [libpari] RgX_mullow, RgX_sqrlow
+   21- [libpari] embed_T2, embednorm_T2, embed_roots, embed_disc, embed_norm
+   22- arithmetic functions now accept factorization matrices, you can use any
+       of f(N), f(factor(N)) or f([N, factor(N)])
+   23- GP function readstr
+   24- allow lists of elements in chinese()
+
+  Changed
+    1- gp --primelimit lim (gp -p lim) is deprecated. Use the generic form
+       'gp -D primelimit=lim' (setting primelimit is now mostly useless, anyway)
+    2- gp --stacksize lim is deprecated. Use gp -s lim or the generic form
+       'gp -D parisize=lim'
+    3- partitions() interface to match forpart()
+    4- improve qfbred(t_QFI) for "small" inputs
+    5- bnfnewprec: ensure we recompute bnf from scratch at most once (could
+       happen many times in makematal())
+    6- [make bench] properly align results if 'printf' is available
+    7- [libpari] the *_invimage function no longer accept a t_COL second
+       argument: use the RgM_RgC_invimage variant. They now return NULL when
+       no solution exist (used to return a t_COL / t_MAT of length 1)
+    8- [libpari] replace the forvec_start() function by a standard
+       iterator: forvec_init() / forvec_next()
+    9- [libpari] Z_lvalrem would destroy its argument. No longer.
+   10- znprimroot(p^k) now always returns the smallest primitive root (was
+       only true for k = 1)
+   11- gmul / gsqr for t_SER with t_INTMOD coefficients: reduce to Z[X] +
+       Kronecker substititution (quasi-linear vs. Karatsuba)
+   12- Mulders/Hanrot-Zimmerman short products for power series
+HC 13- new mpveceint1 implementation: faster and more precise
+   14- version string for development versions: added number of reachable
+       commits (as per git rev-list). Affects version() [#1346]
+
+  Removed
+    1- drop support for "gp -b buffersize" (obsolete since 2.2.10, 04/2005)
+    2- drop backward compatibility 'gp -emacs', 'gp -test'. Use the '--emacs'
+       and '--test' forms.
+
+Done for version 2.6.0 (released 15/05/2013):
+
+  Fixed
+    1- Euclidean chains were confused by t_POLs with t_INTMOD/t_POLMOD coeffs
+       [ because a 0 polynomial could have lg() == 3 ]
+    2- numerical instability in ellheightoo [#1204]
+    3- Flm_gauss(m, smallish p): fix and enable the OK_ulong switch [ faster ]
+    4- remi2n didn't allow negative arguments [native kernel] [#1215]
+    5- ellrootno(e, p) started by computing a global minimal model for e
+       instead of a local one at p.
+    6- qfbred(t_QFR) wrong when frac( sqrt(D) ) > 0.5
+    7- add GC in sumalt()
+    8- problems with diagnostic messages when changing a 'default', e.g. \o3
+    9- divru() could call bfffo(0) => overflow in expo()
+AMe10- (t_FRAC<0) * t_INTMOD => wrong result
+   11- trace(t_POL or t_SER) could yield an unormalized object [0 leading term]
+LGr12- off-by-1 error in primepi() when argument is = primelimit
+   13- bestappr(0.*x+1) -> incorrect object
+   14- znlog(3, Mod(3,8), 2) -> error
+   15- crash when default(prettyprinter,...) points to a non-existent command
+   16- qfperfection(): wrong result in unlucky cases [#1223]
+   17- allocatemem() did not reset parse error [#1226]
+BA 18- (x->vector(1,j,x))(1) --> significant pointers lost [#1211]
+VL 19- [makefile] Incorrect -I and -L flags order [#1212]
+   20- nfbasis / nfdisc(f,, partial factorization) would sometimes spend a
+       lot of time trying to factorize a discriminant [#1227]
+   21- numerical instability in qfgaussred / qfsign [#1232]
+   22- missing consistency checks in conjvec [#1231]
+   23- numerical instability in polredabs [#1228, #1229]
+   24- wrong result in bezoutres [#1233]
+   25- wrong sign in polresultant() [#1234]
+   26- change default(realprecision) so that it returns the internal precision
+       [ as precision(1.) ], not the number of printed digits. [#1235]
+   27- subst(Y/X,X,x) -> 0
+PB 28- polrootsff(x^2-x-ffgen((v^2+1) * Mod(1,3))) -> SEGV [#1241]
+   29- intnum(t=[0,0],[1],(sin(t)/t)^2) -> "precision too low in mpsc1"
+BA 30- functions ending by the x[y]=z construct could corrupt the stack.
+   31- nfbasis(pol, 0, factorization containing (-1)^1) -> wrong [#1244]
+   32- qfminim(): better type checks for matrix entries
+   33- qfminim(): incorrect GC in smallvectors()
+   34- padicappr(x^2+1+O(3), -1+O(5^10)) --> no error
+   35- tests test-kernel and test-ploth were broken
+   36- lots of missing sanity checks in hilbert(x,y,p)
+       [ e.g. hilbert(O(3), Pi, 5) -> 0 ]
+BA 37- for(i=1,10^7,) + SIGINT -> SEGV [#1249]
+   38- ellwp: take flag into account also for t_SER output [ was: numerical
+       case only ]
+   39- factor(p) was much slower than isprime(p) for p a "small" prime
+BA 40- mateigen precision error was not trappable.
+   41- accuracy problems in bnfisunit [#1253]
+   42- broken rnfeltup [#1255]
+   43- x===y was always wrong for x,y t_SER
+BA 44- gamma(t_SER) with positive valuation did not work.
+   45- ispower(x < 0) could return an even value ! [#1259]
+   46- ispower(1 / n) return a wrong result [#1259]
+BA 47- [breakloop] initial context could be lost.
+BA 48- Ser([1+O(x)],x) returned an invalid object.
+BA 49- ispseudoprime used too much stack for huge operands.
+   50- [rnfidealup doc] idealgentoHNF() was incorrect.
+DS 51- elldivpol returned wrong result for degree n >=8.
+   52- overflow in mpbern(n) for huge n [#1256]
+   53- idealfactor(nf, non integral ideal) would remove a rational content
+       instead of factoring A/B with A,B coprime integer ideal. Which led
+       to costly factorizations [#1158]
+LGr54- the global variables associated to the primetable _maxprime / diffptr
+       could become inconsistent
+   55- psdraw() ignored plot colors
+BA 56- stack_base() was not C89 standard compliant.
+BA 57- my(f(x)=x+1);f --> SEGV                                       [#1273]
+   58- ellheight([0, 0, 1, -1, 0], [0., 0.]) -> BUG
+   59- allow bnrL1 over Q [#1279]
+   60- factorpadic(,,,1) => SEGV when linear factors/Q [#1278]
+   61- mathnf(..., 4) didn't remove 0 columns from HNF [#1271]
+JD 62- possible SEGV in pari_init_opts [#1264]
+BA 63- ellorder(E,P*Mod(1,p)) did not work if E was defined over Z
+   64- allow writebin to save user functions (t_CLOSURE) [#1171]
+   65- sqrtn(1+O(5),5) -> error, ispower(1+O(5),5) -> error [#1261]
+   66- parimacro.tex: pdftex --output-format dvi  would produce a PDF
+BA 67- pari_close failed to free all allocated memory [#1297]
+BA 68- pari_close did not restore GMP memory functions
+   69- avoid outputing ANSI escape sequences to reset terminal state when
+       unnecessary [#1289]
+BA 70- ellpointtoz was numerically unstable
+   71- issquarefree(0) => error [#1304]
+   72- sizebyte(t_LIST) returned the size of the wrapper type, not the list
+       itself [#1307]
+   73- ellgroup(E over Q, p) now returns the structure of the group of
+       non-singular points, when the curve has bad reduction at p.
+   74- factor_proven not taken into account in factor(n), where n is a
+       BPSW-pseudoprime
+   75- core(5*(huge composite)^2) was very slow [#1305]
+   76- sqrt(0.E-97-1.12-97*I) -> div by 0 [#1309]
+BA 77- FpX_gcd(0,x) -> div by 0
+   78- x; y; p; q; subst(Mod(q,p), q, x + y) --> Mod(1, p)*x [#1321]
+   79- off-by-1 error when placing prime table sentinel after e.g.
+       default(primelimit, 2);
+   80- t_REAL with huge exponents print incorrectly [#1322]
+   81- a1;a2;a3;a4;a6;ellinit([a1,a2,a3,a4,a6],1) was very slow
+BA 82- FpX_factorff and FpX_rootsff were not using standard argument order
+PB 83- printf("%.6f", 5E-5) -> SEGV [#1328]
+BA 84- diffop(Mod(y,x^2-y),[y],[1]) -> wrong result
+BA 85- calling a GP function with a lot of omitted arguments could cause a crash
+GH 86- missing solutions in thue(), e.g. thue(thueinit(x^3+92*x+1),3^3)
+   87- t_RFRAC == t_RFRAC could return a wrong result [#1339]
+   88- obscure bug in polroots() (sage #13314)
+   89- polinterpolate([1,2] * Mod(1,7), [2,3], 0) -> incorrect type in gabs
+BA 90- printf() did not flush output
+   91- logint() used too much memory and could return a wrong result:
+       logint(3^64, 3) --> 33
+   92- eint1(x < 0) normalization. Now eint1(x) = incgam(0, x) [#418]
+   93- polrootsff(2*x+1,2,y) -> SEGV [#1350]
+   94- resultant(x,x,y) -> 0 and related problems
+   95- thue((x^4+1)^2, 4) -> no solution
+BA 96- idealramgroups() and idealfrobenius() did not accept a bnf
+   97- using new operators with default(compatible,3) caused a crash
+   98- rare corruption in ECM [#1240] factorint(,1) => SEGV
+   99- add missing call to normalize() in lift(t_POL/t_SER) [#1359]
+BA 100- listput was not SIGINT safe
+BA 101- znorder(Mod(5,16),200) -> 5 instead of 4
+   102- e.tate lost accuracy
+   103- 2-adic ellinit
+   104- allow ellinit over C
+   105- ellpointtoz(E / Qp, ...)  [ wrong result / error messages ]
+JD 106- galoisinit(x^3+x^2-2*x-1) -> uninitialized read [#1389]
+BA 107- polhermite(66) -> corrupted result [#1393]
+   108- nfhnf() would only accept matrices of maximal rank
+BA 109- galoisfixedfield() could return a wrong result for polynomials with
+        large roots [#1406]
+   110- bnrdisc could return a wrong result if the modulus had more than
+        2 prime divisors [#1399]
+   111- a = Mod(1,2)*x; gcd(a,a) return x instead of Mod(1,2)*x
+   112- changing primelimit from within forprime loop yielded unpredictable
+        results (potential SEGV)
+   113- y;z;(x^2+y)*w/z/x -> significant pointers lost [#1248]
+   114- log(t_FRAC close to 1) => junk (idem lngamma) [#1238]
+   115- thue(thueinit(x^3-1493,1),3) -> error
+LGr116- typo in modr_safe -> precision error [#1413]
+   117- nfhnfmod(non-integral module) => wrong result
+        nf=nfinit(y); A = [[1,1/2;0,1],[1,1]];
+        nfhnfmod(nf, A, nfdetint(nf,A))
+BA 118- [native kernel] FFT mulii relied on unspecified order of evaluation
+
+  Changed
+    1- mathnf: swapped flag 3 and 5.
+    2- allow ellinit([a4,a6]) [#1213]
+    3- ellinit(... singular curve ...]): return [] instead of raising an error
+    4- GP set elements are no longer converted to t_STR (requiring "eval" to
+       recover the underlying object). Arbitrary GENs can be stored in a set.
+    5- moved Odos/* to relevant src/systems subdirectory
+    6- removed Odos directory
+    7- no longer allow Vec()/Vecrev(), Col(), Vecsmall(),  without argument.
+       Use [], []~, Vecsmall([]), respectively.
+    8- allow specifying an optional dimension in Vec/Vecrev, Col, Vecsmall.
+    9- allow Vecsmall(t_POL or t_SER)
+LGr10- nicer printout of small matrices: justify columns
+   11- improve gmul(t_REAL, t_FRAC) when numerator of t_FRAC is 1
+BA 12- [darwin] do not use dylib_ prefix to ld options [#1210]
+   13- allow idealhnf(nf, t_QFI / t_QFR) for quadratic fields
+   14- no longer allow 3 arguments in bestappr() [useless], no longer
+       mix Pade approximants and continued fractions [too confusing: must a
+       t_SER be converted to a t_RFRAC or be treated coefficientwise?]
+   15- if znlog() has no solution, return [] instead of error
+   16- znlog(x, g): no longer assume that g is a primitive root, nor that the
+       underlying (Z/N)^* is cyclic
+   17- renamed gen_eltorder -> gen_order
+   18- logfile: strip properly color escape sequences [#1225]
+   19- change nfbasis(T, flag, fa) to nfbasis(T, listP). flag was used to invoke
+       round2 instead of round4 (inefficient=> useless) OR to only
+       partially factor poldisc(T), up to primelimit (very dangerous since
+       primelimit is a global variable). Now listP describes a list of primes,
+       and we return a basis of an order which is p-maximal at all those primes:
+       either a vector of primes, a factorisation (as fa before) or an integer
+       B to indicated {p <= B} (a safe and flexible version of nfbasis(T, 1)).
+       nfdisc() was changed similarly.
+   20- first call isanypower() in BPSP_psp_nosmalldiv() when input is > 2^512
+       [ < 1% of required time, 1 order of magnitude faster when it succeeds ]
+       [ #1074 ]
+   21- sort polroots() output so that it no longer depends on current precision
+   22- delete README-subversion, replace with README-git
+   23- move README.os2 to src/system/os2/README
+   24- change compiler version printout in gp header
+   25- much faster final divisibility test in nfgcd() [#1214]
+   26- error type sqrter5 "not a quadratic residue in sqrt" now generalized
+       to denote "not an n-th power residue in sqrtn"
+BA 27- global_err_data is now a GEN.
+BA 28- more usable form of alarm(s, code): evaluate code, aborting after s
+       seconds. Return the result or a t_ERROR object.
+   29- [non-Unix systems] the name of the preferences file is now "gprc.txt"
+       (it remains ".gprc" on Unix systems)
+   30- also look for the preferences file in PARI's "datadir"
+   31- removed rootsold() code : polroots(x, 1) is no longer accepted
+   32- rewrite ellan using C-longs + new function anellsmall()
+   33- renamed all libpari error codes [ pari_err() arguments ]
+   34- allow t_VECSMALL in vecextract
+   35- look for a few more short vectors in polred(), only return subfields
+       and the best primitive polynomial [wrt discriminant]
+   36- [library] remove precdl argument in ellwp0: use a t_SER argument like
+       in all other transcendental functions.
+   37- ellsigma / ellzeta: allow t_SER arguments, like ellwp.
+   38- polcoeff(x+2*y,1,y) -> 2  [ was 2*x^0 ]
+   39- quadhilbert / quadray: replace final polredabs call by polredbest [#1025]
+   40- listsort() now uses the cmp() comparison function, and becomes fully
+       compatible with setsearch() [#1167]
+   41- vecsort(,,2) [lexicographic order] is now always on. The flag is
+       now deprecated and ignored.
+   42- allow t_SER with integral coefficients to use asymptotically fast
+       (ZX_mul / ZX_sqr) polynomial multiplication
+LGr43- let initprimes0 use an existing prime table
+   44- rename stackmalloc -> stack_malloc. Add stack_calloc
+   45- matimagecompl() now returns a permutation (t_VECMALL) no longer a t_VEC
+   46- remove config/gitversion from 'make snapshot' tarball
+JM 47- Better implementation of ellweilpairing/elltatepairing
+BA 48- agm now returns the optimal AGM
+   49- unify make_emacs_tags / make_vi_tags => make_tags + fix problems for
+       (exuberant-ctags)-based etags. Both tag files (emacs / vi) contain
+       the same tags now.
+   50- ellglobalred(E) now also returns the conductor factorization [4th compo]
+   51- library functions *_incremental_CRT no longer need the product of the
+       moduli, instead they compute it and update the running modulus.
+   52- factor_proven now affects all the factoring machinery, as documented, i.e
+       also multiplicative function (moebius, sumdiv,...)
+   53- allow t_VECSMALL in lex()
+   54- nfrootsof1(K) check whether K.pol is a translate of a cyclotomic pol.
+       [initial patch LGr, #1175]
+   55- format of cached Bernoulli table: now a t_VEC of t_FRAC / t_REALs.
+       Removed bern() macro. The new data must be accessed using bernfrac /
+       bernreal.
+   56- [libpari] simplify init_primepointer(n, p, &pd) interface
+       => init_primepointer(n, &pd). Remove argument 'p', ignore the previous
+       value of pd [ remove assumption that it pointed into a prime table ]
+       and always set pd to a pointer into the private prime table.
+   57- forprime loop: no longer allow to modify the loop index
+       ? forprime(p = 2, 10, p = [])
+        ***   at top-level: forprime(p=2,10,p=[])
+        ***                                   ^---
+        ***   prime index read-only: was changed to [].
+   58- faster forparii() [ for() with t_INT lower bound ]
+   59- forprime(p = a, b, ...) now iterates over arbitrary ranges of primes,
+       independently of 'primelimit'. Parameter 'b' can be omitted (no upper
+       limit). More generally primelimit is no longer a true limit to iterate
+       over primes: all libpari functions use the forprime_t interface
+   60- rename ggval -> gvaluation
+BA 70- GP function ellpow is renamed to ellmul
+BA 71- rename powell->ellmul, addell->elladd, subell->ellsub
+   72- is_pth_power interface [ pass a forprime_t iterator ]
+   73- polrootsmod(, 4) is no longer accepted
+   74- revert to Ramanujan's formula to compute Pi [ + binary splitting ]
+   75- polinterpolate(,, 'x) use divide & conquer algorithm
+BA 76- binary(0) now return []
+   77- polisirreducible() now avoids factoring in most cases
+HC 78- reimplement incgam()
+   79- allow eint1(t_COMPLEX)
+   80- when 'echo = 1', no longer echo commands if they were entered
+       interactively [commands ended up printed twice]
+   81- unless 'echo = 1', no longer log commands entered non-interactively
+       when 'log = 1'. '\r file' used to log the entire content of 'file'.
+   82- allow thue(t_POL, rhs) for thue(thueinit(t_POL, rhs))
+   83- elltors now uses division polynomials by default
+   84- modified "Hit Return to Continue" message so that it becomes a comment
+       when copy-pasted
+   85- rnf_fix_pol() takes an extra argument, the calling function's name
+   86- fast gerepilecopy() for leaves
+   87- rename leftright_pow_fold -> gen_pow_fold, leftright_pow_fold_i
+       -> gen_pow_fold_i
+   88- upowuu now returns 0 on overflow
+   89- primes(n) no longer needs precomputed primes
+   90- prime(n) no longer needs precomputed primes
+   91- primepi(n) no longer needs precomputed primes
+   92- removed 3s delay when recompiling PARI after modifying a header
+       [ Was there to avoid problems on slightly out-of-synch NFS fileserver
+       host. Had become an annoyance on fast multicore servers, esp. when
+       bisecting to find a broken commit. ]
+   93- improve Configure --tune + let tune -t/-tt/-ttt print more and more
+       verbose messages [ old 'tune -t' corresponds to current 'tune -tt' ]
+   94- arithmetic functions no longer accept vector / matrix arguments [ to
+    later allow passing factorization matrices ]: use apply()
+BA 95- rename RgX_check_ZXY -> RgX_check_ZXX, ZXY_max_lg -> to ZXX_max_lg
+   96- elleta() and elleisnum(e, 2) to use a theta series formula in
+       O~(prec^(3/2)) instead of O~(prec^2).
+BA 97- zv_cmp0 renamed to zv_equal0
+   98- allow ellinit / Qp for arbitrary reduction type
+   99- ellpointtoz(E / Qp, ...), now return phi(P) [ used to return the same
+       result for phi(P) and phi(-P) [ split multiplicative reduction ],
+       resp. phi(P) + 1/phi(P) [ non-split reduction ]
+  100- ellinit(E / Qp).tate : the u component is now always a square root
+       of u2, also in the non-split case (in which case it lives in a
+       quadratic extension of Qp)
+  101- renamed library function divsum() => sumdivexpr()
+  102- listpop(empty list) => no-op [ was "domain error" ]
+  103- ellap, ellak, ellan: allow non-minimal model
+  104- when timer = 1, no longer print timing if the time is negligible;
+       in particular, no timing should be printed when defining a user function
+       or and alias.
+  105- The proper way to initialize an nf structure when the polynomial
+       discriminant is hard to factor is nfinit([T, listP]), where listP
+       specifies a list of primes (see ??nfinit). nfdisc, nfbasis, all the
+       polred functions allow analogous arguments (see Changed-19). This is
+       cleaner and more flexible than old flags relying on the value
+       primelimit (e.g. nfinit([T, nfbasis(T, 1)]), now deprecated). Also,
+       the nfinit function now sees the local specifications and can
+       take steps to avoid problems (instead of taking for granted a basis,
+       without knowing whether it is correct or not). The result can
+       also be certified (nfcertify)
+  106- polredabs() with (deprecated) nf_PARTIALFACT flag (or new [T,listP]
+       argument) now returns 0 if the resulting order cannot be proven to be
+       maximal.
+  107- rename bezout() -> gcdext(), polresultant() -> polresultantext()
+  108- the prime table is now computed once and for all on startup and can
+       no longer be increased by modifying primelimit: the dynamic forprime
+       machinery allows fast primes up to primelimit^2 which is more than
+       enough even with a small table. The default value of 500.000 is already
+       larger than necessary
+  109- removed the mechanism allowing prime gaps larger than 255 in the
+       prime table: as a result it now limited to 436273290, allowing fast
+       primes up to 1.9 10^17
+BA110- permtonum/numtoperm now use the standard lexicographic numbering
+  111- issquare(t_INTMOD), ispower(t_INTMOD): factor modulus incrementally,
+       in case we hit a local non-residue -> early abort [#1376]
+  112- gphelp + OS/X : make "open" the default PDF viewer (was "acroread")
+  113- renamed exp_Ir -> expIr
+
+  Added
+    1- mathnf for matrices over K[X] [#41]
+BA  2- GP function ellheegner
+BA  3- asm inline macro addllx8 for faster addition
+BA  4- Library function FpXQ_autpowers
+    5- GP default 'linewrap'
+    6- functions Fp_issquare, Fq_issquare.
+    7- GP function cmp [ universal comparison ]
+    8- library functions Fp_addmul, addmulii, addmulii_inplace, addmuliu,
+       addmuliu_inplace, lincombii, mulsubii, submulii, submuliu,
+       submuliu_inplace
+LGr 9- Catalan's constant [ Catalan() ]
+BA 10- library functions F2x_issquare/F2x_sqrt
+BA 11- [INSTALL] Documentation of RUNTEST
+   12- library function bestapprPade
+   13- library function gen_factored_order, Fp_factored_order
+   14- macros retmkvec, retmkvec2, retmkvec3, retmkvec4, retmkcol, retmkcol2,
+       retmkmat, retmkmat2, retmkintmod, retmkpolmod
+       retmkintmod, retmkpolmod, retconst_col, retconst_vec
+   15- allow Ser(t_VECSMALL)
+BA 16- library function gsprintf/gvsprintf
+BA 17- new PARI type t_ERROR (error messages)
+BA 18- new error trapping system and GP functions iferr,iferrname
+BA 19- implement lngamma(t_PADIC)
+LGr20- new PARI functions F2m_gauss, F2m_inv, F2m_rank, F2m_image, matid_F2m,
+       F2m_mul, F2m_F2c_mul
+BA 21- GP function getenv
+   22- new error class e_PRIME [ pari_err() ]
+BA 23- low-level function int_bit
+   24- library function stack_strcat
+   25- function polredbest [ adapting a preliminary patch by BA ]
+BA 26- library functions Fl_invsafe, F2x_halfgcd, Flx_Flxq_eval and Flx_FlxqV_eval.
+BA 27- support for sparse matrix and Wiedemann algorithm
+   28- GP function vecsearch() [ use with vecsort() ]
+BA 29- library function Z_issmooth
+BA 30- linear sieve algorithm for Fp_log/znlog
+BA 31- library functions Flx_to_FlxX, F2m_to_Flm, F2c_to_Flc, and Flxq_powu
+   32- GP function idealnumden()
+LGr33- library function uprecprime()
+   34- library function ZM_pivots()
+   35- library functions nm_Z_mul, ZM_togglesign, ZM_nm_mul [ to improve Zlm_gauss ]
+BA 36- [breakloop] GP functions dbg_up/dbg_down (like gdb up/down)
+   37- library functions rootsof1_Fp, rootsof1u_Fp, rootsof1_Fl
+BA 38- GP functions dbg_x (like \x) and dbg_err (current error data)
+   39- matconcat()
+BA 40- library functions Flm_Fl_add, Flm_invimage, FlxY_evalx
+BA 41- library functions Flx_ffisom, Flx_ffintersect, Flxq_ffisom_inv
+BA 42- library functions Flx_is_irred, Flx_is_smooth, F2x_is_irred
+BA 43- accessors functions for t_CLOSURE: closure_arity,closure_codestr,closure_get_*
+   44- library functions ZMs_ZC_mul, ZpMs_ZpCs_solve, gen_ZpM_Dixon
+BA 45- [breakloop] GP function breakpoint
+BA 46- GP function ffnbirred
+BA 47- cubic sieve algorithm for Flxq_log
+BA 48- library functions F2x_F2xqV_eval, F2x_F2xq_eval
+BA 49- forqfvec()
+BA 50- library functions FqM_image, FqM_rank, FpXQXQ_powers, FpXQXQ_matrix_pow
+BA 51- ellgroup(,,1): also return the generators
+BA 52- library functions FpVV_to_mod, FpE_changepoint, FpE_changepointinv
+BA 53- GP syntax [a..b] : [a,a+1,...,b]
+BA 54- GP syntax [a(x)|x<-b,c(x)] : apply(a,select(c,b))
+BA 55- GP syntax M[a..b,^c] : vecextract(M,"a..b","^c")
+BA 56- library function FpE_log
+   57- select(f, v, 1) for indirect selection
+   58- hamming() function [initial implementation CG]
+   59- ispowerful() function
+   60- polgraeffe() function
+   61- functions poliscyclo(), poliscycloprod(), polcyclofactors()
+   62- function setbinop(f,X,Y) = { f(x,y), x in X, y in Y }
+   63- libpari function moebiusu()
+   64- sumdigits() function
+   65- libpari functions addiu, addui, subiu, subui, uissquare
+   66- randomprime() function. Allow random([a,b])  (return n, a <= n <= b)
+   67- ispolygonal() function
+   68- libpari functions uissquarefree, uposisfundamental, unegisfundamental
+   69- istotient() function
+   70- implement Haible/Papanikolaou binary splitting
+BA 71- PARI functions FlxqX_nbroots, FpXQX_nbroots, FpXQX_nbfact.
+BA 72- PARI function zv_search
+BA 73- GP syntax: multiif if(a==1,b,a==2,c,default).
+BA 74- GP syntax: multi assignement: [a,b,c]=V -> a=V[1];b=V[2];c=V[3]
+BA 75- PARI functions gen_gener, gen_ellgroup, gen_ellgens, gen_powers
+BA 76- FlxqE functions family (for elliptic curves over field of small characteristic>3)
+BA 77- PARI functions Flxq_sqrt, FpXQ_sqrt
+   78- bernpol() function
+   79- sumformal() function
+BA 80- PARI functions ZX_equal1, zvV_equal, ZXV_equal, FpXX_neg, FqX_neg
+BA 81- FpXQE functions family (for elliptic curves over field of large characteristic)
+BA 82- added GP function ellcard
+BA 83- PARI functions FpXQ_powu, Fq_powu, FpXX_mulu, Fq_mulu, Fq_div
+BA 84- PARI functions FqXQ_powers, FqXQ_matrix_pow, FqX_mulu, FqX_Fq_add
+BA 85- PARI functions FqXY_eval, FqXY_evalx, FpXY_Fq_evaly
+BA 86- SEA over non-prime finite field (for char p > 1000)
+LGr87- Add clock_gettime timer option
+   88- add new error type e_DOMAIN
+BA 89- Add black box finite fields for generic linear algebra
+BA 90- PARI functions FlxqM_image, FlxqM_ker, FqM_deplin
+BA 91- GP function ellneg
+BA 92- PARI functions Fp_ellcard, FpXQ_ellcard, Flxq_ellcard
+LGr93- vecmax / vecmin: add optional pointer argument (to hold index of a
+       largest/smallest entry)
+   94- printsep() function
+CG 95- isprimepower() function
+   96- PARI functions F2v_to_F2x, F2x_valrem, F2x_deflate, F2x_shift
+   97- PARI function RgV_polint
+BA 98- GP function digits
+   99- GP default 'sopath' [ rewritten from initial patch by GTo ]
+LGr100- allow polylog(n, t_SER) around a != 0
+BA 101- PARI functions ZX_shifti, ZX_remi2n, ZXV_remi2n
+   102- PARI functions cxexp1, mpsincos1
+BA 103- GP function ellfromj
+   103- GP function forcomposite
+   104- new error class e_PRIORITY [ pari_err() ]
+BA 105- Add black box algebra for Brent and Kung algorithm
+   106- PARI function RgM_dimensions()
+BA 107- PARI functions RgX_splitting(), Flx_splitting()
+   108- made public the CATCH / TRY interface, renamed pari_CATCH / pari_TRY
+        PARI functions err_get_num(), err_get_compo(), pari_err_last()
+   109- PARI function stack_sprintf()
+   110- PARI function RgX_is_QX()
+BA 111- PARI functions retmkmat2,retmkcol2,mkmat2,mkcol2,mkcols,mkcol2s et al.
+BA 112- PARI functions ZXV_dotproduct(), ZXX_Z_divexact()
+BA 113- PARI function gen_ZpX_Newton()
+   114- optional argument to contfracpnqn: return all convergents up to
+        p_n/q_n, not only the last 2
+BA 115- PARI functions Flxq_autpow, F2xq_autpow
+BA 116- PARI functions FpX_divrem_Barrett and unconditional FpX_rem_Barrett
+BA 117- PARI functions F2xq_sqrt_fast, Flxq_lroot, Flxq_lroot_fast
+BA 118- PARI functions FlxqV_dotproduct, FlxV_red
+BA 119- PARI functions ZpXQ_inv, ZpXQ_invlift, ZpXQ_log
+   120- PARI functions absi_shallow, mpabs_shallow, absfrac_shallow,
+        Q_abs_shallow
+BA 121- PARI functions FlxX_Flx_add, FlxX_Fl_mul, FlxX_Flx_mul, FlxX_neg
+BA 122- PARI functions Fp_ellj, FpXQ_ellj, Flxq_ellj
+BA 123- PARI functions FpX_mulu, Flx_mulu, ZX_mulu
+BA 124- PARI functions FlxqXQV_autpow, FlxqXQV_autsum
+BA 125- PARI functions FpXQXQV_autpow, FpXQXQV_autsum
+BA 126- PARI functions FpXT_red, FlxT_red, ZXT_to_FlxT, ZXT_remi2n
+BA 127- Support for preconditionned reduction in FpXQ/Flxq
+   128- PARI functions padic_to_Q, padic_to_Q_shallow, QpV_to_QV, Q_pvalrem,
+        ZX_Zp_root, Zp_appr, Fp_muls, retmkfrac
+BA 129- Add safegel et al. for GP2C -C option
+HC 130- Function sqrtnint
+   131- sumdivmult() to sum multiplicative functions
+   132- ?? online help: allow searching labels, e.g. ??"se:priority"@
+   133- PARI function ZpM_echelon, zlm_echelon
+   134- GP functions matqr and mathouseholder, PARI functions QR_init,
+        QgM_QR_init, gaussred_from_QR, R_from_QR, gtomp, RgC_gtomp, RgM_gtomp
+   135- PARI functions trivial_fact, prime_fact
+   136- PARI function rfrac_to_ser
+   137- PARI functions padic_lindep, Xadic_lindep
+   138- GP function seralgdep
+BA 139- arm, mips and mips64 level0 inline assembly kernel
+   140- new error class e_COMPONENT
+   141- PARI functions init_primepointer_geq, init_primepointer_gt,
+        init_primepointer_leq, init_primepointer_lt
+BA 142- new default strictargs for mandatory arguments
+   143- GP function nfcertify
+   144- GP function ellchangepointinv
+   145- optional 'variable' argument to polresultantext()
+   146- export part of the ifac_* interface (ifact_start, ifact_next,
+        ifac_read, ifac_skip, ifac_isprime)
+   147- PARI function expIxy
+   148- poor man's graphic engine 'plotps' (Configure --graphic=ps) when
+        no graphic library is available; dumps the hi-res plot to a temporary
+        PostScript file, then opens a PostScript viewer ('open -W' by default,
+        $GP_POSTSCRIPT_VIEWER otherwise). Works around #1354 on OS/X.
+PMo149- GP function lambertw / library functions mplambertW, glambertW
+
+  Removed
+    1- dropped DOS support
+    2- qfrep(): bit 2 of flag is now meaningless, we now always return a
+       t_VECSMALL
+    3- file language/errmsg.c and global errmessage[] array: all error
+       messages are now part of pari_err_display())
+    4- error types arither1,mattype1,notpoler (merged with typeer), matinv1
+       (merged with gdiver)
+    5- legacy lindep and PSLQ implementations [algdep/lindep with
+       negative flags]: now use LLL in all cases.
+BA  6- [libpari] removed unusable functions dbg_close/dbg_release.
+    7- [libpari] gisfundamental, gkronecker, gbigomega, geulerphi,
+       gissquarefree, gmoebius, gnextprime, gnumbdiv, gomega, gprecprime,
+       gsumdiv, gdumdivk, znprimroot0
+    8- ellsigma: flags 3 and 4 [ inefficient algorithm using the product
+       formula ]
+    9- Member function 'w' (this is technical, and no longer needed:-)
+   10- obsolete function weipell(). Use ellwpseries()
+   11- [libpari] obsolete function Polred. Use polredbest
+   12- old logo misc/pari.xpm, see http://pari.math.u-bordeaux1.fr/logo.html

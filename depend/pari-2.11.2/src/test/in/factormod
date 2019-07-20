@@ -1,0 +1,59 @@
+print(lift(factorcantor(x^1024+1,12289)))
+check(P,p)=
+{
+  my(F=factormod(P,p));
+  my(G=factorcantor(P,p));
+  if(F!=G || factorback(F)!=P,error(P));
+  F[,1]=apply(poldegree,F[,1]);
+  F~;
+}
+setrand(4); check(y^3-3*y-1,2238004061)
+\\#1451
+check(x^31+x^30+x^29+x^28+x^26+x^24+x^23+x^21+x^16+x^15+x^14+x^11+x^10+x^9+x^8+x^7+x^3+x^2+x,2)
+localbitprec(1000);check(Polrev(binary(round(Pi*2^1000))),2)
+
+polrootsmod(x^16-1,41)
+polrootsmod(x^5+x^2-4*x+2,5)
+polrootsmod(Pol(1),2)
+factorcantor(x^3+x,2)
+factormod(Pol(0),2)
+factormod(Pol(0),2,1)
+factormod(Pol(1),2)
+factormod(Pol(1),2,1)
+f=(x^2+x+1)*(x^3+x);
+factormod(f,2,1)
+factormodSQF(f,2)
+factormodDDF(x^4+x,2)
+polrootsmod(x^5+4*x^4+2*x^3+x^2+4*x+2,7)
+
+p=2^64+13;
+polrootsmod(Pol(1),p)
+polrootsmod(x,p)
+polrootsmod(2*x+1,p)
+factormod(x^2+1,p)
+factormod(x^2+1,p,1)
+factormod(x^2+3,p,1)
+factormod(x^4+1,p)
+factormod(x^4+1,p,1)
+factormod(x^4+3,p,1)
+
+factorcantor(x^2+1,p)
+factorcantor(Pol(0),p)
+factorcantor(Pol(1),p)
+factormodSQF(Pol(1),p)
+factormodDDF(Pol(1),p)
+
+polisirreducible((x^2+x+1)*Mod(1,2))
+polisirreducible((x^2+1)*Mod(1,p))
+polisirreducible(Mod(x^4+x^2+x,2)) \\#2037
+
+factormod((x+1)^2, 10^20+39)
+
+\\ errors, keep at end of file
+polrootsmod(x^3-1, 2^101-1)
+polrootsmod(x^10-1, 1023)
+polrootsmod(Pol(0),p)
+polrootsmod(Pol(0),2)
+factormod(x,0)
+factormod(x^3+1,[y^2+1,2])
+factormod(x^3+1,[y^2+1,5])

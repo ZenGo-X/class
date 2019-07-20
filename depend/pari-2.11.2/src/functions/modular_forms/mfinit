@@ -1,0 +1,58 @@
+Function: mfinit
+Section: modular_forms
+C-Name: mfinit
+Prototype: GD4,L,
+Help: mfinit(NK,{space=4}): Create the space of modular forms corresponding
+ to the data contained in NK and space. NK is a vector which can be
+ either [N,k] (N level, k weight) corresponding to a subspace of M_k(G_0(N)),
+ or [N,k,CHI] (CHI a character) corresponding to a subspace of M_k(G_0(N),chi).
+ The subspace is described by a small integer 'space': 0 for the newspace,
+ 1 for the cuspidal space, 2 for the oldspace, 3 for the space of Eisenstein
+ series and 4 (default) for the full space M_k
+Doc: Create the space of modular forms corresponding to the data contained in
+ \kbd{NK} and \kbd{space}. \kbd{NK} is a vector which can be
+ either $[N,k]$ ($N$ level, $k$ weight) corresponding to a subspace of
+ $M_k(\Gamma_0(N))$, or $[N,k,\var{CHI}]$ (\var{CHI} a character)
+ corresponding to a subspace of $M_k(\Gamma_0(N),\chi)$. Alternatively,
+ it can be a modular form $F$ or modular form space, in which case we use
+ \kbd{mfparams} to define the space parameters.
+
+ The subspace is described by the small integer \kbd{space}: $0$ for the
+ newspace $S_k^{\text{new}}(\Gamma_0(N),\chi)$, $1$ for the cuspidal
+ space $S_k$, $2$ for the oldspace $S_k^{\text{old}}$, $3$ for the space of
+ Eisenstein series $E_k$ and $4$ for the full space $M_k$.
+
+ \misctitle{Wildcards} For given level and weight, it is advantageous to
+ compute simultaneously spaces attached to different Galois orbits
+ of characters, especially in weight $1$. The parameter \var{CHI} may be set
+ to 0 (wildcard), in which case we return a vector of all \kbd{mfinit}(s) of
+ non trivial spaces in $S_k(\Gamma_1(N))$, one for each Galois orbit
+ (see \kbd{znchargalois}). One may also set \var{CHI} to a vector of
+ characters and we return a vector of all mfinits of subspaces of
+ $M_k(G_0(N),\chi)$ for $\chi$ in the list, in the same order. In weight $1$,
+ only $S_1^{\text{new}}$, $S_1$ and $E_1$ support wildcards.
+
+ The output is a technical structure $S$, or a vector of structures if
+ \var{CHI} was a wildcard, which contains the following information:
+ $[N,k,\chi]$ is given by \kbd{mfparams}$(S)$, the space
+ dimension is \kbd{mfdim}$(S)$ and a $\C$-basis for the space is
+ \kbd{mfbasis}$(S)$. The structure is entirely algebraic and does not depend
+ on the current \kbd{realbitprecision}.
+ \bprog
+ ? S = mfinit([36,2], 0); \\ new space
+ ? mfdim(S)
+ %2 = 1
+ ? mfparams
+ %3 = [36, 2, 1, y]  \\ trivial character
+ ? f = mfbasis(S)[1]; mfcoefs(f,10)
+ %4 = [0, 1, 0, 0, 0, 0, 0, -4, 0, 0, 0]
+
+ ? vS = mfinit([36,2,0],0); \\ with wildcard
+ ? #vS
+ %6 = 4   \\ 4 non trivial spaces (mod Galois action)
+ ? apply(mfdim,vS)
+ %7 = [1, 2, 1, 4]
+ ? mfdim([36,2,0], 0)
+ %8 = [[1, Mod(1, 36), 1, 0], [2, Mod(35, 36), 2, 0], [3, Mod(13, 36), 1, 0],
+       [6, Mod(11, 36), 4, 0]]
+ @eprog

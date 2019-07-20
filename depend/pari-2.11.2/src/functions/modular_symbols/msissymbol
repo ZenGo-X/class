@@ -1,0 +1,30 @@
+Function: msissymbol
+Section: modular_symbols
+C-Name: msissymbol
+Prototype: GG
+Help: msissymbol(M,s): M being a full modular symbol space, as given by msinit,
+ check whether s is a modular symbol attached to M.
+Doc:
+ $M$ being a full modular symbol space, as given by \kbd{msinit},
+ check whether $s$ is a modular symbol attached to $M$. If $A$ is a matrix,
+ check whether its columns represent modular symbols and return a $0-1$
+ vector.
+ \bprog
+ ? M = msinit(7,8, 1); \\ M_8(Gamma_0(7))^+
+ ? A = msnew(M)[1];
+ ? s = A[,1];
+ ? msissymbol(M, s)
+ %4 = 1
+ ? msissymbol(M, A)
+ %5 = [1, 1, 1]
+ ? S = mseval(M,s);
+ ? msissymbol(M, S)
+ %7 = 1
+ ? [g,R] = mspathgens(M); g
+ %8 = [[+oo, 0], [0, 1/2], [1/2, 1]]
+ ? #R  \\ 3 relations among the generators g_i
+ %9 = 3
+ ? T = S; T[3]++; \\ randomly perturb S(g_3)
+ ? msissymbol(M, T)
+ %11 = 0  \\ no longer satisfies the relations
+ @eprog

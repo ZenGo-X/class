@@ -1,0 +1,13 @@
+Function: _def_histsize
+Class: default
+Section: default
+C-Name: sd_histsize
+Prototype:
+Help:
+Doc: \kbd{gp} keeps a history of the last
+ \kbd{histsize} results computed so far, which you can recover using the
+ \kbd{\%} notation (see \secref{se:history}). When this number is exceeded,
+ the oldest values are erased. Tampering with this default is the only way to
+ get rid of the ones you do not need anymore.
+
+ The default value is \kbd{5000}.

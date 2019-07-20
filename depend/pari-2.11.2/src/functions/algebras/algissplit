@@ -1,0 +1,28 @@
+Function: algissplit
+Section: algebras
+C-Name: algissplit
+Prototype: iGDG
+Help: algissplit(al,{pl}): tests whether the central simple algebra al is
+ split, i.e. isomorphic to a matrix ring over its center. If pl is set, it
+ should be a prime ideal of the center or an integer between 1 and r1+r2, and in
+ that case tests whether al is locally split at the place pl instead.
+Doc: Given a central simple algebra \var{al} output by \tet{alginit}, tests
+ whether~\var{al} is split, i.e. isomorphic to a matrix algebra over its center.
+ If \var{pl} is set, it should be a prime ideal of~$K$ or an integer between~$1$
+ and~$r_1+r_2$, and in that case tests whether \var{al} is locally split at the
+ place \var{pl} instead.
+
+ \bprog
+ ? nf = nfinit(y^2-5);
+ ? A = alginit(nf, [-1,y]);
+ ? algissplit(A, 1)
+ %3 = 0
+ ? algissplit(A, 2)
+ %4 = 1
+ ? algissplit(A, idealprimedec(nf,2)[1])
+ %5 = 0
+ ? algissplit(A, idealprimedec(nf,5)[1])
+ %6 = 1
+ ? algissplit(A)
+ %7 = 0
+ @eprog

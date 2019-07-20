@@ -1,0 +1,16 @@
+Function: eulerphi
+Section: number_theoretical
+C-Name: eulerphi
+Prototype: G
+Help: eulerphi(x): Euler's totient function of x.
+Description:
+ (gen):int        eulerphi($1)
+Doc: Euler's $\phi$ (totient)\sidx{Euler totient function} function of the
+ integer $|x|$, in other words $|(\Z/x\Z)^*|$.
+ \bprog
+ ? eulerphi(40)
+ %1 = 16
+ @eprog\noindent
+ According to this definition we let $\phi(0) := 2$, since $\Z^* = \{-1,1\}$;
+ this is consistent with \kbd{znstar(0)}: we have
+ \kbd{znstar$(n)$.no = eulerphi(n)} for all $n\in\Z$.

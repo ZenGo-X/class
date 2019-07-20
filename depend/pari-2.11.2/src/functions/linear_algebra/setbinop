@@ -1,0 +1,18 @@
+Function: setbinop
+Section: linear_algebra
+C-Name: setbinop
+Prototype: GGDG
+Help: setbinop(f,X,{Y}): the set {f(x,y), x in X, y in Y}. If Y is omitted,
+ assume that X = Y and that f is symmetric.
+Doc: the set whose elements are the f(x,y), where x,y run through X,Y.
+ respectively. If $Y$ is omitted, assume that $X = Y$ and that $f$ is symmetric:
+ $f(x,y) = f(y,x)$ for all $x,y$ in $X$.
+ \bprog
+ ? X = [1,2,3]; Y = [2,3,4];
+ ? setbinop((x,y)->x+y, X,Y) \\ set X + Y
+ %2 = [3, 4, 5, 6, 7]
+ ? setbinop((x,y)->x-y, X,Y) \\ set X - Y
+ %3 = [-3, -2, -1, 0, 1]
+ ? setbinop((x,y)->x+y, X)   \\ set 2X = X + X
+ %2 = [2, 3, 4, 5, 6]
+ @eprog

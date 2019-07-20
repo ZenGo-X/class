@@ -1,0 +1,14 @@
+Function: ellidentify
+Section: elliptic_curves
+C-Name: ellidentify
+Prototype: G
+Help: ellidentify(E): look up the elliptic curve E in the elldata database and
+ return [[N, M, ...], C] where N is the name of the curve in Cremona's
+ database, M the minimal model and C the coordinates change (see
+ ellchangecurve).
+Doc: look up the elliptic curve $E$, defined by an arbitrary model over $\Q$,
+ in the \tet{elldata} database.
+ Return \kbd{[[N, M, G], C]}  where $N$ is the curve name in Cremona's
+ elliptic curve database, $M$ is the minimal model, $G$ is a $\Z$-basis of
+ the free part of the \idx{Mordell-Weil group} $E(\Q)$ and $C$ is the
+ change of coordinates change, suitable for \kbd{ellchangecurve}.

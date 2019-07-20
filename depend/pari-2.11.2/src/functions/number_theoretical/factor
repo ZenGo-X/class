@@ -1,0 +1,339 @@
+Function: factor
+Section: number_theoretical
+C-Name: factor0
+Prototype: GDG
+Help: factor(x,{D}): factorization of x over domain D. If x and D are both
+ integers, return partial factorization, using primes < D.
+Description:
+ (int):vec             Z_factor($1)
+ (int,):vec            Z_factor($1)
+ (int,small):vec       Z_factor_limit($1, $2)
+ (gen):vec             factor($1)
+ (gen,):vec            factor($1)
+ (gen,gen):vec         factor0($1, $2)
+Doc: factor $x$ over domain $D$; if $D$ is omitted, it is determined from $x$.
+ For instance, if $x$ is an integer, it is factored in $\Z$, if it is a
+ polynomial with rational coefficients, it is factored in $\Q[x]$, etc., see
+ below for details. The result is a two-column matrix: the first contains the
+ irreducibles dividing $x$ (rational or Gaussian primes, irreducible
+ polynomials), and the second the exponents. By convention, $0$ is factored
+ as $0^1$.
+
+ \misctitle{$x \in \Q$}
+ See \tet{factorint} for the algorithms used. The factorization includes the
+ unit $-1$ when $x < 0$ and all other factors are positive; a denominator is
+ factored with negative exponents. The factors are sorted in increasing order.
+ \bprog
+ ? factor(-7/106)
+ %1 =
+ [-1  1]
+
+ [ 2 -1]
+
+ [ 7  1]
+
+ [53 -1]
+ @eprog\noindent By convention, $1$ is factored as \kbd{matrix(0,2)}
+ (the empty factorization, printed as \kbd{[;]}).
+
+ Large rational ``primes'' $ > 2^{64}$ in the factorization are in fact
+ \var{pseudoprimes} (see \kbd{ispseudoprime}), a priori not rigorously proven
+ primes. Use \kbd{isprime} to prove primality of these factors, as in
+ \bprog
+ ? fa = factor(2^2^7 + 1)
+ %1 =
+ [59649589127497217 1]
+
+ [5704689200685129054721 1]
+
+ ? isprime( fa[,1] )
+ %2 = [1, 1]~   \\ both entries are proven primes
+ @eprog\noindent
+ Another possibility is to globally set the default \tet{factor_proven}, which
+ will perform a rigorous primality proof for each pseudoprime factor but will
+ slow down PARI.
+
+ A \typ{INT} argument $D$ can be added, meaning that we look only for
+ prime factors $p < D$. The limit $D$ must be non-negative.
+ In this case, all but the last factor are proven primes, but the remaining
+ factor may actually be a proven composite! If the remaining factor is less
+ than $D^2$, then it is prime.
+ \bprog
+ ? factor(2^2^7 +1, 10^5)
+ %3 =
+ [340282366920938463463374607431768211457 1]
+ @eprog\noindent
+ \misctitle{Deprecated feature} Setting $D=0$ is the same
+ as setting it to $\kbd{primelimit} + 1$.
+ \smallskip
+
+ This routine uses trial division and perfect power tests, and should not be
+ used for huge values of $D$ (at most $10^9$, say):
+ \kbd{factorint(, 1 + 8)} will in general be faster. The latter does not
+ guarantee that all small prime factors are found, but it also finds larger
+ factors and in a more efficient way.
+ \bprog
+ ? F = (2^2^7 + 1) * 1009 * (10^5+3); factor(F, 10^5)  \\ fast, incomplete
+ time = 0 ms.
+ %4 =
+ [1009 1]
+
+ [34029257539194609161727850866999116450334371 1]
+
+ ? factor(F, 10^9)    \\ slow
+ time = 3,260 ms.
+ %6 =
+ [1009 1]
+
+ [100003 1]
+
+ [340282366920938463463374607431768211457 1]
+
+ ? factorint(F, 1+8)  \\ much faster and all small primes were found
+ time = 8 ms.
+ %7 =
+ [1009 1]
+
+ [100003 1]
+
+ [340282366920938463463374607431768211457 1]
+
+ ? factor(F)   \\ complete factorization
+ time = 60 ms.
+ %8 =
+ [1009 1]
+
+ [100003 1]
+
+ [59649589127497217 1]
+
+ [5704689200685129054721 1]
+ @eprog\noindent
+
+ Setting $D = I$ will factor in the Gaussian integers
+ $\Z[i]$:
+
+ \misctitle{$x \in \Q(i)$} The factorization is performed with Gaussian
+ primes in $\Z[i]$ and includes Gaussian units in $\{\pm1, \pm i\}$;
+ factors are sorted by increasing norm. Except for a possible leading unit,
+ the Gaussian factors are normalized: rational factors are positive and
+ irrational factors have positive imaginary part (a canonical represneta.
+
+ Unless \tet{factor_proven} is set, large factors are actually pseudoprimes,
+ not proven primes; a rational factor is prime if less than $2^{64}$ and an
+ irrational one if its norm is less than $2^{64}$.
+ \bprog
+ ? factor(5*I)
+ %1 =
+ [  2 + I 1]
+
+ [1 + 2*I 1]
+ @eprog\noindent One can force the factorization of a rational number
+ by setting the domain $D = I$:
+ \bprog
+ ? factor(-5, I)
+ %2 =
+ [      I 1]
+
+ [  2 + I 1]
+
+ [1 + 2*I 1]
+ ? factorback(%)
+ %3 = -5
+ @eprog
+
+ \misctitle{Univariate polynomials and rational functions}
+ PARI can factor univariate polynomials in $K[t]$. The following base fields
+ $K$ are currently supported: $\Q$, $\R$, $\C$, $\Q_p$, finite fields and
+ number fields. See \tet{factormod} and \tet{factorff} for the algorithms used
+ over finite fields and \tet{nffactor} for the algorithms over number fields.
+ The irreducible factors are sorted by increasing degree and normalized: they
+ are monic except when $K = \Q$ where they are primitive in $\Z[t]$.
+
+ The content is \emph{not} included in the factorization, in particular
+ \kbd{factorback} will in general recover the original $x$ only up to
+ multiplication by an element of $K^*$: when $K\neq\Q$, this scalar is
+ \kbd{pollead}$(x)$ (since irreducible factors are monic); and when $K = \Q$
+ you can either ask for the $\Q$-content explicitly of use factorback:
+ \bprog
+ ? P = t^2 + 5*t/2 + 1; F = factor(P)
+ %1 =
+ [t + 2 1]
+
+ [2*t + 1 1]
+
+ ? content(P, 1) \\ Q-content
+ %2 = 1/2
+
+ ? pollead(factorback(F)) / pollead(P)
+ %3 = 2
+ @eprog
+
+ You can specify $K$ using the optional ``domain'' argument $D$ as follows
+
+ \item $K = \Q$ : $D$ a rational number (\typ{INT} or \typ{FRAC}),
+
+ \item $K = \Z/p\Z$ with $p$ prime : $D$ a \typ{INTMOD} modulo $p$;
+ factoring modulo a non-prime number is not supported.
+
+ \item $K = \F_q$ : $D$ a \typ{FFELT} encoding the finite field; you can also
+ use a \typ{POLMOD} of \typ{INTMOD} modulo a prime $p$ but this is usualy
+ less convenient;
+
+ \item $K = \Q[X]/(T)$ a number field : $D$ a \typ{POLMOD} modulo $T$,
+
+ \item $K = \Q(i)$ (alternate syntax for special case): $D = I$,
+
+ \item $K = \Q(w)$ a quadratic number field (alternate syntax for special
+ case): $D$ a \typ{QUAD},
+
+ \item $K = \R$ : $D$ a real number (\typ{REAL}); truncate the factorization
+ at accuracy \kbd{precision}$(D)$. If $x$ is inexact and \kbd{precision}$(x)$
+ is less than \kbd{precision}$(D)$, then the precision of $x$ is used instead.
+
+ \item $K = \C$ : $D$ a complex number with a \typ{REAL} component, e.g.
+ \kbd{I * 1.}; truncate the factorization as for $K = \R$,
+
+ \item $K = \Q_p$ : $D$ a \typ{PADIC}; truncate the factorization at
+ $p$-adic accuracy \kbd{padicprec}$(D)$, possibly less if $x$ is inexact
+ with insufficient $p$-adic accuracy;
+
+ \bprog
+ ? T = x^2+1;
+ ? factor(T, 1);                      \\ over Q
+ ? factor(T, Mod(1,3))                \\ over F_3
+ ? factor(T, ffgen(ffinit(3,2,'t))^0) \\ over F_{3^2}
+ ? factor(T, Mod(Mod(1,3), t^2+t+2))  \\ over F_{3^2}, again
+ ? factor(T, O(3^6))                  \\ over Q_3, precision 6
+ ? factor(T, 1.)                      \\ over R, current precision
+ ? factor(T, I*1.)                    \\ over C
+ ? factor(T, Mod(1, y^3-2))           \\ over Q(2^{1/3})
+ @eprog\noindent In most cases, it is possible and simpler to call a
+ specialized variant rather than use the above scheme:
+ \bprog
+ ? factormod(T, 3)              \\ over F_3
+ ? factormod(T, [t^2+t+2, 3])   \\ over F_{3^2}
+ ? factormod(T, ffgen(3^2, 't)) \\ over F_{3^2}
+ ? factorpadic(T, 3,6)          \\ over Q_3, precision 6
+ ? nffactor(y^3-2, T)           \\ over Q(2^{1/3})
+ ? polroots(T)                  \\ over C
+ ? polrootsreal(T)              \\ over R (real polynomial)
+ @eprog
+
+ It is also possible to let the routine use the smallest field containing all
+ coefficients, taking into account quotient structures induced by
+ \typ{INTMOD}s and \typ{POLMOD}s (e.g.~if a coefficient in $\Z/n\Z$ is known,
+ all rational numbers encountered are first mapped to $\Z/n\Z$; different
+ moduli will produce an error):
+ \bprog
+ ? T = x^2+1;
+ ? factor(T);                         \\ over Q
+ ? factor(T*Mod(1,3))                 \\ over F_3
+ ? factor(T*ffgen(ffinit(3,2,'t))^0)  \\ over F_{3^2}
+ ? factor(T*Mod(Mod(1,3), t^2+t+2))   \\ over F_{3^2}, again
+ ? factor(T*(1 + O(3^6))              \\ over Q_3, precision 6
+ ? factor(T*1.)                       \\ over R, current precision
+ ? factor(T*(1.+0.*I))                \\ over C
+ ? factor(T*Mod(1, y^3-2))            \\ over Q(2^{1/3})
+ @eprog\noindent Multiplying by a suitable field element equal to $1 \in K$
+ in this way is error-prone and is not recommanded. Factoring existing
+ polynomials with obvious fields of coefficients is fine, the domain
+ argument $D$ should be used instead ad hoc conversions.
+
+ \misctitle{Note on inexact polynomials}
+ Polynomials with inexact coefficients
+ (e.g. floating point or $p$-adic numbers)
+ are first rounded to an exact representation, then factored to (potentially)
+ infinite accuracy and we return a truncated approximation of that
+ virtual factorization. To avoid pitfalls, we advise to only factor
+ \emph{exact} polynomials:
+ \bprog
+ ? factor(x^2-1+O(2^2)) \\ rounded to x^2 + 3, irreducible in Q_2
+ %1 =
+ [(1 + O(2^2))*x^2 + O(2^2)*x + (1 + 2 + O(2^2)) 1]
+
+ ? factor(x^2-1+O(2^3)) \\ rounded to x^2 + 7, reducible !
+ %2 =
+ [  (1 + O(2^3))*x + (1 + 2 + O(2^3)) 1]
+
+ [(1 + O(2^3))*x + (1 + 2^2 + O(2^3)) 1]
+
+ ? factor(x^2-1, O(2^2)) \\ no ambiguity now
+ %3 =
+ [    (1 + O(2^2))*x + (1 + O(2^2)) 1]
+
+ [(1 + O(2^2))*x + (1 + 2 + O(2^2)) 1]
+ @eprog
+
+ \misctitle{Note about inseparable polynomials} Polynomials with inexact
+ coefficients are considered to be squarefree: indeed, there exist a
+ squarefree polynomial arbitrarily close to the input, and they cannot be
+ distinguished at the input accuracy. This means that irreducible factors are
+ repeated according to their apparent multiplicity. On the contrary, using a
+ specialized function such as \kbd{factorpadic} with an \emph{exact} rational
+ input yields the correct multiplicity when the (now exact) input is not
+ separable. Compare:
+ \bprog
+ ? factor(z^2 + O(5^2)))
+ %1 =
+ [(1 + O(5^2))*z + O(5^2) 1]
+
+ [(1 + O(5^2))*z + O(5^2) 1]
+ ? factor(z^2, O(5^2))
+ %2 =
+ [1 + O(5^2))*z + O(5^2) 2]
+ @eprog
+
+ \misctitle{Multivariate polynomials and rational functions}
+ PARI recursively factors \emph{multivariate} polynomials in
+ $K[t_1,\dots, t_d]$ for the same fields $K$ as above and the argument $D$
+ is used in the same way to specify $K$. The irreducible factors are sorted
+ by their main variable (least priority first) then by increasing degree.
+
+ \bprog
+ ? factor(x^2 + y^2, Mod(1,5))
+ %1 =
+ [          x + Mod(2, 5)*y 1]
+
+ [Mod(1, 5)*x + Mod(3, 5)*y 1]
+
+ ? factor(x^2 + y^2, O(5^2))
+ %2 =
+ [  (1 + O(5^2))*x + (O(5^2)*y^2 + (2 + 5 + O(5^2))*y + O(5^2)) 1]
+
+ [(1 + O(5^2))*x + (O(5^2)*y^2 + (3 + 3*5 + O(5^2))*y + O(5^2)) 1]
+
+ ? lift(%)
+ %3 =
+ [ x + 7*y 1]
+
+ [x + 18*y 1]
+ @eprog\noindent Note that the implementation does not really support inexact
+ real fields ($\R$ or $\C$) and usually misses factors even if the input
+ is exact:
+ \bprog
+ ? factor(x^2 + y^2, I)  \\ over Q(i)
+ %4 =
+ [x - I*y 1]
+
+ [x + I*y 1]
+
+ ? factor(x^2 + y^2, I*1.) \\ over C
+ %5 =
+ [x^2 + y^2 1]
+ @eprog
+Variant:
+ \fun{GEN}{factor}{GEN x}
+ \fun{GEN}{boundfact}{GEN x, ulong lim}.
+
+Function: _factor_Aurifeuille
+Section: programming/internals
+C-Name: factor_Aurifeuille
+Prototype: GL
+Help: _factor_Aurifeuille(a,d): return an algebraic factor of Phi_d(a), a != 0
+
+Function: _factor_Aurifeuille_prime
+Section: programming/internals
+C-Name: factor_Aurifeuille_prime
+Prototype: GL
+Help: _factor_Aurifeuille_prime(p,d): return an algebraic factor of Phi_d(p), p prime

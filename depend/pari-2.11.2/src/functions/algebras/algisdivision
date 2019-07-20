@@ -1,0 +1,28 @@
+Function: algisdivision
+Section: algebras
+C-Name: algisdivision
+Prototype: iGDG
+Help: algisdivision(al,{pl}): tests whether the central simple algebra al is a
+ division algebra. If pl is set, it should be a prime ideal of the center or an
+ integer between 1 and r1+r2, and in that case tests whether al is locally a
+ division algebra at the place pl instead.
+Doc: Given a central simple algebra \var{al} output by \tet{alginit}, tests
+ whether \var{al} is a division algebra. If \var{pl} is set, it should be a
+ prime ideal of~$K$ or an integer between~$1$ and~$r_1+r_2$, and in that case
+ tests whether \var{al} is locally a division algebra at the place \var{pl}
+ instead.
+
+ \bprog
+ ? nf = nfinit(y^2-5);
+ ? A = alginit(nf, [-1,y]);
+ ? algisdivision(A, 1)
+ %3 = 1
+ ? algisdivision(A, 2)
+ %4 = 0
+ ? algisdivision(A, idealprimedec(nf,2)[1])
+ %5 = 1
+ ? algisdivision(A, idealprimedec(nf,5)[1])
+ %6 = 0
+ ? algisdivision(A)
+ %7 = 1
+ @eprog

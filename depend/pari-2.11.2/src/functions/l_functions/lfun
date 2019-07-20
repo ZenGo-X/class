@@ -1,0 +1,47 @@
+Function: lfun
+Section: l_functions
+C-Name: lfun0
+Prototype: GGD0,L,b
+Help: lfun(L,s,{D=0}): compute the L-function value L(s), or
+ if D is set, the derivative of order D at s. L is either an
+ Lmath, an Ldata or an Linit.
+Description:
+ (gen,gen):gen:prec       lfun($1, $2, $bitprec)
+ (gen,gen,?0):gen:prec    lfun($1, $2, $bitprec)
+ (gen,gen,small):gen:prec lfun0($1, $2, $3, $bitprec)
+Doc: compute the L-function value $L(s)$, or if \kbd{D} is set, the
+ derivative of order \kbd{D} at $s$. The parameter
+ \kbd{L} is either an Lmath, an Ldata (created by \kbd{lfuncreate}, or an
+ Linit (created by \kbd{lfuninit}), preferrably the latter if many values
+ are to be computed.
+
+ The argument $s$ is also allowed to be a power series; for instance, if $s =
+ \alpha + x + O(x^n)$, the function returns the Taylor expansion of order $n$
+ around $\alpha$. The result is given with absolute error less than $2^{-B}$,
+ where $B = \text{realbitprecision}$.
+
+ \misctitle{Caveat} The requested precision has a major impact on runtimes.
+ It is advised to manipulate precision via \tet{realbitprecision} as
+  explained above instead of \tet{realprecision} as the latter allows less
+ granularity: \kbd{realprecision} increases by increments of 64 bits, i.e. 19
+ decimal digits at a time.
+
+ \bprog
+ ? lfun(x^2+1, 2)  \\ Lmath: Dedekind zeta for Q(i) at 2
+ %1 = 1.5067030099229850308865650481820713960
+
+ ? L = lfuncreate(ellinit("5077a1")); \\ Ldata: Hasse-Weil zeta function
+ ? lfun(L, 1+x+O(x^4))  \\ zero of order 3 at the central point
+ %3 = 0.E-58 - 5.[...] E-40*x + 9.[...] E-40*x^2 + 1.7318[...]*x^3 + O(x^4)
+
+ \\ Linit: zeta(1/2+it), |t| < 100, and derivative
+ ? L = lfuninit(1, [100], 1);
+ ? T = lfunzeros(L, [1,25]);
+ %5 = [14.134725[...], 21.022039[...]]
+ ? z = 1/2 + I*T[1];
+ ? abs( lfun(L, z) )
+ %7 = 8.7066865533412207420780392991125136196 E-39
+ ? abs( lfun(L, z, 1) )
+ %8 = 0.79316043335650611601389756527435211412  \\ simple zero
+ @eprog
+

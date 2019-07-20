@@ -1,0 +1,46 @@
+Function: mfsymbol
+Section: modular_forms
+C-Name: mfsymbol
+Prototype: GDGb
+Help: mfsymbol(mf,f): Initialize data for working with all period
+ polynomials of the modular form f: this is essential for efficiency
+ for functions such as mfsymboleval, mfmanin, and mfpetersson. By abuse
+ of language, initialize data for working with mfpetersson in weight 1
+ or half-integral weight (where no symbol exist).
+Doc: Initialize data for working with all period polynomials of the modular
+ form $f$: this is essential for efficiency for functions such as
+ \kbd{mfsymboleval}, \kbd{mfmanin}, and \kbd{mfpetersson}. An \kbd{mfsymbol}
+ contains an \kbd{mf} structure and can always be used whenever an \kbd{mf}
+ would be needed.
+ \bprog
+ ? mf=mfinit([23,2],0);F=mfeigenbasis(mf)[1];
+ ? FS=mfsymbol(mf,F);
+ ? mfsymboleval(FS,[0,oo])
+ %3 = [8.762565143790690142 E-39 + 0.0877907874...*I,
+      -5.617375463602574564 E-39 + 0.0716801031...*I]
+ ? mfpetersson(FS)
+ %4 =
+ [0.0039488965740025031688548076498662860143 1.2789721111175127425 E-40]
+
+ [1.2630501762985554269 E-40 0.0056442542987647835101583821368582485396]
+ @eprog\noindent
+ By abuse of language, initialize data for working with \kbd{mfpetersson} in
+ weight $1$ and half-integral weight (where no symbol exist); the \kbd{mf}
+ argument may be an \kbd{mfsymbol} attached to a form on the space,
+ which avoids recomputing data independent of the form.
+ \bprog
+ ? mf=mfinit([12,9/2],1); F=mfbasis(mf);
+ ? fs=mfsymbol(mf,F[1]);
+ time = 476 ms
+ ? mfpetersson(fs)
+ %2 = 1.9722437519492014682047692073275406145 E-5
+ ? f2s = mfsymbol(mf,F[2]);
+ time = 484 ms.
+ ? mfpetersson(f2s)
+ %4 = 1.2142222531326333658647877864573002476 E-5
+ ? gs = mfsymbol(fs,F[2]); \\ re-use existing symbol, a little faster
+ time = 430 ms.
+ ? mfpetersson(gs) == %4  \\ same value
+ %6 = 1
+ @eprog For simplicity, we also allow \kbd{mfsymbol(f)} instead of
+ \kbd{mfsymbol(mfinit(f), f)}:

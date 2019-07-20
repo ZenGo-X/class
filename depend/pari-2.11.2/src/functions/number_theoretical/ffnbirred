@@ -1,0 +1,15 @@
+Function: ffnbirred
+Section: number_theoretical
+C-Name: ffnbirred0
+Prototype: GLD0,L,
+Help: ffnbirred(q,n,{fl=0}): number of monic irreducible polynomials over F_q, of
+ degree n (fl=0, default) or at most n (fl=1).
+Description:
+ (int, small, ?0):int      ffnbirred($1, $2)
+ (int, small, 1):int       ffsumnbirred($1, $2)
+ (int, small, ?small):int  ffnbirred0($1, $2, $3)
+Doc: computes the number of monic irreducible polynomials over $\F_q$ of degree exactly $n$,
+ ($\fl=0$ or omitted) or at most $n$ ($\fl=1$).
+Variant: Also available are
+  \fun{GEN}{ffnbirred}{GEN q, long n} (for $\fl=0$)
+  and \fun{GEN}{ffsumnbirred}{GEN q, long n} (for $\fl=1$).

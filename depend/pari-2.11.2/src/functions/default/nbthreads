@@ -1,0 +1,20 @@
+Function: _def_nbthreads
+Class: default
+Section: default
+C-Name: sd_nbthreads
+Prototype:
+Help:
+Doc: This default is specific to the \emph{parallel} version of PARI and gp
+ (built via \kbd{Configure --mt=prthread} or \kbd{mpi}) and is ignored
+ otherwise. In parallel mode, it governs the number of threads to use for
+ parallel computing. The exact meaning and default value depend on the
+ \kbd{mt} engine used:
+
+ \item \kbd{single}: not used (always a single thread).
+
+ \item \kbd{pthread}: number of threads (unlimited, default: number of cores)
+
+ \item \kbd{mpi}: number of MPI processes to use (limited to the number
+ allocated by \kbd{mpirun}, default: use all allocated processes).
+
+ See also \kbd{threadsize} and \kbd{threadsizemax}.

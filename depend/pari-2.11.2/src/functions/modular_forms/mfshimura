@@ -1,0 +1,51 @@
+Function: mfshimura
+Section: modular_forms
+C-Name: mfshimura
+Prototype: GGD1,L,
+Help: mfshimura(mf, F, {D = 1}): F being a modular form of
+ half-integral weight k >= 3/2 and D a (not necessarily fundamental)
+ discriminant of suitable sign, computes the Shimura lift G of weight 2k-1
+ corresponding to D. This function returns [mf2,G,v], where mf2 is a modular
+ form space containing G, and v the vector of coefficients of G on mf. By
+ extension, D can also be a positive squarefree integer.
+Doc: $F$ being a modular form of half-integral weight $k\geq 3/2$ and $D$ a
+ (not necessarily fundamental) discriminant of suitable sign, returns the
+ Shimura lift $G$ of weight $2k-1$ corresponding to $D$. The sign of $D$
+ should be equal to $(-1)^{k-1/2}\epsilon$, where $\epsilon=1$ if $\chi$ is
+ defined modulo $N/4$, $\epsilon=-1$ if $(-4/.)\chi$ is defined modulo
+ $N/4$ (and error otherwise). This function returns $[\var{mf2},G,v]$
+ where \var{mf2} is a modular form space containing $G$ and $v$ expresses $G$
+ in terms of \kbd{mfbasis}$(\var{mf2})$; so that $G$ is
+ \kbd{mflinear}$(\var{mf2},v)$. By extension, we allow $D$ to be a positive
+ squarefree integer, but in that case if $(-1)^{k-1/2}\epsilon\cdot D$ is not a
+ discriminant, the Kohnen $+$-space will in general not be sent to
+ level $N/4$ but only $N/2$.
+ \bprog
+ ? F = mfpow(mfTheta(), 7); mf = mfinit(F);
+ ? [mf2, G, v] = mfshimura(mf, F, -3); mfcoefs(G,5)
+ %2 = [-5/9, 280, 9240, 68320, 295960, 875280]
+ ? mfparams(G)
+ %3 = [1, 6, 1, y]
+ ? mfparams(mf2)
+ %4 = [2, 6, 1, 4] \\ it may happen that G has lower level than expected
+ ? v
+ %5 = [280, 0]~
+ ? mfcoefs(mf2, 5)
+ %6 =
+ [-1/504 -1/504]
+
+ [     1      0]
+
+ [    33      1]
+
+ [   244      0]
+
+ [  1057     33]
+
+ [  3126      0]
+ ? mf = mfinit([60,5/2],1); F = mflinear(mf,mfkohnenbasis(mf)[,1]);
+ ? mfparams(mfshimura(mf,F,1)[2])
+ %8 = [15, 4, 1, y]
+ ? mfparams(mfshimura(mf,F,6)[2])
+ %9 = [30, 4, 1, y]
+ @eprog

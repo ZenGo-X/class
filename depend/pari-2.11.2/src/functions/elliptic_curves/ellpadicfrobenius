@@ -1,0 +1,27 @@
+Function: ellpadicfrobenius
+Section: elliptic_curves
+C-Name: ellpadicfrobenius
+Prototype: GLL
+Help: ellpadicfrobenius(E,p,n): matrix of the Frobenius at p>2 in the standard
+ basis of H^1_dR(E) to absolute p-adic precision p^n.
+Doc: If $p>2$ is a prime and $E$ is an elliptic curve on $\Q$ with good
+ reduction at $p$, return the matrix of the Frobenius endomorphism $\varphi$ on
+ the crystalline module $D_p(E)= \Q_p \otimes H^1_{dR}(E/\Q)$ with respect to
+ the basis of the given model $(\omega, \eta=x\*\omega)$, where
+ $\omega = dx/(2\*y+a_1\*x+a_3)$ is the invariant differential.
+ The characteristic polynomial of $\varphi$ is $x^2 - a_p\*x + p$.
+ The matrix is computed to absolute $p$-adic precision $p^n$.
+
+ \bprog
+ ? E = ellinit([1,-1,1,0,0]);
+ ? F = ellpadicfrobenius(E,5,3);
+ ? lift(F)
+ %3 =
+ [120 29]
+
+ [ 55  5]
+ ? charpoly(F)
+ %4 = x^2 + O(5^3)*x + (5 + O(5^3))
+ ? ellap(E, 5)
+ %5 = 0
+ @eprog

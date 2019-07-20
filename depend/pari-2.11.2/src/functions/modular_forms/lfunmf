@@ -1,0 +1,29 @@
+Function: lfunmf
+Section: modular_forms
+C-Name: lfunmf
+Prototype: GDGb
+Help: lfunmf(mf,{F}): If F is a modular form in mf, output the L-functions
+ corresponding to its complex embeddings. If F is omitted, output the
+ L-functions corresponding to all eigenforms in the new space.
+Doc: If $F$ is a modular form in \kbd{mf}, output the L-functions
+ corresponding to its $[\Q(F):\Q(\chi)]$ complex embeddings, ready for use with
+ the \kbd{lfun} package. If $F$ is omitted, output the $L$-functions attached
+ to all eigenforms in the new space; the result is a vector whose length is
+ the number of Galois orbits of newforms. Each entry contains the vector of
+ $L$-functions corresponding to the $d$ complex embeddings of an orbit of
+ dimension $d$ over $\Q(\chi)$.
+ \bprog
+ ? mf = mfinit([35,2],0);mffields(mf)
+ %1 = [y, y^2 - y - 4]
+ ? f = mfeigenbasis(mf)[2]; mfparams(f) \\ orbit of dimension two
+ %2 = [35, 2, 1, y^2 - y - 4]
+ ? [L1,L2] = lfunmf(mf, f); \\ Two L-functions
+ ? lfun(L1,1)
+ %4 = 0.81018461849460161754947375433874745585
+ ? lfun(L2,1)
+ %5 = 0.46007635204895314548435893464149369804
+ ? [ lfun(L,1) | L <- concat(lfunmf(mf)) ]
+ %6 = [0.70291..., 0.81018..., 0.46007...]
+ @eprog\noindent The \kbd{concat} instruction concatenates the vectors
+ corresponding to the various (here two) orbits, so that we obtain the vector
+ of all the $L$-functions attached to eigenforms.

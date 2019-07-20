@@ -1,0 +1,13 @@
+Function: _def_readline
+Class: default
+Section: default
+C-Name: sd_readline
+Prototype:
+Help:
+Doc: switches readline line-editing
+ facilities on and off. This may be useful if you are running \kbd{gp} in a Sun
+ \tet{cmdtool}, which interacts badly with readline. Of course, until readline
+ is switched on again, advanced editing features like automatic completion
+ and editing history are not available.
+
+ The default value is \kbd{1}.

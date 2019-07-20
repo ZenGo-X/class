@@ -1,0 +1,51 @@
+Function: vecsearch
+Section: linear_algebra
+C-Name: vecsearch
+Prototype: lGGDG
+Help: vecsearch(v,x,{cmpf}): determines whether x belongs to the sorted
+ vector v. If the comparison function cmpf is explicitly given, assume
+ that v was sorted according to vecsort(, cmpf).
+Doc: determines whether $x$ belongs to the sorted vector or list $v$: return
+ the (positive) index where $x$ was found, or $0$ if it does not belong to
+ $v$.
+
+ If the comparison function cmpf is omitted, we assume that $v$ is sorted in
+ increasing order, according to the standard comparison function \kbd{lex},
+ thereby restricting the possible types for $x$ and the elements of $v$
+ (integers, fractions, reals, and vectors of such). We also transparently
+ allow a \typ{VECSMALL} $x$ in this case, for the natural ordering of the
+ integers.
+
+ If \kbd{cmpf} is present, it is understood as a comparison function and we
+ assume that $v$ is sorted according to it, see \tet{vecsort} for how to
+ encode comparison functions.
+ \bprog
+ ? v = [1,3,4,5,7];
+ ? vecsearch(v, 3)
+ %2 = 2
+ ? vecsearch(v, 6)
+ %3 = 0 \\ not in the list
+ ? vecsearch([7,6,5], 5) \\ unsorted vector: result undefined
+ %4 = 0
+ @eprog\noindent Note that if we are sorting with respect to a key
+ which is expensive to compute (e.g. a discriminant), one should rather
+ precompute all keys, sort that vector and search in the vector of keys,
+ rather than searching in the original vector with respect to a comparison
+ function.
+
+ By abuse of notation, $x$ is also allowed to be a matrix, seen as a vector
+ of its columns; again by abuse of notation, a \typ{VEC} is considered
+ as part of the matrix, if its transpose is one of the matrix columns.
+ \bprog
+ ? v = vecsort([3,0,2; 1,0,2]) \\ sort matrix columns according to lex order
+ %1 =
+ [0 2 3]
+
+ [0 2 1]
+ ? vecsearch(v, [3,1]~)
+ %2 = 3
+ ? vecsearch(v, [3,1])  \\ can search for x or x~
+ %3 = 3
+ ? vecsearch(v, [1,2])
+ %4 = 0 \\ not in the list
+ @eprog\noindent

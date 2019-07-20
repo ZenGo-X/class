@@ -1,0 +1,12 @@
+v = [-3,7,-2,11];
+obj = [1, v, Vecsmall(v), [-3,7;-2,11]];
+
+{
+for (i = 1, #obj,
+  my (o = obj[i], u,v);
+  vecmin(o, &u);
+  vecmax(o, &v);
+  print(i, ": ", [vecmax(o), vecmin(o), u, v]);
+)
+}
+

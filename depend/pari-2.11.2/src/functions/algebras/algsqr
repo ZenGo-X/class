@@ -1,0 +1,14 @@
+Function: algsqr
+Section: algebras
+C-Name: algsqr
+Prototype: GG
+Help: algsqr(al,x): element x^2 in al.
+Doc: Given an element $x$ in \var{al}, computes its square $x^2$ in the
+ algebra \var{al}.
+ \bprog
+ ? A = alginit(nfinit(y), [-1,-1]);
+ ? algsqr(A,[1,0,2,0]~)
+ %2 = [-3, 0, 4, 0]~
+ @eprog
+
+ Also accepts a square matrix with coefficients in \var{al}.

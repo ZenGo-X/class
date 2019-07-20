@@ -1,0 +1,57 @@
+Function: bestapprPade
+Section: number_theoretical
+C-Name: bestapprPade
+Prototype: GD-1,L,
+Help: bestapprPade(x, {B}): returns a rational function approximation to x.
+ This function applies to series, polmods, and rational functions of course.
+ Otherwise it applies recursively to all components.
+Doc: using variants of the extended Euclidean algorithm (Pad\'{e}
+ approximants), returns a rational
+ function approximation $a/b$ to $x$, whose denominator is limited
+ by $B$, if present. If $B$ is omitted, return the best approximation
+ affordable given the input accuracy; if you are looking for true rational
+ functions, presumably approximated to sufficient accuracy, you should first
+ try that option. Otherwise, $B$ must be a non-negative real
+ (impose $0 \leq \text{degree}(b) \leq B$).
+
+ \item If $x$ is a \typ{POLMOD} modulo $N$ this function performs rational
+ modular reconstruction modulo $N$. The routine then returns the unique
+ rational function $a/b$ in coprime polynomials, with $\text{degree}(b)\leq B$
+ and $\text{degree}(a)$ minimal, which is congruent to $x$ modulo $N$.
+ Omitting $B$ amounts to choosing it equal to the floor of
+ $\text{degree}(N) / 2$. If rational reconstruction is not possible (no
+ suitable $a/b$ exists), returns $[]$.
+ \bprog
+ ? T = Mod(x^3 + x^2 + x + 3, x^4 - 2);
+ ? bestapprPade(T)
+ %2 = (2*x - 1)/(x - 1)
+ ? U = Mod(1 + x + x^2 + x^3 + x^5, x^9);
+ ? bestapprPade(U)  \\ internally chooses B = 4
+ %3 = []
+ ? bestapprPade(U, 5) \\ with B = 5, a solution exists
+ %4 = (2*x^4 + x^3 - x - 1)/(-x^5 + x^3 + x^2 - 1)
+ @eprog
+
+ \item If $x$ is a \typ{SER}, we implicitly
+ convert the input to a \typ{POLMOD} modulo $N = t^k$ where $k$ is the
+ series absolute precision.
+ \bprog
+ ? T = 1 + t + t^2 + t^3 + t^4 + t^5 + t^6 + O(t^7); \\ mod t^7
+ ? bestapprPade(T)
+ %1 = 1/(-t + 1)
+ @eprog
+ \item If $x$ is a \typ{RFRAC}, we implicitly convert the input to a
+ \typ{POLMOD} modulo $N = t^k$ where $k = 2B + 1$. If $B$ was omitted,
+ we return $x$:
+ \bprog
+ ? T = (4*t^2 + 2*t + 3)/(t+1)^10;
+ ? bestapprPade(T,1)
+ %2 = [] \\ impossible
+ ? bestapprPade(T,2)
+ %3 = 27/(337*t^2 + 84*t + 9)
+ ? bestapprPade(T,3)
+ %4 = (4253*t - 3345)/(-39007*t^3 - 28519*t^2 - 8989*t - 1115)
+ @eprog\noindent
+ The function applies recursively to components of complex objects
+ (polynomials, vectors, \dots). If rational reconstruction fails for even a
+ single entry, return $[]$.

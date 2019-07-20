@@ -1,0 +1,9 @@
+Function: idealcoprime
+Section: number_fields
+C-Name: idealcoprime
+Prototype: GGG
+Help: idealcoprime(nf,x,y): gives an element b in nf such that b. x is an
+ integral ideal coprime to the integral ideal y.
+Doc: given two integral ideals $x$ and $y$
+ in the number field $\var{nf}$, returns a $\beta$ in the field,
+ such that $\beta\cdot x$ is an integral ideal coprime to $y$.

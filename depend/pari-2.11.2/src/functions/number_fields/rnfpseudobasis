@@ -1,0 +1,58 @@
+Function: rnfpseudobasis
+Section: number_fields
+C-Name: rnfpseudobasis
+Prototype: GG
+Help: rnfpseudobasis(nf,T): given an irreducible polynomial T with
+ coefficients in nf, returns [A,J,D,d] where [A,J] is a pseudo basis of the
+ maximal order of the extension, D is the relative ideal discriminant, and d
+ is the relative discriminant in nf^*/nf*^2.
+Doc: given an \var{nf} structure attached to a number field $K$, as output by
+ \kbd{nfinit}, and a monic irreducible polynomial $T$ in $K[x]$ defining a
+ relative extension $L = K[x]/(T)$, computes the relative discriminant of $L$
+ and a pseudo-basis $(A,J)$ for the maximal order $\Z_L$ viewed as a
+ $\Z_K$-module. This is output as a vector $[A,J,D,d]$, where $D$ is the
+ relative ideal discriminant and $d$ is the relative discriminant considered
+ as an element of $K^*/{K^*}^2$.
+ \bprog
+ ? K = nfinit(y^2+1);
+ ? [A,J,D,d] = rnfpseudobasis(K, x^2+y);
+ ? A
+ %3 =
+ [1 0]
+
+ [0 1]
+
+ ? J
+ %4 = [1, 1]
+ ? D
+ %5 = [0, -4]~
+ ? d
+ %6 = [0, -1]~
+ @eprog
+
+ \misctitle{Huge discriminants, helping rnfdisc} the format $[T,B]$ is
+ also accepted instead of $T$ and produce an order which is maximal at all
+ primes $p < B$, see \kbd{??rnfinit}.
+ \bprog
+ ? p = 585403248812100232206609398101;
+ ? q = 711171340236468512951957953369;
+ ? T = x^2 + 3*(p*q)^2;
+ ? [A,J,D,d] = V = rnfpseudobasis(K, T); D
+ time = 22,178 ms.
+ %10 =
+ [3 0]
+
+ [0 3]
+ ? [A,J,D,d] = W = rnfpseudobasis(K, [T,100]); D
+ time = 5 ms.
+ %11 =
+ [3 0]
+
+ [0 3]
+ ? V == W
+ %12 = 1
+ @eprog\noindent In this example, the results are identical since $D \cap \Z$
+ factors over primes less than $100$. Had it not been the case, the
+ order would have been guaranteed maximal at primes $\goth{p} | p $ for $p
+ \leq 100$ only (and might not have been maximal at any maximal ideal
+ $\goth{p}$ such that $\goth{p}^2$ dividing $D$.

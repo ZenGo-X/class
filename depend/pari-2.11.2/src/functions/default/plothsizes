@@ -1,0 +1,8 @@
+Function: _def_plothsizes
+Class: default
+Section: default
+C-Name: sd_plothsizes
+Prototype:
+Help:
+Doc: if the graphic driver allows it, the array contains the size of the
+ terminal, the size of the font, the size of the ticks.

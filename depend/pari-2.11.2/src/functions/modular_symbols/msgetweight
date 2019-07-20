@@ -1,0 +1,12 @@
+Function: msgetweight
+Section: modular_symbols
+C-Name: msgetweight
+Prototype: lG
+Help: msgetweight(M): M being a full modular symbol space, as given by msinit, return its weight k.
+Doc: $M$ being a full modular symbol space, as given by \kbd{msinit}, return
+ its weight $k$.
+ \bprog
+ ? M = msinit(11,4);
+ ? msgetweight(M)
+ %2 = 4
+ @eprog

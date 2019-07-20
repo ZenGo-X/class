@@ -1,0 +1,19 @@
+nf = nfinit(polsubcyclo(11,5));
+t = nf.zk[2];
+nfeltsign(nf, t)
+nfeltsign(nf, t, 1)
+nfeltsign(nf, t, [1..4])
+nfeltsign(nf, [1,0,0,0,0]~, [1..4])
+nfeltsign(nf, [-1/2,0,0,0,0]~, [1..4])
+nfeltsign(nf, 0, 1)
+
+nfeltsign(nf, x+950385237198502187979577282097391163977102921506573742575513/495253880608585631635195731645995689515566957889181807495428)
+
+
+nf=nfinit(a^2-2);
+for(n=1,100,if(nfeltsign(nf,Mod(a+1,a^2-2)^n)!=[(-1)^n,1],print(n)))
+
+\\ Errors
+nfeltsign(nf, a, 3)
+nfeltsign(nf, a, [-1..1])
+nfeltsign(nf, a, [1..3])

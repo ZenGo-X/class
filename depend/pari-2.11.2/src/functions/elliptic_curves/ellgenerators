@@ -1,0 +1,28 @@
+Function: ellgenerators
+Section: elliptic_curves
+C-Name: ellgenerators
+Prototype: G
+Help: ellgenerators(E): if E is an elliptic curve over the rationals,
+ return the generators of the Mordell-Weil group attached to the curve.
+ This relies on the curve being referenced in the elldata database.
+ If E is an elliptic curve over a finite field Fq as output by ellinit(),
+ return a minimal set of generators for the group E(Fq).
+Doc:
+ If $E$ is an elliptic curve over the rationals, return a $\Z$-basis of the
+ free part of the \idx{Mordell-Weil group} attached to $E$.  This relies on
+ the \tet{elldata} database being installed and referencing the curve, and so
+ is only available for curves over $\Z$ of small conductors.
+ If $E$ is an elliptic curve over a finite field $\F_q$ as output by
+ \tet{ellinit}, return a minimal set of generators for the group $E(\F_q)$.
+
+ \misctitle{Caution} when the group is not cyclic, of shape $\Z/d_1\Z \times
+ \Z/d_2\Z$ with $d_2\mid d_1$, the points $[P,Q]$ returned by ellgenerators
+ need not have order $d_1$ and $d_2$: it is true that
+ $P$ has order $d_1$, but we only know that $Q$ is a generator of
+ $E(\F_q)/<P>$ and that the Weil pairing $w(P,Q)$ has order $d_2$,
+ see \kbd{??ellgroup}.
+ If you need generators $[P,R]$ with $R$ of order $d_2$, find
+ $x$ such that $R = Q-[x]P$ has order $d_2$ by solving
+ the discrete logarithm problem $[d_2]Q = [x]([d_2]P)$ in a cyclic group of
+ order $d_1/d_2$. This will be very expensive if $d_1/d_2$ has a large
+ prime factor.

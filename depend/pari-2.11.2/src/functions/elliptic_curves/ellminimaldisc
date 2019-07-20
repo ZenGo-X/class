@@ -1,0 +1,8 @@
+Function: ellminimaldisc
+Section: elliptic_curves
+C-Name: ellminimaldisc
+Prototype: G
+Help: ellminimaldisc(E): E being an elliptic curve defined over a number
+  field output by ellinit, return the minimal discriminant ideal of E.
+Doc: $E$ being an elliptic curve defined over a number field output by
+  \kbd{ellinit}, return the minimal discriminant ideal of E.

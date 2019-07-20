@@ -1,0 +1,84 @@
+Function: ellgroup
+Section: elliptic_curves
+C-Name: ellgroup0
+Prototype: GDGD0,L,
+Help: ellgroup(E,{p},{flag}): given an elliptic curve E defined over
+ a finite field Fq, return the structure of the group E(Fq); for other fields
+ of definition K, p must define a finite residue field
+ (p prime for K = Qp or Q; p a maximal ideal for K a number field) and we
+ return the structure of the (non-singular) reduction of E.
+ If flag is 1, return also generators, the curve equation must be minimal at p.
+Doc:
+ Let \kbd{E} be an \kbd{ell} structure as output by \kbd{ellinit}, attached
+ to an elliptic curve $E/K$. We first describle the function when the field
+ $K = \F_q$ is finite, it computes the structure of the finite abelian group
+ $E(\F_q)$:
+
+ \item if $\fl = 0$, return the structure $[]$ (trivial group) or $[d_1]$
+ (non-trivial cyclic group) or $[d_1,d_2]$ (non-cyclic group) of
+ $E(\F_q) \sim \Z/d_1\Z \times \Z/d_2\Z$, with $d_2\mid d_1$.
+
+ \item if $\fl = 1$, return a triple $[h,\var{cyc},\var{gen}]$, where
+ $h$ is the curve cardinality, \var{cyc} gives the group structure as a
+ product of cyclic groups (as per $\fl = 0$). More precisely, if $d_2 > 1$,
+ the output is $[d_1d_2, [d_1,d_2], [P,Q]]$ where $P$ is
+ of order $d_1$ and $[P,Q]$ generates the curve.
+ \misctitle{Caution} It is not guaranteed that $Q$ has order $d_2$, which in
+ the worst case requires an expensive discrete log computation. Only that
+ \kbd{ellweilpairing}$(E, P, Q, d_1)$ has order $d_2$.
+
+ For other fields of definition and $p$ defining a finite residue field
+ $\F_q$, return the structure of the reduction of $E$: the argument
+ $p$ is best left omitted if $K = \Q_\ell$ (else we must have $p = \ell$) and
+ must be a prime number ($K = \Q$) or prime ideal ($K$ a general number field)
+ with residue field $\F_q$ otherwise. The curve is allowed to have bad
+ reduction at $p$ and in this case we consider the (cyclic) group of
+ non-singular points for the reduction of a minimal model at $p$.
+
+ If $\fl = 0$, the equation not be minimal or even integral at $p$; of course,
+ a minimal model will be more efficient.
+
+ If $\fl = 1$, the requested generators depend on the model, which must then
+ be minimal at $p$, otherwise an exception is thrown. Use
+ \kbd{ellintegralmodel} and/or \kbd{ellocalred} first to reduce to this case.
+
+ \bprog
+ ? E = ellinit([0,1]);  \\ y^2 = x^3 + 0.x + 1, defined over Q
+ ? ellgroup(E, 7)
+ %2 = [6, 2] \\ Z/6 x Z/2, non-cyclic
+ ? E = ellinit([0,1] * Mod(1,11));  \\ defined over F_11
+ ? ellgroup(E)   \\ no need to repeat 11
+ %4 = [12]
+ ? ellgroup(E, 11)   \\ ... but it also works
+ %5 = [12]
+ ? ellgroup(E, 13) \\ ouch, inconsistent input!
+    ***   at top-level: ellgroup(E,13)
+    ***                 ^--------------
+    *** ellgroup: inconsistent moduli in Rg_to_Fp:
+      11
+      13
+ ? ellgroup(E, 7, 1)
+ %6 = [12, [6, 2], [[Mod(2, 7), Mod(4, 7)], [Mod(4, 7), Mod(4, 7)]]]
+ @eprog\noindent
+ Let us now consider curves of bad reduction, in this case we return the
+ structure of the (cyclic) group of non-singular points, satisfying
+ $\#E_{ns}(\F_p) = p - a_p$:
+ \bprog
+ ? E = ellinit([0,5]);
+ ? ellgroup(E, 5, 1)
+ %2 = [5, [5], [[Mod(4, 5), Mod(2, 5)]]]
+ ? ellap(E, 5)
+ %3 = 0 \\ additive reduction at 5
+ ? E = ellinit([0,-1,0,35,0]);
+ ? ellgroup(E, 5, 1)
+ %5 = [4, [4], [[Mod(2, 5), Mod(2, 5)]]]
+ ? ellap(E, 5)
+ %6 = 1 \\ split multiplicative reduction at 5
+ ? ellgroup(E, 7, 1)
+ %7 = [8, [8], [[Mod(3, 7), Mod(5, 7)]]]
+ ? ellap(E, 7)
+ %8 = -1 \\ non-split multiplicative reduction at 7
+ @eprog
+
+Variant: Also available is \fun{GEN}{ellgroup}{GEN E, GEN p}, corresponding
+ to \fl = 0.

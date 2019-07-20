@@ -1,0 +1,17 @@
+Function: serchop
+Section: conversions
+C-Name: serchop
+Prototype: GD0,L,
+Help: serchop(s,{n=0}): remove all terms of degree strictly less than n in
+ series s.
+Doc: remove all terms of degree strictly less than $n$ in series $s$. When
+ the series contains no terms of degree $< n$, return $O(x^n)$.
+ \bprog
+ ? s = 1/x + x + 2*x^2 + O(x^3);
+ ? serchop(s)
+ %2 = x + 2*x^3 + O(x^3)
+ ? serchop(s, 2)
+ %3 = 2*x^2 + O(x^3)
+ ? serchop(s, 100)
+ %4 = O(x^100)
+ @eprog

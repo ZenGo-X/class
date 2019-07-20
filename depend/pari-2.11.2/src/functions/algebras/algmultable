@@ -1,0 +1,37 @@
+Function: algmultable
+Section: algebras
+C-Name: algmultable
+Prototype: mG
+Help: algmultable(al): multiplication table of al over its prime subfield.
+Doc:
+ returns a multiplication table of \var{al} over its
+ prime subfield ($\Q$ or $\F_p$), as a \typ{VEC} of \typ{MAT}: the left
+ multiplication tables of basis elements. If \var{al} was output by
+ \tet{algtableinit}, returns the multiplication table used to define \var{al}.
+ If \var{al} was output by \tet{alginit}, returns the multiplication table of
+ the order~${\cal O}_0$ stored in \var{al}.
+ \bprog
+ ? A = alginit(nfinit(y), [-1,-1]);
+ ? M = algmultable(A);
+ ? #M
+ %3 = 4
+ ? M[1]  \\ multiplication by e_1 = 1
+ %4 =
+ [1 0 0 0]
+
+ [0 1 0 0]
+
+ [0 0 1 0]
+
+ [0 0 0 1]
+
+ ? M[2]
+ %5 =
+ [0 -1  1  0]
+
+ [1  0  1  1]
+
+ [0  0  1  1]
+
+ [0  0 -2 -1]
+ @eprog

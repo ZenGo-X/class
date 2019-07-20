@@ -1,0 +1,74 @@
+Function: mfslashexpansion
+Section: modular_forms
+C-Name: mfslashexpansion
+Prototype: GGGLLD&p
+Help: mfslashexpansion(mf,f,g,n,flrat,{&params}): g being in M_2^+(Q),
+ computes the Fourier expansion of f|_k g to n terms. f must belong to
+ the space mf. If params is given, it is set to the parameters [alpha,w,A].
+ If flrat is 1, the program tries to rationalize the expression; if flag
+ is 0, it does not.
+Doc: let \var{mf} be a modular form space in leven $N$, $f$ a modular form
+ belonging to \var{mf} and let $g$ be in $M_2^+(Q)$. This function
+ computes the Fourier expansion of $f|_k g$ to $n$ terms. We first describe
+ the behaviour when \kbd{flrat} is 0: the result is a
+ vector $v$ of floating point complex numbers such that
+ $$f|_k g(\tau) = q^\alpha \sum_{m\ge0} v[m+1] q^{m/w},$$
+ where $q = e(\tau)$, $w$ is the width of the cusp $g(i\infty)$
+ (namely $(N/(c^2,N)$ if $g$ is integral) and $\alpha$ is a rational number.
+ If \kbd{params} is given, it is set to the parameters $[\alpha,w,
+ \kbd{matid}(2)]$.
+
+ If \kbd{flrat} is 1, the program tries to rationalize the expression, i.e.,
+ to express the coefficients as rational numbers or polmods. We
+ write $g = \lambda \cdot M \cdot A$ where $\lambda \in \Q^*$,
+ $M\in \text{SL}_2(\Z)$ and $A = [a,b;0,d]$ is upper triangular,
+ integral and primitive  with $a > 0$, $d > 0$ and $0 \leq b < d$. Let
+ $\alpha$ and $w$ by the parameters attached to the expansion of
+ $F := f |_k M$ as above, i.e.
+ $$ F(\tau) = q^\alpha \sum_{m\ge0} v[m+1] q^{m/w}.$$
+ The function returns the expansion $v$ of $F = f |_k M$ and sets
+ the parameters to $[\alpha, w, A]$. Finally, the desired expansion is
+ $(a/d)^{k/2} F(\tau + b/d)$. The latter is identical to the returned
+ expansion when $A$ is the identity, i.e. when $g\in \text{PSL}_2(\Z)$.
+ If this is not the case, the expansion differs from $v$ by the multiplicative
+ constant $(a/d)^{k/2} e(\alpha b/(dw))$ and a twist by a root of unity
+ $q^{1/w} \to e(b/(dw)) q^{1/w}$. The complications introduced by this extra
+ matrix $A$ allow to recognize the coefficients in a much smaller cyclotomic
+ field, hence to obtain a simpler description overall. (Note that this
+ rationalization step may result in an error if the program cannot perform it.)
+
+ \bprog
+ ? mf = mfinit([32,4],0); f = mfbasis(mf)[1];
+ ? mfcoefs(f, 10)
+ %2 = [0, 3, 0, 0, 0, 2, 0, 0, 0, 47, 0]
+ ? mfatk = mfatkininit(mf,32); mfcoefs(mfatkin(mfatk,f),10) / mfatk[3]
+ %3 = [0, 1, 0, 16, 0, 22, 0, 32, 0, -27, 0]
+ ? mfatk[3] \\ here normalizing constant C = 1, but need in general
+ %4 = 1
+ ? mfslashexpansion(mf,f,[0,-1;1,0],10,1,&params) * 32^(4/2)
+ %5 = [0, 1, 0, 16, 0, 22, 0, 32, 0, -27, 0]
+ ? params
+ %6 = [0, 32, [1, 0; 0, 1]]
+
+ ? mf = mfinit([12,8],0); f = mfbasis(mf)[1];
+ ? mfslashexpansion(mf,f,[1,0;2,1],7,0)
+ %7 = [0, 0, 0, 0.6666666... + 0.E-38*I, 0, -3.999999... + 6.92820...*I, 0,\
+       -11.99999999... - 20.78460969...*I]
+ ? mfslashexpansion(mf,f,[1,0;2,1],7,1, &params)
+ %8 = [0, 0, 0, 2/3, 0, Mod(8*t, t^2+t+1), 0, Mod(-24*t-24, t^2+t+1)]
+ ? params
+ %9 = [0, 3, [1, 0; 0, 1]]
+ @eprog
+ If $[\Q(f):\Q(\chi)]>1$, the coefficients may be polynomials in $y$,
+ where $y$ is any root of the polynomial giving the field of definition of
+ $f$ (\kbd{f.mod} or \kbd{mfparams(f)[4]}).
+ \bprog
+ ? mf=mfinit([23,2],0);f=mfeigenbasis(mf)[1];
+ ? mfcoefs(f,5)
+ %1 = [Mod(0, y^2 - y - 1), Mod(1, y^2 - y - 1), Mod(-y, y^2 - y - 1),\
+   Mod(2*y - 1, y^2 - y - 1), Mod(y - 1, y^2 - y - 1), Mod(-2*y, y^2 - y - 1)]
+ ? mfslashexpansion(mf,f,[1,0;0,1],5,1)
+ %2 = [0, 1, -y, 2*y - 1, y - 1, -2*y]
+ ? mfslashexpansion(mf,f,[0,-1;1,0],5,1)
+ %3 = [0, -1/23, 1/23*y, -2/23*y + 1/23, -1/23*y + 1/23, 2/23*y]
+ @eprog

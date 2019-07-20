@@ -1,0 +1,16 @@
+Function: rnfpolred
+Section: number_fields
+C-Name: rnfpolred
+Prototype: GGp
+Obsolete: 2013-12-28
+Help: rnfpolred(nf,pol): given a pol with coefficients in nf, finds a list
+ of relative polynomials defining some subfields, hopefully simpler.
+Doc:  This function is obsolete: use \tet{rnfpolredbest} instead.
+ Relative version of \kbd{polred}. Given a monic polynomial \var{pol} with
+ coefficients in $\var{nf}$, finds a list of relative polynomials defining some
+ subfields, hopefully simpler and containing the original field. In the present
+ version \vers, this is slower and less efficient than \kbd{rnfpolredbest}.
+
+ \misctitle{Remark} this function is based on an incomplete reduction
+ theory of lattices over number fields, implemented by \kbd{rnflllgram}, which
+ deserves to be improved.

@@ -1,0 +1,7 @@
+sumformal(1/n)
+sumformal(0)
+sumformal(1)
+sumformal(n)
+sumformal(n^2)
+sumformal(x*y + 1)
+sumformal(x*y + 1,y)

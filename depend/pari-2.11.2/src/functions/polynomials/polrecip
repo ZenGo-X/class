@@ -1,0 +1,7 @@
+Function: polrecip
+Section: polynomials
+C-Name: polrecip
+Prototype: G
+Help: polrecip(pol): reciprocal polynomial of pol.
+Doc:  reciprocal polynomial of \var{pol}, i.e.~the coefficients are in
+ reverse order. \var{pol} must be a polynomial.

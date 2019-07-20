@@ -1,0 +1,19 @@
+Function: alglatcontains
+Section: algebras
+C-Name: alglatcontains
+Prototype: iGGGD&
+Help: alglatcontains(al,lat,x,{&ptc}): tests whether the lattice lat contains the
+ element x. If ptc is present, sets it to the coordinates of x on the basis of
+ lat.
+Doc: Given an algebra \var{al}, a lattice \var{lat} and \var{x} in~\var{al},
+ tests whether~$x\in lat$. If~\var{ptc} is present, sets it to the~\typ{COL} of
+ coordinates of~$x$ in the basis of~\var{lat}.
+ \bprog
+ ? al = alginit(nfinit(y^2+7), [-1,-1]);
+ ? a1 = [1,-1,0,1,2,0,1,2]~;
+ ? lat1 = alglathnf(al,a1);
+ ? alglatcontains(al,lat1,a1,&c)
+ %4 = 1
+ ? c
+ %5 = [-1, -2, -1, 1, 2, 0, 1, 1]~
+ @eprog

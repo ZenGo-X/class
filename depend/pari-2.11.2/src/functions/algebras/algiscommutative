@@ -1,0 +1,18 @@
+Function: algiscommutative
+Section: algebras
+C-Name: algiscommutative
+Prototype: iG
+Help: algiscommutative(al): test whether the algebra al is commutative.
+Doc: \var{al} being a table algebra output by \tet{algtableinit} or a central
+ simple algebra output by \tet{alginit}, tests whether the algebra \var{al} is
+ commutative.
+ \bprog
+ ? mt = [matid(3),[0,0,0;1,0,1;0,0,0],[0,0,0;0,0,0;1,0,1]];
+ ? A = algtableinit(mt);
+ ? algiscommutative(A)
+ %3 = 0
+ ? mt = [matid(3), [0,0,0; 1,1,0; 0,0,0], [0,0,1; 0,0,0; 1,0,1]];
+ ? A = algtableinit(mt,2);
+ ? algiscommutative(A)
+ %6 = 1
+ @eprog

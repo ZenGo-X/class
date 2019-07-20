@@ -1,0 +1,41 @@
+Function: modreverse
+Section: number_fields
+C-Name: modreverse
+Prototype: G
+Help: modreverse(z): reverse polmod of the polmod z, if it exists.
+Doc: let $z = \kbd{Mod(A, T)}$ be a polmod, and $Q$ be its minimal
+ polynomial, which must satisfy $\text{deg}(Q) = \text{deg}(T)$.
+ Returns a ``reverse polmod'' \kbd{Mod(B, Q)}, which is a root of $T$.
+
+ This is quite useful when one changes the generating element in algebraic
+ extensions:
+ \bprog
+ ? u = Mod(x, x^3 - x -1); v = u^5;
+ ? w = modreverse(v)
+ %2 = Mod(x^2 - 4*x + 1, x^3 - 5*x^2 + 4*x - 1)
+ @eprog\noindent
+ which means that $x^3 - 5x^2 + 4x -1$ is another defining polynomial for the
+ cubic field
+ $$\Q(u) = \Q[x]/(x^3 - x - 1) = \Q[x]/(x^3 - 5x^2 + 4x - 1) = \Q(v),$$
+ and that $u \to v^2 - 4v + 1$ gives an explicit isomorphism. From this, it is
+ easy to convert elements between the $A(u)\in \Q(u)$ and $B(v)\in \Q(v)$
+ representations:
+ \bprog
+ ? A = u^2 + 2*u + 3; subst(lift(A), 'x, w)
+ %3 = Mod(x^2 - 3*x + 3, x^3 - 5*x^2 + 4*x - 1)
+ ? B = v^2 + v + 1;   subst(lift(B), 'x, v)
+ %4 = Mod(26*x^2 + 31*x + 26, x^3 - x - 1)
+ @eprog
+ If the minimal polynomial of $z$ has lower degree than expected, the routine
+ fails
+ \bprog
+ ? u = Mod(-x^3 + 9*x, x^4 - 10*x^2 + 1)
+ ? modreverse(u)
+  *** modreverse: domain error in modreverse: deg(minpoly(z)) < 4
+  ***   Break loop: type 'break' to go back to GP prompt
+ break> Vec( dbg_err() ) \\ ask for more info
+ ["e_DOMAIN", "modreverse", "deg(minpoly(z))", "<", 4,
+   Mod(-x^3 + 9*x, x^4 - 10*x^2 + 1)]
+ break> minpoly(u)
+ x^2 - 8
+ @eprog

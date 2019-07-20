@@ -1,0 +1,52 @@
+Function: eval
+Section: polynomials
+C-Name: geval_gp
+Prototype: GC
+Help: eval(x): evaluation of x, replacing variables by their value.
+Description:
+ (gen):gen      geval($1)
+Doc: replaces in $x$ the formal variables by the values that
+ have been assigned to them after the creation of $x$. This is mainly useful
+ in GP, and not in library mode. Do not confuse this with substitution (see
+ \kbd{subst}).
+
+ If $x$ is a character string, \kbd{eval($x$)} executes $x$ as a GP
+ command, as if directly input from the keyboard, and returns its
+ output.
+ \bprog
+ ? x1 = "one"; x2 = "two";
+ ? n = 1; eval(Str("x", n))
+ %2 = "one"
+ ? f = "exp"; v = 1;
+ ? eval(Str(f, "(", v, ")"))
+ %4 = 2.7182818284590452353602874713526624978
+ @eprog\noindent Note that the first construct could be implemented in a
+ simpler way by using a vector \kbd{x = ["one","two"]; x[n]}, and the second
+ by using a closure \kbd{f = exp; f(v)}. The final example is more interesting:
+ \bprog
+ ? genmat(u,v) = matrix(u,v,i,j, eval( Str("x",i,j) ));
+ ? genmat(2,3)   \\ generic 2 x 3 matrix
+ %2 =
+ [x11 x12 x13]
+
+ [x21 x22 x23]
+ @eprog
+
+ A syntax error in the evaluation expression raises an \kbd{e\_SYNTAX}
+ exception, which can be trapped as usual:
+ \bprog
+ ? 1a
+  ***   syntax error, unexpected variable name, expecting $end or ';': 1a
+  ***                                                                   ^-
+ ? E(expr) =
+   {
+     iferr(eval(expr),
+           e, print("syntax error"),
+           errname(e) == "e_SYNTAX");
+   }
+ ? E("1+1")
+ %1 = 2
+ ? E("1a")
+ syntax error
+ @eprog
+ \synt{geval}{GEN x}.

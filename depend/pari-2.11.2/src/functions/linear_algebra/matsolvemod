@@ -1,0 +1,30 @@
+Function: matsolvemod
+Section: linear_algebra
+C-Name: matsolvemod
+Prototype: GGGD0,L,
+Help: matsolvemod(M,D,B,{flag=0}): one solution of system of congruences
+ MX=B mod D (M matrix, B and D column vectors). If (optional) flag is
+ non-null return all solutions.
+Doc: $M$ being any integral matrix,
+ $D$ a column vector of non-negative integer moduli, and $B$ an integral
+ column vector, gives an integer solution to the system of congruences
+ $\sum_i m_{i,j}x_j\equiv b_i\pmod{d_i}$ if one exists, otherwise returns
+ zero. Shorthand notation: $B$ (resp.~$D$) can be given as a single integer,
+ in which case all the $b_i$ (resp.~$d_i$) above are taken to be equal to $B$
+ (resp.~$D$).
+ \bprog
+ ? M = [1,2;3,4];
+ ? matsolvemod(M, [3,4]~, [1,2]~)
+ %2 = [10, 0]~
+ ? matsolvemod(M, 3, 1) \\ M X = [1,1]~ over F_3
+ %3 = [2, 1]~
+ ? matsolvemod(M, [3,0]~, [1,2]~) \\ x + 2y = 1 (mod 3), 3x + 4y = 2 (in Z)
+ %4 = [6, -4]~
+ @eprog
+ If $\fl=1$, all solutions are returned in the form of a two-component row
+ vector $[x,u]$, where $x$ is an integer solution to the system of
+ congruences and $u$ is a matrix whose columns give a basis of the homogeneous
+ system (so that all solutions can be obtained by adding $x$ to any linear
+ combination of columns of $u$). If no solution exists, returns zero.
+Variant: Also available are \fun{GEN}{gaussmodulo}{GEN M, GEN D, GEN B}
+ ($\fl=0$) and \fun{GEN}{gaussmodulo2}{GEN M, GEN D, GEN B} ($\fl=1$).

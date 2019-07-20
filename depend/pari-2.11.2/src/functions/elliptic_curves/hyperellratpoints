@@ -1,0 +1,29 @@
+Function: hyperellratpoints
+Section: elliptic_curves
+C-Name: hyperellratpoints
+Prototype: GGD0,L,
+Help: hyperellratpoints(X,h,{flag=0}): X being a non-singular hyperelliptic
+ curve given by an integral model, return a vector containing the affine rational points on the curve
+ of naive height less than h.
+ If fl=1, stop as soon as a point is found.
+ X can be given either by a squarefree polynomial P such that
+ X:y^2=P(x) or by a vector [P,Q] such that X:y^2+Q(x)y=P(x) and Q^2+4P is
+ squarefree.
+Doc: $X$ being a non-singular hyperelliptic curve given by an integral model,
+ return a vector containing the affine rational points on the curve of naive height less than $h$.
+ If $\fl=1$, stop as soon as a point is found; return either an empty vector or a vector containing a single point.
+
+ $X$ is given either by a squarefree polynomial $P$ such that $X: y^2=P(x)$
+ or by a vector $[P,Q]$ such that $X: y^2+Q(x)\*y=P(x)$ and $Q^2+4\*P$ is
+ squarefree.
+
+ \noindent The parameter $h$ can be
+
+ \item an integer $H$: find the points $[n/d,y]$ whose abscissas $x = n/d$ have
+ naive height (= $\max(|n|, d)$) less than $H$;
+
+ \item a vector $[N,D]$ with $D\leq N$: find the points $[n/d,y]$ with
+ $|n| \leq N$, $d \leq D$.
+
+ \item a vector $[N,[D_1,D_2]]$ with $D_1<D_2\leq N$  find the points
+ $[n/d,y]$ with $|n| \leq N$ and $D_1 \leq d \leq D_2$.

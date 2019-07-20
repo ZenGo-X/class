@@ -1,0 +1,16 @@
+Function: _def_factor_proven
+Class: default
+Section: default
+C-Name: sd_factor_proven
+Prototype:
+Help:
+Doc: this toggle is either 1 (on) or 0 (off). By
+ default, the factors output by the integer factorization machinery are
+ only pseudo-primes, not proven primes. If this toggle is
+ set, a primality proof is done for each factor and all results depending on
+ integer factorization are fully proven. This flag does not affect partial
+ factorization when it is explicitly requested. It also does not affect the
+ private table managed by \tet{addprimes}: its entries are included as is in
+ factorizations, without being tested for primality.
+
+ The default value is \kbd{0}.

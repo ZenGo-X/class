@@ -1,0 +1,21 @@
+Function: lfunetaquo
+Section: l_functions
+C-Name: lfunetaquo
+Prototype: G
+Help: lfunetaquo(M): returns the Ldata structure attached to the
+ modular form z->prod(i=1,#M[,1],eta(M[i,1]*z)^M[i,2]).
+Doc: returns the \kbd{Ldata} structure attached to the $L$ function
+ attached to the modular form
+ $z\mapsto \prod_{i=1}^n \eta(M_{i,1}\*z)^{M_{i,2}}$
+ It is currently assumed that $f$ is a self-dual cuspidal form on
+ $\Gamma_0(N)$ for some $N$.
+ For instance, the $L$-function $\sum \tau(n) n^{-s}$
+ attached to Ramanujan's $\Delta$ function is encoded as follows
+ \bprog
+ ? L = lfunetaquo(Mat([1,24]));
+ ? lfunan(L, 100)  \\ first 100 values of tau(n)
+ @eprog\noindent For convenience, a \typ{VEC} is also accepted instead of
+ a factorization matrix with a single row:
+ \bprog
+ ? L = lfunetaquo([1,24]); \\ same as above
+ @eprog

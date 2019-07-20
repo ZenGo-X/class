@@ -1,0 +1,165 @@
+do(n)= my(k,z); if (k=ispower(n,,&z), print([k,z]));
+{v = [
+3^101*2^20,
+3^101*2^101,
+3^101*2^101*5,
+2^20*3^15*5^5,
+2^3*103^6,
+2^5*103^10,
+2^7*103^10,
+2^15*103^10,
+2^21*103^42,
+2^35*103^70,
+2^105*103^210,
+103^100003,
+541^121
+]; }
+
+for (i=1, #v, do(v[i]))
+for (i=1, 10^6, do(i))
+\\#1259
+do(-16)
+do(-64)
+do(-8)
+do(-8 * 103^6)
+do(-1/64)
+
+ispower(2,2^64)
+ispower(1/2,2^64)
+
+for (i=1, #v, if (!ispowerful(v[i]), print(i)))
+ispowerful(5^3*(10^1000+1)^2)
+
+v = [1, 2^10, 2^15, 2^32, 2^64, 2^128];
+
+/*
+correct = vector(#v);
+{
+for (k = 1, #v,
+  my(u = v[k], s,t);
+  for(i=u, u+10^4,
+    if ((a = ispower(i,,&p)) && isprime(p), s += a; t += p);
+    if (isprime(i), s ++; t += i);
+  );
+  correct[k] = [s,t];
+)
+}
+*/
+{
+for (k = 1, #v,
+  my(u = v[k], s,t);
+  s = sum(i=u, u+10^4, isprimepower(i));
+  t = 0;for (i = u, u+10^4, if (isprimepower(i,&p), t += p));
+  print([s,t]);
+\\  if ([s,t] != correct[k], error(k))
+)
+}
+n=(2^100+277)^10;
+ispseudoprimepower(n)
+ispseudoprimepower(n,&p)
+p
+
+isprimepower(541^121)
+ispowerful(4)
+
+p = 10^6+3; q = 10^6+33; r = 10^6+37;
+v = [Mod(p, p^2*q), Mod(6*p, q*(p*r)^2), Mod(6, p^2*q), Mod(4*p, 8*p^2*q)];
+[ispower(a,2) | a<-v]
+[ispower(a,3) | a<-v]
+[if(ispower(a,2,&b), b) | a<-v]
+[if(ispower(a,3,&b), b) | a<-v]
+[if(issquare(a^2,&b), b) | a<-v]
+[if(ispower(a^3,3,&b), b) | a<-v]
+ispower(Mod(2, 7*5^3), 7, &z); z
+issquare(Mod(1,2))
+issquare(Mod(0,2),&s);s
+issquare(Mod(2,3))
+issquare(Mod(13,121))
+issquare(Mod(Mod(1,2)*y,y^3+y^2+1))
+if (issquare(Mod(Mod(1,2)*y,y^3+y^2+1),&b),b)
+issquare(Mod(Mod(1,5)*y+2,y^3+y^2+1))
+if (issquare(Mod(Mod(1,5)*y,y^3+y^2+1),&b),b)
+if (issquare(Mod(Mod(4,5),y^3+y^2+1),&b),b)
+
+default(realprecision,38);
+if(issquare(Pol(0),&z),z)
+issquare(Pol(4))
+issquare(x^2+x)
+issquare(y^2*x^0)
+issquare(x^0/4)
+if(issquare(y^2*x^0,&z),z)
+issquare(2*x^4+x^3+Mod(1,2))
+issquare(x^2+Mod(1,2))
+if(issquare(x^2+Mod(1,2),&z),z)
+t=ffgen(2^3,'t);
+if(issquare((t*x^2+(1+t)*x+1)^2,&z),z)
+if(issquare((x^4+x^3+3*x^2+2*x+4)*Mod(1,5),&z),z)
+if(issquare(4/x^2,&z),z)
+issquare(1.5)
+if(issquare(1.5,&z),z)
+issquare(4/9)
+issquare(4/3)
+issquare(I)
+issquare(ffgen(2^3,'t))
+if(issquare(ffgen(2^3,'t),&z),z)
+issquare(O(x))
+issquare(x+O(x^2))
+issquare(4*x^2+O(x^3))
+issquare(4/x^2)
+if (issquare(x^0/4,&z),z)
+if (issquare((x+1/2)^2,&z),z)
+if (issquare(x^0/4,&z),z)
+issquare(Mod(1,4)*x^2)
+issquare(Mod(1,4)*(x+1)^2)
+issquare(Mod(x,Mod(x^2+x+2,3)))
+
+ispower(-8,4)
+if(ispower(-8,3,&z),z)
+ispower(-8/27,3)
+if(ispower(-8/27,3,&z),z)
+ispower(Pol(0),3)
+ispower(x^2,3)
+ispower(x^3+x,3)
+ispower(x^3+4,3)
+if(ispower(Pol(8),3,&z),z)
+if(ispower((2+x)^3,3,&z),z)
+ispower((2+x)^3-1,3)
+ispower(1009^11)
+ispower(-1.,3)
+ispower(I,3)
+if(ispower(1/(2*x)^3,3,&z), z)
+if(ispower(1+x+O(x^2),3,&z), z)
+if(ispower((-2/3)^5,5,&z),z)
+ispower(3^(11^2))
+ispower((2/3)^(11^2))
+ispower(30011^(17*11))
+issquare(Mod(3,22))
+
+\\#1703
+ispower(-167^10)
+\\#1782
+isprimepower(30011^(17*3))
+
+do(f,k) = ispower(f,k,&z) && z^k == f;
+test(t) =
+{ my(T = 5*t*(x^3+x^2+t)*(x^2+t*x+1)^3);
+  [do(T,3), do(T^6,3), do(T^9,3), do(T^18,3), do(T^18,9), do(T^18,18)];
+}
+test(Mod(1,2))
+test(Mod(1,3))
+test(Mod(1,17))
+test(Mod(1,nextprime(2^100)))
+test(ffgen(2^3,'t))
+test(ffgen(3^3,'t))
+test(ffgen([nextprime(2^100),3],'t))
+test(Mod(Mod(1,2),y^3+y^2+1))
+ispower(Mod(x,x^2+1), 2, &y)
+ispower(Mod(x,x^2+1), 2)
+
+p=2^1500+1465;
+ispower(p^11)
+ispower(p^29)
+ispower(p^101)
+
+\\#1915
+issquare(Mod(1,67)*x^4+Mod(14,67)*x^2+Mod(49,67))

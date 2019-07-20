@@ -1,0 +1,14 @@
+Function: ispolygonal
+Section: number_theoretical
+C-Name: ispolygonal
+Prototype: lGGD&
+Help: ispolygonal(x,s,{&N}): true(1) if x is an s-gonal number, false(0) if
+ not (s > 2). If N is given set it to n if x is the n-th s-gonal number.
+Doc: true (1) if the integer $x$ is an s-gonal number, false (0) if not.
+ The parameter $s > 2$ must be a \typ{INT}. If $N$ is given, set it to $n$
+ if $x$ is the $n$-th $s$-gonal number.
+ \bprog
+ ? ispolygonal(36, 3, &N)
+ %1 = 1
+ ? N
+ @eprog

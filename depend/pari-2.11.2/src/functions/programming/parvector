@@ -1,0 +1,22 @@
+Function: parvector
+Section: programming/parallel
+C-Name: parvector
+Prototype: LVJ
+Description:
+  (small,,closure):vec    parvector($1, $3)
+Help: parvector(N,i,expr): as vector(N,i,expr) but the evaluations of expr are
+ done in parallel.
+Doc: As \kbd{vector(N,i,expr)} but the evaluations of \kbd{expr} are done in
+ parallel. The expression \kbd{expr} must not access global variables or
+ variables declared with \kbd{local()}, and must be free of side effects.
+ \bprog
+ parvector(10,i,quadclassunit(2^(100+i)+1).no)
+ @eprog\noindent
+ computes the class numbers in parallel.
+ %\syn{NO}
+
+Function: _parvector_worker
+Section: programming/internals
+C-Name: parvector_worker
+Prototype: GG
+Help: _parvector_worker(i,C): evaluate the closure C on i.

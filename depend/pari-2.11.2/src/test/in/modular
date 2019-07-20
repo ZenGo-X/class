@@ -1,0 +1,59 @@
+v = [2,3,2^32-1,2^64-1,10^20];
+f(a,b,p)=(a*Mod(1,p)) * (b*Mod(1,p));
+g(a,p)=sqr(a*Mod(1,p));
+test(a,b)=
+{
+  for (i=1,#v,print(i, ": ", f(a,b,v[i])));
+  for (i=1,#v,print(i, ": ", g(a,v[i])));
+}
+test(polcyclo(10),polcyclo(5));
+test([1,2;3,4], [-1,2;-4,2]);
+Mod(Mod(1,y),x)
+Mod(Mod(1,x),y)
+iferr(Mod(1,"a"),E,E)
+iferr(Mod(0,0),E,E)
+iferr(Mod(0,Pol(0)),E,E)
+iferr(Mod(x+O(x^2), x^3), E,E)
+Mod(x+O(x^2), x^2)
+Mod(x+O(x^3), x^2)
+Mod(Mod(x,x^3), x^2)
+Mod(Mod(1,12), 9)
+Mod(1/x,x^2+1)
+Mod([5,6],2)
+Mod(3*x,2)
+Mod(x,y)
+Mod(Pol(0),2)
+Pol(0)*Mod(1,2)
+k=100000000000000000000;
+Mod(3,7)^-k
+Mod(3,7)^k
+
+\g1
+a=Mod(1,2);b=Mod(1,3);
+a+b
+a-b
+a*b
+a/b
+a+a
+a-a
+a*a
+a/a
+a=Mod(1,x);b=Mod(1,x+1);
+a+b
+a-b
+a*b
+a/b
+a+a
+a-a
+a*a
+a/a
+
+\\#1652
+p=436^56-35;lift(Mod(271,p)^((p-1)/2))
+\\#1717
+Mod(0,1)==0
+Mod(0,1)==1
+Mod(0,1)==-1
+Mod(0,x^0)==0
+Mod(0,x^0)==1
+Mod(0,x^0)==-1

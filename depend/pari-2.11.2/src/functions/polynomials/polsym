@@ -1,0 +1,7 @@
+Function: polsym
+Section: polynomials
+C-Name: polsym
+Prototype: GL
+Help: polsym(x,n): column vector of symmetric powers of the roots of x up to n.
+Doc: creates the column vector of the \idx{symmetric powers} of the roots of the
+ polynomial $x$ up to power $n$, using Newton's formula.

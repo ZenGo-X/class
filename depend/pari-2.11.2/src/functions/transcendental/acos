@@ -1,0 +1,11 @@
+Function: acos
+Section: transcendental
+C-Name: gacos
+Prototype: Gp
+Help: acos(x): arc cosine of x.
+Doc: principal branch of $\cos^{-1}(x) = -i \log (x + i\sqrt{1-x^2})$.
+ In particular, $\Re(\text{acos}(x))\in [0,\pi]$ and if $x\in \R$ and $|x|>1$,
+ then $\text{acos}(x)$ is complex. The branch cut is in two pieces:
+ $]-\infty,-1]$ , continuous with quadrant II, and $[1,+\infty[$, continuous
+ with quadrant IV. We have $\text{acos}(x) = \pi/2 - \text{asin}(x)$ for all
+ $x$.

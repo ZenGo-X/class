@@ -1,0 +1,73 @@
+lift
+1
+2
+x
+3
+8/3
+x
+x + 2
+1 + 2*x + 3*x^2 + O(x^4)
+(a)->lift(a,'x)
+1
+Mod(2, 3)
+x
+3 + O(3^3)
+2*3^-1 + 2 + O(3)
+x
+Mod(1, 3)*x + Mod(2, 3)
+Mod(1, 5) + Mod(2, 5)*x + Mod(3, 5)*x^2 + O(x^4)
+(a)->lift(a,'y)
+1
+Mod(2, 3)
+x
+3 + O(3^3)
+2*3^-1 + 2 + O(3)
+Mod(x, x^2)
+Mod(1, 3)*x + Mod(2, 3)
+Mod(1, 5) + Mod(2, 5)*x + Mod(3, 5)*x^2 + O(x^4)
+(a)->lift(a,'z)
+1
+Mod(2, 3)
+x
+3 + O(3^3)
+2*3^-1 + 2 + O(3)
+Mod(x, x^2)
+Mod(1, 3)*x + Mod(2, 3)
+Mod(1, 5) + Mod(2, 5)*x + Mod(3, 5)*x^2 + O(x^4)
+centerlift
+1
+-1
+x
+3
+-1/3
+x
+x - 1
+1 + 2*x - 2*x^2 + O(x^4)
+liftall
+1
+2
+x
+3
+8/3
+x
+x + 2
+1 + 2*x + 3*x^2 + O(x^4)
+liftint
+1
+2
+x
+3
+8/3
+Mod(x, x^2)
+x + 2
+1 + 2*x + 3*x^2 + O(x^4)
+liftpol
+1
+Mod(2, 3)
+x
+3 + O(3^3)
+2*3^-1 + 2 + O(3)
+x
+Mod(1, 3)*x + Mod(2, 3)
+Mod(1, 5) + Mod(2, 5)*x + Mod(3, 5)*x^2 + O(x^4)
+Total time spent: 0

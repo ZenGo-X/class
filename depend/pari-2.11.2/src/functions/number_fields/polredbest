@@ -1,0 +1,54 @@
+Function: polredbest
+Section: number_fields
+C-Name: polredbest
+Prototype: GD0,L,
+Help: polredbest(T,{flag=0}): reduction of the polynomial T (gives minimal
+ polynomials only). If flag=1, gives also elements.
+Doc: finds a polynomial with reasonably
+ small coefficients defining the same number field as $T$.
+ All $T$ accepted by \tet{nfinit} are also allowed here (e.g. non-monic
+ polynomials, \kbd{nf}, \kbd{bnf}, \kbd{[T,Z\_K\_basis]}). Contrary to
+ \tet{polredabs}, this routine runs in polynomial time, but it offers no
+ guarantee as to the minimality of its result.
+
+ This routine computes an LLL-reduced basis for an order in $\Q[X]/(T)$, then
+ examines small linear combinations of the basis vectors, computing their
+ characteristic polynomials. It returns the \emph{separable} polynomial $P$ of
+ smallest discriminant, the one with lexicographically smallest
+ \kbd{abs(Vec(P))} in case of ties. This is a good candidate for subsequent
+ number field computations since it guarantees that the denominators of
+ algebraic integers, when expressed in the power basis, are reasonably small.
+ With no claim of minimality, though.
+
+ It can happen that iterating this functions yields better and better
+ polynomials, until it stabilizes:
+ \bprog
+ ? \p5
+ ? P = X^12+8*X^8-50*X^6+16*X^4-3069*X^2+625;
+ ? poldisc(P)*1.
+ %2 = 1.2622 E55
+ ? P = polredbest(P);
+ ? poldisc(P)*1.
+ %4 = 2.9012 E51
+ ? P = polredbest(P);
+ ? poldisc(P)*1.
+ %6 = 8.8704 E44
+ @eprog\noindent In this example, the initial polynomial $P$ is the one
+ returned by \tet{polredabs}, and the last one is stable.
+
+ If $\fl = 1$: outputs a two-component row vector $[P,a]$,  where $P$ is the
+ default output and \kbd{Mod(a, P)} is a root of the original $T$.
+ \bprog
+ ? [P,a] = polredbest(x^4 + 8, 1)
+ %1 = [x^4 + 2, Mod(x^3, x^4 + 2)]
+ ? charpoly(a)
+ %2 = x^4 + 8
+ @eprog\noindent In particular, the map $\Q[x]/(T) \to \Q[x]/(P)$,
+ $x\mapsto \kbd{Mod(a,P)}$ defines an isomorphism of number fields, which can
+ be computed as
+ \bprog
+   subst(lift(Q), 'x, a)
+ @eprog\noindent if $Q$ is a \typ{POLMOD} modulo $T$; \kbd{b = modreverse(a)}
+ returns a \typ{POLMOD} giving the inverse of the above map (which should be
+ useless since $\Q[x]/(P)$ is a priori a better representation for the number
+ field and its elements).

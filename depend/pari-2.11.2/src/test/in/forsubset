@@ -1,0 +1,31 @@
+test(N) = /* check cardinalities and compatibility of forksubset/forallsubset */
+{ my(l1,l2,l3,k);
+  l1 = [];
+  forsubset(N, s, l1 = concat(l1,s));
+  if (#l1 != 2^N, error(N));
+
+  l2 = [];
+  for (k = 0, N,
+    l3 = [];
+    forsubset([N,k], s, l3 = concat(l3,s));
+    if (#l3 != binomial(N,k),  error([N,k]));
+    l2 = concat(l2, l3);
+  );
+  if (l1 != l2, error("size ", N));
+}
+test(0);
+test(1);
+test(2);
+test(3);
+test(4);
+test(5);
+
+forsubset(4,s,print(s));
+\\ corner cases
+forsubset([0,0],s,print(s))
+forsubset(0,s,print(s))
+forsubset([0,1],s,print(s))
+forsubset(-1,s,)
+forsubset([2,-1],s,)
+\\ errors
+forsubset('x,s,)

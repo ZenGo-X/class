@@ -1,0 +1,10 @@
+Function: rnfbasistoalg
+Section: number_fields
+C-Name: rnfbasistoalg
+Prototype: GG
+Help: rnfbasistoalg(rnf,x): relative version of nfbasistoalg, where rnf is a
+ relative numberfield.
+Doc: computes the representation of $x$
+ as a polmod with polmods coefficients. Here, $\var{rnf}$ is a relative number
+ field extension $L/K$ as output by \kbd{rnfinit}, and $x$ an element of
+ $L$ expressed on the relative integral basis.

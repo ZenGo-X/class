@@ -1,0 +1,33 @@
+default(parisize, 20M);
+check(a,b) = my(t = abs((a-b)/b)); if (t, ceil(log(t)/log(10)), -oo);
+
+default(realprecision, 211);
+pi=Pi;
+
+\p115
+v = vector(1120,n,n*sin(1/n));
+check(limitnum(n -> n*sin(1/n)), 1)
+check(limitnum(v), 1)
+check(limitnum(n -> n^2*sin(1/n^2),,2), 1)
+check(limitnum(n -> n^2*sin(1/n^2),10,2), 1)
+check(limitnum(n -> (1+1/n)^n), exp(1))
+
+f(n) = n! / (n^n*exp(-n)*sqrt(2*Pi*n));
+asympnum(f)
+asympnum(n->log(1+1/n^2),,2)[1..17]
+
+\p115
+asympnum(n->log(1+1/n^pi),,pi)[1..17]
+asympnum(v)
+
+\p38
+log(limitnum(n->(1+1/n)^n))
+
+h(n)=my(a=1,A=1,B=1.); vector(n, i, a=B/i;A+=a;B+=A; a);
+H=h(160000);
+b(n)=log(H[n])-(2*sqrt(n)-3/4*log(n));
+C=-1/2-log(2*sqrt(Pi));
+check(limitnum(n->b(n^2)), C)
+asympnum(n->b(n^2)-C)
+asympnum(n->lngamma(n+1)-(n+1/2)*log(n)+n-1/2*log(2*Pi))
+asympnum(a->a^(-5/2)*if(a%40==0,I,0))

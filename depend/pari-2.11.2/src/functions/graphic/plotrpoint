@@ -1,0 +1,20 @@
+Function: plotrpoint
+Section: graphic
+C-Name: plotrpoint
+Prototype: vLGG
+Help: plotrpoint(w,dx,dy): draw a point (and move cursor) at position dx,dy
+ relative to present position of the cursor in rectwindow w.
+Doc: draw the point $(x1+dx,y1+dy)$ on the rectwindow $w$ (if it is inside
+ $w$), where $(x1,y1)$ is the current position of the cursor, and in any case
+ move the virtual cursor to position $(x1+dx,y1+dy)$.
+
+ If you draw few points in the rectwindow, they will be hard to see; in
+ this case, you can use filled boxes instead. Compare:
+ \bprog
+ ? plotinit(0, 100,100); plotrpoint(0, 50,50); plotrpoint(0, 10,10);
+ ? plotdraw(0)
+
+ ? thickpoint(w,x,y)= plotmove(w,x-2,y-2); plotrbox(w,4,4,1);
+ ? plotinit(1, 100,100); thickpoint(1, 50,50); thickpoint(1, 60,60);
+ ? plotdraw(1)
+ @eprog

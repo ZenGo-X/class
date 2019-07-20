@@ -1,0 +1,43 @@
+Function: contfracpnqn
+Section: number_theoretical
+C-Name: contfracpnqn
+Prototype: GD-1,L,
+Help: contfracpnqn(x, {n=-1}): [p_n,p_{n-1}; q_n,q_{n-1}] corresponding to the
+ continued fraction x. If n >= 0 is present, returns all convergents from
+ p_0/q_0 up to p_n/q_n.
+Doc: when $x$ is a vector or a one-row matrix, $x$
+ is considered as the list of partial quotients $[a_0,a_1,\dots,a_n]$ of a
+ rational number, and the result is the 2 by 2 matrix
+ $[p_n,p_{n-1};q_n,q_{n-1}]$ in the standard notation of continued fractions,
+ so $p_n/q_n=a_0+1/(a_1+\dots+1/a_n)$. If $x$ is a matrix with two rows
+ $[b_0,b_1,\dots,b_n]$ and $[a_0,a_1,\dots,a_n]$, this is then considered as a
+ generalized continued fraction and we have similarly
+ $p_n/q_n=(1/b_0)(a_0+b_1/(a_1+\dots+b_n/a_n))$. Note that in this case one
+ usually has $b_0=1$.
+
+ If $n \geq 0$ is present, returns all convergents from $p_0/q_0$ up to
+ $p_n/q_n$. (All convergents if $x$ is too small to compute the $n+1$
+ requested convergents.)
+ \bprog
+ ? a = contfrac(Pi,10)
+ %1 = [3, 7, 15, 1, 292, 1, 1, 1, 3]
+ ? allpnqn(x) = contfracpnqn(x,#x) \\ all convergents
+ ? allpnqn(a)
+ %3 =
+ [3 22 333 355 103993 104348 208341 312689 1146408]
+
+ [1  7 106 113  33102  33215  66317  99532  364913]
+ ? contfracpnqn(a) \\ last two convergents
+ %4 =
+ [1146408 312689]
+
+ [ 364913  99532]
+
+ ? contfracpnqn(a,3) \\ first three convergents
+ %5 =
+ [3 22 333 355]
+
+ [1  7 106 113]
+ @eprog
+
+Variant: also available is \fun{GEN}{pnqn}{GEN x} for $n = -1$.

@@ -1,0 +1,73 @@
+Function: idealchinese
+Section: number_fields
+C-Name: idealchinese
+Prototype: GGDG
+Help: idealchinese(nf,x,{y}): x being a prime ideal factorization and y a
+ vector of elements, gives an element b such that v_p(b-y_p)>=v_p(x) for all
+ prime ideals p dividing x, and v_p(b)>=0 for all other p. If y is omitted,
+ return a data structure which can be used in place of x in later calls.
+Doc: $x$ being a prime ideal factorization (i.e.~a 2-columns matrix whose first
+ column contains prime ideals and the second column contains integral
+ exponents), $y$ a vector of elements in $\var{nf}$ indexed by the ideals in
+ $x$, computes an element $b$ such that
+
+ $v_{\goth{p}}(b - y_{\goth{p}}) \geq v_{\goth{p}}(x)$ for all prime ideals
+ in $x$ and $v_{\goth{p}}(b)\geq 0$ for all other $\goth{p}$.
+
+ \bprog
+ ? K = nfinit(t^2-2);
+ ? x = idealfactor(K, 2^2*3)
+ %2 =
+ [[2, [0, 1]~, 2, 1, [0, 2; 1, 0]] 4]
+
+ [           [3, [3, 0]~, 1, 2, 1] 1]
+ ? y = [t,1];
+ ? idealchinese(K, x, y)
+ %4 = [4, -3]~
+ @eprog
+
+ The argument $x$ may also be of the form $[x, s]$ where the first component
+ is as above and $s$ is a vector of signs, with $r_1$ components
+ $s_i$ in $\{-1,0,1\}$:
+ if $\sigma_i$ denotes the $i$-th real embedding of the number field,
+ the element $b$ returned satisfies further
+ $\kbd{sign}(\sigma_i(b)) = s_i$ for all $i$ such that $s_i = \pm1$.
+ In other words, the sign is fixed to $s_i$ at the $i$-th embedding whenever
+ $s_i$ is non-zero.
+ \bprog
+ ? idealchinese(K, [x, [1,1]], y)
+ %5 = [16, -3]~
+ ? idealchinese(K, [x, [-1,-1]], y)
+ %6 = [-20, -3]~
+ ? idealchinese(K, [x, [1,-1]], y)
+ %7 = [4, -3]~
+ @eprog
+
+ If $y$ is omitted, return a data structure which can be used in
+ place of $x$ in later calls and allows to solve many chinese remainder
+ problems for a given $x$ more efficiently.
+ \bprog
+ ? C = idealchinese(K, [x, [1,1]]);
+ ? idealchinese(K, C, y) \\ as above
+ %9 = [16, -3]~
+ ? for(i=1,10^4, idealchinese(K,C,y))  \\ ... but faster !
+ time = 80 ms.
+ ? for(i=1,10^4, idealchinese(K,[x,[1,1]],y))
+ time = 224 ms.
+ @eprog
+ Finally, this structure is itself allowed in place of $x$, the
+ new $s$ overriding the one already present in the structure. This allows to
+ initialize for different sign conditions more efficiently when the underlying
+ ideal factorization remains the same.
+ \bprog
+ ? D = idealchinese(K, [C, [1,-1]]);   \\ replaces [1,1]
+ ? idealchinese(K, D, y)
+ %13 = [4, -3]~
+ ? for(i=1,10^4,idealchinese(K,[C,[1,-1]]))
+ time = 40 ms.   \\ faster than starting from scratch
+ ? for(i=1,10^4,idealchinese(K,[x,[1,-1]]))
+ time = 128 ms.
+ @eprog
+Variant: Also available is
+ \fun{GEN}{idealchineseinit}{GEN nf, GEN x} when $y = \kbd{NULL}$.
+

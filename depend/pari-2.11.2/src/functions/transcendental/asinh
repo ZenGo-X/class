@@ -1,0 +1,10 @@
+Function: asinh
+Section: transcendental
+C-Name: gasinh
+Prototype: Gp
+Help: asinh(x): inverse hyperbolic sine of x.
+Doc: principal branch of $\sinh^{-1}(x) = \log(x + \sqrt{1+x^2})$. In
+ particular $\Im(\text{asinh}(x))\in [-\pi/2,\pi/2]$.
+ The branch cut is in two pieces: $]-i \infty ,-i]$, continuous with quadrant
+ III and $[+i,+i \infty[$, continuous with quadrant I.
+

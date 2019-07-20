@@ -1,0 +1,7 @@
+Function: bernvec
+Section: transcendental
+C-Name: bernvec
+Prototype: L
+Obsolete: 2007-03-30
+Help: bernvec(x): this routine is obsolete, use bernfrac repeatedly.
+Doc: This routine is obsolete, kept for backward compatibility only.

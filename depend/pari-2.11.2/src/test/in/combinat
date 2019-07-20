@@ -1,0 +1,13 @@
+vector(10, k, stirling(11,k))
+vector(11, k, stirling(12,k))
+vector(10, k, stirling(11,k, 2))
+vector(11, k, stirling(12,k, 2))
+v = vector(5!,i,numtoperm(5, i-1))
+if(vecsort(v,lex)!=v,error("numtoperm"));
+vector(#v, i, permtonum(v[i]))
+vector(#v, i, permtonum(Vecsmall(v[i])))
+stirling(100,0)
+iferr(permtonum([1,3,0]), E, Vec(E))
+permtonum(1)
+permtonum([])
+numtoperm(0,0)

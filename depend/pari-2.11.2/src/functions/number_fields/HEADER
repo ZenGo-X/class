@@ -1,0 +1,409 @@
+Function: _header_number_fields
+Class: header
+Section: number_fields
+Doc:
+ \section{General number fields}
+
+ In this section, we describe functions related to general number fields.
+ Functions related to quadratic number fields are found in
+ \secref{se:arithmetic} (Arithmetic functions).
+
+ \subsec{Number field structures} %GPHELPskip
+
+ Let $K = \Q[X] / (T)$ a number field, $\Z_K$ its ring of integers, $T\in\Z[X]$
+ is monic. Three basic number field structures can be attached to $K$ in
+ GP:
+
+ \item $\tev{nf}$ denotes a number field, i.e.~a data structure output by
+ \tet{nfinit}. This contains the basic arithmetic data attached to the
+ number field: signature, maximal order (given by a basis \kbd{nf.zk}),
+ discriminant, defining polynomial $T$, etc.
+
+ \item $\tev{bnf}$ denotes a ``Buchmann's number field'', i.e.~a
+ data structure output by \tet{bnfinit}. This contains
+ $\var{nf}$ and the deeper invariants of the field: units $U(K)$, class group
+ $\Cl(K)$, as well as technical data required to solve the two attached
+ discrete logarithm problems.
+
+ \item $\tev{bnr}$ denotes a ``ray number field'', i.e.~a data structure
+ output by \kbd{bnrinit}, corresponding to the ray class group structure of
+ the field, for some modulus $f$. It contains a \var{bnf}, the modulus
+ $f$, the ray class group $\Cl_f(K)$ and data attached to
+ the discrete logarithm problem therein.
+
+ \subsec{Algebraic numbers and ideals} %GPHELPskip
+
+ \noindent An \tev{algebraic number} belonging to $K = \Q[X]/(T)$ is given as
+
+ \item a \typ{INT}, \typ{FRAC} or \typ{POL} (implicitly modulo $T$), or
+
+ \item a \typ{POLMOD} (modulo $T$), or
+
+ \item a \typ{COL}~\kbd{v} of dimension $N = [K:\Q]$, representing
+ the element in terms of the computed integral basis, as
+ \kbd{sum(i = 1, N,~v[i] * nf.zk[i])}. Note that a \typ{VEC}
+ will not be recognized.
+ \medskip
+
+ \noindent An \tev{ideal} is given in any of the following ways:
+
+ \item an algebraic number in one of the above forms, defining a principal ideal.
+
+ \item a prime ideal, i.e.~a 5-component vector in the format output by
+ \kbd{idealprimedec} or \kbd{idealfactor}.
+
+ \item a \typ{MAT}, square and in Hermite Normal Form (or at least
+ upper triangular with non-negative coefficients), whose columns represent a
+ $\Z$-basis of the ideal.
+
+ One may use \kbd{idealhnf} to convert any ideal to the last (preferred) format.
+
+ \item an \emph{extended ideal} \sidx{ideal (extended)} is a 2-component
+ vector $[I, t]$, where $I$ is an ideal as above and $t$ is an algebraic
+ number, representing the ideal $(t)I$. This is useful whenever \tet{idealred}
+ is involved, implicitly working in the ideal class group, while keeping track
+ of principal ideals. The following multiplicative ideal operations
+ update the principal part: \kbd{idealmul}, \kbd{idealsqr}, \kbd{idealinv},
+ \kbd{idealpow} and \kbd{idealred}; e.g.~using \kbd{idealmul}
+ on $[I,t]$, $[J,u]$, we obtain $[IJ, tu]$. In all other
+ functions, the extended part is silently discarded, e.g.~using
+ \kbd{idealadd} with the above input produces $I+J$.
+
+ The ``principal part'' $t$ in an extended ideal may be
+ represented in any of the above forms, and \emph{also} as a factorization
+ matrix (in terms of number field elements, not ideals!), possibly the empty
+ factorization matrix \kbd{factor(1)} representing $1$; the empty matrix
+ \kbd{[;]} is also accepted as a synonym for $1$. When $t$ is such a
+ factorization matrix, elements stay in
+ factored form, or \tev{famat} for \emph{fa}ctorization \emph{mat}rix, which
+ is a convenient way to avoid coefficient explosion. To recover the
+ conventional expanded form, try \tet{nffactorback}; but many functions
+ already accept \var{famat}s as input, for instance \tet{ideallog}, so
+ expanding huge elements should never be necessary.
+
+ \subsec{Finite abelian groups} %GPHELPskip
+
+ A finite abelian group $G$ in user-readable format is given by its Smith
+ Normal Form as a pair $[h,d]$ or triple $[h,d,g]$.
+ Here $h$ is the cardinality of $G$, $(d_i)$ is the vector of elementary
+ divisors, and $(g_i)$ is a vector of generators. In short,
+ $G = \oplus_{i\leq n} (\Z/d_i\Z) g_i$, with $d_n \mid \dots \mid d_2 \mid d_1$
+ and $\prod d_i = h$. This information can also be retrieved as
+ $G.\kbd{no}$, $G.\kbd{cyc}$ and $G.\kbd{gen}$.
+
+ \item a \tev{character} on the abelian group
+ $\oplus (\Z/d_j\Z) g_j$
+ is given by a row vector $\chi = [a_1,\ldots,a_n]$ such that
+ $\chi(\prod g_j^{n_j}) = \exp(2\pi i\sum a_j n_j / d_j)$.
+
+ \item given such a structure, a \tev{subgroup} $H$ is input as a square
+ matrix in HNF, whose columns express generators of $H$ on the given generators
+ $g_i$. Note that the determinant of that matrix is equal to the index $(G:H)$.
+
+ \subsec{Relative extensions} %GPHELPskip
+
+ We now have a look at data structures attached to relative extensions
+ of number fields $L/K$, and to projective $\Z_K$-modules. When defining a
+ relative extension $L/K$, the $\var{nf}$ attached to the base field $K$
+ must be defined by a variable having a lower priority (see
+ \secref{se:priority}) than the variable defining the extension. For example,
+ you may use the variable name $y$ to define the base field $K$, and $x$ to
+ define the relative extension $L/K$.
+
+ \subsubsec{Basic definitions}\label{se:ZKmodules} %GPHELPskip
+
+ \item $\tev{rnf}$ denotes a relative number field, i.e.~a data structure
+ output by \kbd{rnfinit}, attached to the extension $L/K$. The \var{nf}
+ attached to be base field $K$ is \kbd{rnf.nf}.
+
+ \item A \emph{relative matrix} is an $m\times n$ matrix whose entries are
+ elements of $K$, in any form. Its $m$ columns $A_j$ represent elements
+ in $K^n$.
+
+ \item An \tev{ideal list} is a row vector of fractional ideals of the number
+ field $\var{nf}$.
+
+ \item A \tev{pseudo-matrix} is a 2-component row vector $(A,I)$ where $A$
+ is a relative $m\times n$ matrix and $I$ an ideal list of length $n$. If $I =
+ \{\goth{a}_1,\dots, \goth{a}_n\}$ and the columns of $A$ are $(A_1,\dots,
+ A_n)$, this data defines the torsion-free (projective) $\Z_K$-module
+ $\goth{a}_1 A_1\oplus \goth{a}_n A_n$.
+
+ \item An \tev{integral pseudo-matrix} is a 3-component row vector w$(A,I,J)$
+ where $A = (a_{i,j})$ is an $m\times n$ relative matrix and $I =
+ (\goth{b}_1,\dots, \goth{b}_m)$, $J = (\goth{a}_1,\dots, \goth{a}_n)$ are ideal
+ lists, such that $a_{i,j} \in \goth{b}_i \goth{a}_j^{-1}$ for all $i,j$. This
+ data defines two abstract projective $\Z_K$-modules
+ $N = \goth{a}_1\omega_1\oplus \cdots\oplus \goth{a}_n\omega_n $ in $K^n$,
+ $P = \goth{b}_1\eta_1\oplus \cdots\oplus \goth{b}_m\eta_m$ in $K^m$, and a
+ $\Z_K$-linear map $f:N\to P$ given by
+ $$ f(\sum \alpha_j\omega_j) = \sum_i \Big(a_{i,j}\alpha_j\Big) \eta_i.$$
+ This data defines the $\Z_K$-module $M = P/f(N)$.
+
+ \item Any \emph{projective} $\Z_K$-module\varsidx{projective module} $M$
+ of finite type in $K^m$ can be given by a pseudo matrix $(A,I)$.
+
+ \item An arbitrary $\Z_K$ modules of finite type in $K^m$, with non-trivial
+ torsion, is given by an integral pseudo-matrix $(A,I,J)$
+
+ \subsubsec{Pseudo-bases, determinant} %GPHELPskip
+
+ \item The pair $(A,I)$ is a \tev{pseudo-basis} of the module it
+ generates if the $\goth{a}_j$ are non-zero, and the $A_j$ are $K$-linearly
+ independent. We call $n$ the \emph{size} of the pseudo-basis. If $A$ is a
+ relative matrix, the latter condition means it is square with non-zero
+ determinant; we say that it is in Hermite Normal
+ Form\sidx{Hermite normal form} (HNF) if it is upper triangular and all the
+ elements of the diagonal are equal to 1.
+
+ \item For instance, the relative integer basis \kbd{rnf.zk} is a pseudo-basis
+ $(A,I)$ of $\Z_L$, where $A = \kbd{rnf.zk[1]}$ is a vector of elements of $L$,
+ which are $K$-linearly independent. Most \var{rnf} routines return and handle
+ $\Z_K$-modules contained in $L$ (e.g.~$\Z_L$-ideals) via a pseudo-basis
+ $(A',I')$, where $A'$ is a relative matrix representing a vector of elements of
+ $L$ in terms of the fixed basis \kbd{rnf.zk[1]}
+
+ \item The \emph{determinant} of a pseudo-basis $(A,I)$ is the ideal
+ equal to the product of the determinant of $A$ by all the ideals of $I$. The
+ determinant of a pseudo-matrix is the determinant of any pseudo-basis of the
+ module it generates.
+
+ \subsec{Class field theory}\label{se:CFT}
+
+ A $\tev{modulus}$, in the sense of class field theory, is a divisor supported
+ on the non-complex places of $K$. In PARI terms, this means either an
+ ordinary ideal $I$ as above (no Archimedean component), or a pair $[I,a]$,
+ where $a$ is a vector with $r_1$ $\{0,1\}$-components, corresponding to the
+ infinite part of the divisor. More precisely, the $i$-th component of $a$
+ corresponds to the real embedding attached to the $i$-th real root of
+ \kbd{K.roots}. (That ordering is not canonical, but well defined once a
+ defining polynomial for $K$ is chosen.) For instance, \kbd{[1, [1,1]]} is a
+ modulus for a real quadratic field, allowing ramification at any of the two
+ places at infinity, and nowhere else.
+
+ A \tev{bid} or ``big ideal'' is a structure output by \kbd{idealstar}
+ needed to compute in $(\Z_K/I)^*$, where $I$ is a modulus in the above sense.
+ It is a finite abelian group as described above, supplemented by
+ technical data needed to solve discrete log problems.
+
+ Finally we explain how to input ray number fields (or \var{bnr}), using class
+ field theory. These are defined by a triple $A$, $B$, $C$, where the
+ defining set $[A,B,C]$ can have any of the following forms:
+ $[\var{bnr}]$,
+ $[\var{bnr},\var{subgroup}]$,
+ $[\var{bnr},\var{character}]$,
+ $[\var{bnf},\var{mod}]$,
+ $[\var{bnf},\var{mod},\var{subgroup}]$. The last two forms are kept for
+ backward compatibility, but no longer serve any real purpose (see example
+ below); no newly written function will accept them.
+
+ \item $\var{bnf}$ is as output by \kbd{bnfinit}, where units are mandatory
+ unless the modulus is trivial; \var{bnr} is as output by \kbd{bnrinit}. This
+ is the ground field $K$.
+
+ \item \emph{mod} is a modulus $\goth{f}$, as described above.
+
+ \item \emph{subgroup} a subgroup of the ray class group modulo $\goth{f}$ of
+ $K$. As described above, this is input as a square matrix expressing
+ generators of a subgroup of the ray class group \kbd{\var{bnr}.clgp} on the
+ given generators.
+
+ The corresponding \var{bnr} is the subfield of the ray class field of $K$
+ modulo $\goth{f}$, fixed by the given subgroup.
+
+ \bprog
+   ? K = bnfinit(y^2+1);
+   ? bnr = bnrinit(K, 13)
+   ? %.clgp
+   %3 = [36, [12, 3]]
+   ? bnrdisc(bnr); \\ discriminant of the full ray class field
+   ? bnrdisc(bnr, [3,1;0,1]); \\ discriminant of cyclic cubic extension of K
+   ? bnrconductor(bnr, [3,1]); \\ conductor of chi: g1->zeta_12^3, g2->zeta_3
+ @eprog\noindent
+ We could have written directly
+ \bprog
+   ? bnrdisc(K, 13);
+   ? bnrdisc(K, 13, [3,1;0,1]);
+ @eprog\noindent
+ avoiding one \tet{bnrinit}, but this would actually be slower since the
+ \kbd{bnrinit} is called internally anyway. And now twice!
+
+ \subsec{General use}
+
+ All the functions which are specific to relative extensions, number fields,
+ Buchmann's number fields, Buchmann's number rays, share the prefix \kbd{rnf},
+ \kbd{nf}, \kbd{bnf}, \kbd{bnr} respectively. They take as first argument a
+ number field of that precise type, respectively output by \kbd{rnfinit},
+ \kbd{nfinit}, \kbd{bnfinit}, and \kbd{bnrinit}.
+
+ However, and even though it may not be specified in the descriptions of the
+ functions below, it is permissible, if the function expects a $\var{nf}$, to
+ use a $\var{bnf}$ instead, which contains much more information. On the other
+ hand, if the function requires a \kbd{bnf}, it will \emph{not} launch
+ \kbd{bnfinit} for you, which is a costly operation. Instead, it will give you
+ a specific error message. In short, the types
+ $$ \kbd{nf} \leq \kbd{bnf} \leq \kbd{bnr}$$
+ are ordered, each function requires a minimal type to work properly, but you
+ may always substitute a larger type.
+
+ The data types corresponding to the structures described above are rather
+ complicated. Thus, as we already have seen it with elliptic curves, GP
+ provides ``member functions'' to retrieve data from these structures (once
+ they have been initialized of course). The relevant types of number fields
+ are indicated between parentheses: \smallskip
+
+ \sidx{member functions}
+ \settabs\+xxxxxxx&(\var{bnr},x&\var{bnf},x&nf\hskip2pt&)x&: &\cr
+ \+\tet{bid}    &(\var{bnr}&&&)&: & bid ideal structure.\cr
+
+ \+\tet{bnf}    &(\var{bnr},& \var{bnf}&&)&: & Buchmann's number field.\cr
+
+ \+\tet{clgp}  &(\var{bnr},& \var{bnf}&&)&: & classgroup. This one admits the
+ following three subclasses:\cr
+
+ \+      \quad \tet{cyc} &&&&&: & \quad cyclic decomposition
+  (SNF)\sidx{Smith normal form}.\cr
+
+ \+      \quad \kbd{gen}\sidx{gen (member function)} &&&&&: &
+  \quad generators.\cr
+
+ \+      \quad \tet{no}  &&&&&: & \quad number of elements.\cr
+
+ \+\tet{diff}  &(\var{bnr},& \var{bnf},& \var{nf}&)&: & the different ideal.\cr
+
+ \+\tet{codiff}&(\var{bnr},& \var{bnf},& \var{nf}&)&: & the codifferent
+ (inverse of the different in the ideal group).\cr
+
+ \+\tet{disc} &(\var{bnr},& \var{bnf},& \var{nf}&)&: & discriminant.\cr
+
+ \+\tet{fu}   &(\var{bnr},& \var{bnf}&&)&: & \idx{fundamental units}.\cr
+
+ \+\tet{index}   &(\var{bnr},& \var{bnf},& \var{nf}&)&: &
+  \idx{index} of the power order in the ring of integers.\cr
+
+ \+\tet{mod}   &(\var{bnr}&&&)&: & modulus.\cr
+
+ \+\tet{nf}   &(\var{bnr},& \var{bnf},& \var{nf}&)&: & number field.\cr
+
+ \+\tet{pol}   &(\var{bnr},& \var{bnf},& \var{nf}&)&: & defining polynomial.\cr
+
+ \+\tet{r1} &(\var{bnr},& \var{bnf},& \var{nf}&)&: & the number
+ of real embeddings.\cr
+
+ \+\tet{r2} &(\var{bnr},& \var{bnf},& \var{nf}&)&: & the number
+ of pairs of complex embeddings.\cr
+
+ \+\tet{reg}  &(\var{bnr},& \var{bnf}&&)&: & regulator.\cr
+
+ \+\tet{roots}&(\var{bnr},& \var{bnf},& \var{nf}&)&: & roots of the
+ polynomial generating the field.\cr
+
+ \+\tet{sign} &(\var{bnr},& \var{bnf},& \var{nf}&)&: & signature $[r1,r2]$.\cr
+
+ \+\tet{t2}   &(\var{bnr},& \var{bnf},& \var{nf}&)&: & the $T_2$ matrix (see
+ \kbd{nfinit}).\cr
+
+ \+\tet{tu}   &(\var{bnr},& \var{bnf}&&)&: & a generator for the torsion
+ units.\cr
+
+ \+\tet{zk}   &(\var{bnr},& \var{bnf},& \var{nf}&)&: & integral basis, i.e.~a
+ $\Z$-basis of the maximal order.\cr
+
+ \+\tet{zkst}   &(\var{bnr}&&&)&: & structure of $(\Z_K/m)^*$.\cr
+
+ The member functions \kbd{.codiff}, \kbd{.t2} and \kbd{.zk} perform a
+ computation and are relatively expensive in large degree: move them out of
+ tight loops and store them in variables.
+
+ \misctitle{Deprecated} The following member functions are still available, but deprecated and should not be used in new scripts :
+ \+\tet{futu} &(\var{bnr},& \var{bnf},&&)&: &
+  $[u_1,...,u_r,w]$, $(u_i)$ is a vector of fundamental units,\cr
+ \+&&&&&& $w$ generates the torsion units.\cr
+
+ \+\tet{tufu} &(\var{bnr},& \var{bnf},&&)&: &
+  $[w,u_1,...,u_r]$, $(u_i)$ is a vector of fundamental units,\cr
+ \+&&&&&& $w$ generates the torsion units.\cr
+
+
+   For instance, assume that $\var{bnf} = \kbd{bnfinit}(\var{pol})$, for some
+ polynomial. Then \kbd{\var{bnf}.clgp} retrieves the class group, and
+ \kbd{\var{bnf}.clgp.no} the class number. If we had set $\var{bnf} =
+ \kbd{nfinit}(\var{pol})$, both would have output an error message. All these
+ functions are completely recursive, thus for instance
+ \kbd{\var{bnr}.bnf.nf.zk} will yield the maximal order of \var{bnr}, which
+ you could get directly with a simple \kbd{\var{bnr}.zk}.
+
+ \subsec{Class group, units, and the GRH}\label{se:GRHbnf}
+
+ Some of the functions starting with \kbd{bnf} are implementations of the
+ sub-exponential algorithms for finding class and unit groups under \idx{GRH},
+ due to Hafner-McCurley, \idx{Buchmann} and Cohen-Diaz-Olivier. The general
+ call to the functions concerning class groups of general number fields
+ (i.e.~excluding \kbd{quadclassunit}) involves a polynomial $P$ and a
+ technical vector
+ $$\var{tech} = [c_1, c_2, \var{nrpid} ],$$
+ where the parameters are to be understood as follows:
+
+ $P$ is the defining polynomial for the number field, which must be in
+ $\Z[X]$, irreducible and monic. In fact, if you supply a non-monic polynomial
+ at this point, \kbd{gp} issues a warning, then \emph{transforms your
+ polynomial} so that it becomes monic. The \kbd{nfinit} routine
+ will return a different result in this case: instead of \kbd{res}, you get a
+ vector \kbd{[res,Mod(a,Q)]}, where \kbd{Mod(a,Q) = Mod(X,P)} gives the change
+ of variables. In all other routines, the variable change is simply lost.
+
+ The \var{tech} interface is obsolete and you should not tamper with
+ these parameters. Indeed, from version 2.4.0 on,
+
+ \item the results are always rigorous under \idx{GRH} (before that version,
+ they relied on a heuristic strengthening, hence the need for overrides).
+
+ \item the influence of these parameters on execution time and stack size is
+ marginal. They \emph{can} be useful to fine-tune and experiment with the
+ \kbd{bnfinit} code, but you will be better off modifying all tuning
+ parameters in the C code (there are many more than just those three).
+ We nevertheless describe it for completeness.
+
+ The numbers $c_1 \leq c_2$ are non-negative real numbers. By default they are
+ chosen so that the result is correct under GRH. For $i = 1,2$, let
+ $B_i = c_i(\log |d_K|)^2$, and denote by $S(B)$ the set of maximal ideals of
+ $K$ whose norm is less than $B$. We want $S(B_1)$ to generate $\Cl(K)$ and hope
+ that $S(B_2)$ can be \emph{proven} to generate $\Cl(K)$.
+
+ More precisely, $S(B_1)$ is a factorbase used to compute a tentative
+ $\Cl(K)$ by generators and relations. We then check explicitly, using
+ essentially \kbd{bnfisprincipal}, that the elements of $S(B_2)$ belong to the
+ span of $S(B_1)$. Under the assumption that $S(B_2)$ generates $\Cl(K)$, we
+ are done. User-supplied $c_i$ are only used to compute initial guesses for
+ the bounds $B_i$, and the algorithm increases them until one can \emph{prove}
+ under GRH that $S(B_2)$ generates $\Cl(K)$. A uniform result of Bach says
+ that $c_2 = 12$ is always suitable, but this bound is very pessimistic and a
+ direct algorithm due to Belabas-Diaz-Friedman is used to check the condition,
+ assuming GRH. The default values are $c_1 = c_2 = 0$. When $c_1$ is equal to
+ $0$ the algorithm takes it equal to $c_2$.
+
+ $\var{nrpid}$ is the maximal number of small norm relations attached to each
+ ideal in the factor base. Set it to $0$ to disable the search for small norm
+ relations. Otherwise, reasonable values are between 4 and 20. The default is
+ 4.
+
+ \misctitle{Warning} Make sure you understand the above! By default, most of
+ the \kbd{bnf} routines depend on the correctness of the GRH. In particular,
+ any of the class number, class group structure, class group generators,
+ regulator and fundamental units may be wrong, independently of each other.
+ Any result computed from such a \kbd{bnf} may be wrong. The only guarantee is
+ that the units given generate a subgroup of finite index in the full unit
+ group. You must use \kbd{bnfcertify} to certify the computations
+ unconditionally.
+
+ \misctitle{Remarks}
+
+ You do not need to supply the technical parameters (under the library you
+ still need to send at least an empty vector, coded as \kbd{NULL}). However,
+ should you choose to set some of them, they \emph{must} be given in the
+ requested order. For example, if you want to specify a given value of
+ \var{nrpid}, you must give some values as well for $c_1$ and $c_2$, and provide
+ a vector $[c_1,c_2,\var{nrpid}]$.
+
+ Note also that you can use an $\var{nf}$ instead of $P$, which avoids
+ recomputing the integral basis and analogous quantities.

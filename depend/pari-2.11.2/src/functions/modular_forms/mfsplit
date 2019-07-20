@@ -1,0 +1,56 @@
+Function: mfsplit
+Section: modular_forms
+C-Name: mfsplit
+Prototype: GD0,L,D0,L,
+Help: mfsplit(mf,{dimlim=0},{flag=0}): mf containing the new space
+ split the new space into Galois
+ orbits of eigenforms of the newspace and return [vF,vK], where vF gives
+ the (Galois orbit of) eigenforms in terms of mfbasis(mf) and vK is a list of
+ polynomials defining each Galois orbit. If dimlim is set only the Galois
+ orbits of dimension <= dimlim are computed (i.e. the rational eigenforms if
+ dimlim = 1 and the character is real). Flag speeds up computations when the
+ dimension is large: if flag = d > 0, when the dimension of the eigenspace
+ is > d, only the Galois polynomial is computed.
+Doc: \kbd{mf} from \kbd{mfinit} with integral weight containing the new space
+ (either the new space itself or the cuspidal space or the full space), and
+ preferably the newspace itself for efficiency, split the space into Galois
+ orbits of eigenforms of the newspace, satisfying various restrictions.
+
+ The functions returns $[vF, vK]$, where $vF$ gives (Galois orbit of)
+ eigenforms and $vK$ is a list of polynomials defining each Galois orbit.
+ The eigenforms are given in \kbd{mftobasis} format, i.e. as a matrix
+ whose columns give the forms with respect to \kbd{mfbasis(mf)}.
+
+ If \kbd{dimlim} is set, only the Galois orbits of dimension $\leq \kbd{dimlim}$
+ are computed (i.e. the rational eigenforms if $\kbd{dimlim} = 1$ and the
+ character is real). This can considerably speed up the function when a Galois
+ orbit is defined over a large field.
+
+ \kbd{flag} speeds up computations when the dimension is large: if $flag=d>0$,
+ when the dimension of the eigenspace is $>d$, only the Galois polynomial is
+ computed.
+
+ Note that the function \kbd{mfeigenbasis} returns all eigenforms in an
+ easier to use format (as modular forms which can be input as is in other
+ functions); \kbd{mfsplit} is only useful when you can restrict
+ to orbits of small dimensions, e.g. rational eigenforms.
+
+ \bprog
+ ? mf=mfinit([11,2],0); f=mfeigenbasis(mf)[1]; mfcoefs(f,16)
+ %1 = [0, 1, -2, -1, ...]
+ ? mf=mfinit([23,2],0); f=mfeigenbasis(mf)[1]; mfcoefs(f,16)
+ %2 = [Mod(0, z^2 - z - 1), Mod(1, z^2 - z - 1), Mod(-z, z^2 - z - 1), ...]
+ ? mf=mfinit([179,2],0); apply(poldegree, mffields(mf))
+ %3 = [1, 3, 11]
+ ? mf=mfinit([719,2],0);
+ ? [vF,vK] = mfsplit(mf, 5); \\ fast when restricting to small orbits
+ time = 192 ms.
+ ? #vF  \\ a single orbit
+ %5 = 1
+ ? poldegree(vK[1]) \\ of dimension 5
+ %6 = 5
+ ? [vF,vK] = mfsplit(mf); \\ general case is slow
+ time = 2,104 ms.
+ ? apply(poldegree,vK)
+ %8 = [5, 10, 45] \\ because degree 45 is large...
+ @eprog

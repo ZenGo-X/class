@@ -1,0 +1,10 @@
+Function: qfbcompraw
+Section: number_theoretical
+C-Name: qfbcompraw
+Prototype: GG
+Help: qfbcompraw(x,y): Gaussian composition without reduction of the binary
+ quadratic forms x and y.
+Doc: \idx{composition} of the binary quadratic forms $x$ and $y$, without
+ \idx{reduction} of the result. This is useful e.g.~to compute a generating
+ element of an ideal. The result is undefined if $x$ and $y$ do not have the
+ same discriminant.

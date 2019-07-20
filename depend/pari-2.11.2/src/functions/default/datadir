@@ -1,0 +1,12 @@
+Function: _def_datadir
+Class: default
+Section: default
+C-Name: sd_datadir
+Prototype:
+Help:
+Doc: the name of directory containing the optional data files. For now,
+ this includes the \kbd{elldata}, \kbd{galdata}, \kbd{galpol}, \kbd{seadata}
+ packages.
+
+ The default value is \kbd{/usr/local/share/pari}, or the override specified
+ via \kbd{Configure --datadir=}.

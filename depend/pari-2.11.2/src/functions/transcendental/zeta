@@ -1,0 +1,35 @@
+Function: zeta
+Section: transcendental
+C-Name: gzeta
+Prototype: Gp
+Help: zeta(s): Riemann zeta function at s with s a complex or a p-adic number.
+Doc: For $s \neq 1$ a complex number, Riemann's zeta
+ function \sidx{Riemann zeta-function} $\zeta(s)=\sum_{n\ge1}n^{-s}$,
+ computed using the \idx{Euler-Maclaurin} summation formula, except
+ when $s$ is of type integer, in which case it is computed using
+ Bernoulli numbers\sidx{Bernoulli numbers} for $s\le0$ or $s>0$ and
+ even, and using modular forms for $s>0$ and odd. Power series
+ are also allowed:
+ \bprog
+ ? zeta(2) - Pi^2/6
+ %1 = 0.E-38
+ ? zeta(1+x+O(x^3))
+ %2 = 1.0000000000000000000000000000000000000*x^-1 + \
+      0.57721566490153286060651209008240243104 + O(x)
+ @eprog
+
+ For $s\neq 1$ a $p$-adic number, Kubota-Leopoldt zeta function at $s$, that
+ is the unique continuous $p$-adic function on the $p$-adic integers
+ that interpolates the values of $(1 - p^{-k}) \zeta(k)$ at negative
+ integers $k$ such that $k \equiv 1 \pmod{p-1}$ (resp. $k$ is odd) if
+ $p$ is odd (resp. $p = 2$). Power series are not allowed in this case.
+ \bprog
+ ? zeta(-3+O(5^10))
+ %1 = 4*5^-1 + 4 + 3*5 + 4*5^3 + 4*5^5 + 4*5^7 + O(5^9)))))
+ ? (1-5^3) * zeta(-3)
+ %2 = -1.0333333333333333333333333333333333333
+ ? bestappr(%)
+ %3 = -31/30
+ ? zeta(-3+O(5^10)) - (-31/30)
+ %4 = O(5^9)
+ @eprog

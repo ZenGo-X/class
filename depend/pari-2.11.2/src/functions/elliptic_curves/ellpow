@@ -1,0 +1,7 @@
+Function: ellpow
+Section: elliptic_curves
+C-Name: ellmul
+Prototype: GGG
+Obsolete: 2012-06-06
+Help: ellpow(E,z,n): deprecated alias for ellmul.
+Doc: deprecated alias for \kbd{ellmul}.

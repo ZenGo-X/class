@@ -1,0 +1,13 @@
+Function: idealnumden
+Section: number_fields
+C-Name: idealnumden
+Prototype: GG
+Help: idealnumden(nf,x): returns [A,B], where A,B are coprime integer ideals
+ such that x = A/B.
+Doc: returns $[A,B]$, where $A,B$ are coprime integer ideals
+ such that $x = A/B$, in the number field $\var{nf}$.
+ \bprog
+ ? nf = nfinit(x^2+1);
+ ? idealnumden(nf, (x+1)/2)
+ %2 = [[1, 0; 0, 1], [2, 1; 0, 1]]
+ @eprog

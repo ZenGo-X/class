@@ -1,0 +1,13 @@
+Function: vecsum
+Section: linear_algebra
+C-Name: vecsum
+Prototype: G
+Help: vecsum(v): return the sum of the components of the vector v.
+Doc: return the sum of the components of the vector $v$. Return $0$ on an
+ empty vector.
+ \bprog
+ ? vecsum([1,2,3])
+ %1 = 6
+ ? vecsum([])
+ %2 = 0
+ @eprog

@@ -1,0 +1,185 @@
+Function: printf
+Section: programming/specific
+C-Name: printf0
+Prototype: vss*
+Help: printf(fmt,{x}*): prints its arguments according to the format fmt.
+Doc: This function is based on the C library command of the same name.
+ It prints its arguments according to the format \var{fmt}, which specifies how
+ subsequent arguments are converted for output. The format is a
+ character string composed of zero or more directives:
+
+ \item ordinary characters (not \kbd{\%}), printed unchanged,
+
+ \item conversions specifications (\kbd{\%} followed by some characters)
+ which fetch one argument from the list and prints it according to the
+ specification.
+
+ More precisely, a conversion specification consists in a \kbd{\%}, one or more
+ optional flags (among \kbd{\#}, \kbd{0}, \kbd{-}, \kbd{+}, ` '), an optional
+ decimal digit string specifying a minimal field width, an optional precision
+ in the form of a period (`\kbd{.}') followed by a decimal digit string, and
+ the conversion specifier (among \kbd{d},\kbd{i}, \kbd{o}, \kbd{u},
+ \kbd{x},\kbd{X}, \kbd{p}, \kbd{e},\kbd{E}, \kbd{f}, \kbd{g},\kbd{G}, \kbd{s}).
+
+ \misctitle{The flag characters} The character \kbd{\%} is followed by zero or
+ more of the following flags:
+
+ \item \kbd{\#}: the value is converted to an ``alternate form''. For
+ \kbd{o} conversion (octal), a \kbd{0} is prefixed to the string. For \kbd{x}
+ and \kbd{X} conversions (hexa), respectively \kbd{0x} and \kbd{0X} are
+ prepended. For other conversions, the flag is ignored.
+
+ \item \kbd{0}: the value should be zero padded. For
+ \kbd{d},
+ \kbd{i},
+ \kbd{o},
+ \kbd{u},
+ \kbd{x},
+ \kbd{X}
+ \kbd{e},
+ \kbd{E},
+ \kbd{f},
+ \kbd{F},
+ \kbd{g}, and
+ \kbd{G} conversions, the value is padded on the left with zeros rather than
+ blanks. (If the \kbd{0} and \kbd{-} flags both appear, the \kbd{0} flag is
+ ignored.)
+
+ \item \kbd{-}: the value is left adjusted on the field boundary. (The
+ default is right justification.) The value is padded on the right with
+ blanks, rather than on the left with blanks or zeros. A \kbd{-} overrides a
+ \kbd{0} if both are given.
+
+ \item \kbd{` '} (a space): a blank is left before a positive number
+ produced by a signed conversion.
+
+ \item \kbd{+}: a sign (+ or -) is placed before a number produced by a
+ signed conversion. A \kbd{+} overrides a space if both are used.
+
+ \misctitle{The field width} An optional decimal digit string (whose first
+ digit is non-zero) specifying a \emph{minimum} field width. If the value has
+ fewer characters than the field width, it is padded with spaces on the left
+ (or right, if the left-adjustment flag has been given). In no case does a
+ small field width cause truncation of a field; if the value is wider than
+ the field width, the field is expanded to contain the conversion result.
+ Instead of a decimal digit string, one may write \kbd{*} to specify that the
+ field width is given in the next argument.
+
+ \misctitle{The precision} An optional precision in the form of a period
+ (`\kbd{.}') followed by a decimal digit string. This gives
+ the number of digits to appear after the radix character for \kbd{e},
+ \kbd{E}, \kbd{f}, and \kbd{F} conversions, the maximum number of significant
+ digits for \kbd{g} and \kbd{G} conversions, and the maximum number of
+ characters to be printed from an \kbd{s} conversion.
+ Instead of a decimal digit string, one may write \kbd{*} to specify that the
+ field width is given in the next argument.
+
+ \misctitle{The length modifier} This is ignored under \kbd{gp}, but
+ necessary for \kbd{libpari} programming. Description given here for
+ completeness:
+
+ \item \kbd{l}: argument is a \kbd{long} integer.
+
+ \item \kbd{P}: argument is a \kbd{GEN}.
+
+ \misctitle{The conversion specifier} A character that specifies the type of
+ conversion to be applied.
+
+ \item \kbd{d}, \kbd{i}: a signed integer.
+
+ \item \kbd{o}, \kbd{u}, \kbd{x}, \kbd{X}: an unsigned integer, converted
+ to unsigned octal (\kbd{o}), decimal (\kbd{u}) or hexadecimal (\kbd{x} or
+ \kbd{X}) notation. The letters \kbd{abcdef} are used for \kbd{x}
+ conversions;  the letters \kbd{ABCDEF} are used for \kbd{X} conversions.
+
+ \item \kbd{e}, \kbd{E}: the (real) argument is converted in the style
+ \kbd{[ -]d.ddd e[ -]dd}, where there is one digit before the decimal point,
+ and the number of digits after it is equal to the precision; if the
+ precision is missing, use the current \kbd{realprecision} for the total
+ number of printed digits. If the precision is explicitly 0, no decimal-point
+ character appears. An \kbd{E} conversion uses the letter \kbd{E} rather
+ than \kbd{e} to introduce the exponent.
+
+ \item \kbd{f}, \kbd{F}: the (real) argument is converted in the style
+ \kbd{[ -]ddd.ddd}, where the number of digits after the decimal point
+ is equal to the precision; if the precision is missing, use the current
+ \kbd{realprecision} for the total number of printed digits. If the precision
+ is explicitly 0, no decimal-point character appears. If a decimal point
+ appears, at least one digit appears before it.
+
+ \item \kbd{g}, \kbd{G}: the (real) argument is converted in style
+ \kbd{e} or \kbd{f} (or \kbd{E} or \kbd{F} for \kbd{G} conversions)
+ \kbd{[ -]ddd.ddd}, where the total number of digits printed
+ is equal to the precision; if the precision is missing, use the current
+ \kbd{realprecision}. If the precision is explicitly 0, it is treated as 1.
+ Style \kbd{e} is used when
+ the decimal exponent is $< -4$, to print \kbd{0.}, or when the integer
+ part cannot be decided given the known significant digits, and the \kbd{f}
+ format otherwise.
+
+ \item \kbd{c}: the integer argument is converted to an unsigned char, and the
+ resulting character is written.
+
+ \item \kbd{s}: convert to a character string. If a precision is given, no
+ more than the specified number of characters are written.
+
+ \item \kbd{p}: print the address of the argument in hexadecimal (as if by
+ \kbd{\%\#x}).
+
+ \item \kbd{\%}: a \kbd{\%} is written. No argument is converted. The complete
+ conversion specification is \kbd{\%\%}.
+
+ \noindent Examples:
+
+ \bprog
+ ? printf("floor: %d, field width 3: %3d, with sign: %+3d\n", Pi, 1, 2);
+ floor: 3, field width 3:   1, with sign:  +2
+
+ ? printf("%.5g %.5g %.5g\n",123,123/456,123456789);
+ 123.00 0.26974 1.2346 e8
+
+ ? printf("%-2.5s:%2.5s:%2.5s\n", "P", "PARI", "PARIGP");
+ P :PARI:PARIG
+
+ \\ min field width and precision given by arguments
+ ? x = 23; y=-1/x; printf("x=%+06.2f y=%+0*.*f\n", x, 6, 2, y);
+ x=+23.00 y=-00.04
+
+ \\ minimum fields width 5, pad left with zeroes
+ ? for (i = 2, 5, printf("%05d\n", 10^i))
+ 00100
+ 01000
+ 10000
+ 100000  \\@com don't truncate fields whose length is larger than the minimum width
+ ? printf("%.2f  |%06.2f|", Pi,Pi)
+ 3.14  |  3.14|
+ @eprog\noindent All numerical conversions apply recursively to the entries
+ of vectors and matrices:
+ \bprog
+ ? printf("%4d", [1,2,3]);
+ [   1,   2,   3]
+ ? printf("%5.2f", mathilbert(3));
+ [ 1.00  0.50  0.33]
+
+ [ 0.50  0.33  0.25]
+
+ [ 0.33  0.25  0.20]
+ @eprog
+ \misctitle{Technical note} Our implementation of \tet{printf}
+ deviates from the C89 and C99 standards in a few places:
+
+ \item whenever a precision is missing, the current \kbd{realprecision} is
+ used to determine the number of printed digits (C89: use 6 decimals after
+ the radix character).
+
+ \item in conversion style \kbd{e}, we do not impose that the
+ exponent has at least two digits; we never write a \kbd{+} sign in the
+ exponent; 0 is printed in a special way, always as \kbd{0.E\var{exp}}.
+
+ \item in conversion style \kbd{f}, we switch to style \kbd{e} if the
+ exponent is greater or equal to the precision.
+
+ \item in conversion \kbd{g} and \kbd{G}, we do not remove trailing zeros
+  from the fractional part of the result; nor a trailing decimal point;
+  0 is printed in a special way, always as \kbd{0.E\var{exp}}.
+ %\syn{NO}

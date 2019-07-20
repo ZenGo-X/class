@@ -1,0 +1,72 @@
+Function: ellsea
+Class: basic
+Section: elliptic_curves
+C-Name: ellsea
+Prototype: GD0,L,
+Help: ellsea(E,{tors=0}): computes the order of the group E(Fq)
+ for the elliptic curve E, defined over a finite field,
+ using SEA algorithm, with early abort for curves (or their quadratic
+ twist) with non-prime order.
+Doc: Let $E$ be an \var{ell} structure as output by \kbd{ellinit}, defined over
+ a finite field $\F_q$. This low-level function computes the order of the
+ group $E(\F_q)$ using the SEA algorithm; compared to the high-level
+ function \kbd{ellcard}, which includes SEA among its choice of algorithms,
+ the \kbd{tors} argument allows to speed up a search for curves having almost
+ prime order and whose quadratic twist may also have almost prime order.
+ When \kbd{tors} is set to a non-zero value, the function returns $0$ as soon
+ as it detects that the order has a small prime factor not dividing \kbd{tors};
+ SEA considers modular polynomials of increasing prime degree $\ell$ and we
+ return $0$ as soon as we hit an $\ell$ (coprime to \kbd{tors}) dividing
+ $\#E(\F_q)$:
+ \bprog
+ ? ellsea(ellinit([1,1], 2^56+3477), 1)
+ %1 = 72057594135613381
+ ? forprime(p=2^128,oo, q = ellcard(ellinit([1,1],p)); if(isprime(q),break))
+ time = 6,571 ms.
+ ? forprime(p=2^128,oo, q = ellsea(ellinit([1,1],p),1);if(isprime(q),break))
+ time = 522 ms.
+ @eprog\noindent
+ In particular, set \kbd{tors} to $1$ if you want a curve with prime order,
+ to $2$ if you want to allow a cofactor which is a power of two (e.g. for
+ Edwards's curves), etc. The early exit on bad curves yields a massive
+ speedup compared to running the cardinal algorithm to completion.
+
+ When \kbd{tors} is negative, similar checks are performed for the quadratic
+ twist of the curve.
+
+ The following function returns a curve of prime order over $\F_p$.
+ \bprog
+ cryptocurve(p) =
+ {
+   while(1,
+     my(E, N, j = Mod(random(p), p));
+     E = ellinit(ellfromj(j));
+     N = ellsea(E, 1); if (!N, continue);
+     if (isprime(N), return(E));
+     \\ try the quadratic twist for free
+     if (isprime(2*p+2 - N), return(ellinit(elltwist(E))));
+   );
+ }
+ ? p = randomprime([2^255, 2^256]);
+ ? E = cryptocurve(p); \\ insist on prime order
+ %2 = 47,447ms
+ @eprog\noindent The same example without early abort (using \kbd{ellcard(E)}
+ instead of \kbd{ellsea(E, 1)}) runs for about 5 minutes before finding a
+ suitable curve.
+
+ The availability of the \kbd{seadata} package will speed up the computation,
+ and is strongly recommended. The generic function \kbd{ellcard} should be
+ preferred when you only want to compute the cardinal of a given curve without
+ caring about it having almost prime order:
+
+ \item If the characteristic is too small ($p \leq 7$) or the field
+ cardinality is tiny ($q \leq 523$) the generic algorithm
+ \kbd{ellcard} is used instead and the \kbd{tors} argument is ignored.
+ (The reason for this is that SEA is not implemented for $p \leq 7$ and
+ that if $q \leq 523$ it is likely to run into an infinite loop.)
+
+ \item If the field cardinality is smaller than about $2^{50}$, the
+ generic algorithm will be faster.
+
+ \item Contrary to \kbd{ellcard}, \kbd{ellsea} does not store the computed
+ cardinality in $E$.

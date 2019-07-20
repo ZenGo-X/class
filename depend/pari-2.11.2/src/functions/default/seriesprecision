@@ -1,0 +1,11 @@
+Function: _def_seriesprecision
+Class: default
+Section: default
+C-Name: sd_seriesprecision
+Prototype:
+Help:
+Doc: number of significant terms
+ when converting a polynomial or rational function to a power series
+ (see~\b{ps}).
+
+ The default value is \kbd{16}.

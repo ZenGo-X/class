@@ -1,0 +1,49 @@
+default(realprecision, 38);
+polinterpolate([2,3,4])
+polinterpolate([2,3,4] * Mod(1,7))
+polinterpolate([2,3,4] * Mod(1,7),, 0)
+polinterpolate([1,2,4], [2,3,4])
+polinterpolate([1,2,4] * Mod(1,7), [2,3,4], 0)
+polinterpolate([1,2,4], [2,3,4], 1.5)
+polinterpolate([1,2,4], [2,3,4], 1.5, &e); e
+polinterpolate([1,2],[0,0])
+polinterpolate([],[])
+polinterpolate([1],[2])
+polinterpolate([],[],Mod(1,2))
+polinterpolate([0],[0],Mod(1,2))
+polinterpolate([1],[1],Mod(1,2))
+
+z = varhigher("z", x);  \\ so variable ordering is z < x < y
+test(a,b,v) = my(f = polinterpolate(a,b,v)); [f, variable(f)];
+
+test([], [], 1)
+test([], [], x)
+test([], [], y)
+test([], [], z)
+test([], [], z + 1)    \\ expect [0, z], currently returns [0, 0]
+test([0], [0], 1)
+test([0], [0], x)
+test([0], [0], y)
+test([0], [0], z)
+test([0], [0], z + 1)  \\ expect [0, z], currently returns [0, 0]
+test([1], [1], 1)
+test([1], [1], x)
+test([1], [1], y)
+test([1], [1], z)
+test([1], [1], z + 1)  \\ expect [1, z], currently returns [1, 0]
+test([1], [x], 1)
+test([1], [x], x)
+test([1], [x], y)
+test([1], [x], z)
+test([1], [x], z + 1)  \\ expect [x, z], currently returns [x, x]
+
+test([0, 1], [0, x], 1)
+test([0, 1], [0, x], x)
+test([0, 1], [0, x], y)
+test([0, 1], [0, x], z)
+test([0, 1], [0, x], z + 1)
+test([x, x + 1], [0, 1], 1)
+test([x, x + 1], [0, 1], x)
+test([x, x + 1], [0, 1], y)
+test([x, x + 1], [0, 1], z)
+test([x, x + 1], [0, 1], z + 1)

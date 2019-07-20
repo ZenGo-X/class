@@ -1,0 +1,13 @@
+Function: _def_secure
+Class: default
+Section: default
+C-Name: sd_secure
+Prototype:
+Help:
+Doc: this toggle is either 1 (on) or 0 (off). If on, the \tet{system} and
+ \tet{extern} command are disabled. These two commands are potentially
+ dangerous when you execute foreign scripts since they let \kbd{gp} execute
+ arbitrary UNIX commands. \kbd{gp} will ask for confirmation before letting
+ you (or a script) unset this toggle.
+
+ The default value is \kbd{0}.

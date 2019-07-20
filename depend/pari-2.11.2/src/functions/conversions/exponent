@@ -1,0 +1,43 @@
+Function: exponent
+Section: conversions
+C-Name: gpexponent
+Prototype: G
+Help: exponent(x): binary exponent of x
+Doc: When $x$ is a \typ{REAL}, the result is the binary exponent $e$ of $x$.
+ For a non-zero $x$, this is the unique integer $e$ such that
+ $2^e \leq |x| < 2^{e+1}$. For a real $0$, this returns the PARI exponent $e$
+ attached to $x$ (which may represent any floating-point number less than
+ $2^e$ in absolute value).
+ \bprog
+ ? exponent(Pi)
+ %1 = 1
+ ? exponent(4.0)
+ %2 = 2
+ ? exponent(0.0)
+ %3 = -128
+ ? default(realbitprecision)
+ %4 = 128
+ @eprog\noindent This definition extends naturally to non-zero integers,
+ and the exponent of an exact $0$ is $-\kbd{oo}$ by convention.
+
+ For convenience, we \emph{define} the exponent of a \typ{FRAC} $a/b$ as
+ the difference of \kbd{exponent}$(a)$ and \kbd{exponent}$(b)$; note that,
+ if $e'$ denotes the exponent of \kbd{$a/b$ * 1.0}, then the exponent $e$
+ we return is either $e'$ or $e'+1$, thus $2^{e+1}$ is an upper bound for
+ $|a/b|$.
+ \bprog
+ ? [ exponent(9), exponent(10), exponent(9/10), exponent(9/10*1.) ]
+ %5 = [3, 3, 0, -1]
+ @eprog
+
+ For a PARI object of type \typ{COMPLEX}, \typ{POL}, \typ{SER}, \typ{VEC},
+ \typ{COL}, \typ{MAT} this returns the largest exponent found among the
+ components of $x$. Hence $2^{e+1}$ is a quick upper bound for the sup norm
+ of real matrices or polynomials; and $2^{e+(3/2)}$ for complex ones.
+
+ \bprog
+ ? exponent(3*x^2 + 15*x - 100)
+ %5 = 6
+ ? exponent(0)
+ %6 = -oo
+ @eprog

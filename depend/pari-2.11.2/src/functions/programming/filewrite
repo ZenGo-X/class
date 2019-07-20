@@ -1,0 +1,44 @@
+Function: filewrite
+Section: programming/specific
+C-Name: gp_filewrite
+Prototype: vLs
+Help: filewrite(n, s): write the string s to file attached to descriptor n,
+ ending with a newline. The file must have been opened with fileopen in
+ "w" or "a" mode.
+Doc: write the string $s$ to the file attached to descriptor $n$, ending with
+ a newline. The file must have been opened with \kbd{fileopen} in
+ \kbd{"w"} or \kbd{"a"} mode. There is no guarantee that $s$ is completely
+ written to disk until \kbd{fileclose$(n)$} is executed, which is automatic
+ when quitting \kbd{gp}.
+
+ If the newline is not desired, use \kbd{filewrite1}.
+
+ \misctitle{Variant} The high-level function \kbd{write} is expensive when many
+ consecutive writes are expected because it cannot use buffering. The low-level
+ interface \kbd{fileopen} / \kbd{filewrite} / \kbd{fileclose} is more efficient:
+ \bprog
+ ? f = "/tmp/bigfile";
+ ? for (i = 1, 10^5, write(f, i^2+1))
+ time = 240 ms.
+
+ ? v = vector(10^5, i, i^2+1);
+ time = 10 ms. \\ computing the values is fast
+ ? write("/tmp/bigfile2",v)
+ time = 12 ms. \\ writing them in one operation is fast
+
+ ? n = fileopen("/tmp/bigfile", "w");
+ ? for (i = 1, 10^5, filewrite(n, i^2+1))
+ time = 24 ms.  \\ low-level write is ten times faster
+ ? fileclose(n);
+ @eprog\noindent In the final example, the file needs not be in a consistent
+ state until the ending \kbd{fileclose} is evaluated, e.g. some lines might be
+ half-written or not present at all even though the corresponding
+ \kbd{filewrite} was executed already. Both a single high-level \kbd{write}
+ and a succession of low-level \kbd{filewrite}s achieve the same efficiency,
+ but the latter is often more natural. In fact, concatenating naively
+ the entries to be written is quadratic in the number of entries, hence
+ much more expensive than the original write operations:
+ \bprog
+ ? v = []; for (i = 1, 10^5, v = concat(v,i))
+ time = 1min, 41,456 ms.
+ @eprog

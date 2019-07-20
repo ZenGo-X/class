@@ -1,0 +1,44 @@
+Function: mflinear
+Section: modular_forms
+C-Name: mflinear
+Prototype: GG
+Help: mflinear(vF,v): vF being a vector of modular forms and v
+ a vector of coefficients of same length, compute the linear
+ combination of the entries of vF with coefficients v.
+Doc: \kbd{vF} being a vector of generalized modular forms and \kbd{v}
+ a vector of coefficients of same length, compute the linear
+ combination of the entries of \kbd{vF} with coefficients \kbd{v}.
+ \misctitle{Note} Use this in particular to subtract two forms $F$ and $G$
+ (with $vF=[F,G]$ and $v=[1,-1]$), or to multiply an form by
+ a scalar $\lambda$ (with $vF=[F]$ and $v=[\lambda]$).
+ \bprog
+ ? D = mfDelta(); G = mflinear([D],[-3]);
+ ? mfcoefs(G,4)
+ %2 = [0, -3, 72, -756, 4416]
+ @eprog For user convenience, we allow
+
+ \item a modular form space \kbd{mf} as a \kbd{vF} argument, which is
+ understood as \kbd{mfbasis(mf)};
+
+ \item in this case, we also allow a modular form $f$ as $v$, which
+ is understood as \kbd{mftobasis}$(\var{mf}, f)$.
+
+ \bprog
+ ? T = mfpow(mfTheta(),7); F = mfShimura(T,-3); \\ Shimura lift for D=-3
+ ? mfcoefs(F,8)
+ %2 = [-5/9, 280, 9240, 68320, 295960, 875280, 2254560, 4706240, 9471000]
+ ? mf = mfinit(F); G = mflinear(mf,F);
+ ? mfcoefs(G,8)
+ %4 = [-5/9, 280, 9240, 68320, 295960, 875280, 2254560, 4706240, 9471000]
+ @eprog\noindent This last construction allows to replace a general modular
+ form by a simpler linear combination of basis functions, which is often
+ more efficient:
+ \bprog
+ ? T10=mfpow(mfTheta(),10); mfcoef(T10, 10^4) \\ direct evaluation
+ time = 399 ms.
+ %5 = 128205250571893636
+ ? mf=mfinit(T10); F=mflinear(mf,T10); \\ instantaneous
+ ? mfcoef(F, 10^4) \\ after linearization
+ time = 67 ms.
+ %7 = 128205250571893636
+ @eprog

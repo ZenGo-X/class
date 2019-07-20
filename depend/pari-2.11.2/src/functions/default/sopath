@@ -1,0 +1,18 @@
+Function: _def_sopath
+Class: default
+Section: default
+C-Name: sd_sopath
+Prototype:
+Help:
+Doc: this is a list of directories, separated by colons ':'
+ (semicolons ';' in the DOS world, since colons are preempted for drive names).
+ When asked to \tet{install} an external symbol from a shared library whose
+ name is not given by an absolute path (does not start with \kbd{/}, \kbd{./}
+ or \kbd{../}), \kbd{gp} will look for it in these directories, in the order
+ they were written in \kbd{sopath}. Here, as usual, \kbd{.} means the current
+ directory, and \kbd{..} its immediate parent. Environment expansion is
+ performed.
+
+ The default value is \kbd{""}, corresponding to an empty list of
+ directories: \tet{install} will use the library name as input (and look in
+ the current directory if the name is not an absolute path).

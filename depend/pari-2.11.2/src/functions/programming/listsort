@@ -1,0 +1,21 @@
+Function: listsort
+Section: programming/specific
+C-Name: listsort
+Prototype: vWD0,L,
+Help: listsort(L,{flag=0}): sort the list L in place. If flag is non-zero,
+ suppress all but one occurence of each element in list.
+Doc: sorts the \typ{LIST} \var{list} in place, with respect to the (somewhat
+ arbitrary) universal comparison function \tet{cmp}. In particular, the
+ ordering is the same as for sets and \tet{setsearch} can be used on a sorted
+ list.
+ \bprog
+ ? L = List([1,2,4,1,3,-1]); listsort(L); L
+ %1 = List([-1, 1, 1, 2, 3, 4])
+ ? setsearch(L, 4)
+ %2 = 6
+ ? setsearch(L, -2)
+ %3 = 0
+ @eprog\noindent This is faster than the \kbd{vecsort} command since the list
+ is sorted in place: no copy is made. No value returned.
+
+ If $\fl$ is non-zero, suppresses all repeated coefficients.

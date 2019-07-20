@@ -1,0 +1,58 @@
+Function: idealstar
+Section: number_fields
+C-Name: idealstar0
+Prototype: DGGD1,L,
+Help: idealstar({nf},N,{flag=1}): gives the structure of (Z_K/N)^*, where N is
+ a modulus (an ideal in any form or a vector [f0, foo], where f0 is an ideal
+ and foo is a {0,1}-vector with r1 components. flag is
+ optional, and can be 0: simply gives the structure as an abelian group, i.e.
+ a 3-component vector [h,d,g] where h is the order, d the orders of the cyclic
+ factors and g the generators;
+ if flag=1 (default), gives a bid structure used in ideallog
+ to compute discrete logarithms; underlying generators are well-defined but not
+ explicitly computed, which saves time; if flag=2, same as with flag=1 except
+ that the generators are also given.
+ If nf is omitted, N must be an integer and
+ we return the structure of (Z/NZ)^*.
+Doc: outputs a \kbd{bid} structure,
+ necessary for computing in the finite abelian group $G = (\Z_K/N)^*$. Here,
+ \var{nf} is a number field and $N$ is a \var{modulus}: either an ideal in any
+ form, or a row vector whose first component is an ideal and whose second
+ component is a row vector of $r_1$ 0 or 1. Ideals can also be given
+ by a factorization into prime ideals, as produced by \tet{idealfactor}.
+
+ This \var{bid} is used in \tet{ideallog} to compute discrete logarithms. It
+ also contains useful information which can be conveniently retrieved as
+ \kbd{\var{bid}.mod} (the modulus),
+ \kbd{\var{bid}.clgp} ($G$ as a finite abelian group),
+ \kbd{\var{bid}.no} (the cardinality of $G$),
+ \kbd{\var{bid}.cyc} (elementary divisors) and
+ \kbd{\var{bid}.gen} (generators).
+
+ If $\fl=1$ (default), the result is a \kbd{bid} structure without
+ generators: they are well defined but not explicitly computed, which saves
+ time.
+
+ If $\fl=2$, as $\fl=1$, but including generators.
+
+ If $\fl=0$, only outputs $(\Z_K/N)^*$ as an abelian group,
+ i.e as a 3-component vector $[h,d,g]$: $h$ is the order, $d$ is the vector of
+ SNF\sidx{Smith normal form} cyclic components and $g$ the corresponding
+ generators.
+
+ If \var{nf} is omitted, we take it to be the rational number fields, $N$ must
+ be an integer and we return the structure of $(\Z/N\Z)^*$. In other words
+ \kbd{idealstar(, N, flag)} is short for
+ \bprog
+   idealstar(nfinit(x), N, flag)
+ @eprog\noindent but faster. The alternative syntax \kbd{znstar(N, flag)}
+ is also available for an analogous effect but, due to an unfortunate
+ historical oversight, the default value of \kbd{flag} is different in
+ the two functions (\kbd{znstar} does not initialize by default, you probably
+ want \kbd{znstar(N,1)}).
+
+Variant: Instead the above hardcoded numerical flags, one should rather use
+ \fun{GEN}{Idealstar}{GEN nf, GEN ideal, long flag}, where \kbd{flag} is
+ an or-ed combination of \tet{nf_GEN} (include generators) and \tet{nf_INIT}
+ (return a full \kbd{bid}, not a group), possibly $0$. This offers
+ one more combination: gen, but no init.

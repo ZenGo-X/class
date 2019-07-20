@@ -1,0 +1,27 @@
+Function: idealispower
+Section: number_fields
+C-Name: idealispower
+Prototype: lGGLD&
+Help: idealispower(nf,A,n,{&B}): return 1 if A = B^n is an n-th power
+ else return 0.
+Doc: let \var{nf} be a number field and $n > 0$ be a positive integer.
+ Return $1$ if the fractional ideal $A = B^n$ is an $n$-th power and $0$
+ otherwise. If the argument $B$ is present, set it to the $n$-th root of $A$,
+ in HNF.
+ \bprog
+ ? K = nfinit(x^3 - 2);
+ ? A = [46875, 30966, 9573; 0, 3, 0; 0, 0, 3];
+ ? idealispower(K, A, 3, &B)
+ %3 = 1
+ ? B
+ %4 =
+ [75 22 41]
+
+ [ 0  1  0]
+
+ [ 0  0  1]
+
+ ? A = [9375, 2841, 198; 0, 3, 0; 0, 0, 3];
+ ? idealispower(K, A, 3)
+ %5 = 0
+ @eprog\noindent

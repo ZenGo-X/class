@@ -1,0 +1,11 @@
+Function: rnfidealdown
+Section: number_fields
+C-Name: rnfidealdown
+Prototype: GG
+Help: rnfidealdown(rnf,x): finds the intersection of the ideal x with the
+ base field.
+Doc: let $\var{rnf}$ be a relative number
+ field extension $L/K$ as output by \kbd{rnfinit}, and $x$ an ideal of
+ $L$, given either in relative form or by a $\Z$-basis of elements of $L$
+ (see \secref{se:rnfidealabstorel}). This function returns the ideal of $K$
+ below $x$, i.e.~the intersection of $x$ with $K$.

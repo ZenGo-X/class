@@ -1,0 +1,9 @@
+Function: plotkill
+Section: graphic
+C-Name: plotkill
+Prototype: vL
+Help: plotkill(w): erase the rectwindow w.
+Doc: erase rectwindow $w$ and free the corresponding memory. Note that if you
+ want to use the rectwindow $w$ again, you have to use \kbd{plotinit} first
+ to specify the new size. So it's better in this case to use \kbd{plotinit}
+ directly as this throws away any previous work in the given rectwindow.

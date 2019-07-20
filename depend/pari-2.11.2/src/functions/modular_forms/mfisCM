@@ -1,0 +1,22 @@
+Function: mfisCM
+Section: modular_forms
+C-Name: mfisCM
+Prototype: G
+Help: mfisCM(F): Tests whether the eigenform F is a CM form. The answer
+ is 0 if it is not, and if it is, either the unique negative discriminant
+ of the CM field, or the pair of two negative discriminants of CM fields,
+ this latter case occuring only in weight 1 when the projective image is
+ D2=C2xC2, i.e., coded 4 by mfgaloistype.
+Doc: Tests whether the eigenform $F$ is a CM form. The answer
+ is $0$ if it is not, and if it is, either the unique negative discriminant
+ of the CM field, or the pair of two negative discriminants of CM fields,
+ this latter case occuring only in weight $1$ when the projective image is
+ $D_2=C_2\times C_2$, i.e., coded $4$ by \kbd{mfgaloistype}.
+ \bprog
+ ? F = mffromell(ellinit([0,1]))[2]; mfisCM(F)
+ %1 = -3
+ ? mf = mfinit([39,1,-39],0); F=mfeigenbasis(mf)[1]; mfisCM(F)
+ %2 = Vecsmall([-3, -39])
+ ? mfgaloistype(mf)
+ %3 = [4]
+ @eprog

@@ -1,0 +1,71 @@
+default(realprecision,38);
+sqrt(0)
+sqrtn(0.,3)
+sqrtn(0.*I,3)
+sqrtn(1/2,3)
+sqrtn(quadgen(5),3)
+sqrtn(8+O(17^100), 3)
+
+test(b, M)=
+{ my (B = b);
+  for (i=2, M,
+    B *= b; \\ b^i
+    a = sqrtnint(B + 1, i);
+    if (a != b, error([b, B, i]));
+  );
+}
+test(2, 100);
+test(2^32+1, 10);
+test(2^64+1, 10);
+a=10^1000000;
+sqrtnint(a,12345)
+sqrtnint(a,123456)
+sqrtnint(10^300,8)
+sqrtnint(10^500,27)
+
+sqrtn(Mod(0,3),-2)
+sqrtn(O(3),-2)
+sqrtn(0*ffgen((2^64+13)^2),-2)
+sqrtn(0*ffgen(3^2),-2)
+sqrtn(0*ffgen(2^2),-2)
+
+sqrtnint(10^1000,1001)
+sqrtn(2., 10, &z)
+z
+sqrtn(10+O(3^8), 10, &z)
+z
+sqrtn(1+O(3^3), -3)
+sqrtn(1,1)
+sqrtn(1,-1,&z)
+z
+sqrtn(Mod(2,4),3)
+sqrtn(Mod(2,4),3,&z)
+sqrtn(1, 3)
+sqrtint(0)
+iferr(sqrt(3+O(2^2)),E,E)
+iferr(sqrt(3+O(2^3)),E,E)
+iferr(sqrt(Mod(2,11)),E,E)
+iferr(sqrt(Mod(2,33)),E,E)
+sqrt(0.e-10+1e-10*I)
+[sqrtn(27+O(3^4),3,&z), z]
+[sqrtn(16+O(2^5),4,&z), z]
+[sqrtn(2^6+O(2^9),6,&z), z]
+sqrtn([8,27],3)
+iferr(sqrtn(Mod(2,7),3),E,E)
+[sqrtn(Mod(2,7),3,&z),z]
+iferr(sqrtn(Mod(2,21),3),E,E)
+iferr(sqrtn(Mod(6,35),6),E,E)
+[sqrtn(Mod(64,101),6,&z),z]
+iferr(sqrtn(Mod(3,19),4),E,E)
+sqrtn(0,3)
+check(a)=
+{
+  for(d=-5,5,if(d,
+    my(u=sqrtn(a^d,d,&z));
+    if(u^d!=a^d,error("sqrtn ",[a,d]));
+    if (z^d!=1,error("sqrtn(&z)",[a,d]))));
+}
+check(Mod(3,101));
+check(Mod(nextprime(2^65),nextprime(2^100)));
+check(ffgen([3,7]));
+check(ffgen([nextprime(2^100),3]));

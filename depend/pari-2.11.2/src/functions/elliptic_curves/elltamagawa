@@ -1,0 +1,18 @@
+Function: elltamagawa
+Section: elliptic_curves
+C-Name: elltamagawa
+Prototype: G
+Help: elltamagawa(E): E being an elliptic curve over a number field,
+ returns the global Tamagawa number of the curve.
+Doc:
+ The object $E$ being an elliptic curve over a number field, returns the global
+ Tamagawa number of the curve (including the factor at infinite places).
+ \bprog
+ ? e = ellinit([1, -1, 1, -3002, 63929]); \\ curve "90c6" from elldata
+ ? elltamagawa(e)
+ %2 = 288
+ ? [elllocalred(e,p)[4] | p<-[2,3,5]]
+ %3 = [6, 4, 6]
+ ? vecprod(%)  \\ since e.disc > 0 the factor at infinity is 2
+ %4 = 144
+ @eprog

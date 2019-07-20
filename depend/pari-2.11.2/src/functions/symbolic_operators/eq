@@ -1,0 +1,29 @@
+Function: _==_
+Help: x==y: return 1 if x and y are equal, 0 otherwise.
+Section: symbolic_operators
+C-Name: geq
+Prototype: GG
+Description:
+ (small, small):bool:parens             $(1) == $(2)
+ (lg, lg):bool:parens                   $(1) == $(2)
+ (small, int):bool:parens               cmpsi($1, $2) == 0
+ (mp, 0):bool                           !signe($1)
+ (int, 1):bool                          equali1($1)
+ (int, -1):bool                         equalim1($1)
+ (int, small):bool:parens               cmpis($1, $2) == 0
+ (int, int):bool                        equalii($1, $2)
+ (gen, 0):bool                          gequal0($1)
+ (gen, 1):bool                          gequal1($1)
+ (gen, -1):bool                         gequalm1($1)
+ (real,real):bool                       cmprr($1, $2) == 0
+ (mp, mp):bool:parens                   mpcmp($1, $2) == 0
+ (errtyp, errtyp):bool:parens           $(1) == $(2)
+ (errtyp, #str):bool:parens             $(1) == $(errtyp:2)
+ (#str, errtyp):bool:parens             $(errtyp:1) == $(2)
+ (typ, typ):bool:parens                 $(1) == $(2)
+ (typ, #str):bool:parens                $(1) == $(typ:2)
+ (#str, typ):bool:parens                $(typ:1) == $(2)
+ (str, str):negbool                     strcmp($1, $2)
+ (small, gen):bool                      gequalsg($1, $2)
+ (gen, small):bool                      gequalgs($1, $2)
+ (gen, gen):bool                        gequal($1, $2)

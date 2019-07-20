@@ -1,0 +1,32 @@
+Function: ellpadics2
+Section: elliptic_curves
+C-Name: ellpadics2
+Prototype: GGL
+Help: ellpadics2(E,p,n): returns s2 to absolute p-adic precision p^n.
+Doc: If $p>2$ is a prime and $E/\Q$ is an elliptic curve with ordinary good
+ reduction at $p$, returns the slope of the unit eigenvector
+ of \kbd{ellpadicfrobenius(E,p,n)}, i.e., the action of Frobenius $\varphi$ on
+ the crystalline module $D_p(E)= \Q_p \otimes H^1_{dR}(E/\Q)$ in the basis of
+ the given model $(\omega, \eta=x\*\omega)$, where $\omega$ is the invariant
+ differential $dx/(2\*y+a_1\*x+a_3)$. In other words, $\eta + s_2\omega$
+ is an eigenvector for the unit eigenvalue of $\varphi$.
+ \bprog
+ ? e=ellinit([17,42]);
+ ? ellpadics2(e,13,4)
+ %2 = 10 + 2*13 + 6*13^3 + O(13^4)
+ @eprog
+ This slope is the unique $c \in 3^{-1}\Z_p$ such that the odd solution
+   $\sigma(t) = t + O(t^2)$ of
+ $$ - d(\dfrac{1}{\sigma} \dfrac{d \sigma}{\omega})
+  = (x(t) + c) \omega$$
+ is in $t\Z_p[[t]]$.
+
+ It is equal to $b_2/12 - E_2/12$ where $E_2$ is the value of the Katz
+ $p$-adic Eisenstein series of weight 2 on $(E,\omega)$. This is
+ used to construct a canonical $p$-adic height when $E$ has good ordinary
+ reduction at $p$ as follows
+ \bprog
+ s2 = ellpadics2(E,p,n);
+ h(E,p,n, P, s2) = ellpadicheight(E, [p,[1,-s2]],n, P);
+ @eprog\noindent Since $s_2$ does not depend on the point $P$, we compute it
+ only once.

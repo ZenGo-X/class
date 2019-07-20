@@ -1,0 +1,17 @@
+Function: Strchr
+Section: conversions
+C-Name: Strchr
+Prototype: G
+Help: Strchr(x): converts x to a string, translating each integer into a
+ character.
+Doc:
+ converts $x$ to a string, translating each integer
+ into a character.
+ \bprog
+ ? Strchr(97)
+ %1 = "a"
+ ? Vecsmall("hello world")
+ %2 = Vecsmall([104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100])
+ ? Strchr(%)
+ %3 = "hello world"
+ @eprog

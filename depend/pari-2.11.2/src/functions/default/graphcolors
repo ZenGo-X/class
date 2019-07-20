@@ -1,0 +1,16 @@
+Function: _def_graphcolors
+Class: default
+Section: default
+C-Name: sd_graphcolors
+Prototype:
+Help:
+Doc: entries in the
+ \tet{graphcolormap} that will be used to plot multi-curves. The successive
+ curves are drawn in colors
+
+ \kbd{graphcolormap[graphcolors[1]]}, \kbd{graphcolormap[graphcolors[2]]},
+   \dots
+
+ cycling when the \kbd{graphcolors} list is exhausted.
+
+ The default value is \kbd{[4,5]}.

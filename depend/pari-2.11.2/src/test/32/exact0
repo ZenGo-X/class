@@ -1,0 +1,24 @@
+  ***   at top-level: Mod(0,2)*x*1.
+  ***                           ^---
+  *** _*_: forbidden multiplication t_REAL * t_INTMOD.
+Mod(0, 2)
+Mod(0, 2)
+Mod(0, 2)*x^15 + O(x^16)
+Mod(2, 4) + Mod(0, 4)*I
+Mod(0, 4) + Mod(0, 4)*I
+Mod(1, 2) + Mod(0, 2)*I
+Mod(0, 2)
+Mod(0, 2)
+Mod(0, 2)
+1
+Mod(0, 5)
+Mod(0, 5)
+0 0 O(x^4) 0 0 O(x^4) 
+Mod(0, 2) Mod(0, 2) Mod(0, 2)*x^3 + O(x^4) Mod(0, 2) Mod(0, 2) Mod(0, 2)*x^3
+ + O(x^4) 
+x^3 1 1 + O(x^4) 1 x^3 x^3 + O(x^4) 
+x^3 + 0.E-38*x 0.E-38*x^2 + 1 1 + 0.E-38*x^2 + O(x^4) 0.E-38*x^2 + 1 x^3 + 0
+.E-38*x 0.E-38*x + x^3 + O(x^4) 
+x^3 + 0.E-38 0.E-38*x^3 + 1 1 + 0.E-38*x^3 + O(x^4) 0.E-38*x^3 + 1 x^3 + 0.E
+-38 0.E-38 + x^3 + O(x^4) 
+Total time spent: 8

@@ -1,0 +1,12 @@
+Function: shift
+Section: operators
+C-Name: gshift
+Prototype: GL
+Help: shift(x,n): shift x left n bits if n>=0, right -n bits if
+ n<0.
+Doc: shifts $x$ componentwise left by $n$ bits if $n\ge0$ and right by $|n|$
+ bits if $n<0$. May be abbreviated as $x$ \kbd{<<} $n$ or $x$ \kbd{>>} $(-n)$.
+ A left shift by $n$ corresponds to multiplication by $2^n$. A right shift of an
+ integer $x$ by $|n|$ corresponds to a Euclidean division of $x$ by $2^{|n|}$
+ with a remainder of the same sign as $x$, hence is not the same (in general) as
+ $x \kbd{\bs} 2^n$.

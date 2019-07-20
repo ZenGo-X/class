@@ -1,0 +1,14 @@
+Function: znprimroot
+Section: number_theoretical
+C-Name: znprimroot
+Prototype: G
+Help: znprimroot(n): returns a primitive root of n when it exists.
+Doc: returns a primitive root (generator) of $(\Z/n\Z)^*$, whenever this
+ latter group is cyclic ($n = 4$ or $n = 2p^k$ or $n = p^k$, where $p$ is an
+ odd prime and $k \geq 0$). If the group is not cyclic, the result is
+ undefined. If $n$ is a prime power, then the smallest positive primitive
+ root is returned. This may not be true for $n = 2p^k$, $p$ odd.
+
+ Note that this function requires factoring $p-1$ for $p$ as above,
+ in order to determine the exact order of elements in
+ $(\Z/n\Z)^*$: this is likely to be costly if $p$ is large.

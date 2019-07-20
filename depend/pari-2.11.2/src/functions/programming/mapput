@@ -1,0 +1,23 @@
+Function: mapput
+Section: programming/specific
+C-Name: mapput
+Prototype: vWGG
+Help: mapput(M,x,y): associates x to y in the map M.
+Doc: Associates $x$ to $y$ in the map $M$. The value $y$ can be retrieved
+ with \tet{mapget}.
+ \bprog
+ ? M = Map();
+ ? mapput(M, "foo", 23);
+ ? mapput(M, 7718, "bill");
+ ? mapget(M, "foo")
+ %4 = 23
+ ? mapget(M, 7718)
+ %5 = "bill"
+ ? Vec(M)  \\ keys
+ %6 = [7718, "foo"]
+ ? Mat(M)
+ %7 =
+ [ 7718 "bill"]
+
+ ["foo"     23]
+ @eprog

@@ -1,0 +1,9 @@
+Function: matsize
+Section: linear_algebra
+C-Name: matsize
+Prototype: G
+Help: matsize(x): number of rows and columns of the vector/matrix x as a
+ 2-vector.
+Doc: $x$ being a vector or matrix, returns a row vector
+ with two components, the first being the number of rows (1 for a row vector),
+ the second the number of columns (1 for a column vector).

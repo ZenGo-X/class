@@ -1,0 +1,50 @@
+Function: bestappr
+Section: number_theoretical
+C-Name: bestappr
+Prototype: GDG
+Help: bestappr(x, {B}): returns a rational approximation to x, whose
+ denominator is limited by B, if present. This function applies to reals,
+ intmods, p-adics, and rationals of course. Otherwise it applies recursively
+ to all components.
+
+Doc: using variants of the extended Euclidean algorithm, returns a rational
+ approximation $a/b$ to $x$, whose denominator is limited
+ by $B$, if present. If $B$ is omitted, return the best approximation
+ affordable given the input accuracy; if you are looking for true rational
+ numbers, presumably approximated to sufficient accuracy, you should first
+ try that option. Otherwise, $B$ must be a positive real scalar (impose
+ $0 < b \leq B$).
+
+ \item If $x$ is a \typ{REAL} or a \typ{FRAC}, this function uses continued
+ fractions.
+ \bprog
+ ? bestappr(Pi, 100)
+ %1 = 22/7
+ ? bestappr(0.1428571428571428571428571429)
+ %2 = 1/7
+ ? bestappr([Pi, sqrt(2) + 'x], 10^3)
+ %3 = [355/113, x + 1393/985]
+ @eprog
+ By definition, $a/b$ is the best rational approximation to $x$ if
+ $|b x - a| < |v x - u|$ for all integers $(u,v)$ with $0 < v \leq B$.
+ (Which implies that $n/d$ is a convergent of the continued fraction of $x$.)
+
+ \item If $x$ is a \typ{INTMOD} modulo $N$ or a \typ{PADIC} of precision $N =
+ p^k$, this function performs rational modular reconstruction modulo $N$. The
+ routine then returns the unique rational number $a/b$ in coprime integers
+ $|a| < N/2B$ and $b\leq B$ which is congruent to $x$ modulo $N$. Omitting
+ $B$ amounts to choosing it of the order of $\sqrt{N/2}$. If rational
+ reconstruction is not possible (no suitable $a/b$ exists), returns $[]$.
+ \bprog
+ ? bestappr(Mod(18526731858, 11^10))
+ %1 = 1/7
+ ? bestappr(Mod(18526731858, 11^20))
+ %2 = []
+ ? bestappr(3 + 5 + 3*5^2 + 5^3 + 3*5^4 + 5^5 + 3*5^6 + O(5^7))
+ %2 = -1/3
+ @eprog\noindent In most concrete uses, $B$ is a prime power and we performed
+ Hensel lifting to obtain $x$.
+
+ The function applies recursively to components of complex objects
+ (polynomials, vectors, \dots). If rational reconstruction fails for even a
+ single entry, return $[]$.

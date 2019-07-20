@@ -1,0 +1,31 @@
+Function: bnrchar
+Section: number_fields
+C-Name: bnrchar
+Prototype: GGDG
+Help: bnrchar(bnr,g,{v}): returns all characters chi on bnr.clgp such that
+ chi(g[i]) = e(v[i]); if v is omitted, returns all characters that are
+ trivial on the g[i].
+Doc: returns all characters $\chi$ on \kbd{bnr.clgp} such that
+ $\chi(g_i) = e(v_i)$, where $e(x) = \exp(2i\pi x)$. If $v$ is omitted,
+ returns all characters that are trivial on the $g_i$. Else the vectors $g$
+ and $v$ must have the same length, the $g_i$ must be ideals in any form, and
+ each $v_i$ is a rational number whose denominator must divide the order of
+ $g_i$ in the ray class group. For convenience, the vector of the $g_i$
+ can be replaced by a matrix whose columns give their discrete logarithm,
+ as given by \kbd{bnrisprincipal}; this allows to specify abstractly a
+ subgroup of the ray class group.
+
+ \bprog
+ ? bnr = bnrinit(bnfinit(x), [160,[1]], 1); /* (Z/160Z)^* */
+ ? bnr.cyc
+ %2 = [8, 4, 2]
+ ? g = bnr.gen;
+ ? bnrchar(bnr, g, [1/2,0,0])
+ %4 = [[4, 0, 0]]  \\ a unique character
+ ? bnrchar(bnr, [g[1],g[3]]) \\ all characters trivial on g[1] and g[3]
+ %5 = [[0, 1, 0], [0, 2, 0], [0, 3, 0], [0, 0, 0]]
+ ? bnrchar(bnr, [1,0,0;0,1,0;0,0,2])
+ %6 = [[0, 0, 1], [0, 0, 0]]  \\ characters trivial on given subgroup
+ @eprog
+
+

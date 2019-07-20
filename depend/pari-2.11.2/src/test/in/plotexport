@@ -1,0 +1,25 @@
+default(realprecision,38);
+\\ platform independent
+test(s)= concat(Vec(s)[30..88]);
+
+plotinit(0,500,500)
+plotmove(0,0,0);plotbox(0,500,500)
+test(plotexport("ps",[0,0,0]))
+plotmove(0,0,900);plotlines(0,900,0)
+plotlines(0,vector(5,k,50*k),vector(5,k,10*k*k))
+plotmove(0,243,583);
+plotpoints(0,225,334)
+plotpoints(0,vector(10,k,10*k),vector(10,k,5*k*k))
+test(plotexport("svg",[0,20,20]))
+test(plothexport("svg",x=-5,5,sin(x)))
+test(plothexport("svg",t=0,2*Pi,[sin(5*t),sin(7*t)],1,100))
+test(plothrawexport("svg",vector(100,k,k),vector(100,k,k*k/100)))
+plotmove(0,50,50);plotrbox(0,50,50)
+plotrline(0,200,150)
+plotrmove(0,5,5);
+plotrpoint(0,20,20)
+plotinit(3,600,600);plotscale(3,-7,7,-2,2);
+test(plotexport("svg",[0,0,0]))
+plotmove(0,100,100);plotstring(0,Pi);
+plotmove(0,200,200);plotstring(0,"(0,0)");
+test(plotexport("svg",[0,10,10]))

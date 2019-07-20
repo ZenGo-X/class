@@ -1,0 +1,49 @@
+Function: polred
+Section: number_fields
+C-Name: polred0
+Prototype: GD0,L,DG
+Obsolete: 2013-03-27
+Help: polred(T,{flag=0}): deprecated, use polredbest. Reduction of the
+ polynomial T (gives minimal polynomials only). The following binary digits of
+ (optional) flag are significant 1: partial reduction, 2: gives also elements.
+Doc: This function is \emph{deprecated}, use \tet{polredbest} instead.
+ Finds polynomials with reasonably small coefficients defining subfields of
+ the number field defined by $T$. One of the polynomials always defines $\Q$
+ (hence has degree $1$), and another always defines the same number field
+ as $T$ if $T$ is irreducible.
+
+ All $T$ accepted by \tet{nfinit} are also allowed here;
+ in particular, the format \kbd{[T, listP]} is recommended, e.g. with
+ $\kbd{listP} = 10^5$ or a vector containing all ramified primes. Otherwise,
+ the maximal order of $\Q[x]/(T)$ must be computed.
+
+ The following binary digits of $\fl$ are significant:
+
+ 1: Possibly use a suborder of the maximal order. The
+ primes dividing the index of the order chosen are larger than
+ \tet{primelimit} or divide integers stored in the \tet{addprimes} table.
+ This flag is \emph{deprecated}, the \kbd{[T, listP]} format is more
+ flexible.
+
+ 2: gives also elements. The result is a two-column matrix, the first column
+ giving primitive elements defining these subfields, the second giving the
+ corresponding minimal polynomials.
+ \bprog
+ ? M = polred(x^4 + 8, 2)
+ %1 =
+ [           1         x - 1]
+
+ [ 1/2*x^2 + 1 x^2 - 2*x + 3]
+
+ [-1/2*x^2 + 1 x^2 - 2*x + 3]
+
+ [     1/2*x^2       x^2 + 2]
+
+ [     1/4*x^3       x^4 + 2]
+ ? minpoly(Mod(M[2,1], x^4+8))
+ %2 = x^2 + 2
+ @eprog
+
+ \synt{polred}{GEN T} ($\fl = 0$). Also available is
+ \fun{GEN}{polred2}{GEN T} ($\fl = 2$). The function \kbd{polred0} is
+ deprecated, provided for backward compatibility.

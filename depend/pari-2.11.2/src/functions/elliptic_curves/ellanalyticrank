@@ -1,0 +1,28 @@
+Function: ellanalyticrank
+Section: elliptic_curves
+C-Name: ellanalyticrank_bitprec
+Prototype: GDGb
+Help: ellanalyticrank(E, {eps}): returns the order of vanishing at s=1
+ of the L-function of the elliptic curve E and the value of the first
+ non-zero derivative. To determine this order, it is assumed that any
+ value less than eps is zero. If no value of eps is given, 2^(-bitprecision/2)
+ is used.
+Doc: returns the order of vanishing at $s=1$ of the $L$-function of the
+ elliptic curve $E$ and the value of the first non-zero derivative. To
+ determine this order, it is assumed that any value less than \kbd{eps} is
+ zero. If \kbd{eps} is omitted, $2^{-b/2}$ is used, where $b$
+ is the current bit precision.
+ \bprog
+ ? E = ellinit("11a1"); \\ rank 0
+ ? ellanalyticrank(E)
+ %2 = [0, 0.2538418608559106843377589233]
+ ? E = ellinit("37a1"); \\ rank 1
+ ? ellanalyticrank(E)
+ %4 = [1, 0.3059997738340523018204836835]
+ ? E = ellinit("389a1"); \\ rank 2
+ ? ellanalyticrank(E)
+ %6 = [2, 1.518633000576853540460385214]
+ ? E = ellinit("5077a1"); \\ rank 3
+ ? ellanalyticrank(E)
+ %8 = [3, 10.39109940071580413875185035]
+ @eprog

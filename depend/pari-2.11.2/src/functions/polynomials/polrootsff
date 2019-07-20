@@ -1,0 +1,7 @@
+Function: polrootsff
+Section: polynomials
+C-Name: polrootsff
+Prototype: GDGDG
+Obsolete: 2018-03-11
+Help: polrootsff(x,{p},{a}): obsolete, use polrootsmod.
+Doc: obsolete, kept for backward compatibility: use factormod.

@@ -1,0 +1,23 @@
+Function: lfuntheta
+Section: l_functions
+C-Name: lfuntheta
+Prototype: GGD0,L,b
+Help: lfuntheta(data,t,{m=0}): compute the value of the m-th derivative
+ at t of the theta function attached to the L-function given by data.
+ data can be either the standard L-function data, or the output of
+ lfunthetainit.
+Doc: compute the value of the $m$-th derivative
+ at $t$ of the theta function attached to the $L$-function given by \kbd{data}.
+  \kbd{data} can be either the standard $L$-function data, or the output of
+ \kbd{lfunthetainit}. The result is given with absolute error less than
+ $2^{-B}$, where $B = \text{realbitprecision}$.
+
+ The theta function is defined by the formula
+ $\Theta(t)=\sum_{n\ge1}a(n)K(nt/\sqrt(N))$, where $a(n)$ are the coefficients
+ of the Dirichlet series, $N$ is the conductor, and $K$ is the inverse Mellin
+ transform of the gamma product defined by the \kbd{Vga} component.
+ Its Mellin transform is equal to $\Lambda(s)-P(s)$, where $\Lambda(s)$
+ is the completed $L$-function and the rational function $P(s)$ its polar part.
+ In particular, if the $L$-function is the $L$-function of a modular form
+ $f(\tau)=\sum_{n\ge0}a(n)q^n$ with $q=\exp(2\pi i\tau)$, we have
+ $\Theta(t)=2(f(it/\sqrt{N})-a(0))$. Note that $a(0)=-L(f,0)$ in this case.

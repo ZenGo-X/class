@@ -1,0 +1,28 @@
+default(realprecision,38);
+Mod(0,2)*x*1.
+Pol(Mod(0,2)) + 2
+Mod(1,2)+Pol(Mod(1,2))
+Ser(Mod(1,2)) + 1
+(2+0*I)+I*Mod(0,4)
+a=b=Mod(2, 4) + Mod(2, 4)*I; a*b
+(Mod(0,2)+I)^2
+Mod(0,2)/x
+a=Mod(1, 2)*x^10 + Mod(1, 2); 2*a
+a+a
+valuation(Mod(0,101),101)
+gcd(Mod(0,5),10)
+gcd(Mod(0,5),Mod(0,10))
+{
+v = [[0,0,0,0], [0,0,0,Mod(0,2)], [1,0,0,Mod(0,2)],
+     [1,0,0.,Mod(0,2)], [1,0,Mod(0,2),0.]];
+for (i = 1, #v,
+  w = v[i];
+  print1(Pol(w), " ");
+  print1(Polrev(w), " ");
+  print1(Ser(w), " ");
+  w = vecextract(w, "-1..1");
+  print1(Pol(w), " ");
+  print1(Polrev(w), " ");
+  print1(Ser(w), " "); print();
+)
+}

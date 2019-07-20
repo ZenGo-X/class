@@ -1,0 +1,42 @@
+Function: precision
+Section: conversions
+C-Name: precision0
+Prototype: GD0,L,
+Help: precision(x,{n}): if n is present, return x at precision n. If n is
+ omitted, return real precision of object x.
+Description:
+ (real):small          prec2ndec(gprecision($1))
+ (gen):int             precision0($1, 0)
+ (real,0):small        prec2ndec(gprecision($1))
+ (gen,0):int           precision0($1, 0)
+ (real,#small):real    rtor($1, ndec2prec($2))
+ (gen,#small):gen      gprec($1, $2)
+ (real,small):real     precision0($1, $2)
+ (mp,small):mp         precision0($1, $2)
+ (gen,small):gen       precision0($1, $2)
+
+Doc: the function behaves differently according to whether $n$ is
+ present and positive or not. If $n$ is missing, the function returns the
+ floating point precision in decimal digits of the PARI object $x$. If $x$
+ has no floating point component, the function returns \kbd{+oo}.
+
+ \bprog
+ ? precision(exp(1e-100))
+ %1 = 154                \\ 154 significant decimal digits
+ ? precision(2 + x)
+ %2 = +oo                \\ exact object
+ ? precision(0.5 + O(x))
+ %3 = 38                 \\ floating point accuracy, NOT series precision
+ ? precision( [ exp(1e-100), 0.5 ] )
+ %4 = 38                 \\ minimal accuracy among components
+ @eprog
+
+ If $n$ is present, the function creates a new object equal to $x$ with a new
+ floating point precision $n$: $n$ is the number of desired significant
+ \emph{decimal} digits. If $n$ is smaller than the precision of a \typ{REAL}
+ component of $x$, it is truncated, otherwise it is extended with zeros.
+ For non-floating point types, no change.
+
+Variant: Also available are \fun{GEN}{gprec}{GEN x, long n} and
+ \fun{long}{precision}{GEN x}. In both, the accuracy is expressed in
+ \emph{words} (32-bit or 64-bit depending on the architecture).

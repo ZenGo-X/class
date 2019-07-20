@@ -1,0 +1,80 @@
+Function: lfunconductor
+Section: l_functions
+C-Name: lfunconductor
+Prototype: GDGD0,L,b
+Help: lfunconductor(L,{ab=[1,10000]},{flag=0}): give the conductor
+  of the given L-function; ab = [a,b] is the interval where we expect
+  to find the conductor.
+  If flag=0 (default), give either the conductor found as an integer, or a
+  vector (possibly empty) of conductors found. If flag=1, same but give the
+  computed floating point approximations to the conductors found, without
+  rounding to integers.
+  If flag=2, give all the conductors found, even those far from integers.
+  Note: this program is heuristic and should only be used if the primes
+  dividing the conductor are unknown. If they are known, a direct search
+  through possible prime exponents using lfuncheckfeq will be more efficient.
+
+Doc:  Compute the conductor of the given $L$-function
+  (if the structure contains a conductor, it is ignored);
+  $\kbd{ab} = [a,b]$ is the interval where we expect to find the conductor;
+  it may be given as a single scalar $b$, in which case we look in $[1,b]$.
+  Increasing \kbd{ab} slows down the program but gives better accuracy for the
+  result.
+
+  If \kbd{flag} is $0$ (default), give either the conductor found as an
+  integer, or a vector (possibly empty) of conductors found. If \kbd{flag} is
+  $1$, same but give the computed floating point approximations to the
+  conductors found, without rounding to integers. It \kbd{flag} is $2$, give
+  all the conductors found, even those far from integers.
+
+  \misctitle{Caveat} This is a heuristic program and the result is not
+  proven in any way:
+  \bprog
+  ? L = lfuncreate(857); \\ Dirichlet L function for kronecker(857,.)
+  ? \p19
+    realprecision = 19 significant digits
+  ? lfunconductor(L)
+  %2 = [17, 857]
+  ? lfunconductor(L,,1) \\ don't round
+  %3 = [16.99999999999999999, 857.0000000000000000]
+
+  ? \p38
+    realprecision = 38 significant digits
+  ? lfunconductor(L)
+  %4 = 857
+  @eprog
+
+  \misctitle{Note} This program should only be used if the primes dividing the
+  conductor are unknown, which is rare. If they are known, a direct
+  search through possible prime exponents using \kbd{lfuncheckfeq} will
+  be more efficient and rigorous:
+  \bprog
+  ? E = ellinit([0,0,0,4,0]); /* Elliptic curve y^2 = x^3+4x */
+  ? E.disc  \\ |disc E| = 2^12
+  %2 = -4096
+  \\ create Ldata by hand. Guess that root number is 1 and conductor N
+  ? L(N) = lfuncreate([n->ellan(E,n), 0, [0,1], 2, N, 1]);
+  ? fordiv(E.disc, d, print(d,": ",lfuncheckfeq(L(d))))
+  1: 0
+  2: 0
+  4: -1
+  8: -2
+  16: -3
+  32: -127
+  64: -3
+  128: -2
+  256: -2
+  512: -1
+  1024: -1
+  2048: 0
+  4096: 0
+  ? lfunconductor(L(1)) \\ lfunconductor ignores conductor = 1 in Ldata !
+  %5 = 32
+  @eprog\noindent The above code assumed that root number was $1$;
+  had we set it to $-1$, none of the \kbd{lfuncheckfeq} values would have been
+  acceptable:
+  \bprog
+  ? L2(N) = lfuncreate([n->ellan(E,n), 0, [0,1], 2, N, -1]);
+  ? [ lfuncheckfeq(L2(d)) | d<-divisors(E.disc) ]
+  %7 = [0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, -1, -1]
+  @eprog

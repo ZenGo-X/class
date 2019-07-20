@@ -1,0 +1,67 @@
+Function: trap
+Section: programming/specific
+C-Name: trap0
+Prototype: DrDEDE
+Obsolete: 2012-01-17
+Help: trap({e}, {rec}, seq): this function is obsolete, use "iferr".
+ Try to execute seq, trapping runtime error e (all of them if e omitted);
+ sequence rec is executed if the error occurs and is the result of the command.
+Wrapper: (,_,_)
+Description:
+ (?str,?closure,?closure):gen trap0($1, $2, $3)
+Doc: This function is obsolete, use \tet{iferr}, which has a nicer and much
+ more powerful interface. For compatibility's sake we now describe the
+ \emph{obsolete} function \tet{trap}.
+
+ This function tries to
+ evaluate \var{seq}, trapping runtime error $e$, that is effectively preventing
+ it from aborting computations in the usual way; the recovery sequence
+ \var{rec} is executed if the error occurs and the evaluation of \var{rec}
+ becomes the result of the command. If $e$ is omitted, all exceptions are
+ trapped. See \secref{se:errorrec} for an introduction to error recovery
+ under \kbd{gp}.
+
+ \bprog
+ ? \\@com trap division by 0
+ ? inv(x) = trap (e_INV, INFINITY, 1/x)
+ ? inv(2)
+ %1 = 1/2
+ ? inv(0)
+ %2 = INFINITY
+ @eprog\noindent
+ Note that \var{seq} is effectively evaluated up to the point that produced
+ the error, and the recovery sequence is evaluated starting from that same
+ context, it does not "undo" whatever happened in the other branch (restore
+ the evaluation context):
+ \bprog
+ ? x = 1; trap (, /* recover: */ x, /* try: */ x = 0; 1/x)
+ %1 = 0
+ @eprog
+
+ \misctitle{Note} The interface is currently not adequate for trapping
+ individual exceptions. In the current version \vers, the following keywords
+ are recognized, but the name list will be expanded and changed in the
+ future (all library mode errors can be trapped: it's a matter of defining
+ the keywords to \kbd{gp}):
+
+ \kbd{e\_ALARM}: alarm time-out
+
+ \kbd{e\_ARCH}: not available on this architecture or operating system
+
+ \kbd{e\_STACK}: the PARI stack overflows
+
+ \kbd{e\_INV}: impossible inverse
+
+ \kbd{e\_IMPL}: not yet implemented
+
+ \kbd{e\_OVERFLOW}: all forms of arithmetic overflow, including length
+ or exponent overflow (when a larger value is supplied than the
+ implementation can handle).
+
+ \kbd{e\_SYNTAX}: syntax error
+
+ \kbd{e\_MISC}: miscellaneous error
+
+ \kbd{e\_TYPE}: wrong type
+
+ \kbd{e\_USER}: user error (from the \kbd{error} function)

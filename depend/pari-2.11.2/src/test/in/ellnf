@@ -1,0 +1,225 @@
+\\package:elldata
+default(realprecision,38);
+K=nfinit(t^3-2);
+e=ellinit([t+1,t^2 - (t^3+(t+1)*t)], K);
+P=[t,t];
+ellisoncurve(e, P)
+elladd(e, P,P)
+ellmul(e, P,3)
+ellordinate(e, t)
+ellordinate(e, t+1)
+elldivpol(e, 3)
+ellfromj(Mod(t,t^3-2))
+ellinit(e, idealprimedec(K,2)[1])
+ellinit(e, idealprimedec(K,5)[1])
+
+{
+  K = nfinit(t);
+  forell(E, 1, 1000,
+    my(e,N,f,v);
+    v = [1/60,7131/3600,11/12,5/12];
+    e = ellchangecurve(ellinit(E[2],1), v);
+    eK= ellchangecurve(ellinit(E[2],K), v);
+    N = ellconvertname(E[1])[1];
+    f = factor(N)[,1];
+    for(i=1, #f,
+      my(p = f[i], P,A,B);
+      P=idealprimedec(K,p)[1];
+      A=elllocalred(e,P.p); A[3]=0;
+      B=elllocalred(eK,P); B[3]=0;
+      if(A!=B, error(E[2]));
+      if(ellap(e,p) != ellap(eK,P),error(E[2]))
+    )
+  )
+}
+e = ellchangecurve(ellinit([1,0],K),[17^2,0,0,0]);
+P = idealprimedec(K,17)[1]; elllocalred(e,P)
+
+nf4=nfinit(a^2+1);
+P17 = idealprimedec(nf4,17)[1];
+P13 = idealprimedec(nf4,13)[1];
+P5 = idealprimedec(nf4,5)[1];
+E=ellinit([1+a,0,1,0,0],nf4);
+E2 = ellchangecurve(E, [17,0,0,0]);
+[ellap(E2, P5), ellap(E2, P13), ellap(E2, P17)]
+[ellcard(E2, P5), ellcard(E2, P13), ellcard(E2, P17)]
+[ellgroup(E2, P5), ellgroup(E2, P13), ellgroup(E2, P17)]
+E3 = ellchangecurve(E, [1/17,a,a+1,0]);
+ellap(E3, P17)
+ellan(E2,20)
+ellan(E3,20)
+ellglobalred(E)
+ellglobalred(E2)
+ellglobalred(E3)
+
+K=nfinit(x^4+20*x^2+16);
+E = ellinit([-1377/256*x^6-6885/32*x^4+729/4*x^3-4131/2*x^2+14013/4*x+5589/4, -1863/16*x^6-9315/2*x^4-5589/2*x^3-44712*x^2-53460*x+33534], K);
+P2 = idealprimedec(K,2)[1]; [ellap(E,P2), ellgroup(E,P2)]
+P3 = idealprimedec(K,3)[1]; [ellap(E,P3), ellgroup(E,P3)]
+P5 = idealprimedec(K,5)[1]; [ellap(E,P5), ellgroup(E,P5)]
+E = ellinit([1/4*x^2+3,-7/4*x^2-1,-3/16*x^3-5/4*x^2-1/2,-1/4*x^3-3/4*x^2-x,-3/16*x^3-1/4*x^2-3/2*x+1/2],K);
+ellgroup(E,P2,1)
+ellgroup(E,P3,1)
+P=idealprimedec(K,209844281664738991)[1]; ellgroup(E,P,1)
+
+K=bnfinit(a^2 - 2*3*5*29);
+e = ellinit([a,1], K);
+E = ellchangecurve(e, Mod([2^3 * 3 * a, a+123, 17*a+2, 16*a+3], K.pol));
+ellintegralmodel(E)[1..5]
+ellintegralmodel(E, &v)[1..5]
+v
+ellminimalmodel(E, &v)[1..5]
+v
+
+ellminimalmodel(ellinit([a^4,(a+2)^6], K))
+
+p=2*10^10+89; q=10^10+19;
+P=nfbasistoalg(K, bnfisprincipal(K, idealprimedec(K,p)[1])[2]);
+Q=nfbasistoalg(K, bnfisprincipal(K, idealprimedec(K,q)[1])[2]);
+e = ellinit([P^3*Q^4,P^6*Q^4], K);
+ellminimalmodel(e,&v); v
+ellglobalred(e)
+e = ellinit([P^4*Q^4,P^6*Q^4], K);
+ellglobalred(e)
+
+K=bnfinit(a^2-65);
+u=Mod(8+a,K.pol);
+e = ellinit([1,40*u+1,0,25*u^2,0], K); ellminimalmodel(e)
+e = ellinit([1,10*u+1,0,25*u^2,0], K); ellminimalmodel(e)
+ellglobalred(e)
+
+E=ellinit([0,-1,0,-15/16*z^2+5/2*z+8,5/16*z^2-9*z+14],nfinit(z^3-4*z^2-32*z+64));
+ellglobalred(E)
+
+E=ellinit([-3850829794560*a-15877538149168,-8352767604912215040*a-34439343881478343808],bnfinit(a^2-17));
+ellminimalmodel(E,&v)[1..5]
+v
+
+\\ #1899
+E=ellinit([0,34,0,225,0],bnfinit(a^2-7));
+ellminimalmodel(E, &v)[1..5]
+v
+
+K = nfinit(a^2 - a + 1);
+E = ellinit([1, -1, 0, -3*a, -3*a + 3],K);
+/* Same curve, non integral model */
+E2 = ellinit([(144*a+9)/-48,(3240*a-2565)/-864],K);
+idealnorm(K,ellglobalred(E)[1])
+idealnorm(K,ellglobalred(E2)[1])
+elltamagawa(E)
+elltamagawa(E2)
+ellrootno(E)
+ellrootno(E2)
+elltors(E)
+elltors(E2)
+ellbsd(E)
+ellbsd(E2)
+E.omega
+E2.omega
+E.eta
+E2.eta
+E.area
+E2.area
+
+K=bnfinit(t^5 - 8*t^4 - 2*t^3 + 2*t^2 + t - 8);
+E=ellinit([-10, -6, -10, -7, -8],K);
+Emin=ellminimalmodel(E);
+Emin.omega
+
+K = nfinit(a^2 - a - 22);
+E = ellinit([0, 0, 1, -1590*a - 8580, 92750*a + 359875],K);
+idealnorm(K,ellglobalred(E)[1])
+elltamagawa(E)
+ellrootno(E)
+elltors(E)
+ellbsd(E)
+ellbsd(ellchangecurve(E,[1/Mod(a,K.pol),0,0,0]))
+ellbsd(ellchangecurve(E,[Mod(a,K.pol),0,0,0]))
+E.omega
+E.eta
+E.area
+
+K = nfinit(a^3 - a^2 + 1);
+E = ellinit([a + 1, -a^2 - a - 1, a^2 + a, -a^2, -a^2 + 1],K);
+idealnorm(K,ellglobalred(E)[1])
+elltamagawa(E)
+ellrootno(E)
+elltors(E)
+ellbsd(E)
+E.omega
+E.eta
+E.area
+
+K = nfinit(a^2-a-57);
+E = ellinit([a,-a,a,-5692-820*a,-259213-36720*a],K);
+ellminimaldisc(E)
+
+K = nfinit(a^2-26);
+E = ellinit([a,a-1,a+1,4*a+10,2*a+6],K);
+ellminimaldisc(E)
+
+E = ellinit([1,2,3,4,5]);
+ellminimaldisc(E)
+
+nf2=nfinit(a^2-2);
+nf3=nfinit(a^2-a-1);
+E=ellinit([0, 0, 0, -3/2*a - 3/16, 7/8*a + 7/32],nf3);
+ellminimaldisc(E)
+ellheight(E,[-a+11/4,3*a-9/2])
+
+E=ellinit([0,0,1,-5*a-25,-15*a-49], nf3);
+ellheight(E,[-4*a+3,-a+1])
+ellrootno(E)
+
+E=ellinit([a+1,a-1,a,6*a+2,14*a+34],nf2);
+ellheight(E,[-3/2*a+1/2,-9/4*a-3/2])
+ellheight(E,[-a+1,-3*a-3]);
+ellrootno(E)
+
+E=ellinit([0,a+1,0,18*a-27,-55*a+78],nf2);
+ellheight(E,[2*a-5,-2*a+5])
+ellrootno(E)
+
+E=ellinit([0,a+a^2,0,a^3,(a+1)^2],nf3);
+ellheight(E,[-a,a+1])
+ellheight(E,[-a^2,a+1])
+ellrootno(E)
+
+E=ellinit([0,a+a^2,0,a^3,(a+1)^2],nfinit(a^2-a-3));
+ellheight(E,[-a,a+1])
+ellheight(E,[-a^2,a+1])
+ellrootno(E)
+
+E=ellinit([0,1,0,a*(1-a),(a+1)^2],nf3);
+ellheight(E,[-a,a+1])
+ellheight(E,[a-1,a+1])
+ellrootno(E)
+
+E=ellinit([0,a,1,a+1,0],nf4);
+ellheight(E,[0,0])
+ellrootno(E)
+
+E=ellinit([1,a+1,0,-2*a-1,1],nf4);
+ellheight(E,[-2*a,-2*a-1])
+ellrootno(E)
+
+E = ellinit([x+1,-x+1,0,7*x-46,-22*x+118], nfinit(x^2-x+3));
+ellheight(E,[3,-2*x+2])
+ellrootno(E)
+
+E = ellinit([x+1,-1,x,-x^2,0], nfinit(x^3-x^2+1));
+ellheight(E,[0,-x])
+ellrootno(E)
+
+E = ellinit([-22032-15552*a,0],nf2);
+ellheight(E,[-72*a-108,0])
+
+\\#2001
+E=ellinit([0,-1,0,-49,141]);
+K=nfinit(t^5-8*t^4-2*t^3+7*t^2+6*t-10);
+EK=ellinit(E,K);
+v=[-10389455*t^4+94207180*t^3-74647193*t^2-43748717*t+61159408,2455284431170392*t^4-11016432463258648*t^3-93170850675195967*t^2+178129308340634152*t-98800231481430471,0,2728467290019334591152803*t^4-22989796437900272628924775*t^3+2354051986650548020107980*t^2+37608622876236967823113454*t-29191600123918022419958490];
+Emin=ellchangecurve(EK,Mod(v,K.pol)); u=nfeltembed(K,v[1]);
+A1 = Emin.area;
+A2 = apply(x->abs(x)^2,u) * E.area;
+exponent(vector(3,i,(A1[i]-A2[i])/A2[i]))

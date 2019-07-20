@@ -1,0 +1,29 @@
+Function: _def_realprecision
+Class: default
+Section: default
+C-Name: sd_realprecision
+Prototype:
+Help:
+Doc: the number of significant digits used to convert exact inputs given to
+ transcendental functions (see \secref{se:trans}), or to create
+ absolute floating point constants (input as \kbd{1.0} or \kbd{Pi} for
+ instance). Unless you tamper with the \tet{format} default, this is also
+ the number of significant digits used to print a \typ{REAL} number;
+ \kbd{format} will override this latter behavior, and allow you to have a
+ large internal precision while outputting few digits for instance.
+
+ Note that PARI's internal precision works on a word basis (by increments of
+ 32 or 64 bits), hence may be a little larger than the number of decimal
+ digits you expected. For instance to get 2 decimal digits you need one word
+ of precision which, on a 64-bit machine, actually gives you 19 digits ($19 <
+ \log_{10}(2^{64}) < 20$). The value returned when typing
+ \kbd{default(realprecision)} is the internal number of significant digits,
+ not the number of printed digits:
+ \bprog
+ ? default(realprecision, 2)
+       realprecision = 19 significant digits (2 digits displayed)
+ ? default(realprecision)
+ %1 = 19
+ @eprog
+ The default value is \kbd{38}, resp.~\kbd{28}, on a 64-bit, resp.~32-bit,
+ machine.

@@ -1,0 +1,6 @@
+Function: cotanh
+Section: transcendental
+C-Name: gcotanh
+Prototype: Gp
+Help: cotanh(x): hyperbolic cotangent of x.
+Doc: hyperbolic cotangent of $x$.

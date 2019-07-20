@@ -1,0 +1,21 @@
+Function: algissemisimple
+Section: algebras
+C-Name: algissemisimple
+Prototype: iG
+Help: algissemisimple(al): test whether the algebra al is semisimple.
+Doc: \var{al} being a table algebra output by \tet{algtableinit} or a central
+ simple algebra output by \tet{alginit}, tests whether the algebra \var{al} is
+ semisimple.
+ \bprog
+ ? mt = [matid(3),[0,0,0;1,0,1;0,0,0],[0,0,0;0,0,0;1,0,1]];
+ ? A = algtableinit(mt);
+ ? algissemisimple(A)
+ %3 = 0
+ ? m_i=[0,-1,0,0;1,0,0,0;0,0,0,-1;0,0,1,0]; \\ quaternion algebra (-1,-1)
+ ? m_j=[0,0,-1,0;0,0,0,1;1,0,0,0;0,-1,0,0];
+ ? m_k=[0,0,0,-1;0,0,-1,0;0,1,0,0;1,0,0,0];
+ ? mt = [matid(4), m_i, m_j, m_k];
+ ? A = algtableinit(mt);
+ ? algissemisimple(A)
+ %9 = 1
+ @eprog

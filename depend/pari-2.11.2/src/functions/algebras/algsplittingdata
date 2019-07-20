@@ -1,0 +1,45 @@
+Function: algsplittingdata
+Section: algebras
+C-Name: algsplittingdata
+Prototype: mG
+Help: algsplittingdata(al): data stored in the central simple algebra al to
+ compute a splitting of al over an extension.
+Doc: Given a central simple algebra \var{al} output by \tet{alginit} defined
+ by a multiplication table over its center~$K$ (a number field), returns data
+ stored to compute a splitting of \var{al} over an extension. This data is a
+ \typ{VEC} \kbd{[t,Lbas,Lbasinv]} with $3$ components:
+
+  \item an element $t$ of \var{al} such that $L=K(t)$ is a maximal subfield
+ of \var{al};
+
+  \item a matrix \kbd{Lbas} expressing a $L$-basis of \var{al} (given an
+ $L$-vector space structure by multiplication on the right) on the integral
+ basis of \var{al};
+
+  \item a matrix \kbd{Lbasinv} expressing the integral basis of \var{al} on
+ the previous $L$-basis.
+
+ \bprog
+ ? nf = nfinit(y^3-5); a = y; b = y^2;
+ ? {m_i = [0,a,0,0;
+           1,0,0,0;
+           0,0,0,a;
+           0,0,1,0];}
+ ? {m_j = [0, 0,b, 0;
+           0, 0,0,-b;
+           1, 0,0, 0;
+           0,-1,0, 0];}
+ ? {m_k = [0, 0,0,-a*b;
+           0, 0,b,   0;
+           0,-a,0,   0;
+           1, 0,0,   0];}
+ ? mt = [matid(4), m_i, m_j, m_k];
+ ? A = alginit(nf,mt,'x);
+ ? [t,Lb,Lbi] = algsplittingdata(A);
+ ? t
+ %8 = [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]~;
+ ? matsize(Lb)
+ %9 = [12, 2]
+ ? matsize(Lbi)
+ %10 = [2, 12]
+ @eprog

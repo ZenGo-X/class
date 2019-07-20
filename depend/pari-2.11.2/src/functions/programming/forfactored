@@ -1,0 +1,60 @@
+Function: forfactored
+Section: programming/control
+C-Name: forfactored
+Prototype: vV=GGI
+Help: forfactored(N=a,b,seq): the sequence is evaluated, N is of the form
+ [n, factor(n)], n going from a up to b.
+Doc: evaluates \var{seq}, where
+ the formal variable $N$ is $[n, \kbd{factor}(n)]$ and $n$ goes from
+ $a$ to $b$; $a$ and $b$ must be integers. Nothing is done if $a>b$.
+
+ This function is only implemented for $|a|, |b| < 2^{64}$ ($2^{32}$ on a 32-bit
+ machine). It uses a sieve and runs in time $O(\sqrt{b} + b-a)$. It should
+ be at least 3 times faster than regular factorization as long as the interval
+ length $b-a$ is much larger than $\sqrt{b}$ and get relatively faster as
+ the bounds increase. The function slows down dramatically
+ if $\kbd{primelimit} < \sqrt{b}$.
+
+ \bprog
+ ? B = 10^9;
+ ? for (N = B, B+10^6, factor(N))
+ time = 4,538 ms.
+ ? forfactored (N = B, B+10^6, [n,fan] = N)
+ time = 1,031 ms.
+
+ ? B = 10^11;
+ ? for (N = B, B+10^6, factor(N))
+ time = 15,575 ms.
+ ? forfactored (N = B, B+10^6, [n,fan] = N)
+ time = 2,375 ms.
+
+ ? B = 10^14;
+ ? for (N = B, B+10^6, factor(N))
+ time = 1min, 4,948 ms.
+ ? forfactored (N = B, B+10^6, [n,fan] = N)
+ time = 58,601 ms.
+ @eprog\noindent The last timing is with the default \kbd{primelimit}
+ (500000) which is much less than $\sqrt{B+10^6}$; it goes down
+ to \kbd{26,750ms} if \kbd{primelimit} gets bigger than that bound.
+ In any case $\sqrt{B+10^6}$ is much larger than the interval length $10^6$
+ so \kbd{forfactored} gets relatively slower for that reason as well.
+
+ Note that all PARI multiplicative functions accept the \kbd{[n,fan]}
+ argument natively:
+ \bprog
+ ? s = 0; forfactored(N = 1, 10^7, s += moebius(N)*eulerphi(N)); s
+ time = 6,001 ms.
+ %1 = 6393738650
+ ? s = 0; for(N = 1, 10^7, s += moebius(N)*eulerphi(N)); s
+ time = 28,398 ms. \\ slower, we must factor N. Twice.
+ %2 = 6393738650
+ @eprog
+
+ The following loops over the fundamental dicriminants less than $X$:
+ \bprog
+ ? X = 10^8;
+ ? forfactored(d=1,X, if (isfundamental(d),));
+ time = 34,030 ms.
+ ? for(d=1,X, if (isfundamental(d),))
+ time = 1min, 24,225 ms.
+ @eprog

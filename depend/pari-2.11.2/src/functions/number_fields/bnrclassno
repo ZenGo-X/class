@@ -1,0 +1,28 @@
+Function: bnrclassno
+Section: number_fields
+C-Name: bnrclassno0
+Prototype: GDGDG
+Help: bnrclassno(A,{B},{C}): relative degree of the class field defined by
+ A,B,C. [A,{B},{C}] is of type [bnr], [bnr,subgroup], [bnf,modulus],
+ or [bnf,modulus,subgroup].
+ Faster than bnrinit if only the ray class number is wanted.
+Doc:
+  let $A$, $B$, $C$ define a class field $L$ over a ground field $K$
+ (of type \kbd{[\var{bnr}]},
+ \kbd{[\var{bnr}, \var{subgroup}]},
+ or \kbd{[\var{bnf}, \var{modulus}]},
+ or \kbd{[\var{bnf}, \var{modulus},\var{subgroup}]},
+ \secref{se:CFT}); this function returns the relative degree $[L:K]$.
+
+ In particular if $A$ is a \var{bnf} (with units), and $B$ a modulus,
+ this function returns the corresponding ray class number modulo $B$.
+ One can input the attached \var{bid} (with generators if the subgroup
+ $C$ is non trivial) for $B$ instead of the module itself, saving some time.
+
+ This function is faster than \kbd{bnrinit} and should be used if only the
+ ray class number is desired. See \tet{bnrclassnolist} if you need ray class
+ numbers for all moduli less than some bound.
+
+Variant: Also available is
+ \fun{GEN}{bnrclassno}{GEN bnf,GEN f} to compute the ray class number
+ modulo~$f$.

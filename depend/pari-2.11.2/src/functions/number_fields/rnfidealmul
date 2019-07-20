@@ -1,0 +1,10 @@
+Function: rnfidealmul
+Section: number_fields
+C-Name: rnfidealmul
+Prototype: GGG
+Help: rnfidealmul(rnf,x,y): relative version of idealmul, where rnf is a
+ relative numberfield.
+Doc: $\var{rnf}$ being a relative number
+ field extension $L/K$ as output by \kbd{rnfinit} and $x$ and $y$ being ideals
+ of the relative extension $L/K$ given by pseudo-matrices, outputs the ideal
+ product, again as a relative ideal.

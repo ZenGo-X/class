@@ -1,0 +1,38 @@
+Function: alggroupcenter
+Section: algebras
+C-Name: alggroupcenter
+Prototype: GDGD&
+Help: alggroupcenter(gal,{p=0},{&cc}): constructs the center of the group
+ algebra of gal over Q (resp. Fp), and sets cc to the conjugacy classes of gal.
+Doc: initializes the center~$Z(K[G])$ of the group algebra~$K[G]$ over~$K=\Q$
+ ($p = 0$ or omitted) or~$\F_p$ where~$G$ is the underlying group of the
+ \kbd{galoisinit} structure~\var{gal}. The input~\var{gal} is also allowed to
+ be a \typ{VEC} of permutations that is closed under products.
+ Sets~\var{cc} to a \typ{VEC}~$[\var{elts},\var{conjclass},\var{rep},\var{flag}]$
+ where~\var{elts} is a sorted \typ{VEC} containing the list of elements
+ of~$G$, \var{conjclass} is a \typ{VECSMALL} of the same length as~\var{elts}
+ containing the index of the conjugacy class of the corresponding element (an
+ integer between $1$ and the number of conjugacy classes), and~\var{rep} is a
+ \typ{VECSMALL} of length the number of conjugacy classes giving for each
+ conjugacy class the index in~\var{elts} of a representative of this conjugacy
+ class. Finally \var{flag} is $1$ if and only if the permutation
+ representation of $G$ is transitive, in which case the $i$-th element
+ of \var{elts} is characterized by $g[1] = i$; this is always the case
+ when \var{gal} is a \kbd{galoisinit} structure. The basis of~$Z(K[G])$ as
+ output consists of the indicator functions of the conjugacy classes in the
+ ordering given by~\var{cc}. Example:
+ \bprog
+ ? K = nfsplitting(x^4+x+1);
+ ? gal = galoisinit(K); \\ S4
+ ? al = alggroupcenter(gal,,&cc);
+ ? algiscommutative(al)
+ %4 = 1
+ ? #cc[3] \\ number of conjugacy classes of S4
+ %5 = 5
+ ? gal = [Vecsmall([1,2,3]),Vecsmall([1,3,2])]; \\ C2
+ ? al = alggroupcenter(gal,,&cc);
+ ? cc[3]
+ %8 = Vecsmall([1, 2])
+ ? cc[4]
+ %9 = 0
+ @eprog

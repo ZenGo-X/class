@@ -1,0 +1,11 @@
+Function: next
+Section: programming/control
+C-Name: next0
+Prototype: D1,L,
+Help: next({n=1}): interrupt execution of current instruction sequence, and
+ start another iteration from the n-th innermost enclosing loops.
+Doc: interrupts execution of current $seq$,
+ resume the next iteration of the innermost enclosing loop, within the
+ current function call (or top level loop). If $n$ is specified, resume at
+ the $n$-th enclosing loop. If $n$ is bigger than the number of enclosing
+ loops, all enclosing loops are exited.

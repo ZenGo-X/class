@@ -1,0 +1,13 @@
+Vecsmall([104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 33])
+"hello world!"
+"\\pmatrix{\n \\frac{1}{2}\\cr\n }"
+"\\frac{x^3\n + 3\\*y\\*x^2\n + 3\\*y^2\\*x\n + y^3}{x^2\n - 2\\*y\\*x\n + y
+^2}"
+"x"
+"1/2"
+"ab1"
+1
+  ***   at top-level: Strchr(-1)
+  ***                 ^----------
+  *** Strchr: out of range in integer -> character conversion (-1).
+Total time spent: 0

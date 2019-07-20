@@ -1,0 +1,16 @@
+Function: mfderivE2
+Section: modular_forms
+C-Name: mfderivE2
+Prototype: GD1,L,
+Help: mfderivE2(F,{m=1}): compute the Serre derivative (q.d/dq)F - kE_2F/12
+ of the generalized modular form F of weight k; and if m > 1, the m-th iterate.
+Doc: compute the Serre derivative $(q.d/dq)F - kE_2F/12$
+ of the generalized modular form $F$, which has weight $k+2$;
+ if $F$ is a true modular form, then its Serre derivative is also modular.
+ If $m>1$, compute the $m$-th iterate, of weight $k + 2m$.
+ \bprog
+ ? mfcoefs(mfderivE2(mfEk(4)),5)*(-3)
+ %1 = [1, -504, -16632, -122976, -532728]
+ ? mfcoefs(mfEk(6),5)
+ %2 = [1, -504, -16632, -122976, -532728]
+ @eprog

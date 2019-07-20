@@ -1,0 +1,10 @@
+Function: dbg_x
+Section: programming/control
+C-Name: dbgGEN
+Prototype: vGD-1,L,
+Help: dbg_x(A,{n}): print inner structure of A, complete if n is omitted, up to
+ level n otherwise. Intended for debugging.
+Doc: Print the inner structure of \kbd{A}, complete if \kbd{n} is omitted, up
+ to level \kbd{n} otherwise. This is useful for debugging. This is similar to
+ \b{x} but does not require \kbd{A} to be an history entry. In particular,
+ it can be used in the break loop.

@@ -1,0 +1,34 @@
+Function: znchartoprimitive
+Section: number_theoretical
+C-Name: znchartoprimitive
+Prototype: GG
+Help: znchartoprimitive(G,chi): let G be znstar(q,1) and chi
+ be a Dirichlet character on (Z/qZ)* of conductor q0. Return [G0,chi0],
+ where chi0 is the primitive character attached to chi and G0 is znstar(q0).
+Doc: Let \var{G} be attached to $(\Z/q\Z)^*$ (as per
+ \kbd{G = znstar(q, 1)}) and \kbd{chi} be a Dirichlet character on
+ $(\Z/q\Z)^*$, of conductor $q_0 \mid q$.
+
+ \bprog
+ ? G = znstar(126000, 1);
+ ? [G0,chi0] = znchartoprimitive(G,11)
+ ? G0.mod
+ %3 = 126000
+ ? chi0
+ %4 = 11
+ ? [G0,chi0] = znchartoprimitive(G,1);\\ trivial character, not primitive!
+ ? G0.mod
+ %6 = 1
+ ? chi0
+ %7 = []~
+ ? [G0,chi0] = znchartoprimitive(G,1009)
+ ? G0.mod
+ %4 = 125
+ ? chi0
+ %5 = [14]~
+ @eprog\noindent Note that \kbd{znconreyconductor} is more efficient since
+ it can return $\chi_0$ and its conductor $q_0$ without needing to initialize
+ $G_0$. (The price to pay is a more cryptic format and the need to
+ initalize $G_0$ later but the can be done once for all characters
+ of conductor $q_0$.)
+

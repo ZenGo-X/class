@@ -1,0 +1,33 @@
+lindep([sqrt(2), sqrt(3), sqrt(2)+sqrt(3)])
+lindep([1, 2 + 3 + 3^2 + 3^3 + 3^4 + O(3^5)])
+lindep([1,2,3;4,5,6;7,8,9])
+lindep([x*y, x^2 + y, x^2*y + x*y^2, 1])
+z = sqrt(1+5*y+y^2+y^3);
+seralgdep(z, 2,3)
+seralgdep(z, 2,2)
+seralgdep(1/(1-y+O(y^5)), 1,1)
+seralgdep(1+5*y+O(y^3), 1,10)
+lindep([])
+lindep([0])
+lindep([1])
+lindep([1,I])
+algdep(1,0)
+algdep(1,-1)
+z=sqrt(2+O(7^4)); algdep(z,2)
+lindep(Mod([E*x, E*x + E, E^2*x^2 + E*x + 2*E], E^3))
+lindep([[1,0,0],[0,1,0],[1,1,0]])
+lindep([[1,0,0]~,[0,1,0]~,[1,1,0]~])
+lindep([[1,0,0]~,[0,1,0]~,[1,1,1]~])
+lindep([[1,0,0]~,[0,1,0],[1,1,0]])
+lindep([[1,0,0]~,[0,1,0]~,[1,1,0]~])
+
+T=polcyclo(5,'t); zT = polroots(T)[1];
+bestapprnf(sqrt(5), T)
+bestapprnf(x*zT+sqrt(5), T, zT)
+bestapprnf([exp(2*I*Pi/5)+2], T, zT)
+z=sqrt(2);
+bestapprnf(z+1, x^2-2)
+bestapprnf(z+1, 4*x^2-2)
+T=x^3-2; vT=polroots(T); z=3*2^(1/3)+1;
+bestapprnf(z, T, vT[1])
+type(bestapprnf(z, T, vT[2]))

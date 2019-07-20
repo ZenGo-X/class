@@ -1,0 +1,66 @@
+n = 10!; fa = factor(n);
+sumdiv(n, d, eulerphi(d))
+sumdiv(n, d, d^2)
+sumdiv(fa, d, eulerphi(d))
+sumdiv(fa, d, d^2)
+sumdivmult(n, d, eulerphi(d))
+sumdivmult(n, d, d^2)
+sumdivmult(fa, d, eulerphi(d))
+sumdivmult(fa, d, d^2)
+
+sigma2(x) = sigma(x,2);
+sigma3(x) = sigma(x,3);
+sigma_1(x) = sigma(x,-1);
+core2(x) = core(x,1);
+fun = [ispowerful, moebius, core, core2, omega, bigomega, eulerphi, numdiv, sigma, sigma2, sigma3, sigma_1];
+for(i=1,#fun, print(fun[i](fa)))
+v = concat([-50..-1], [1..50]);
+fav = apply(factor, v);
+{
+  for (i=1,#fun,
+    my(f = fun[i]);
+    for (j=1,#v, if (f(v[j]) != f(fav[j]), error([f,v[j]]))))
+}
+\\ allow 0
+fun0 = [ispowerful, core, core2, eulerphi];
+{
+  for (i=1,#fun0,
+    my(f = fun0[i]);
+    if (f(0) != f(factor(0)), error([f,0])))
+}
+
+test(fa)= for(i=1,#fun, print(iferr(fun[i](fa),E,E)));
+test(0)
+test(factor(0))
+test(-2)
+test(factor(-2))
+
+fa = factor(1);
+for(i=1,#fun, print(fun[i](fa)))
+divisors(fa)
+
+fa = factor(0);
+ispowerful(fa)
+core(fa)
+core2(fa)
+divisors(fa)
+
+fa = [5!, factor(5!)];
+core2(fa)
+divisors(fa)
+
+n = x^2*(x+1)^3*(x+2)^5; fa = factor(n);
+sumdiv(n, d, d)
+sumdiv(fa, d, d)
+sumdivmult(n, d, d)
+sumdivmult(fa, d, d)
+
+\\#1664
+divisors([1,2])
+
+\\#1702
+moebius(factor(18))
+
+\\ core would destroy its input
+R = 762104756900678410271641;
+core(R); R

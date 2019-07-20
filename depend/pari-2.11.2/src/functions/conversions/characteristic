@@ -1,0 +1,15 @@
+Function: characteristic
+Section: conversions
+C-Name: characteristic
+Prototype: mG
+Help: characteristic(x): characteristic of the base ring over which x is
+ defined.
+Doc:
+ returns the characteristic of the base ring over which $x$ is defined (as
+ defined by \typ{INTMOD} and \typ{FFELT} components). The function raises an
+ exception if incompatible primes arise from \typ{FFELT} and \typ{PADIC}
+ components.
+ \bprog
+ ? characteristic(Mod(1,24)*x + Mod(1,18)*y)
+ %1 = 6
+ @eprog

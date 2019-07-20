@@ -1,0 +1,38 @@
+Function: lcm
+Section: number_theoretical
+C-Name: glcm0
+Prototype: GDG
+Help: lcm(x,{y}): least common multiple of x and y, i.e. x*y / gcd(x,y)
+ up to units.
+Description:
+ (int, int):int lcmii($1, $2)
+ (gen):gen      glcm0($1, NULL)
+ (gen, gen):gen glcm($1, $2)
+Doc: least common multiple of $x$ and $y$, i.e.~such
+ that $\lcm(x,y)*\gcd(x,y) = x*y$, up to units. If $y$ is omitted and $x$
+ is a vector, returns the $\text{lcm}$ of all components of $x$.
+ For integer arguments, return the non-negative \text{lcm}.
+
+ When $x$ and $y$ are both given and one of them is a vector/matrix type,
+ the LCM is again taken recursively on each component, but in a different way.
+ If $y$ is a vector, resp.~matrix, then the result has the same type as $y$,
+ and components equal to \kbd{lcm(x, y[i])}, resp.~\kbd{lcm(x, y[,i])}. Else
+ if $x$ is a vector/matrix the result has the same type as $x$ and an
+ analogous definition. Note that for these types, \kbd{lcm} is not
+ commutative.
+
+ Note that \kbd{lcm(v)} is quite different from
+ \bprog
+ l = v[1]; for (i = 1, #v, l = lcm(l, v[i]))
+ @eprog\noindent
+ Indeed, \kbd{lcm(v)} is a scalar, but \kbd{l} may not be (if one of
+ the \kbd{v[i]} is a vector/matrix). The computation uses a divide-conquer tree
+ and should be much more efficient, especially when using the GMP
+ multiprecision kernel (and more subquadratic algorithms become available):
+ \bprog
+ ? v = vector(10^5, i, random);
+ ? lcm(v);
+ time = 546 ms.
+ ? l = v[1]; for (i = 1, #v, l = lcm(l, v[i]))
+ time = 4,561 ms.
+ @eprog

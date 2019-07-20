@@ -1,0 +1,16 @@
+Function: _def_path
+Class: default
+Section: default
+C-Name: sd_path
+Prototype:
+Help:
+Doc: this is a list of directories, separated by colons ':'
+ (semicolons ';' in the DOS world, since colons are preempted for drive names).
+ When asked to read a file whose name is not given by an absolute path
+ (does not start with \kbd{/}, \kbd{./} or \kbd{../}), \kbd{gp} will look for
+ it in these directories, in the order they were written in \kbd{path}. Here,
+ as usual, \kbd{.} means the current directory, and \kbd{..} its immediate
+ parent. Environment expansion is performed.
+
+ The default value is \kbd{".:\til:\til/gp"} on UNIX systems,
+ \kbd{".;C:\bs;C:\bs GP"} on DOS, OS/2 and Windows, and \kbd{"."} otherwise.

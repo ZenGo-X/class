@@ -1,0 +1,270 @@
+% Copyright (c) 2007-2016 Karim Belabas.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU General Public License
+
+% Reference Card for PARI-GP, Algebraic Number Theory.
+% Author:
+%  Karim Belabas
+%  Universite de Bordeaux, 351 avenue de la Liberation, F-33405 Talence
+%  email: Karim.Belabas@math.u-bordeaux.fr
+%
+% See refcard.tex for acknowledgements and thanks.
+\def\TITLE{Modular forms, modular symbols}
+\input refmacro.tex
+
+\section{Modular Forms}
+\subsec{Dirichlet characters} Characters are encoded in three different ways:
+
+\item a \typ{INT} $D\equiv 0,1\mod 4$: the quadratic character $(D/\cdot)$;
+
+\item a \typ{INTMOD} \kbd{Mod}$(m,q)$, $m\in(\ZZ/q)^*$
+using a canonical bijection with the dual group (the Conrey character
+$\chi_q(m,\cdot)$);
+
+\item a pair $[G,\kbd{chi}]$, where $G = \kbd{znstar}(q,1)$ encodes
+$(\ZZ/q\ZZ)^* = \sum_{j \leq k} (\ZZ/d_j\ZZ) \cdot g_j$ and the vector
+$\kbd{chi} = [c_1,\dots,c_k]$ encodes the character such that $\chi(g_j) =
+e(c_j/d_j)$.
+\medskip
+
+\li{initialize $G = (\ZZ/q\ZZ)^*$}{G = znstar$(q,1)$}
+\li{convert datum $D$ to $[G,\chi]$}{znchar$(D)$}
+\li{Galois orbits of Dirichlet characters}{chargalois$(G)$}
+
+\subsec{Spaces of modular forms}
+Arguments of the form $[N,k,\chi]$
+give the level weight and nebentypus $\chi$; $\chi$ can be omitted: $[N,k]$
+means trivial $\chi$.\hfil\break
+\li{initialize $S_k^{\text{new}}(\Gamma_0(N),\chi)$}{mfinit$([N,k,\chi])$}
+\li{initialize $S_k(\Gamma_0(N),\chi)$}{mfinit$([N,k,\chi],1)$}
+\li{initialize $S_k^{\text{old}}(\Gamma_0(N),\chi)$}{mfinit$([N,k,\chi],2)$}
+\li{initialize $E_k(\Gamma_0(N),\chi)$}{mfinit$([N,k,\chi],3)$}
+\li{initialize $M_k(\Gamma_0(N),\chi)$}{mfinit$([N,k,\chi],4)$}
+\li{find eigenforms}{mfsplit$(M)$}
+\li{statistics on self-growing caches}{getcache$()$}
+\smallskip
+
+We let $M$ = \kbd{mfinit}$(\dots)$ denote a modular space.
+\hfil\break
+\li{describe the space $M$}{mfdescribe$(M)$}
+\li{recover $(N,k,\chi)$}{mfparams$(M)$}
+\li{\dots the space identifier (0 to 4)}{mfspace$(M)$}
+\li{\dots the dimension of $M$ over $\CC$}{mfdim$(M)$}
+\li{\dots a $\CC$-basis $(f_i)$ of $M$}{mfbasis$(M)$}
+\li{\dots a basis $(F_j)$ of eigenforms}{mfeigenbasis$(M)$}
+\li{\dots polynomials defining $\QQ(\chi)(F_j)/\QQ(\chi)$}{mffields$(M)$}
+\smallskip
+\li{matrix of Hecke operator $T_n$ on $(f_i)$}{mfheckemat$(M,n)$}
+\li{eigenvalues of $w_Q$}{mfatkineigenvalues$(M,Q)$}
+\li{basis of period poynomials for weight $k$}{mfperiodpolbasis$(k)$}
+
+\li{basis of the Kohnen $+$-space}{mfkohnenbasis$(M)$}
+\li{\dots new space and eigenforms}{mfkohneneigenbasis$(M, b)$}
+\li{isomorphism $S_k^+(4N,\chi) \to S_{2k-1}(N,\chi^2)$}
+   {mfkohnenbijection$(M)$}
+
+\smallskip
+Useful data can also be obtained a priori, without computing a complete
+modular space:
+\hfil\break
+\li{dimension of $S_k^{\text{new}}(\Gamma_0(N),\chi)$}{mfdim$([N,k,\chi])$}
+\li{dimension of $S_k(\Gamma_0(N),\chi)$}{mfdim$([N,k,\chi],1)$}
+\li{dimension of $S_k^{\text{old}}(\Gamma_0(N),\chi)$}{mfdim$([N,k,\chi],2)$}
+\li{dimension of $M_k(\Gamma_0(N),\chi)$}{mfdim$([N,k,\chi],3)$}
+\li{dimension of $E_k(\Gamma_0(N),\chi)$}{mfdim$([N,k,\chi],4)$}
+\li{Sturm's bound for $M_k(\Gamma_0(N),\chi)$}{mfsturm$(N,k)$}
+
+\subsec{$\Gamma_0(N)$ cosets}
+
+\li{list of right $\Gamma_0(N)$ cosets}{mfcosets$(N)$}
+\li{identify coset a matrix belongs to}{mftocoset}
+
+\subsec{Cusps} a cusp is given by a rational number or \kbd{oo}.\hfil\break
+\li{lists of cusps of $\Gamma_0(N)$}{mfcusps$(N)$}
+\li{number of cusps of $\Gamma_0(N)$}{mfnumcusps$(N)$}
+\li{width of cusp $c$ of $\Gamma_0(N)$}{mfcuspwidth$(N,c)$}
+\li{is cusp $c$ regular for $M_k(\Gamma_0(N),\chi)$?}
+   {mfcuspisregular$([N,k,\chi], c)$}
+
+\subsec{Create an individual modular form} Besides \kbd{mfbasis} and
+\kbd{mfeigenbasis}, an individual modular form can be identified by a few
+coefficients.\hfil\break
+\li{modular form from coefficients}{mftobasis(mf,\var{vec})}
+\smallskip
+
+There are also many predefined ones:\hfil\break
+\li{Eisenstein series $E_k$ on $Sl_2(\ZZ)$}{mfEk$(k)$}
+\li{Eisenstein-Hurwitz series on $\Gamma_0(4)$}{mfEH$(k)$}
+\li{unary $\theta$ function (for character $\psi$)}{mfTheta$(\{\psi\})$}
+\li{Ramanujan's $\Delta$}{mfDelta$()$}
+\li{$E_k(\chi)$}{mfeisenstein$(k,\chi)$}
+\li{$E_k(\chi_1,\chi_2)$}{mfeisenstein$(k,\chi_1,\chi_2)$}
+\li{eta quotient $\prod_i \eta(a_{i,1} \cdot z)^{a_{i,2}}$}{mffrometaquo$(a)$}
+\li{newform attached to ell. curve $E/\QQ$}{mffromell$(E)$}
+\li{identify an $L$-function as a eigenform}{mffromlfun$(L)$}
+\li{$\theta$ function attached to $Q > 0$}{mffromqf$(Q)$}
+\li{trace form in $S_k^{\text{new}}(\Gamma_0(N),\chi)$}
+   {mftraceform$([N,k,\chi])$}
+\li{trace form in $S_k(\Gamma_0(N),\chi)$}
+   {mftraceform$([N,k,\chi], 1)$}
+
+\subsec{Operations on modular forms} In this section, $f$, $g$ and
+the $F[i]$ are modular forms\hfil\break
+\li{$f\times g$}{mfmul$(f,g)$}
+\li{$f / g$}{mfdiv$(f,g)$}
+\li{$f^n$}{mfpow$(f,n)$}
+\li{$f(q)/q^v$}{mfshift$(f,v)$}
+\li{$\sum_{i\leq k} \lambda_i F[i]$, $L = [\lambda_1,\dots,\lambda_k]$}
+   {mflinear$(F,L)$}
+\li{$f = g$?}{mfisequal(f,g)}
+\li{expanding operator $B_d(f)$}{mfbd$(f,d)$}
+\li{Hecke operator $T_n f$}{mfhecke$(mf,f,n)$}
+\li{initialize Atkin--Lehner operator $w_Q$}{mfatkininit$(mf,Q)$}
+\li{\dots apply $w_Q$ to $f$}{mfatkin$(w_Q,f)$}
+\li{twist by the quadratic char $(D/\cdot)$}{mftwist$(f,D)$}
+\li{derivative wrt. $q \cdot d/dq$}{mfderiv$(f)$}
+\li{see $f$ over an absolute field}{mfreltoabs$(f)$}
+\li{Serre derivative $\big(q \cdot {d\over dq} - {k\over 12} E_2\big) f$}
+   {mfderivE2$(f)$}
+\li{Rankin-Cohen bracket $[f,g]_n$}{mfbracket$(f,g,n)$}
+\li{Shimura lift of $f$ for discriminant $D$}{mfshimura$(mf,f,D)$}
+
+\subsec{Properties of modular forms} In this section, $f = \sum_n f_n q^n$
+is a modular form
+in some space $M$ with parameters $N,k,\chi$.\hfil\break
+\li{describe the form $f$}{mfdescribe$(f)$}
+\li{$(N,k,\chi)$ for form $f$}{mfparams$(f)$}
+\li{the space identifier (0 to 4) for $f$}{mfspace$(mf,f)$}
+\li{$[f_0,\dots,f_n]$}{mfcoefs$(f, n)$}
+\li{$f_n$}{mfcoef$(f,n)$}
+\li{is $f$ a CM form?}{mfisCM$(f)$}
+\li{Galois rep. attached to $(1,\chi)$-eigenform}
+   {mfgaloistype$(M,F)$}
+\li{Galois rep. attached to all $(1,\chi)$ eigenforms}
+   {mfgaloistype$(M)$}
+
+\li{decompose $f$ on \kbd{mfbasis}$(M)$}{mftobasis$(M,f)$}
+\li{smallest level on which $f$ is defined}{mfconductor$(M,f)$}
+\li{decompose $f$ on $\oplus S_k^{\text{new}}(\Gamma_0(d))$, $d\mid N$}
+   {mftonew$(M,f)$}
+\li{valuation of $f$ at cusp $c$}{mfcuspval$(M,f,c)$}
+\li{expansion at $\infty$ of $f \mid_k \gamma$}{mfslashexpansion$(M,f,\gamma,n)$}
+\li{$n$-Taylor expansion of $f$ at $i$}{mftaylor$(f,n)$}
+\li{all rational eigenforms matching criteria}{mfeigensearch}
+\li{\dots  forms matching criteria}{mfsearch}
+\subsec{Forms embedded into $\CC$} Given a modular form $f$
+in $M_k(\Gamma_0(N),\chi)$ its field of definition $\Q(f)$ has
+$n = [\Q(f):\Q(\chi)]$ embeddings into the complex numbers.
+If $n = 1$, the following functions return a single answer, attached to the
+canonical embedding of $f$ in $\CC[[q]]$; else
+a vector of $n$ results, corresponding to the $n$ conjugates of $f$.\hfill\break
+\li{complex embeddings of $\Q(f)$}{mfembed$(f)$}
+\li{... embed coefs of $f$}{mfembed$(f, v)$}
+\li{evaluate $f$ at $\tau\in{\cal H}$}{mfeval$(f,\tau)$}
+\li{$L$-function attached to $f$}{lfunmf$(mf,f)$}
+\li{\dots eigenforms of new space $M$}{lfunmf$(M)$}
+
+\subsec{Periods and symbols} The functions in this section
+depend on $[\Q(f):\Q(\chi)]$ as above.
+\li{initialize symbol $fs$ attached to $f$}{mfsymbol$(M,f)$}
+\li{evaluate symbol $fs$ on path $p$}{mfsymboleval$(fs,p)$}
+\li{Petersson product of $f$ and $g$}{mfpetersson$(fs,gs)$}
+\li{period polynomial of form $f$}{mfperiodpol$(M,fs)$}
+\li{period polynomials for eigensymbol $FS$}{mfmanin$(FS)$}
+
+\newcolumn
+
+\section{Modular Symbols}
+Let $G = \Gamma_0(N)$, $V_k = \QQ[X,Y]_{k-2}$, $L_k = \ZZ[X,Y]_{k-2}$. We let
+$\Delta = \text{Div}^0(\PP^1(\QQ))$; an element of $\Delta$ is a \emph{path}
+between cusps of $X_0(N)$ via the identification $[b]-[a] \to $ the path from
+$a$ to $b$. A path is coded by the pair $[a,b]$, where $a,b$ are rationals
+or \kbd{oo}, denoting the point at infinity $(1:0)$.\hfil\break
+
+Let $\MM_k(G) = \Hom_G(\Delta, V_k) \simeq H^1_c(X_0(N),V_k)$;
+an element of $\MM_k(G)$ is a $V_k$-valued \emph{modular symbol}.
+There is a natural decomposition $\MM_k(G) = \MM_k(G)^+ \oplus \MM_k(G)^-$
+under the action of the $*$ involution, induced by complex conjugation.
+The \kbd{msinit} function computes either $\MM_k$ ($\varepsilon = 0$) or
+its $\pm$-parts ($\varepsilon = \pm1$) and fixes a minimal
+set of $\ZZ[G]$-generators $(g_i)$ of $\Delta$.\hfil\break
+
+\li{initialize $M = \MM_k(\Gamma_0(N))^\varepsilon$}
+   {msinit$(N,k,\{\varepsilon=0\})$}
+\li{the level $M$}{msgetlevel$(M)$}
+\li{the weight $k$}{msgetweight$(M)$}
+\li{the sign $\varepsilon$}{msgetsign$(M)$}
+\li{Farey symbol attached to $G$}{mspolygon$(M)$}
+\smallskip
+
+\li{$\ZZ[G]$-generators $(g_i)$ and relations for $\Delta$}{mspathgens$(M)$}
+\li{decompose $p = [a,b]$ on the $(g_i)$}{mspathlog$(M,p)$}
+\smallskip
+
+\subsec{Create a symbol}
+\li{Eisenstein symbol attached to cusp $c$}{msfromcusp$(M,c)$}
+\li{cuspidal symbol attached to $E/\QQ$}{msfromell$(E)$}
+\li{symbol having given Hecke eigenvalues}{msfromhecke$(M,v,\{H\})$}
+\li{is $s$ a symbol ?}{msissymbol$(M,s)$}
+\subsec{Operations on symbols}
+\li{the list of all $s(g_i)$}{mseval$(M,s)$}
+\li{evaluate symbol $s$ on path $p=[a,b]$}{mseval$(M,s,p)$}
+\li{Petersson product of $s$ and $t$}{mspetersson$(M,s,t)$}
+
+\subsec{Operators on subspaces}
+An operator is given by a matrix of a fixed $\QQ$-basis. $H$, if given, is a
+stable $\QQ$-subspace of $\MM_k(G)$: operator is restricted to $H$.\hfil\break
+\li{matrix of Hecke operator $T_p$ or $U_p$}{mshecke$(M,p,\{H\})$}
+\li{matrix of Atkin-Lehner $w_Q$}{msatkinlehner$(M,Q\{H\})$}
+\li{matrix of the $*$ involution}{msstar$(M,\{H\})$}
+
+\subsec{Subspaces} A subspace is given by a structure allowing
+quick projection and restriction of linear operators. Its fist
+component is a matrix with integer coefficients whose columns for a
+$\QQ$-basis. If $H$ is a Hecke-stable subspace of $M_k(G)^+$ or $M_k(G)^-$,
+it can be split into a direct sum of Hecke-simple subspaces.
+To a simple subspace corresponds a single normalized newform
+$\sum_n a_n q^n$.
+\hfil\break
+\li{cuspidal subspace $S_k(G)^\varepsilon$}{mscuspidal$(M)$}
+\li{Eisenstein subspace $E_k(G)^\varepsilon$}{mseisenstein$(M)$}
+\li{new part of $S_k(G)^\varepsilon$}{msnew$(M)$}
+\li{split $H$ into simple subspaces (of dim $\leq d$)}{mssplit$(M,H,\{d\})$}
+\li{dimension of a subspace}{msdim$(M)$}
+\li{$(a_1,\dots, a_B)$ for attached newform}
+   {msqexpansion$(M, H, \{B\})$}
+\li{$\ZZ$-structure from $H^1(G,L_k)$ on subspace $A$ }{mslattice$(M,A)$}
+
+\medskip
+\subsec{Overconvergent symbols and $p$-adic $L$ functions}
+Let $M$ be a full modular symbol space given by \kbd{msinit}
+and $p$ be a prime. To a classical modular symbol $\phi$ of level $N$
+($v_p(N)\leq 1$), which is an eigenvector for $T_p$ with non-zero eigenvalue
+$a_p$, we can attach a $p$-adic $L$-function $L_p$. The function $L_p$
+is defined on continuous characters of $\text{Gal}(\QQ(\mu_{p^\infty})/\QQ)$;
+in GP we allow characters $\langle \chi \rangle^{s_1} \tau^{s_2}$, where
+$(s_1,s_2)$ are integers, $\tau$ is the Teichm\"uller character and $\chi$ is
+the cyclotomic character.
+
+The symbol $\phi$ can be lifted to an \emph{overconvergent} symbol $\Phi$,
+taking values in spaces of $p$-adic distributions (represented in GP by a
+list of moments modulo $p^n$).
+
+\kbd{mspadicinit} precomputes data used to lift symbols. If $\fl$ is given,
+it speeds up the computation by assuming that $v_p(a_p) = 0$ if $\fl = 0$
+(fastest), and that $v_p(a_p) \geq \fl$ otherwise (faster as $\fl$ increases).
+
+\kbd{mspadicmoments} computes distributions \var{mu} attached to $\Phi$
+allowing to compute $L_p$ to high accuracy.
+
+\li{initialize $\var{Mp}$ to lift symbols}{mspadicinit$(M,p,n,\{\fl\})$}
+\li{lift symbol $\phi$}{mstooms$(\var{Mp}, \phi)$}
+\li{eval overconvergent symbol $\Phi$ on path $p$}{msomseval$(\var{Mp},\Phi,p)$}
+\li{\var{mu} for $p$-adic $L$-functions}
+   {mspadicmoments$(\var{Mp}, S, \{D=1\})$}
+\li{$L_p^{(r)}(\chi^s)$, $s = [s_1,s_2]$}
+   {mspadicL$(\var{mu}, \{s = 0\}, \{r = 0\})$}
+\li{$\hat{L}_p(\tau^i)(x)$}{mspadicseries$(\var{mu}, \{i = 0\})$}
+
+\copyrightnotice
+\bye

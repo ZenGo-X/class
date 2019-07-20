@@ -1,0 +1,15 @@
+Function: lfunlambda
+Section: l_functions
+C-Name: lfunlambda0
+Prototype: GGD0,L,b
+Help: lfunlambda(L,s,{D=0}): compute the completed L function Lambda(s),
+ or if D is set, the derivative of order D at s. L is either
+ an Lmath, an Ldata or an Linit.
+Doc: compute the completed $L$-function $\Lambda(s) = N^{s/2}\gamma(s)L(s)$,
+ or if \kbd{D} is set, the derivative of order \kbd{D} at $s$.
+ The parameter \kbd{L} is either an \kbd{Lmath}, an \kbd{Ldata} (created by
+ \kbd{lfuncreate}, or an \kbd{Linit} (created by \kbd{lfuninit}), preferrably the
+ latter if many values are to be computed.
+
+ The result is given with absolute error less than $2^{-B}|\gamma(s)N^{s/2}|$,
+ where $B = \text{realbitprecision}$.

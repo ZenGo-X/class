@@ -1,0 +1,13 @@
+Function: rnfisabelian
+Section: number_fields
+C-Name: rnfisabelian
+Prototype: lGG
+Help: rnfisabelian(nf,T): T being a relative polynomial with coefficients
+ in nf, return 1 if it defines an abelian extension, and 0 otherwise.
+Doc: $T$ being a relative polynomial with coefficients
+ in \var{nf}, return 1 if it defines an abelian extension, and 0 otherwise.
+ \bprog
+ ? K = nfinit(y^2 + 23);
+ ? rnfisabelian(K, x^3 - 3*x - y)
+ %2 = 1
+ @eprog

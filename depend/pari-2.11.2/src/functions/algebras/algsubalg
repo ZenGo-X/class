@@ -1,0 +1,36 @@
+Function: algsubalg
+Section: algebras
+C-Name: algsubalg
+Prototype: GG
+Help: algsubalg(al,B): subalgebra of al with basis B.
+Doc: \var{al} being a table algebra output by \tet{algtableinit} and \var{B}
+ being a basis of a subalgebra of~\var{al} represented by a matrix, computes an
+ algebra~\var{al2} isomorphic to \var{B}.
+
+ Returns $[\var{al2},\var{B2}]$ where \var{B2} is a possibly different basis of
+ the subalgebra \var{al2}, with respect to which the multiplication table of
+ \var{al2} is defined.
+ \bprog
+ ? mt = [matid(3), [0,0,0; 1,1,0; 0,0,0], [0,0,1; 0,0,0; 1,0,1]];
+ ? A = algtableinit(mt,2);
+ ? B = algsubalg(A,[1,0; 0,0; 0,1]);
+ ? algdim(A)
+ %4 = 3
+ ? algdim(B[1])
+ %5 = 2
+ ? m = matcompanion(x^4+1);
+ ? mt = [m^i | i <- [0..3]];
+ ? al = algtableinit(mt);
+ ? B = [1,0;0,0;0,1/2;0,0];
+ ? al2 = algsubalg(al,B);
+ ? algdim(al2[1])
+ ? al2[2]
+ %13 =
+ [1 0]
+
+ [0 0]
+
+ [0 1]
+
+ [0 0]
+ @eprog

@@ -1,0 +1,66 @@
+Function: Vec
+Section: conversions
+C-Name: gtovec0
+Prototype: GD0,L,
+Help: Vec(x, {n}): transforms the object x into a vector of dimension n.
+Description:
+ (gen):vec        gtovec($1)
+Doc: transforms the object $x$ into a row vector. The dimension of the
+ resulting vector can be optionally specified via the extra parameter $n$.
+ If $n$ is omitted or $0$, the dimension depends on the type of $x$; the
+ vector has a single component, except when $x$ is
+
+ \item a vector or a quadratic form: returns the initial object considered as a
+ row vector,
+
+ \item a polynomial or a power series: returns a vector consisting of the
+ coefficients. In the case of a polynomial, the coefficients of the vector
+ start with the leading coefficient of the polynomial, while for power series
+ only the significant coefficients are taken into account, but this time by
+ increasing order of degree. In particular the valuation is ignored
+ (which makes the function useful for series of negative valuation):
+ \bprog
+ ? Vec(3*x^2 + x)
+ %1 = [3, 1, 0]
+ ? Vec(x^2 + 3*x^3 + O(x^5))
+ %2 = [1, 3, 0]
+ ? Vec(x^-2 + 3*x^-1 + O(x))
+ %3 = [1, 3, 0]
+ @eprog\noindent \kbd{Vec} is the reciprocal function of \kbd{Pol} for a
+ polynomial and of \kbd{Ser} for power series of valuation $0$.
+
+ \item a matrix: returns the vector of columns comprising the matrix,
+ \bprog
+ ? m = [1,2,3;4,5,6]
+ %4 =
+ [1 2 3]
+
+ [4 5 6]
+ ? Vec(m)
+ %5 = [[1, 4]~, [2, 5]~, [3, 6]~]
+ @eprog
+
+ \item a character string: returns the vector of individual characters,
+ \bprog
+ ? Vec("PARI")
+ %6 = ["P", "A", "R", "I"]
+ @eprog
+
+ \item a map: returns the vector of the domain of the map,
+
+ \item an error context (\typ{ERROR}): returns the error components, see
+ \tet{iferr}.
+
+ In the last four cases (matrix, character string, map, error), $n$ is
+ meaningless and must be omitted or an error is raised. Otherwise, if $n$ is
+ given, $0$ entries are appended at the end of the vector if $n > 0$, and
+ prepended at the beginning if $n < 0$. The dimension of the resulting vector
+ is $|n|$. This allows to write a conversion function for series that
+ takes positive valuations into account:
+ \bprog
+ ? serVec(s) = Vec(s, -serprec(s,variable(s)));
+ ? Vec(x^2 + 3*x^3 + O(x^5))
+ %2 = [0, 0, 1, 3, 0]
+ @eprog (That function is not intended for series of negative valuation.)
+
+Variant: \fun{GEN}{gtovec}{GEN x} is also available.

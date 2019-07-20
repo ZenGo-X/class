@@ -1,0 +1,43 @@
+Function: ellminimaltwist
+Section: elliptic_curves
+C-Name: ellminimaltwist0
+Prototype: GD0,L,
+Help: ellminimaltwist(E, {flag=0}): E being an elliptic curve defined over Q,
+ return a discriminant D such that the twist of E by D is minimal among all
+ possible quadratic twists, i.e., if flag=0, its minimal model has minimal
+ discriminant, or if flag=1, it has minimal conductor.
+Doc: Let $E$ be an elliptic curve defined over $\Q$, return
+ a discriminant $D$ such that the twist of $E$ by $D$ is minimal among all
+ possible quadratic twists, i.e. if $\fl=0$, its minimal model has minimal
+ discriminant, or if $\fl=1$, it has minimal conductor.
+
+ In the example below, we find a curve with $j$-invariant $3$ and minimal
+ conductor.
+ \bprog
+ ? E = ellminimalmodel(ellinit(ellfromj(3)));
+ ? ellglobalred(E)[1]
+ %2 = 357075
+ ? D = ellminimaltwist(E,1)
+ %3 = -15
+ ? E2 = ellminimalmodel(ellinit(elltwist(E,D)));
+ ? ellglobalred(E2)[1]
+ %5 = 14283
+ @eprog
+ In the example below, $\fl=0$ and $\fl=1$ give different results.
+ \bprog
+ ? E = ellinit([1,0]);
+ ? D0 = ellminimaltwist(E,0)
+ %7 = 1
+ ? D1 = ellminimaltwist(E,1)
+ %8 = 8
+ ? E0 = ellminimalmodel(ellinit(elltwist(E,D0)));
+ ? [E0.disc, ellglobalred(E0)[1]]
+ %10 = [-64, 64]
+ ? E1 = ellminimalmodel(ellinit(elltwist(E,D1)));
+ ? [E1.disc, ellglobalred(E1)[1]]
+ %12 = [-4096, 32]
+ @eprog
+
+Variant: Also available are
+ \fun{GEN}{ellminimaltwist}{E} for $\fl=0$, and
+ \fun{GEN}{ellminimaltwistcond}{E} for $\fl=1$.

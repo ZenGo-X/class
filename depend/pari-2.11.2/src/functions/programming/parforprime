@@ -1,0 +1,28 @@
+Function: parforprime
+Section: programming/parallel
+C-Name: parforprime0
+Prototype: vV=GDGJDVDI
+Description:
+ (gen,gen,closure):void parforprime($1, $2, $3, NULL, NULL)
+Help: parforprime(p=a,{b},expr1,{r},{expr2}):
+ evaluates the expression expr1 in parallel for all primes p between a and b
+ (if b is set to +oo, the loop will not stop), resulting in as many
+ values; if the formal variables r and expr2 are present, evaluate
+ sequentially expr2, in which r has been replaced by the different results
+ obtained for expr1 and p with the corresponding arguments.
+Doc:
+ behaves exactly as \kbd{parfor}, but loops only over prime values $p$.
+ Precisely, the functions evaluates in parallel the expression \kbd{expr1}
+ in the formal
+ argument $p$ running through the primes from $a$ to $b$.
+ If $b$ is set to \kbd{+oo}, the loop runs indefinitely.
+ If $r$ and \kbd{expr2} are present, the expression \kbd{expr2} in the
+ formal variables $r$ and $p$ is evaluated with $r$ running through all
+ the different results obtained for \kbd{expr1} and $p$ takes the
+ corresponding argument.
+
+ It is allowed fo \kbd{expr2} to exit the loop using
+ \kbd{break}/\kbd{next}/\kbd{return}; see the remarks in the documentation
+ of \kbd{parfor} for details.
+
+ %\syn{NO}

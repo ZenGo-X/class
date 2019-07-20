@@ -1,0 +1,14 @@
+Function: algsub
+Section: algebras
+C-Name: algsub
+Prototype: GGG
+Help: algsub(al,x,y): element x-y in al.
+Doc: Given two elements $x$ and $y$ in \var{al}, computes their difference
+ $x-y$ in the algebra \var{al}.
+ \bprog
+ ? A = alginit(nfinit(y), [-1,-1]);
+ ? algsub(A,[1,1,0,0]~,[1,0,1,0]~)
+ %2 = [0, 1, -1, 0]~
+ @eprog
+
+ Also accepts matrices with coefficients in \var{al}.

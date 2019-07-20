@@ -1,0 +1,32 @@
+Function: vector
+Section: linear_algebra
+C-Name: vecteur
+Prototype: GDVDE
+Help: vector(n,{X},{expr=0}): row vector with n components of expression
+ expr (X ranges from 1 to n). By default, fill with 0s.
+Doc: creates a row vector (type
+ \typ{VEC}) with $n$ components whose components are the expression
+ \var{expr} evaluated at the integer points between 1 and $n$. If one of the
+ last two arguments is omitted, fill the vector with zeroes.
+ \bprog
+ ? vector(3,i, 5*i)
+ %1 = [5, 10, 15]
+ ? vector(3)
+ %2 = [0, 0, 0]
+ @eprog
+
+ The variable $X$ is lexically scoped to each evaluation of \var{expr}.  Any
+ change to $X$ within \var{expr} does not affect subsequent evaluations, it
+ still runs 1 to $n$.  A local change allows for example different indexing:
+ \bprog
+ vector(10, i, i=i-1; f(i)) \\ i = 0, ..., 9
+ vector(10, i, i=2*i; f(i)) \\ i = 2, 4, ..., 20
+ @eprog\noindent
+ This per-element scope for $X$ differs from \kbd{for} loop evaluations,
+ as the following example shows:
+ \bprog
+ n = 3
+ v = vector(n); vector(n, i, i++)            ----> [2, 3, 4]
+ v = vector(n); for (i = 1, n, v[i] = i++)   ----> [2, 0, 4]
+ @eprog\noindent
+ %\syn{NO}

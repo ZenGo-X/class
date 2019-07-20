@@ -1,0 +1,10 @@
+Function: matmultodiagonal
+Section: linear_algebra
+C-Name: matmultodiagonal
+Prototype: GG
+Help: matmultodiagonal(x,y): product of matrices x and y, knowing that the
+ result will be a diagonal matrix. Much faster than general multiplication in
+ that case.
+Doc: product of the matrices $x$ and $y$ assuming that the result is a
+ diagonal matrix. Much faster than $x*y$ in that case. The result is
+ undefined if $x*y$ is not diagonal.

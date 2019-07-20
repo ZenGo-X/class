@@ -1,0 +1,12 @@
+Function: prodeuler
+Section: sums
+C-Name: prodeuler0
+Prototype: V=GGEp
+Help: prodeuler(X=a,b,expr): Euler product (X runs over the primes between a
+ and b) of real or complex expression.
+Doc: product of expression \var{expr},
+ initialized at 1. (i.e.~to a \emph{real} number equal to 1 to the current
+ \kbd{realprecision}), the formal parameter $X$ ranging over the prime numbers
+ between $a$ and $b$.\sidx{Euler product}
+
+ \synt{prodeuler}{void *E, GEN (*eval)(void*,GEN), GEN a,GEN b, long prec}.

@@ -1,0 +1,5 @@
+Function: _norange
+Class: gp2c_internal
+Description:
+ ():small    LONG_MAX
+

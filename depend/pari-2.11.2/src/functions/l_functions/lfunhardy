@@ -1,0 +1,31 @@
+Function: lfunhardy
+Section: l_functions
+C-Name: lfunhardy
+Prototype: GGb
+Help: lfunhardy(L,t): variant of the Hardy L-function attached to L, used for
+ plotting on the critical line.
+Doc: Variant of the Hardy $Z$-function given by \kbd{L}, used for
+ plotting or locating zeros of $L(k/2+it)$ on the critical line.
+ The precise definition is as
+ follows: if as usual $k/2$ is the center of the critical strip, $d$ is the
+ degree, $\alpha_j$ the entries of \kbd{Vga} giving the gamma factors,
+ and $\varepsilon$ the root number, then if we set
+ $s = k/2+it = \rho e^{i\theta}$ and
+ $E=(d(k/2-1)+\sum_{1\le j\le d}\alpha_j)/2$, the computed function at $t$ is
+ equal to
+ $$Z(t) = \varepsilon^{-1/2}\Lambda(s) \cdot |s|^{-E}e^{dt\theta/2}\;,$$
+ which is a real function of $t$ for self-dual $\Lambda$,
+ vanishing exactly when $L(k/2+it)$ does on the critical line. The
+ normalizing factor $|s|^{-E}e^{dt\theta/2}$ compensates the
+ exponential decrease of $\gamma_A(s)$ as $t\to\infty$ so that
+ $Z(t) \approx 1$.
+
+ \bprog
+ ? T = 100; \\ maximal height
+ ? L = lfuninit(1, [T]); \\ initialize for zeta(1/2+it), |t|<T
+ ? \p19 \\ no need for large accuracy
+ ? ploth(t = 0, T, lfunhardy(L,t))
+ @eprog\noindent Using \kbd{lfuninit} is critical for this particular
+ applications since thousands of values are computed. Make sure to initialize
+ up to the maximal $t$ needed: otherwise expect to see many warnings for
+ unsufficient initialization and suffer major slowdowns.

@@ -1,0 +1,70 @@
+Function: _header_modular_forms
+Class: header
+Section: modular_forms
+Doc:
+ \section{Modular forms}
+
+ This section describes routines for working with modular forms and modular
+ form spaces.
+
+ \subsec{Modular form spaces} %GPHELPskip
+
+ These structures are initialized by the \kbd{mfinit} command; supported
+ modular form \emph{spaces} with corresponding flags are the following:
+
+ \item The full modular form space $M_k(\Gamma_0(N),\chi)$, where $k$ is an
+ integer or a half-integer and $\chi$ a Dirichlet character modulo $N$
+ (flag $4$, the default).
+
+ \item The cuspidal space $S_k(\Gamma_0(N),\chi)$ (flag $1$).
+
+ \item The Eisenstein space ${\cal E}_k(\Gamma_0(N),\chi)$ (flag $3$), so
+ that $M_k={\cal E}_k\oplus S_k$.
+
+ \item The new space $S_k^{\text{new}}(\Gamma_0(N),\chi)$ (flag $0$).
+
+ \item The old space $S_k^{\text{old}}(\Gamma_0(N),\chi)$ (flag $2$), so that
+ $S_k=S_k^{\text{new}}\oplus S_k^{\text{old}}$.
+
+ These resulting \kbd{mf} structure contains a basis of modular forms, which
+ is accessed by the function \kbd{mfbasis}; the elements of this basis have
+ Fourier coefficients in the cyclotomic field $\Q(\chi)$. These coefficients
+ are given algebraically, as rational numbers or \typ{POLMOD}s. The member
+ function \kbd{mf.mod} recovers the modulus used to define $\Q(\chi)$, which
+ is a cyclotomic polynomial $\Phi_n(t)$. When needed, the elements of
+ $\Q(\chi)$ are considered to be canonically embedded into $\C$ via
+ $\kbd{Mod}(t,\Phi_n(t)) \mapsto \exp(2i\pi/n)$.
+
+ The basis of eigenforms for the new space is obtained by the function
+ \kbd{mfeigenbasis}: the elements of this basis now have Fourier coefficients
+ in a relative field extension of $\Q(\chi)$. Note that if the space is
+ larger than the new space (i.e. is the cuspidal or full space) we
+ nevertheless obtain only the eigenbasis for the new space.
+
+ \subsec{Generalized modular forms} %GPHELPskip
+
+ A modular form is represented in a special internal format giving the
+ possibility to compute an arbitrary number of terms of its Fourier coefficients
+ at infinity $[a(0),a(1),...,a(n)]$ using the function \kbd{mfcoefs}. These
+ coefficients are given algebraically, as rational numbers or \typ{POLMOD}s.
+ The member function \kbd{f.mod} recovers the modulus used in the
+ coefficients of $f$, which will be the same as for $k = \Q(\chi)$ (a cyclotomic
+ polynomial), or define a number field extension $K/k$.
+
+ Modular forms are obtained either directly from other mathematical objects,
+ e.g., elliptic curves, or by a specific formula, e.g., Eisenstein series or
+ Ramanujan's Delta function, or by applying standard operators to existing forms
+ (Hecke operators, Rankin--Cohen brackets, \dots). A function \kbd{mfparams} is
+ provided so that one can recover the level, weight, character and field of
+ definition corresponding to a given modular form.
+
+ A number of creation functions and operations are provided. It is however
+ important to note that strictly speaking some of these operations create
+ objects which are \emph{not} modular forms: typical examples are
+ derivation or integration of modular forms, the Eisenstein series $E_2$, eta
+ quotients, or quotients of modular forms. These objects are nonetheless very
+ important in the theory, so are not considered as errors; however the user must
+ be aware that no attempt is made to check that the objects that he handles are
+ really modular. When the documentation of a function does not state that it
+ applies to generalized modular forms, then the output is undefined if the
+ input is not a true modular form.

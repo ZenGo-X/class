@@ -1,0 +1,12 @@
+Function: galoisisnormal
+Section: number_fields
+C-Name: galoisisnormal
+Prototype: lGG
+Help: galoisisnormal(gal,subgrp): gal being as output by galoisinit,
+ and subgrp a subgroup of gal as output by galoissubgroups,
+ return 1 if subgrp is a normal subgroup of gal, else return 0.
+Doc: \var{gal} being as output by \kbd{galoisinit}, and \var{subgrp} a subgroup
+ of \var{gal} as output by \kbd{galoissubgroups},return $1$ if \var{subgrp} is a
+ normal subgroup of \var{gal}, else return 0.
+
+ This command also accepts subgroups returned by \kbd{galoissubgroups}.

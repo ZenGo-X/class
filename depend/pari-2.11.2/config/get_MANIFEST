@@ -1,0 +1,10 @@
+git ls-files | grep -v '/$' | grep -v '\.gitignore' | grep -v TODO
+# generated files
+echo doc/usersch3.tex
+echo src/language/default.h
+echo src/language/init.h
+echo src/language/parse.c
+echo src/language/parse.h
+echo src/gp/gp_init.h
+echo src/gp/whatnow.h
+echo src/funclist

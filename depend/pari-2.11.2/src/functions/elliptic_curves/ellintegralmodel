@@ -1,0 +1,19 @@
+Function: ellintegralmodel
+Section: elliptic_curves
+C-Name: ellintegralmodel
+Prototype: GD&
+Help: ellintegralmodel(E,{&v}): given an elliptic curve E defined
+ over a number field or Qp, returns an integral model. If v is present,
+ sets the variable v to the corresponding change of variable.
+Doc: Let $E$ be an \kbd{ell} structure over a number field $K$ or $\Q_p$.
+ This function returns an integral model. If $v$ is present, sets
+ $v = [u,0,0,0]$ to the corresponding change of variable: the return value is
+ identical to that of \kbd{ellchangecurve(E, v)}.
+ \bprog
+ ? e = ellinit([1/17,1/42]);
+ ? e = ellintegralmodel(e,&v);
+ ? e[1..5]
+ %3 = [0, 0, 0, 15287762448, 3154568630095008]
+ ? v
+ %4 = [1/714, 0, 0, 0]
+ @eprog

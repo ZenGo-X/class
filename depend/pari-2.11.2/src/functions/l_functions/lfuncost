@@ -1,0 +1,65 @@
+Function: lfuncost
+Section: l_functions
+C-Name: lfuncost0
+Prototype: GDGD0,L,b
+Help: lfuncost(L,{sdom},{der=0}): estimate the cost of running
+ lfuninit(L,sdom,der) at current bit precision. Returns [t,b], to indicate
+ that t coefficients a_n will be computed at bit accuracy b. Subsequent
+ evaluation of lfun at s evaluates a polynomial of degree t at exp(h s).
+ If L is already an Linit, then sdom and der are ignored.
+Doc: estimate the cost of running
+ \kbd{lfuninit(L,sdom,der)} at current bit precision. Returns $[t,b]$, to
+ indicate that $t$ coefficients $a_n$ will be computed, as well as $t$ values of
+ \tet{gammamellininv}, all at bit accuracy $b$.
+ A subsequent call to \kbd{lfun} at $s$ evaluates a polynomial of degree $t$
+ at $\exp(h s)$ for some real parameter $h$, at the same bit accuracy $b$.
+ If $L$ is already an \kbd{Linit}, then \var{sdom} and \var{der} are ignored
+ and are best left omitted; the bit accuracy is also inferred from $L$: in
+ short we get an estimate of the cost of using that particular \kbd{Linit}.
+
+ \bprog
+ ? \pb 128
+ ? lfuncost(1, [100]) \\ for zeta(1/2+I*t), |t| < 100
+ %1 = [7, 242]  \\ 7 coefficients, 242 bits
+ ? lfuncost(1, [1/2, 100]) \\ for zeta(s) in the critical strip, |Im s| < 100
+ %2 = [7, 246]  \\ now 246 bits
+ ? lfuncost(1, [100], 10) \\ for zeta(1/2+I*t), |t| < 100
+ %3 = [8, 263]  \\ 10th derivative increases the cost by a small amount
+ ? lfuncost(1, [10^5])
+ %3 = [158, 113438]  \\ larger imaginary part: huge accuracy increase
+
+ ? L = lfuncreate(polcyclo(5)); \\ Dedekind zeta for Q(zeta_5)
+ ? lfuncost(L, [100]) \\ at s = 1/2+I*t), |t| < 100
+ %5 = [11457, 582]
+ ? lfuncost(L, [200]) \\ twice higher
+ %6 = [36294, 1035]
+ ? lfuncost(L, [10^4])  \\ much higher: very costly !
+ %7 = [70256473, 45452]
+ ? \pb 256
+ ? lfuncost(L, [100]); \\ doubling bit accuracy
+ %8 = [17080, 710]
+ @eprog\noindent In fact, some $L$ functions can be factorized algebraically
+ by the \kbd{lfuninit} call, e.g. the Dedekind zeta function of abelian
+ fields, leading to much faster evaluations than the above upper bounds.
+ In that case, the function returns a vector of costs as above for each
+ individual function in the product actually evaluated:
+ \bprog
+ ? L = lfuncreate(polcyclo(5)); \\ Dedekind zeta for Q(zeta_5)
+ ? lfuncost(L, [100])  \\ a priori cost
+ %2 = [11457, 582]
+ ? L = lfuninit(L, [100]); \\ actually perform all initializations
+ ? lfuncost(L)
+ %4 = [[16, 242], [16, 242], [7, 242]]
+ @eprog\noindent The Dedekind function of this abelian quartic field
+ is the product of four Dirichlet $L$-functions attached to the trivial
+ character, a non-trivial real character and two complex conjugate
+ characters. The non-trivial characters happen to have the same conductor
+ (hence same evaluation costs), and correspond to two evaluations only
+ since the two conjugate characters are evaluated simultaneously.
+ For a total of three $L$-functions evaluations, which explains the three
+ components above. Note that the actual cost is much lower than the a priori
+ cost in this case.
+Variant: Also available is
+ \fun{GEN}{lfuncost}{GEN L, GEN dom, long der, long bitprec}
+ when $L$ is \emph{not} an \kbd{Linit}; the return value is a \typ{VECSMALL}
+ in this case.

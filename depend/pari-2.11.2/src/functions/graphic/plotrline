@@ -1,0 +1,10 @@
+Function: plotrline
+Section: graphic
+C-Name: plotrline
+Prototype: vLGG
+Help: plotrline(w,dx,dy): if the cursor is at (x1,y1), draw a line from
+ (x1,y1) to (x1+dx,y1+dy) (and move the cursor) in the rectwindow w.
+Doc: draw in the rectwindow $w$ the part of the segment
+ $(x1,y1)-(x1+dx,y1+dy)$ which is inside $w$, where $(x1,y1)$ is the current
+ position of the virtual cursor, and move the virtual cursor to
+ $(x1+dx,y1+dy)$ (even if it is outside the window).

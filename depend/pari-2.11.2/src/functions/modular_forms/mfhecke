@@ -1,0 +1,46 @@
+Function: mfhecke
+Section: modular_forms
+C-Name: mfhecke
+Prototype: GGL
+Help: mfhecke(mf,F,n): F being a modular form in space mf, returns T(n)F,
+ where T(n) is the n-th Hecke operator. Warning: if F is of level M<N,
+ T(n)F is in general not the same in M_k(G_0(M),CHI) and in M_k(G_0(N),CHI).
+ We take T(n) at the same level as the one used in mf.
+Doc: $F$ being a modular form in modular form space \var{mf}, returns
+ $T(n)F$, where $T(n)$ is the $n$-th Hecke operator.
+
+ \misctitle{Warning} If $F$ is of level $M<N$, then $T(n)F$
+ is in general not the same in $M_k(\Gamma_0(M),\chi)$ and in
+ $M_k(\Gamma_0(N),\chi)$. We take $T(n)$ at the same level as the one used in
+ \kbd{mf}.
+ \bprog
+ ? mf = mfinit([26,2],0); F = mfbasis(mf)[1]; mftobasis(mf,F)
+ %1 = [1, 0]~
+ ? G2 = mfhecke(mf,F,2); mftobasis(mf,G2)
+ %2 = [0, 1]~
+ ? G5 = mfhecke(mf,F,5); mftobasis(mf,G5)
+ %3 = [-2, 1]~
+ @eprog\noindent Modular forms of half-integral weight are supported, in
+ which case $n$ must be a perfect square, else $T_n$ will act as $0$ (the
+ operator $T_p$ for $p \mid N$ is not supported yet):
+ \bprog
+ ? F = mfpow(mfTheta(),3); mf = mfinit(F);
+ ? mfisequal(mfhecke(mf,F,9), mflinear([F],[4]))
+ %2 = 1
+ @eprog ($F$ is an eigenvector of all $T_{p^2}$, with eigenvalue $p+1$ for
+ odd $p$.)
+
+ \misctitle{Warning} When $n$ is a large composite, resp.~the square of a large
+ composite in half-integral weight, it is in general more efficient to use
+ \kbd{mfheckemat} on the \kbd{mftobasis} coefficients:
+ \bprog
+ ? mfcoefs(mfhecke(mf,F,3^10), 10)
+ time = 917 ms.
+ %3 = [324, 1944, 3888, 2592, 1944, 7776, 7776, 0, 3888, 9720, 7776]
+ ? M = mfheckemat(mf,3^10) \\ instantaneous
+ %4 =
+ [324]
+ ? G = mflinear(mf, M*mftobasis(mf,F));
+ ? mfcoefs(G, 10) \\ instantaneous
+ %6 = [324, 1944, 3888, 2592, 1944, 7776, 7776, 0, 3888, 9720, 7776]
+ @eprog

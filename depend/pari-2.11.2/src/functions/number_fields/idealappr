@@ -1,0 +1,23 @@
+Function: idealappr
+Section: number_fields
+C-Name: idealappr0
+Prototype: GGD0,L,
+Help: idealappr(nf,x,{flag}): x being a fractional ideal, gives an element
+ b such that v_p(b)=v_p(x) for all prime ideals p dividing x, and v_p(b)>=0
+ for all other p; x may also be a prime ideal factorization with possibly
+ zero exponents. flag is deprecated (ignored), kept for backward compatibility.
+Doc: if $x$ is a fractional ideal
+ (given in any form), gives an element $\alpha$ in $\var{nf}$ such that for
+ all prime ideals $\goth{p}$ such that the valuation of $x$ at $\goth{p}$ is
+ non-zero, we have $v_{\goth{p}}(\alpha)=v_{\goth{p}}(x)$, and
+ $v_{\goth{p}}(\alpha)\ge0$ for all other $\goth{p}$.
+
+ The argument $x$ may also be given as a prime ideal factorization, as
+ output by \kbd{idealfactor}, but allowing zero exponents.
+ This yields an element $\alpha$ such that for all prime ideals $\goth{p}$
+ occurring in $x$, $v_{\goth{p}}(\alpha) = v_{\goth{p}}(x)$;
+ for all other prime ideals, $v_{\goth{p}}(\alpha)\ge0$.
+
+ flag is deprecated (ignored), kept for backward compatibility.
+
+Variant: Use directly \fun{GEN}{idealappr}{GEN nf, GEN x} since \fl is ignored.

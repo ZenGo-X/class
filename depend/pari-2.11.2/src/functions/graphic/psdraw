@@ -1,0 +1,7 @@
+Function: psdraw
+Section: graphic
+C-Name: psdraw
+Prototype: vGD0,L,
+Obsolete: 2018-02-01
+Help: psdraw(list, {flag=0}): obsolete function.
+Doc: This function is obsolete, use plotexport and write the result to file.

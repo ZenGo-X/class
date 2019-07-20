@@ -1,0 +1,45 @@
+Function: mfeigensearch
+Section: modular_forms
+C-Name: mfeigensearch
+Prototype: GDG
+Help: mfeigensearch(NK,{AP}): search for normalized rational eigen cuspforms
+ with quadratic characters given a few initial coefficients. The meaning of
+ the parameters is as follows:
+
+ NK is of the form [N,k]: search given level N, weight k and quadratic
+ character; note that the character is uniquely determined by (N,k).
+ The level N can be replaced by a vector of allowed levels.
+
+ AP is the search criterion, which can be omitted: a list of pairs
+ [...,[p,a_p],...], where a_p is either a t_INT (exact match) or a t_INTMOD
+ (match modulo the given integer).
+
+ The result is a vector of newforms matching the search criteria, sorted by
+ increasing level.
+Doc:  search for a normalized rational eigen cuspform with quadratic
+ character given restrictions on a few initial coefficients. The meaning of
+ the parameters is as follows:
+
+ \item \kbd{NK} governs the limits of the search: it is of the form
+ $[N,k]$: search for given level $N$, weight $k$ and quadratic
+ character; note that the character $(D/.)$ is uniquely determined by $(N,k)$.
+ The level $N$ can be replaced by a vector of allowed levels.
+
+ \item \kbd{AP} is the search criterion, which can be omitted: a list of
+ pairs $[\ldots, [p,a_p], \ldots]$, where $p$ is a prime number and $a_p$ is
+ either a \typ{INT} (the $p$-th Fourier coefficient must match $a_p$ exactly)
+ or a \typ{INTMOD} \kbd{Mod}$(a,b)$ (the $p$-th coefficient must be congruent
+ to $a$ modulo $b$).
+
+ The result is a vector of newforms $f$ matching the search criteria, sorted
+ by increasing level then increasing $|D|$.
+ \bprog
+ ? #mfeigensearch([[1..80],2], [[2,2],[3,-1]])
+ %1 = 1
+ ? #mfeigensearch([[1..80],2], [[2,2],[5,2]])
+ %2 = 1
+ ? v = mfeigensearch([[1..20],2], [[3,Mod(2,3)],[7,Mod(5,7)]]); #v
+ %3 = 1
+ ? F=v[1]; [mfparams(F)[1], mfcoefs(F,15)]
+ %4 = [11, [0, 1, -2, -1, 2, 1, 2, -2, 0, -2, -2, 1, -2, 4, 4, -1]]
+ @eprog

@@ -1,0 +1,26 @@
+U(n)=polchebyshev(n,2);
+T(n)=polchebyshev(n,1);
+L(n)=pollegendre(n);
+H(n)=polhermite(n);
+print("U");for (n=-50,50, if (U(n+1)+U(n-1)-2*x*U(n), print(n)))
+print("T");for (n=-50,50, if (T(n+1)+T(n-1)-2*x*T(n), print(n)))
+print("L");for (n=-50,50, if ((n+1)*L(n+1)-(2*n+1)*x*L(n)+n*L(n-1), print(n)))
+print("H");for (n=0,100, Hn=H(n); if (H(n+1)-2*x*Hn+Hn', print(n)))
+
+T=polchebyshev(5,1,x);
+subst(T,x,2) == polchebyshev(5,1,2)
+U=polchebyshev(5,2,x);
+subst(U,x,2) == polchebyshev(5,2,2)
+H=polhermite(5);
+subst(H,x,2) == polhermite(5,2)
+L=pollegendre(5);
+subst(L,x,2) == pollegendre(5,2)
+polchebyshev(-1,2,2)
+polchebyshev(-2,2,2)
+polchebyshev(4,2,2)
+
+z=Mod(2,2^64+13); N=1000;
+T=polchebyshev(N,1);subst(T,x,z) == polchebyshev(N,1,z)
+T=polchebyshev(N,2);subst(T,x,z) == polchebyshev(N,2,z)
+T=polhermite(N);subst(T,x,z) == polhermite(N,z)
+T=pollegendre(N);subst(T,x,z) == pollegendre(N,z)

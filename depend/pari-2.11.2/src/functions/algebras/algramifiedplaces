@@ -1,0 +1,18 @@
+Function: algramifiedplaces
+Section: algebras
+C-Name: algramifiedplaces
+Prototype: G
+Help: algramifiedplaces(al): vector of the places of the center of al that
+ ramify in al. Each place is described as an integer between 1 and r1 or as a
+ prime ideal.
+Doc: Given a central simple algebra \var{al} output by \tet{alginit}, returns a
+ \typ{VEC} containing the list of places of the center of \var{al} that are
+ ramified in \var{al}. Each place is described as an integer between~$1$
+ and~$r_1$ or as a prime ideal.
+
+ \bprog
+ ? nf = nfinit(y^2-5);
+ ? A = alginit(nf, [-1,y]);
+ ? algramifiedplaces(A)
+ %3 = [1, [2, [2, 0]~, 1, 2, 1]]
+ @eprog

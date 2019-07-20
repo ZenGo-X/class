@@ -1,0 +1,158 @@
+Qi = nfinit(x^2+1);
+idealintersect(Qi,0,1)
+Q = nfinit(y);
+idealaddtoone(Q,1,[;])
+idealaddtoone(Q,2,[;])
+idealaddtoone(Q,[;],[;])
+idealaddtoone(Q,[;],1)
+idealaddtoone(Q,[1,[;]])
+idealaddtoone(Q,[1,[;],Mat(1/2)])
+zQ = idealstar(,4);
+ideallog(Q,2,zQ)
+z=znstar(6,1);
+z.clgp
+ideallog(,0,z)
+ideallog(,2,z)
+ideallog(,3,z)
+ideallog(Q,3,z)
+ideallog(,3,zQ)
+p=19;N=19^4;z=znstar(N,1);g=Mod(z.gen[1],N);
+for(i=1,1000,if (i%p && g^ideallog(,i,z)[1] != i, error(i)))
+z=znstar(3120,1);
+Mat(vector(#z,i,znlog(z.gen[i],z)))
+
+nfisideal(Qi,matdiagonal([6,12]))
+P = idealprimedec(Qi,2)[1];
+idealprincipalunits(Qi,P,10)
+idealprincipalunits(Qi,P,1)
+idealintersect(Qi, 1/2,1/2)
+ideallog(Q,1/2,idealstar(Q,3,1))
+idealdiv(Qi,7*x-1,3*x+1,1)
+
+K=nfinit(x^2-236*x+13384);\\ Q(sqrt(60)), in disguise
+idealhnf(K, qfbprimeform(60,2))
+
+K=nfinit(x^3-2);
+u=nfalgtobasis(K,x);v=nfalgtobasis(K,x^2);
+idealhnf(K,Mat([u,v]))
+idealhnf(K,1/4,1/6)
+idealhnf(K,4,[6,0,0]~)
+idealhnf(K,2,1/6)
+idealhnf(K,1/3,u/2)
+idealhnf(K,u,v/2)
+P = idealprimedec(K,5);
+idealval(K,P[1],P[2])
+idealval(K,P[2],P[1])
+idealval(K,P[2],P[2])
+P[1][2] += 5;
+idealval(K,P[1],P[1])
+idealmul(K,P[1],P[1].gen[2])
+idealmul(K,[2,1;0,1],[2,1;0,1])
+idealmul(K,matid(4),matid(4))
+idealnorm(K,P[1])
+idealinv(K,Mod(x,K.pol))
+idealinv(K,Mod(x-1,K.pol))
+idealinv(K,2)
+idealinv(K,1)
+idealpow(K,idealhnf(K,x),-2)
+v=[1,1/2,x,Mod(x,K.pol),P[1],[;],Mat(1),vector(5),[1,2,3;4,5,6;7,8,9],[1,2,3;0,4,5;0,0,6],I];
+for(i=1,#v, if(!nfisideal(K,v[i]),print(i)))
+idealred(K,2)
+idealred(K,[2,[;]])
+idealred(K,[2,factor(1)])
+
+k=nfinit(polcyclo(5));
+idealfactor(k,101,100)
+idealfactor(k,2*101,100)
+idealfactor(k,101/103,100)
+idealfactor(k,101/(2*103),100)
+idealfactor(k,2^4*[0,1,0,0]~,100)
+nf=nfinit(x^2+x+1);
+p = 67452192952521724999; pi = idealprimedec(nf,p)[1];
+q = 762234946175168528650011228121; qi = idealprimedec(nf,q)[1];
+f=idealfactor(nf, idealdiv(nf,pi,qi))
+idealfactor(nf, 787033*(x+1), 100)
+fa = idealfactor(nf, 471440*x + 612823, 100)
+idealfactor(nf,fa[2,1],10)
+idealfactor(nf,fa[2,1],40)
+idealfactor(nf, 471440*x + 612823, 2000)
+id=idealfactorback(nf,f)
+idealnumden(nf,id)
+idealnumden(nf,pi)
+idealnumden(nf,1)
+idealnumden(nf,1/2)
+idealnumden(nf,x/2)
+nffactorback(nf, [3, x+1, [1,2]~], [1, 2, 3])
+
+test(nf,F,v)=
+{
+  my(Y = idealchinese(nf,F,v), P = F[,1], E = F[,2]);
+  for (i=1,#P, if( nfeltval(nf, nfeltadd(nf,v[i],-Y),P[i]) < E[i], error(i)));
+  Y;
+}
+v = [x,0,[0,1/7^4]~,Mod(x,nf.pol)];
+F = idealfactor(nf, 2*3*7);
+F[,2] *= 3;
+test(nf,F,v)
+F[,2] = [0,1,-2,3]~;
+test(nf,F,v)
+F[,2] = [1,1,1,1]~;
+test(nf,F,[1,0,0,0])
+test(nf,F,[0,1/11,0,0])
+P = F[2,1];
+v = nfeltval(nf, 0, P, &y); [v == valuation(0,2),y]
+v = nfeltval(nf, 12, P, &y); [v,y]
+v = nfeltval(nf, (2/5*(1-x))^3, P, &y); [v,y]
+v = nfeltval(nf, nfeltpow(nf,P.gen[2],4), P, &y); [v,y]
+
+K = nfinit(t^2-2);
+fa = idealfactor(K, 2^2*3);
+C = idealchinese(K, [fa, [1,1]]);
+idealchinese(K, C, [1,t])
+idealchinese(K, C, [-1,t])
+C = idealchinese(K, fa);
+idealchinese(K, C, [1,t])
+C = idealchinese(K, [C,[-1,-1]]);
+idealchinese(K, C, [1,t])
+
+F = idealfactor(Q,2);
+idealchinese(Q, [F,[-1]], [0])
+idealchinese(Q, [F,[1]], [0])
+idealchinese(Q, [F,[0]], [0])
+
+K = nfinit(x^3 - 2);
+A = [46875, 30966, 9573; 0, 3, 0; 0, 0, 3];
+idealispower(K, A, 3, &B)
+B
+A = [9375, 2841, 198; 0, 3, 0; 0, 0, 3];
+idealispower(K, A, 3)
+idealispower(K, A, 1)
+
+\\ #2019
+idealispower(nfinit('y), 4, 2, &A)
+A
+
+K = nfinit(x^3 - 2);
+idealispower(K,2*5^3,3, &A)
+A
+
+\\ #1643
+K=nfinit(x^8-1310*x^6+575380*x^4-93689568*x^2+3644295424);
+idealprimedec(K,17,1)
+
+K=nfinit(2*x^2+1);
+idealprimedec(K,2)
+
+nf=nfinit(x^6+108); a=Mod(x,x^6+108);
+{ for(k=2,5,
+    u=nfalgtobasis(nf,(2*a^2+a+3)*random(2^100*x^6)^k);
+    b=idealredmodpower(nf,u,k);
+    v=nfeltmul(nf,u,nfeltpow(nf,b,k)); print(v)); }
+idealredmodpower(nf,0,2)
+idealredmodpower(nf,1,2)
+idealredmodpower(nf,x^5-3*x^4-3*x^3+18*x^2-18*x-54,2)
+idealredmodpower(nf,x/2,2)
+idealredmodpower(nf,x/12,2)
+
+\\ Errors, keep at end of file
+idealred(nf,[2,Mat(1)])

@@ -1,0 +1,25 @@
+Function: lngamma
+Section: transcendental
+C-Name: glngamma
+Prototype: Gp
+Help: lngamma(x): logarithm of the gamma function of x.
+Doc: principal branch of the logarithm of the gamma function of $x$. This
+ function is analytic on the complex plane with non-positive integers
+ removed, and can have much larger arguments than \kbd{gamma} itself.
+
+ For $x$ a power series such that $x(0)$ is not a pole of \kbd{gamma},
+ compute the Taylor expansion. (PARI only knows about regular power series
+ and can't include logarithmic terms.)
+ \bprog
+ ? lngamma(1+x+O(x^2))
+ %1 = -0.57721566490153286060651209008240243104*x + O(x^2)
+ ? lngamma(x+O(x^2))
+  ***   at top-level: lngamma(x+O(x^2))
+  ***                 ^-----------------
+  *** lngamma: domain error in lngamma: valuation != 0
+ ? lngamma(-1+x+O(x^2))
+  *** lngamma: Warning: normalizing a series with 0 leading term.
+  ***   at top-level: lngamma(-1+x+O(x^2))
+  ***                 ^--------------------
+  *** lngamma: domain error in intformal: residue(series, pole) != 0
+ @eprog

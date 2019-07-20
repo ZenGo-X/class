@@ -1,0 +1,20 @@
+Function: ffinvmap
+Section: number_theoretical
+C-Name: ffinvmap
+Prototype: G
+Help: ffinvmap(m): given a map m between finite fields, return a partial map
+ that return the pre-images by the map m.
+Doc: $m$ being a map from $K$ to $L$ two finite fields, return the partial map
+ $p$ from $L$ to $K$ such that for all $k\in K$, $p(m(k))=k$.
+ \bprog
+ ? a = ffgen([3,5],'a);
+ ? b = ffgen([3,10],'b);
+ ? m = ffembed(a, b);
+ ? p = ffinvmap(m);
+ ? u = random(a);
+ ? v = ffmap(m, u);
+ ? ffmap(p, v^2+v+2) == u^2+u+2
+ %7 = 1
+ ? ffmap(p, b)
+ %8 = []
+ @eprog

@@ -1,0 +1,50 @@
+Vs=[0,10^-10,10^-100,200,-21/2,1/2,10-I,1+128*I,60,30+60*I];
+Vx=[19+236*I,1/10,-1/10,I/10,-I/10,1/10-I/10,50,100,-100,100+1001*I];
+
+test(fun, p) =
+{
+  my (P = 1/10.^(p-1));
+  for (i=1,#Vs,
+    for (j=1,#Vx,
+      my (v,w, s = Vs[i], x = Vx[j]);
+      localprec(p);      v = fun(s, x);
+      localprec(p + 38); w = fun(s, x);
+      e = abs((v-w)/w);
+\\      e = if (abs(w) < 1, abs(v-w), abs((v-w)/w));
+      if (e > P, printf("%9s, %13s: %.1e\n", s,x,e));
+    )
+  );
+}
+
+test(incgam, 19)
+test(incgam, 38)
+test(incgam, 77)
+test(incgam, 96)
+test(incgam, 115)
+
+Vs=[1/10+1/5*I,-1/10,-1/10+2/5*I,2/5*I,-2/5*I,-1,-20,-200001/10000];
+Vx=[11/10,13/10,1/10000];
+
+test(incgam, 38)
+test(incgam, 76)
+
+default(realprecision, 38);
+incgam(-1000.4,2)
+incgam(1/2,10^8)
+incgam(-3,20)
+incgam(1/5,50)
+incgamc(2,0)
+printf("%.28Pg\n", imag(incgam(110.0,I)))
+printf("%.28Pg\n", imag(incgam(110,I)))
+incgam(110.0,10*I)
+
+eint1(-0.3-95*I)
+eint1(100)
+incgam(-10+1e-100,1)
+eint1(2,5)
+\p1000
+eint1(100)
+\p481
+eint1(150)
+
+eint1(0)

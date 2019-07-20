@@ -1,0 +1,46 @@
+Function: Pol
+Section: conversions
+C-Name: gtopoly
+Prototype: GDn
+Description:
+ (gen,?var):pol  gtopoly($1, $2)
+Help: Pol(t,{v='x}): convert t (usually a vector or a power series) into a
+ polynomial with variable v, starting with the leading coefficient.
+Doc:
+ transforms the object $t$ into a polynomial with main variable $v$. If $t$
+ is a scalar, this gives a constant polynomial. If $t$ is a power series with
+ non-negative valuation or a rational function, the effect is similar to
+ \kbd{truncate}, i.e.~we chop off the $O(X^k)$ or compute the Euclidean
+ quotient of the numerator by the denominator, then change the main variable
+ of the result to $v$.
+
+ The main use of this function is when $t$ is a vector: it creates the
+ polynomial whose coefficients are given by $t$, with $t[1]$ being the leading
+ coefficient (which can be zero). It is much faster to evaluate
+ \kbd{Pol} on a vector of coefficients in this way, than the corresponding
+ formal expression $a_n X^n + \dots + a_0$, which is evaluated naively exactly
+ as written (linear versus quadratic time in $n$). \tet{Polrev} can be used if
+ one wants $x[1]$ to be the constant coefficient:
+ \bprog
+ ? Pol([1,2,3])
+ %1 = x^2 + 2*x + 3
+ ? Polrev([1,2,3])
+ %2 = 3*x^2 + 2*x + 1
+ @eprog\noindent
+ The reciprocal function of \kbd{Pol} (resp.~\kbd{Polrev}) is \kbd{Vec} (resp.~
+ \kbd{Vecrev}).
+ \bprog
+ ? Vec(Pol([1,2,3]))
+ %1 = [1, 2, 3]
+ ? Vecrev( Polrev([1,2,3]) )
+ %2 = [1, 2, 3]
+ @eprog\noindent
+
+ \misctitle{Warning} This is \emph{not} a substitution function. It will not
+ transform an object containing variables of higher priority than~$v$.
+ \bprog
+ ? Pol(x + y, y)
+   ***   at top-level: Pol(x+y,y)
+   ***                 ^----------
+   *** Pol: variable must have higher priority in gtopoly.
+ @eprog

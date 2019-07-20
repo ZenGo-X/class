@@ -1,0 +1,1274 @@
+#!@runtime_perl@
+# Copyright (C) 2000  The PARI group.
+#
+# This file is part of the PARI/GP package.
+#
+# PARI/GP is free software; you can redistribute it and/or modify it under the
+# terms of the GNU General Public License as published by the Free Software
+# Foundation. It is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY WHATSOEVER.
+#
+# Check the License for details. You should have received a copy of it, along
+# with the package; see the file 'COPYING'. If not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+# Output extended help corresponding to a given GP command. By default,
+# extract relevant information from  from the PARI manual, run TeX, then open
+# an xdvi display.
+#
+# The manual can be compressed.
+#
+# Usage: gphelp keyword
+#
+# Command line options:
+#  -k: apropos (list of relevant GP functions)
+#  -detex      (-d): don't use TeX + xdvi (implicit when DISPLAY is not set).
+#  -color_help (-ch) <number>: use color "number" (same scheme as in GP)
+#  -color_bold (-cb) <number>: display bold in color "number"
+#  -color_underline (-cu) <number>: display underlined text in color "number"
+#
+#  -raw   use internal format for output with @x markers, -detex is implicit
+#         (for the TeX-to-pod converter)
+#
+#  -to_pod file		convert file to POD (should be the only args)
+#
+#  -to_dumbpod file	same, but without nested formating
+#  -utf8  in detex mode, use UFT-8 encoding for output
+#
+# Granted environment variables (override):
+#  GPTMPDIR: where temporary files will go (/tmp by default).
+#  GPDOCDIR: where is manual (by default, where make install will put it).
+#  GPXDVI: which 'xdvi' program to call (xdvi by default)
+#
+$version= "@version@";
+$datadir= "@datadir@";
+# no expanded material (@key@) below
+$wwwsite= "http://pari.math.u-bordeaux.fr/";
+
+$xdvi = $ENV{GPXDVI} || "xdvi";
+$xdviref = $ENV{GPXDVIREF} || "$xdvi -paper 29.7x21cm";
+$gzip = "gzip";
+$zcat = "$gzip -dc";
+$bzip = "bzip2";
+$bzcat = "$bzip -dc";
+$docdir = &get_docdir();
+$tex = $ENV{GPTEX} || "tex";
+
+$refcard = (@ARGV and $ARGV[-1] =~ /refcard/i);
+
+$dumb_pod=1, $ARGV[0] = '-to_pod' if @ARGV && $ARGV[0] eq '-to_dumb_pod';
+&to_pod() if @ARGV == 2 && $ARGV[0] eq '-to_pod';
+
+&options(); &init();
+if ($#ARGV < 0) { &treat(""); cleanexit(); }
+
+&pretex() if (!$detex);
+for (@ARGV) { &treat($_); }
+if ($apropos) { &apropos_final_print(); cleanexit(); }
+&posttex() if (!$detex);
+print "ugly_kludge_done\n" if (!$detex && $fromgp);
+cleanexit();
+
+#
+# Procedures
+#
+sub cleanexit {
+  print "\e[0m" unless $to_pod or $raw;
+  exit 0;
+}
+
+sub help {
+  print "Usage: $0 [-k] [-detex] [-ch c1] [-cb c2] [-cu c3] keyword\n";
+  print "where c1,c2,c3 denote background, bold and underline color\n";
+  exit(1);
+}
+
+sub options {
+  $utf8 = $raw = $detex = $fromgp = $apropos = $noskip = 0;
+  $ch = $cb = $cu = '';
+  while ($_ = $ARGV[0])
+  {
+    last if (! /^-[a-z]/);
+    shift(@ARGV);
+    if ($_ eq "-fromgp")
+      { $fromgp = 1; }
+    elsif ($_ eq "-k")
+      { $apropos = $detex = 1; }
+    elsif ($_ eq "-balloon")
+      { $balloon = 1; }
+    elsif ($_ eq "-detex" || $_ eq "-d")
+      { $detex = 1; }
+    elsif ($_ eq "-raw")
+      { $raw = $detex = 1; }
+    elsif ($_ eq "-utf8")
+      { $utf8 = 1; }
+    elsif ($_ eq "-noskip")
+      { $noskip = 1; }
+    elsif ($_ eq "-color_help" || $_ eq "-ch")
+      { $ch = &color(shift(@ARGV)); }
+    elsif ($_ eq "-color_bold" || $_ eq "-cb")
+      { $cb = &color(shift(@ARGV)); }
+    elsif ($_ eq "-color_underline" || $_ eq "-cu")
+      { $cu = &color(shift(@ARGV)); }
+    else
+      { &help(); }
+  }
+  $ch = "\e[m$ch";
+  $cu .= $cu ? "\e[1m": "\e[4m";
+  $cb .= "\e[1m";
+  $detex = 1 if (!$ENV{DISPLAY});
+}
+
+sub get_docdir {
+  my $d = $ENV{GPDOCDIR} || $ENV{GPHELP_DOCDIR};
+  if (!defined $d) {
+    # work from TOPDIR/Oarch or TOPDIR too: may be uninstalled yet;
+    $d = $0; $d =~ s,/gphelp,,;
+    for ("$datadir", '.', '..', $d) {
+      my $t = "$_/doc";
+      if (-f "$t/translations") { $d = $t; last; }
+    }
+    $d ||= "$datadir/doc";	# Last resort
+  }
+  if ($d =~ /^\./) {
+    eval { require Cwd;
+      $d = Cwd::cwd() . "/$d";
+      $d =~ s,doc/\.\./doc,doc,;
+    }
+  }
+  return $d;
+}
+
+sub init {
+  &inittr();
+
+  $indent = "   ";
+  # avoid Glob.pm! (for minimal Windows install)
+  opendir(DIR, $docdir) || die "$docdir not found";
+  @file_list = grep { /^usersch.*tex/ } readdir(DIR);
+  closedir(DIR);
+
+  chdir($docdir);
+  $docfile = "usersch3.tex";
+  open(IN,"translations") || die("Could not find translation file, docdir='$docdir'");
+  while(<IN>)
+  {
+    chomp; @_ = split(/ *\@ */);
+    $key = shift(@_);
+    $transl{$key} = join('@',@_);
+  }
+  close(IN);
+}
+
+sub not_found {
+  my($help) = shift;
+  $help =~ s/\\\\/_B#K#S_/g;
+  $help =~ s/\\(.)/$1/g;
+  $help =~ s/_B#K#S_/\\/g;
+  print "'$help' not found !\n";
+}
+
+sub choose_chap {
+  while (s/\@([0-9])$//) { $docfile = "usersch$1.tex"; }
+  if (-f $docfile) { $pipe = ""; }
+  else
+  {
+    die "Cannot find $docfile"
+      if (! -f "$docfile.z" &&
+          ! -f "$docfile.gz" &&
+          ! -f "$docfile.Z" &&
+          ! -f "$docfile.bz2");
+    if (-f "$docfile.bz2") {
+        $pipe = $bzcat;
+        $docfile = "$docfile.bz2";
+    } else {
+        $pipe = $zcat;
+    }
+  }
+}
+
+sub safe_setsid {
+  eval {
+    require POSIX;
+    POSIX::setsid(); # detach from terminal (^C will not kill xdvi)
+  };
+}
+
+# assume we're in $docdir
+sub open_viewer_then_quit {
+  my $F = shift;
+  my ($f, $viewer, $redirect);
+  my $cygwin = ($^O =~ /cygwin/);
+  my $win32 = ($^O =~ /ms(win|ys)/);
+  my $osx = ($^O =~ /darwin/);
+
+  $f = "$F.dvi";
+  $f = "$F.dvi.gz" if (! -f "$f");
+  $f = "$F.pdf"    if (! -f "$f");
+  die "could not find \'$F\'" if (! -f "$f");
+  $F = $f;
+  $redirect = ' 2>/dev/null >/dev/null &';
+  if ($f =~ /\.dvi/)
+  { # DVI
+    $viewer = ($f =~ /refcard/)? $xdviref: $xdvi;
+  }
+  elsif ($cygwin)
+  { # PDF Win32
+    @_ = split(/"/, `acro.exe`);
+    ($viewer = $_[1]) =~ s,\\,/,g;
+
+    $redirect = "";
+    $F =~ s,/cygdrive/(.),$1:, ; # Reader can't cope with Cygwin paths
+    $F      = "\"$F\"";
+    $viewer = "\"$viewer\"";
+  }
+  elsif ($win32)
+  { # PDF Win32
+    @_ = split(/"/, "$ENV{GP_PDF_VIEWER}");
+    $viewer = $_[1];
+    print "using \'$viewer\', ";
+  }
+  elsif ($osx)
+  {
+    $viewer = "open";
+  }
+  else
+  { # PDF generic
+    $viewer = "acroread";
+  }
+
+  print "displaying \'$F\'.";
+  print "\n" if (!$fromgp);
+  safe_setsid();
+  if ($win32)
+  {
+    system($viewer,$F);
+  }
+  else
+  {
+    system("$viewer $F$redirect");
+  }
+  cleanexit();
+}
+
+sub treat {
+  my($help);
+  $_ = $_[0];
+  s/_QUOTE/'/g;
+  s/_BACKQUOTE/`/g;
+  s/_DOUBQUOTE/"/g;
+  s/^ *"(.*)"([^"]*) *$/$1$2/;
+  if (s/\@$//)
+  {
+    $found = 0;
+    $searchall = 1;
+    $help = $_;
+    for (@file_list)
+    {
+      next if (!/^usersch(.*)\.tex/);
+
+      &treat("$help\@$1");
+      if ($apropos && $#list > 0 || $#sentence_list > 0)
+      {
+        print "\nChapter $1:\n";
+        print "==========\n";
+        &apropos_final_print();
+      }
+    }
+    return not_found($help) if (!$found && !$apropos);
+    $searchall = 0;
+    $apropos = 0; return;
+  }
+  &choose_chap;
+
+  if (!$apropos)
+  {
+    $_ = "users" if (/^$/);
+    open_viewer_then_quit($_) if (/^(users|tutorial|refcard|libpari)$/
+                                  || /^refcard-/ || /^tutorial-mf$/);
+    if ($transl{$_}) { $_ = $transl{$_}; &choose_chap; }
+  }
+  if (/^[^a-zA-Z0-9]*$/) { $_ = 'GP operators@2'; &choose_chap; }
+
+  s/(\W)/\\$1/g;
+  s/_/\\\\_/g if (!/^se\\:/);
+      ($pipe && open(DOC,"$pipe $docfile |"))
+  || (!$pipe && open(DOC,"$docfile")) || die "Cannot open $docfile: $!";
+  return &apropos($_) if ($apropos);
+
+  $help = $_;
+
+  my ($first);
+  my ($pat) = $help;
+  if ($pat =~ /[a-zA-Z0-9]$/) { $pat .= '\b'; } else { $pat .= '}'; }
+  while (<DOC>)
+  {
+    if (/\\(subsubsec[a-z]*|subsec[a-z]*|section|chapter|label)\{$pat/
+        && (!/\\label\{se:def,/ || $pat =~ /se\\:def/)) { $first = $_; last; }
+  }
+  if (eof(DOC))
+  {
+    &not_found($help) if (!$searchall);
+    return;
+  }
+  $found = 1;
+  if (!$detex) { tex($first); }
+  else
+  {
+    &detex(); print "\n" if (!$fromgp);
+    # Avoid broken pipe from zcat
+    do {local $/; <DOC>} if $^O eq 'os2' and $pipe;
+  }
+  close(DOC);
+}
+
+#
+#  A propos
+#
+
+sub apropos_print_list {
+  $current = "";
+  @_ = sort(@_);
+  for (@_)
+  {
+    next if ($_ eq $current);
+    $current = $_; print "$indent$_\n";
+  }
+}
+
+sub apropos_raw_print {
+  $indent = "";
+  &apropos_print_list(@sentence_list);
+  &apropos_print_list(@list);
+}
+
+sub apropos_final_print {
+  my($maxlen) = 0;
+  my($i,$nbcol,$current);
+  my($cols) = ($ENV{'COLUMNS'} || 80) - 1;
+
+  if ($raw) { &apropos_raw_print(); return; }
+  @list = sort(@list);
+  for (@list)
+  {
+    $i= length($_);
+    $maxlen = $i if ($i > $maxlen);
+  }
+  $maxlen++; $nbcol = $cols / $maxlen;
+  $nbcol =~ s/\..*//;
+  $nbcol-- if  ($nbcol * $maxlen == $cols);
+  $nbcol = 1 if (!$nbcol);
+
+  $current = ""; $i = 0;
+  for (@list)
+  {
+    next if ($_ eq $current);
+    $current = $_; print($_); $i++;
+    if ($i >= $nbcol)
+    {
+      $i=0; print "\n"; next;
+    }
+    print " " x ($maxlen - length($_));
+  }
+  print "\n" if ($i);
+  if ($#sentence_list > 0)
+  {
+    print "\nSee also:\n" if ($#list > 0);
+    $indent = "  ";
+    apropos_print_list(@sentence_list);
+  }
+}
+
+sub apropos_check {
+  my($line, $current) = @_;
+  $line =~ s/\n/ /g;
+  return if ($line !~ /$help/i);
+
+  local($_) = $current;
+  s/\\b\{(.)\}/\\$1/;
+  s/\{\}//g;
+  s/\\pow/^/;
+  s/\\%/%/;
+  s/\\bs/\\/;
+  s/\\_/_/g;
+  s/\\\#/\#/g;
+  s,\+\$/\$-,+/-,;
+  s/\$\(.*//; # remove argument lists
+  if (/ /) { push(@sentence_list,$_); } else { push(@list,$_); }
+}
+
+sub apropos {
+  my($line,$current,$new);
+  $help = $_[0];
+  $help='\\\\pow' if ($help eq '\^');
+  $help='\\\\til' if ($help eq '\~');
+  @sentence_list = @list = "";
+  while (<DOC>)
+  {
+    if (/^\\(subsubsec[a-z]*|subsec[a-z]*|section|chapter)\{/)
+    {
+      $new = &get_match($_,'\\{','\\}');
+      &apropos_check($line, $current);
+      $current = $new; $line = "";
+    }
+    $line .= $_;
+  }
+  &apropos_check($line, $current);
+}
+
+##
+##  Tex Part
+##
+# Actual text is in file TEX. Parimacro + Geometry info goes to WRAP
+sub pretex {
+  my ($basedir) = $ENV{GPHELP_TMPDIR} || $ENV{GPTMPDIR} || $ENV{TMPDIR} || "/tmp";
+  $tmpdir = "$basedir/gp.help$$";
+  mkdir $tmpdir, 0755 || die "Cannot create temporary directory";
+  $texfile = "$tmpdir/gp.help";
+
+  open(TEX,">$texfile.tex") || die "Couldn't open $texfile.tex";
+}
+
+sub endsection
+{
+  /^\\(section|sub[sub]*sec)/i && ($noskip || !/\%GPHELPskip/);
+}
+
+sub tex { my ($first) = @_;
+  print TEX $first;
+  while (<DOC>)
+  {
+    last if endsection();
+    print TEX;
+  }
+}
+
+sub posttex {
+  my ($wrap) = "$tmpdir/gpwrapper.help";
+  my (@goners) = ("$texfile.tex",
+                  "$wrap.tex", "$wrap.dvi", "$wrap.log", "$wrap.aux");
+  if (!$found) { unlink @goners; rmdir("$tmpdir"); cleanexit(); }
+
+  open(WRAP, ">$wrap.tex") || die "Couldn't open $wrap.tex";
+  if ($balloon) {
+    print WRAP '\nopagenumbers\def\fromgphelp{}'
+    . "\\input $docdir/parimacro.tex"
+    . '\setbox0\vbox{'
+    . "\\input $texfile.tex"
+    . ' }
+\dimen0=\the\ht0 \advance\dimen0 by \dp0
+\advance\dimen0 by 60pt
+\dimen1=\the\wd0
+\advance\dimen1 by 60pt
+\vsize \dimen0
+\hsize \dimen1
+\advance\voffset 30pt\advance\hoffset 30pt
+\advance\hoffset-1in \advance\voffset-1in
+\special{papersize=\the\dimen1,\the\dimen0}
+\noindent\box0
+\end';
+  } else {
+    print WRAP '\nopagenumbers\def\fromgphelp{}'
+    . "\\input $docdir/parimacro.tex"
+    . "\\input $texfile.tex"
+    . '\end';
+  }
+  close(WRAP) || die "Error closing '$wrap.tex': $!";
+  close(TEX) || die "Error closing '$texfile.tex': $!";
+
+  chdir($tmpdir);
+  $out = `$tex $wrap.tex 2>&1 < /dev/null`;
+  -f "$wrap.dvi"
+    || die "could not create '$wrap.dvi': status=$?, $out";
+  safe_setsid();
+  my ($goners) = join(" ", @goners);
+  system("($xdvi $wrap.dvi 2>/dev/null >/dev/null; rm -f $goners; rmdir $tmpdir)&");
+}
+
+#
+#  Detex Part
+#
+sub fit_loop {
+  my($i);
+  return if ($miss > 9 || $#_ <= 0);
+  while ($miss > 0)
+  {
+#  print "1:$miss ";print @_;print "\n";
+    for (@_) { $miss-- if (s/([?!\.;])$/$1 /);
+       return if ($miss == 0);
+    }
+#  print "2:$miss ";print @_;print "\n";
+    for (@_) { $miss-- if (s/([?!\.;]) $/$1  /);
+       return if ($miss == 0);
+    }
+#  print "3:$miss ";print @_;print "\n";
+    for (@_) { $miss-- if (s/([\),])$/$1 /);
+       return if ($miss == 0);
+    }
+#  print "4:$miss ";print @_;print "\n";
+    $i = 0;
+    for (@_)
+    {
+      if (!$i) { $i = 1; next; }
+      $miss-- if (s/^\(/ (/);
+       return if ($miss == 0);
+    }
+#  print "5:$miss "; print @_;print "\n";
+    for (@_)
+    {
+       next if (/^ *$/);
+       $miss--; s/$/ /;
+       return if ($miss == 0);
+    }
+  }
+}
+
+sub fit_line {
+  my($wi, @a);
+  my($l) = -1;
+  my($rem) = $_[0];
+  for (@l)
+  {
+     my ($l2) = $l; $l += ($_ + 1);
+     if ($l > $rem) { $l = $l2; last; }
+     $wi++;
+  }
+  $miss = $rem - $l;
+  splice(@l, 0, $wi);
+  @a = splice(@w, 0, $wi-1); &fit_loop(@a);
+  push(@a, shift(@w)); return join(' ', @a);
+}
+
+# empty output line
+sub is_void {
+  my($in) = shift;
+  $in =~ s/\@\[\w+\]//g;
+  $in =~ s/\@[012]//g;
+  ($in =~ /^\s*$/)? 1: 0;
+}
+
+sub nl { push(@f_text, shift); }
+
+sub split_words { my ($txt) = @_;
+  $txt =~ s/^ +//;
+  for ( split(/\s+/, $txt) )
+  {
+    s/\Q$tr{nbrk}/ /g;
+    my ($w) = $_;
+    # these codes will be replaced by 1 character
+    s/\@\[(obr|cbr|ldollar|lt|gt|\{|\})]/\@/g;
+    if ($utf8)
+    { s/\@\[(ouml|uuml|agrav|aacute|eacute|pm)]/\@/g; } # one char
+    else
+    {
+      s/\@\[(ouml|uuml|agrav|aacute|eacute)]/\@\@/g;  # two chars
+      s/\@\[pm]/+\/-/g; # three chars
+    }
+    # the rest will be replaced by zero-width characters
+    s/\@\[\w+\]//g;
+    my ($l) = length($_);
+    # zero-width word
+    if (!$l && $#w >= 0) { $w[$#w] .= $w; next; }
+    push(@l, $l);
+    push(@w, $w);
+  }
+  # first word might still be zero-width
+  if ($#w >= 1 && !$l[0])
+  {
+    splice(@w, 0,2, "$w[0]$w[1]");
+    splice(@l, 0,1);
+  }
+}
+
+sub format_text {
+  my($last_void) = 0;
+  my($noindent) = 0;
+  my($init) = 1;
+  my($cols) = ($ENV{'COLUMNS'} || 80) - 1;
+  my($first) = $cols - length($indent);
+
+  for (@text)
+  {
+    if (s/^\@1//)       # start verbatim
+    {
+      nl(&fit_line($first)) if (@w);
+      nl("") if (!$last_void && !is_void($_)); # add empty line
+      nl("$indent$_"); next;
+    }
+    if (s/^\@0//)    # verbatim lines
+    {
+      nl("$indent$_"); next;
+    }
+
+    if (s/^\@2//)       # end verbatim, add indent
+    {
+      nl("") if (!$last_void);
+      $last_void = 1;
+      split_words($_); next;
+    }
+
+    if (s/^\@3//)       # end verbatim + no indent
+    {
+      nl("") if (!$last_void);
+      $noindent = 1;
+      $last_void = 1;
+      split_words($_); next;
+    }
+
+    if (!is_void($_)) { split_words($_); next; }
+
+    # line is empty, split out previous paragraph
+    next if (!@l || !$l[0]); # nothing
+    if ($init) {
+      nl(&fit_line($first));
+    } else {
+      nl("") if (!$last_void);
+      nl("\@[endbold]" . ($noindent? "": $indent) 
+                       . &fit_line($noindent? $cols: $first));
+    }
+    while (@w) { nl(&fit_line($cols)); }
+    $noindent = $init = $last_void = 0;
+  }
+}
+
+# argument has the form s1${open}s2${close}s3
+# Return 's2'. Set $remainder to 's3'.
+sub get_match {
+  local ($_, $open, $close) = @_;
+  my (@tmp, $arg,$parity,$ok);
+  my ($obr) = 1;
+  $parity = ($open eq $close);
+  /$open/; $_ = $'; # remove everything before (and including) first $open
+
+  while ($_) {
+    @tmp = split(/($open|$close)/);
+    while ($#tmp >= 0) {
+      $_ = shift(@tmp);
+      $obr++ if (/^$open$/);
+      if ($parity && $obr == 2) { $ok = 1; last }
+      $obr-- if (/^$close$/);
+      if (!$obr) { $ok = 1; last }
+      $arg .= $_;
+    }
+    last if ($ok);
+    $_ = <DOC>;
+  }
+  $remainder = join('',@tmp);
+  return $arg;
+}
+
+sub detex {
+  my($fun);
+# 1: get the function "prototype"
+  $fun = &get_match($_,'\\{','\\}');
+  $fun = &basic_subst($fun);
+  $_ = $remainder;
+  $_ = <DOC> if (!&basic_subst($_));
+  push(@text, "\@[startbold]$fun:\@[endbold]");
+  push(@text, "");
+# 2: parse the function description
+  if ($_) { s/^ *://; &presubst(); }
+  while (<DOC>)
+  {
+    last if endsection();
+    &presubst();
+  }
+  if ($raw) { print join("\n", @text); return; }
+#  for (@text) { print("AA{$_}BB\n"); } # DEBUG
+  &format_text();
+  for (@f_text) { &TeXprint($_); }
+}
+
+# We use the special char @ to transmit special sequences
+sub inittr {
+  @ou = qw( dollar nbrk startref endref startbold endbold startcode endcode
+	    obr cbr uuml ouml agrave aacute eacute
+	    startpodcode endpodcode startlink endlink
+            startbc endbc
+            startbg endbg
+	    startbcode endbcode startbi endbi startit endit
+	    startword endword startlword endlword pm empty gt lt podleader );
+
+  @tr{@ou} = map "\@[$_]", @ou;
+  $tr{dollar} = '$' if $to_pod;
+
+  %pr = ( dollar => '',
+	  ldollar => '$',	# literal dollar
+	  nbrk => 'S< >',
+	  startbold => 'B<',
+	  endbold => '>',
+	  startcode => 'C<',
+	  startlink => 'L<',
+	  endlink => '>',
+	  endcode => '>',
+	  obr => '{',
+	  cbr => '}',
+	  startpodcode => 'C<',
+	  endpodcode => '>',
+	  ( $dumb_pod
+	    ? (startbcode => 'B<',
+	       endbcode => '>',
+	       startbi => 'B<',
+	       endbi => '>',)
+	    : (startbcode => 'B<C<',
+	       endbcode => '>>',
+	       startbi => 'B<I<',
+	       endbi => '>>')),
+          startbc => 'I<',
+          endbc => '>',
+          startbg => 'B<',
+          endbg => '>',
+	  startit => 'I<',
+	  endit => '>',
+	  startword => 'F<',
+	  endword => '>',
+	  startlword => ' F<',
+	  endlword => '> ',
+	  pm => 'F<+->',
+	  "gt" => 'E<gt>',
+	  "lt" => 'E<lt>',
+	  ouml => 'E<ouml>',
+	  uuml => 'E<uuml>',
+	  eacute => 'E<eacute>',
+	  agrave => 'E<agrave>',
+	  aacute => 'E<aacute>',
+	  empty => 'Z<>',
+	  podleader => '=',
+	);
+}
+
+sub indent_equally { my $in = shift; $in =~ s/^[ \t]*/    /mg; $in }
+sub quote { my $in = shift; $in =~ s/~/\\~/g; $in }
+
+sub basic_subst {
+  local($_) = shift;
+
+  s/\\teb\{([^\}]*)\}/"\\sidx{$1}$tr{startbold}" . quote($1) . "$tr{endbold}"/eg;
+  s/\\tet\{([^\}]*)\}/"\\sidx{$1}$tr{startcode}" . quote($1) . "$tr{endcode}"/eg;
+  s/\\url\{([^\}]*)\}/"\\sidx{$1}$tr{startcode}" . quote($1) . "$tr{endcode}"/eg;
+  s/\\tev\{([^\}]*)\}/"\\sidx{$1}$tr{startit}" . quote($1) . "$tr{endit}"/eg;
+
+  s/(\S)[ \t]*\n[ \t]+/$1\n/gm;
+  s/([^\\])\\\{/$1$tr{obr}/g;
+  s/([^\\])\\\}/$1$tr{cbr}/g;
+  s/([^\\])\\-/$1/g;
+  s/\A\\q?quad(?![a-zA-Z])\s*/$tr{nbrk}$tr{nbrk}/;
+  s|\\wwwsite|$wwwsite|g;
+  s/^\\def\\.*\{\n.*\n\}//gm;
+  s/\\def\\.*//g;
+  s(\\footnote\s*\{?\*+\}?\s*\{\s*((?:[^{}]|\{(?:[^{}]|\{[^{}]*\})*\})*)\})
+    {$tr{startbold}FOOTNOTE$tr{endbold}$tr{lt}$tr{lt}$tr{lt} $1 $tr{gt}$tr{gt}$tr{gt}}g;
+  s/(\{[\w\s]+)\{\}([\s\w]+\})/$1$2/g;	# {nf{}init}
+  s(\\op(?![a-zA-Z])\s*)({\\it op\\/})g;	# {nf{}init}
+  s/\\emacs\b//;
+  s/\\unix\b//;
+  s/\\(leavevmode|strut)(?![a-zA-Z])\s*//g;
+  s/ \\funno \s*
+     { \s* ((?:[^{}]|\{[^{}]*\})*) } \s*
+     { \s* ((?:[^{}]|\{[^{}]*\})*) } \s*
+     { \s* ((?:[^{}]|\{[^{}]*\})*) }
+   /\\noindent{\\tt $1 \$\\key{$2}\$($3)}/gx;
+  s/\\fun\s*\{([^{}]*)\}\s*\{((?:[^{}]|\{[^{}]*\})*)\}\s*\{((?:[^{}]|\{[^{}]*\})*)\}/\\kbd{$1 \\key{$2}($3)}\\sidx{$2}/g;
+
+  s/\\\\(?=[a-zA-Z])/\\bs /g;
+  s/\\b\{\}\\b\{\}/\\bs\\bs /g;
+  s/\\\\/\\bs/g;
+  s/(\'\'|\`\`)/"/g unless $to_pod;     # (english) double quotes
+  # asymptotic or isomorphic (~) [beware of ties]
+  s/(^|[^\\]) +~/$1~/;
+  s/~ */~/;
+  s/(^|[^\\])~/$1$tr{nbrk}/g;           # ties
+  s/\\(simeq|sim|approx)(?![a-zA-Z])/ ~ /g;
+  s/\\til(?![a-zA-Z])/~/g;		# ~ (transpose)
+  s/\\(~|tilde|widetilde)/~/g;
+  s/\\colon\b/:/g;
+
+  s/\\(equiv)(?![a-zA-Z])/ = /g;
+  s/\\'a/$tr{aacute}/g; s/\\'\{a\}/$tr{aacute}/g;
+  s/\\`a/$tr{agrave}/g; s/\\`\{a\}/$tr{agrave}/g;
+  s/\\"o/$tr{ouml}/g;   s/\\"\{o\}/$tr{ouml}/g;
+  s/\\"u/$tr{uuml}/g;   s/\\"\{u\}/$tr{uuml}/g;
+  s/\\'e/$tr{eacute}/g; s/\\'\{e\}/$tr{eacute}/g;
+  s/{\\cal (.)}/$tr{startbc}$1$tr{endbc}/g;
+
+  s/(^|[^\\])%.*/$1/g;		        # comments
+  s/\\vadjust\s*\{\s*\\penalty\s*\d+\s*\}//g;
+
+  # We do not strip %\n, thus:
+  s/\\kbd\{\n\s*/\\kbd{/g;
+  s/\$\\bf(\b|(?=[\d_]))\s*([^\$]+)\$/\$$tr{startbcode}$1$tr{endbcode}\$/g;
+  s/\$/$tr{dollar}/g;		        # math mode
+  s/\t/ /g; s/\\,//g; s/\\[ ;]/ /g;     # various spaces
+  s/\\\///g;			# italic correction
+  s/^&+//g;			# tab marks
+  s/([^\\])&+/$1 /g;		# tab marks
+  s/\\TeX\{\}/TeX/g;
+  s/\\TeX(\W)/TeX$1/g;
+  s/ *\\circ\b */ o /g;
+  s/\\d?frac\{\s*((?:[^{}]|\{[^{}]*\})*)\}\{\s*((?:[^{}]|\{[^{}]*\})*)\}/($1)\/($2)/g;
+  s(\\d?frac\s*(\d)\s*(\d))(($1/$2))g;
+  s[{\s*(\w)\s*\\over(?![a-zA-Z])\s*(\w)\s*}]{($1/$2)}g;
+  s[{\s*((?:[^{}]|\{[^{}]*\})*)\\over(?![a-zA-Z])\s*((?:[^{}]|\{[^{}]*\})*)}][($1)/($2)]g;
+
+  # \def\synt#1#2{\syn{#1}{\tt #2}}
+  # \def\syn#1#2{\synx{#1}{#2}{#1}}
+  s/\\synt?\{\s*((?:[^{}]|\{[^{}]*\})*)\}\{\s*((?:[^{}]|\{[^{}]*\})*)\}/\\synx{$1}{$2}{$1}/g;
+  # \def\synx#1#2#3{\sidx{#3}The library syntax is $\key{#1}({#2})$}
+  # Often used with embedded {}.
+  s/\\synx\{\s*((?:[^{}]|\{[^{}]*\})*)\}\{\s*((?:[^{}]|\{[^{}]*\})*)\}\{((?:[^{}]|\{[^{}]*\})*)\}/\\sidx{$3}The library syntax is $tr{startcode}$tr{startbold}$1$tr{endbold}($2)$tr{endcode}/;
+
+  # May be used with an empty arg
+  s/\\typ\{([^\}]*)\}/$tr{startcode}t_$1$tr{endcode}/g;
+
+  s/(\\string)?\\_/_/g;
+  s/\\([#\$&%|])/$1/g;
+  s/\\(hat(?![a-zA-Z])|\^)(\{\\?\s*\})?/^/g;
+  s/\\hbox\{\\kbd\{\\pow}}/^/g; # from doc_make
+  s/^(\@\[podleader\]head\d *)\\pow(?![a-zA-z])( *)/$1^$2/gm;
+  s/ *\\pow(?![a-zA-z]) */^/g;
+
+  s/\\neq?(?![a-zA-Z])/ != /g;
+  s/\\enspace(?![a-zA-Z])/ /g;
+  s/\\\*/ /g;
+  s/\\times(?![a-zA-Z]) */ x /g;
+  s/\\infty(?![a-zA-Z]) */ oo /g;
+  s/ *\\(bmod|mod) */ mod /g;
+  s/ *\\pmod(?![a-zA-Z]) *\{\s*((?:[^{}]|\{[^{}]*\})*)\}/ (mod $1)/g;
+  s/ *\\cdot(?![a-zA-Z]) */./g;		# Maybe " . "?
+  s/ *(\\|\@)[lc]?dots(?![a-zA-Z]) */.../g;
+  # math operators
+  s/\\(Norm | Frob | disc | Cl | Re | Im
+    | exp | log | ln | arg | sin(h)? | cos(h)? | tan(h)? | sqrt
+    | lim(proj)?
+    | mod | gcd | lcm
+    | Id | det | Hom | deg | expr | seq | args 
+    | min | max )
+    (?![a-zA-Z])/$tr{startlword}$1$tr{endlword}/xg;
+#  s/\\pi(?![a-zA-Z])/$tr{startword}Pi$tr{endword}/g;
+
+  # math symbols with HTML entities equivalents
+  s/\\(Alpha | Beta | Chi | Delta | Epsilon | Phi | Gamma | Eta | Iota
+    | vartheta | Kappa | Lambda | Mu | Nu | Omicron | Pi | Theta | Rho
+    | Sigma | Tau | Ypsilon | varsigma | Omega | Xi | Psi | Zeta
+    | alpha | beta | chi | delta | epsilon | varepsilon | phi | gamma | eta
+    | iota | varphi | kappa | lambda | mu | nu | omicron | pi | theta | rho
+    | sigma | tau | ypsilon | varpi | omega | xi | psi | zeta
+    | ell | wp | cap | cup | sup | prod | sum | int | nmid)
+    (?![a-zA-Z])/$tr{startword}$1$tr{endword}/xg;
+#  s/ *\\in(?![a-zA-Z]) */ belongs to /g;
+  s/\\pm(?![a-zA-Z])/$tr{pm}/g;
+  s/ *\\mid(?![a-zA-Z]) */ | /g;
+
+  s/\\idxtyp\{([^{}]*)\}/\\sidx{t_$1}/g;
+  if (!$to_pod) {
+    s/\\secref\{/Section \\ref{/g;
+    s/\\ref\{([^\}]*)\}/$tr{startref}$1$tr{endref}/g;
+    if ($raw)
+    { s/\\label\{([^\}]*)\}/\@[label $1]/g; }
+    else
+    { s/\\label\{[^\}]*\}//g; }
+  }
+
+  s/ *\\noindent\b */\@3/;
+  s/\\(medskip|bigskip|smallskip|left|right)(?![a-zA-Z])[ \t]*//g;
+  s/\\vfill *(\\eject)?//g;
+  s/\\(q|quad)(?![a-zA-Z])\s*/  /g;
+  s/\\qquad(?![a-zA-Z])\s*/    /g;
+
+  s/\\centerline\s*\{\s*(?:\\tt\b\s*)?(.*(\n[ \t].*)*)\}(?=\s*$)/indent_equally($1)/ge;
+  s/\\centerline\s*\{\s*(?:\\tt\b\s*)?((?:[^{}]|\{[^{}]*\})*)\}/ indent_equally($1)/ge;
+
+  s/\\big\b//g;
+
+  s/\\settabs.*//;
+  s/^\\\+/\n$tr{nbrk}/gm;
+  s/\\\+//g;
+  s/\\cr(?![a-zA-Z])//g;
+  s/\\B(?![a-zA-Z])/\\kbd{BIL}/g;
+
+  s/ *([=><]) */ $1 /g;
+  s/ *<  *([=<]) */ <$1 /g;
+  s/ *>  *([=>]) */ >$1 /g;
+  s/ *([*+-\/^&=|:]) += */ $1= /g;
+  s/ *! *= */ != /g;
+  # now fix spacing
+  s/ == = / === /g;
+  s/< *([-a-zA-Z]*) *>/<$1>/g;
+
+  s/ *\\Rightarrow */ ==$tr{gt} /g;
+  s/\\rangle(?![a-zA-Z])\s*/$tr{startcode}$tr{gt}$tr{endcode}/g;
+  s/\\langle(?![a-zA-Z])\s*/$tr{startcode}$tr{lt}$tr{endcode}/g;
+  s/\\rightarrow(?![a-zA-Z])\s*/$tr{startcode}--$tr{gt}$tr{endcode}/g;
+  s/\\longleftrightarrow(?![a-zA-Z])\s*/$tr{startcode}$tr{lt}-----$tr{gt}$tr{endcode}/g;
+  s/\\mapsto(?![a-zA-Z])\s*/$tr{startcode}:---$tr{gt}$tr{endcode}/g;
+  s/ *\\geq?(?![a-zA-Z]) *([^ ])/ $tr{startcode}$tr{gt}=$tr{endcode} $1/g;
+  s/ *\\leq?(?![a-zA-Z]) *([^ ])/ $tr{startcode}$tr{lt}=$tr{endcode} $1/g;
+  s/ *\\gg?(?![a-zA-Z]) *([^ ])/ $tr{startcode}$tr{gt}$tr{gt}$tr{endcode} $1/g;
+  s/ *\\ll?(?![a-zA-Z]) *([^ ])/ $tr{startcode}$tr{lt}$tr{ll}$tr{endcode} $1/g;
+
+  s/\\(vers|PARIversion)(?![a-zA-Z])/$tr{startbold}$version$tr{endbold}/g;
+  s/\\([QRCPFZN])(?![a-zA-Z])/$tr{startbi}$1$tr{endbi}$2/g;
+  s/\\Bbb\b\s*(\w)/$tr{startbi}$1$tr{endbi}/g;
+
+  s/\\([oc]br)/$tr{$1}/g;
+  s/\\quo(?![a-zA-Z])/\"/g;
+  s/(^|\s)\{(\w+)\}/$1$2/g;
+
+  s/\\p(?![a-zA-Z])/$tr{startbold}p$tr{endbold}$1/g;
+  s/^ *\\point\{([^\}]*)\}/\\item $1/g;
+  s/\@\[dollar]\\bullet\@\[dollar]/\\item /g;
+  s/\\bullet/\\item/g;
+  s/^ *\\item/\@3$tr{startbold}*$tr{endbold}/g;
+  s/\\item/$tr{startbold}*$tr{endbold}/g;
+  s/^ *\\misctitle\{([^\}]*)\}/\@3$tr{startbold}$1.$tr{endbold}/g;
+  s/\\subsubsec\{([^\}]*)\}/\@3$tr{startbold}$1.$tr{endbold}/g unless $to_pod;
+  s/\\subsec\{([^\}]*)\}/\@3$tr{startbold}$1.$tr{endbold}/g unless $to_pod;
+  s/\\\$/$tr{ldollar}/g;
+  s/\\kbd\s*\{\s*</\\kbd{$tr{lt}/g if $to_pod;
+  s/\\kbd\s*\{\s*>/\\kbd{$tr{gt}/g if $to_pod;
+  s/\\kbd\s*\{((?:[^{}]|\{[^{}]*\})*)\}/$tr{startcode}$1$tr{endcode}/g;
+
+  s/\\key\{((?:[^{}]|\{[^{}]*\})*)\}/$tr{startbold}$1$tr{endbold}/g unless $refcard;
+  s/\\goth\{((?:[^{}]|\{[^{}]*\})*)\}/$tr{startbg}$1$tr{endbg}/g;
+
+  if ($refcard) {
+    s/\\(?:key|li)\{((?:[^{}]+(?=[{}])|\{[^{}]*\})*)\}\s*\{\}[ \t]*\n/\n\n=back\n\n$1\n\n=over\n\n/g;
+    s/\\(?:key|li)\{((?:[^{}]+(?=[{}])|\{[^{}]*\})*)\}\s*\{(([^{}]+(?=[{}])|\{[^{}]*\})*)\}/\n=item $tr{startcode}$2$tr{endcode}\n\n$1\n/g;
+  }
+
+  s/\\(floor|ceil|round|binom)\{/$1\{/g;
+  s/\\(var|emph)\{([^\}]*)\}/$tr{startit}$2$tr{endit}/g;
+  s/\\fl(?![a-zA-Z])/$tr{startit}flag$tr{endit}/g;
+  s/\\b\{([^}]*)\}/$tr{startcode}\\$1$tr{endcode}/g;
+  s/\\kbdsidx/\\sidx/g;
+  s/\\sidx\{[^\}]*\}//g unless $to_pod;
+  s/\\[a-zA-Z]*idx\{([^\}]*)\}/$1/g unless $to_pod;
+  s/\{\\text\{(st|nd|th)\}\}/\\text{$1}/g;
+  s/\^\\text\{th\}/-th/g;
+  s/1\^\\text\{st\}/1st/g;
+  s/2\^\\text\{nd\}/2nd/g;
+  s/\\text\{([a-zA-z0-9]*)\}/$1/g;
+  s/\\(text|hbox|Big)//g;
+  s/([A-Za-z])--([A-Za-z])/$1-$2/g; # Rankin--Cohen
+
+  s/^([ \t]+)\{ *\\(it|sl|bf|tt)\b/S<$1>{\\$2/gm;
+  s/\{ *\\(it|sl) *(([^{}]+(?=[{}])|\{[^{}]*\})*)\}/$tr{startit}$2$tr{endit}/g;
+  s/\{ *\\bf *(([^{}]+(?=[{}])|\{[^{}]*\})*)\}/$tr{startbold}$1$tr{endbold}/g;
+  s/\{ *\\tt *(([^{}]+(?=[{}])|\{[^{}]*\})*)\}/$tr{startpodcode}$1$tr{endpodcode}/g;
+  $seek=1 if (s/\\emph\{ */$tr{startit}/g);
+  if ($seek) { $seek=0 if (s/\}/$tr{endit}/) }
+  s/\\(backslash|bs)\{(\w)\}/\\$2/g;
+  s/\\(backslash|bs)(?![a-zA-Z]) */\\/g;
+  s/ *\\setminus */ \\ /g;
+
+  s/\@com(.*)$/$tr{startcode}$1$tr{endcode}/g;
+
+  # Last resort:
+  s/\\kbd\s*\{(.*?)\}/$tr{startcode}$1$tr{endcode}/g;
+  s/^([ \t]{3,})\Q$tr{startcode}\E(.*)\Q$tr{endcode}\E/$1$2/gmo if $to_pod;
+  # Last resort:
+  s/^([ \t]{3,})\Q$tr{startcode}\E(.*?)\Q$tr{endcode}\E/$1$2/gmso if $to_pod;
+  # Remove leading spaces unless have embedded wrapped code:
+  s/^[ \t]+//gm if $to_pod and /^\S/ and not /^[ \t]*\n[ \t]/m;
+  s/\{ *\}//g;			# empty args
+
+  s{\Q$tr{startcode}\E((ftp|http)://.*?)\Q$tr{endcode}\E}{$tr{startlink}$1$tr{endlink}}go if $to_pod;
+  $_;
+}
+
+sub presubst {
+  chomp;
+  if ($in_prog && /\@eprog *(\\noindent)? */)
+  {
+    my ($eprog) = $1? '@3': '@2';
+    $in_prog = 0;
+    $_ = $eprog . &code_subst($`) . $tr{endcode};
+    push(@text, $_);
+    $_ = &basic_subst($');
+  }
+  elsif ($in_prog || s/\\bprog(tabs.*)?//g)
+  {
+    $in_prog++;  # = 1 on the \bprog line
+                 # code should start on the next line
+    $_ = &code_subst($_);
+    s/^/\@1$tr{startcode}/ if ($in_prog == 2);
+    s/^/\@0/ if ($in_prog > 2);
+  }
+  else { $_ = &basic_subst($_); }
+  if (/^ *$/)
+  {
+    push(@text,"\n");
+  }
+  else
+  {
+    for (split(/\n/, $_)) { push(@text, $_); }
+  }
+}
+
+sub code_subst {
+  my $in = shift;
+  $in =~ s/\@dots\b/.../g;
+  if ($in =~ /\@com(.*)/)
+  {
+    my ($c) = &basic_subst($1);
+    if (!$to_pod) { $c = $tr{endcode} . $c . $tr{startcode}; }
+    $in = $` . $c . &code_subst($');
+  }
+  if ($in =~ /\@Ccom(.*)\*\//)
+  {
+    my ($c) = &basic_subst($1);
+    if (!$to_pod) { $c = $tr{endcode} . $c . $tr{startcode}; }
+    $in = $` .$c . "*/" . &code_subst($');
+  }
+  $in;
+}
+
+sub wrap_code {
+  my $in = shift;
+  $in =~ s/^[ \t]+$//mg;
+  $in = &code_subst($in);
+  $in =~ s/^(.)/  $1/mg;
+  $in =~ s/\s*\Z//;
+#  $in =~ s/\\kbd\{((?:[^{}]|\{[^{}]*\})*)\}/$1/g if $to_pod;
+  $in =~ s/\$([^\$\n]*)\$/$1/g if $to_pod;
+  "\n\n$in\n\n";
+}
+
+sub indexify {
+  my $in = shift;
+  $in =~ s/(^|and\s+)(\w+)(\$?\()/$1\\idx{$2}$3/g;
+  $in =~ s/^(\\b\{\w+\})(?!\S)/\\idx{$1}/g;
+  $in;
+}
+
+sub for_index {
+  my $in = shift;
+  1 while $in =~ s/\Q$tr{startcode}\E(.*?)\Q$tr{endcode}\E/$1/go;
+  $in;
+}
+
+sub strip_trail { my $in = shift; $in =~ s/\s+\Z//; $in }
+
+# This subroutine works in paragraph mode
+sub TeXprint_topod {
+  s/\A\s+//;
+  s/^\\def\\.*\{\n.*\n\}//gm;
+  s/\\def\\.*//g;		# Repeated in basic_subst, as the next one
+  s/(\{[\w\s]+)\{\}([\s\w]+\})/$1$2/g;	# {rnf{}llgram}
+
+  s/\\vbox\s*\{\s*\\bprog/\\bprog/g;
+  s/([\\\@])eprog\s*\}/$1eprog/g;
+
+  #  \n is below to prevent splitting on ' '
+  #  We also remove ':'
+  s/\\sectype\{\s*((?:[^{}]|\{[^{}]*\})*)\}\{\s*((?:[^{}]|\{[^{}]*\})*)\}/\\subsec{Type \\typ{$1} (${2}s)}\n\\sidx{$2}/g;
+  s/\\sectypeindex\{\s*((?:[^{}]|\{[^{}]*\})*)\}\{\s*((?:[^{}]|\{[^{}]*\})*)\}\{\s*((?:[^{}]|\{[^{}]*\})*)\}/\\subsec{Type \\typ{$1} (${2}s)}\n\\sidx{$3}/g;
+  s/\\sectypes\{\s*((?:[^{}]|\{[^{}]*\})*)\}\{\s*((?:[^{}]|\{[^{}]*\})*)\}\{\s*((?:[^{}]|\{[^{}]*\})*)\}/\\subsec{Type \\typ{$1} and \\typ{$1} (${3}s)}\n\\sidx{$3}/g;
+
+  # Try to guard \label/\sidx (removing possible '.')
+#  This somehow breaks index...
+#  s/(\\(?:section|subsec(?:ref|idx|op)?(unix)?)\s*{(?:(?:[^{}]+(?=[{}])|{[^{}]+})+)})\.?\s*\\(label|sidx)/$1\n\\$2/;
+  s/(\\(?:section|subsec(?:ref|idx|op)?)\s*\{(?:(?:[^{}]+(?=[{}])|{[^{}]+})+)\})\.?\s*\\(label|sidx)/$1\n\\$2/;
+
+  # last if /\\subsec[\\{}ref]*[\\\${]$help[}\\\$]/o;
+  s/\\chapter\s*\{((?:[^{}]|\{[^{}]*\})*)\}\s*/\n\n$tr{podleader}head1 NAME\n\nlibPARI - $1\n\n/;
+  s/\\appendix\s*\{((?:[^{}]|\{[^{}]*\})*)\}\s*/\n\n$tr{podleader}head1 NAME\n\nAppendix - $1\n\n/;
+  s/\\section\s*\{((?:[^{}]|\{[^{}]*\})*)\}\s*/"\n\n$tr{podleader}head1 " . indexify($1) . "\n\n"/e;
+
+  # Try to delimit by :
+  s/\\subsec(?:ref)?(?:unix)?\s*\{(([^{}]+(?=[{}])|{[^{}]+})+)\}([^\n]*):[\n ]/"\n\n$tr{podleader}head2 " . indexify("$1$3") . "\n\n"/e;
+  s/\\subsubsec(?:ref)?(?:unix)?\s*\{(([^{}]+(?=[{}])|{[^{}]+})+)\}([^:]*):\s*/"\n\n$tr{podleader}head3 " . indexify("$1$3") . "\n\n"/e;
+  s/\\subsubsec\s*{(([^{}]+(?=[{}])|{[^{}]+})+)}(.*)$/"\n\n$tr{podleader}head3 " . indexify("$1") . "$3\n\n"/me;
+  s/\\subseckbd\s*{(([^{}]+(?=[{}])|{[^{}]+})+)}([^:]*):\s*/"\n\n$tr{podleader}head2 " . indexify("$1$3") . "\n\n"/e;
+  # Try to delimit by ' '
+  s/\\subsec(?:ref)?(?:unix)?\s*\{(([^{}]+(?=[{}])|{[^{}]+})+)\}(\S*)\s+/"\n\n$tr{podleader}head2 " . indexify("$1$3") . "\n\n"/e;
+  s/\\subsec(?:title)?(?:unix)?\s*\{(([^{}]+(?=[{}])|{[^{}]*})+)\}:?\s*/"\n\n$tr{podleader}head2 " . indexify("$1") . "\n\n"/e;
+
+  # This is to skip preface in refcard:
+  /\Q$tr{podleader}\Ehead1|\\title(?![a-zA-Z])\s*\{/o and $seen_start = 1
+    or $seen_start or return;	# Skip now!
+
+  s/\\title\s*\{([^{}\s]*)(\s+([^{}]*))?\}(\s*\\centerline\s*\{([^{}]*)\})?\s*/$tr{podleader}head1 NAME\n\n$1 - $3.  $5\n\n/ and $seen_title++
+    unless $seen_title;
+  s/\\title\s*\{([^{}\s]*)(\s+([^{}]*))?\}(\s*\\centerline\s*\{([^{}]*)\})?\s*/\n\n/;
+  s/\\parskip.*/\n/g;		# Up to end of the line
+  #s/([A-Z])\</$1 < /g;		# Disambiguate with POD...
+
+  # Duplicate removal of settabs, since they may contain \hskip
+  s/\\settabs.*//;
+  s/^[ \t]*\\hskip\s*\w+/$tr{nbrk}/g;
+  s/[ \t]*\\hskip\s*\w+/\n$tr{nbrk}/g;
+  1 while s/ \\
+	     ( (small|big)skip | newcolumn | noindent
+	     | (short)?copyrightnotice | hfill | break | par
+	     | leavevmode | strut | endgroup | bye
+             )
+	     (?![a-zA-Z])[ \t]*(\n\s*)
+	     /\n\n/gx;
+
+  s/'(\W)'/{\\tt '$1'}/g;
+  s/(\\\w+)(\\hbox)/$1 $2/g;
+  s/\\hbox\s*\{(?:\\it\b\s*)?((?:\\[\{\}]|[^{}]|\{[^{}]*\})*)\}/$1/g;
+
+  # substitute non-verbatim code
+  $acc = '';
+  pos = 0;
+  while ( s/\A(.*?)\\bprog//s ) {
+    $acc .= basic_subst(strip_trail($1));
+    $_ .= <DOC> until /(\\|@)eprog\b/ or eof(DOC);
+    $acc .= wrap_code($1) if s/\A(?:tabs[^\n]*)?(?![a-zA-Z])[ \t]*\n?(.*?)(\\|@)eprog\s*//s;
+  }
+  $_ = $acc . basic_subst($_);
+
+#  s/\\kbd\{/\{\\tt /g;		# startcode
+#  s/\\typ\{/\{\\tt t_/g;	# startcode
+
+  s/\$\s*(\@\[startbi\][A-Z]\@\[endbi\])\s*\$/$1/g;
+#  s/\\p(\b|(?=[\d_]))/B<p>/g;
+  #s/\$\\bf\b\s*([^\$]+)\$/C<B<$1>>/g;
+
+  @lines = split /^$/m, $_;
+  for (@lines) {
+    s/>/\@[gt]/g unless /^\n*[ \t]/;
+    s/</\@[lt]/g unless /^\n*[ \t]/;
+  }
+  $_ = join '', @lines;
+
+  s/\$\$(.*?)\$\$\s*/\n\nS<  >$tr{startcode}$1$tr{endcode}\n\n/gs;
+  s/\$([^\$]+)\$/$tr{startcode}$1$tr{endcode}/g;
+
+  s/\\s(?:ref|idx)\{\s*([^{}]*)\}/"X<" . for_index($1) . ">"/ge; #
+  s/\\(?:ref|idx)\{\s*([^{}]*)\}/"X<" . for_index($1) . ">$1"/ge;
+
+# Conflict between different versions of PARI and refcard:
+# s/\\(?:key|li)\s*\{(.*)\}\s*\{(.+)\}[ \t]*\n/\n\n=item C<$2>\n\n$1\n\n/msg;
+# s/\\(?:key|li)\s*\{(.*)\}\s*\{\}[ \t]*\n/\n\n=back\n\n$1\n\n=over\n\n/mgs;
+# s/\\(key|var)(?![a-zA-Z])\s*\{(\w+)\}/C<$2>/mg;
+  s/\\var\s*\{X<(\w+)>(\w+)\}/X<$1>$tr{startcode}$2$tr{endcode}/mg;
+  s/\\var\s*\{f\{\}lag\}/$tr{startcode}flag$tr{endcode}/mg;
+
+  s/\\metax(?![a-zA-Z])\s*\{(.*)\}\s*\{\s*(\w+)(?=C\<)(.*)\}[ \t]*\n/\n\n=item C<L<$2>$3>\n\n$1\n\n/mg;
+  s/\\metax(?![a-zA-Z])\s*\{(.*)\}\s*\{(.*)\}[ \t]*\n/\n\n=item C<$2>\n\n$1\n\n/mg;
+  s/C\<\{\}=/C\<=/g;
+  s/\\fl(?![a-zA-Z])/I<flag>/g;
+  s/\\file(?![a-zA-Z])/F<file>/g;
+  s/\\(unix|emacs)\b\s*(\{?)(\s*\\(no)?indent)?\s*/X<\U$1>$2/g;
+  s/\A\\label\s*\{([\w:.-]*)\}([ \t]*\n\s*(?=[^\s=]))?/X<Label $1>/g;
+  s/\\label\s*\{([\w:.-]*)\}/X<Label $1>/g;
+  s/\\secref\s*\{([\w:.-]*)\}/L<Label $1>/g;
+  s/\\begin(double)?indentedkeys\s*/\n\n=over\n\n/g;
+  s/\\end(double)?indentedkeys\s*/\n\n=back\n\n/g;
+  # begin/end group appear in very special context only
+  s/\\begingroup\W.*//s;		# Eat to the end
+  s/\n{3,}/\n\n/g;
+  s/\\subsec\{((?:[^{}]|\{[^{}]*\})+)\}\s*/\n\n=back\n\nB<$1>\n\n=over\n\n/g; # In refcard
+  # for refcard:
+  s/{\\rm(?![a-zA-Z])\s*([^{}]*)}/$1/g;
+  s/\\Z<>/\\/g;			# Optimize for readability
+
+  # Now replace the POD stuff
+  # Start with cosmetic stuff:
+  $in_code = 0;
+  s/(\@\[((start)|end)code\])/ ($3 ? $in_code++ : --$in_code) ? "" : $1 /ge;
+
+  if ($dumb_pod) {
+    my @stack;
+    s /(\@\[((start)|end)(\w+)\])/
+      if ($3) {			# Start
+	push @stack, $4;
+	(@stack > 1 ? "\@[end$stack[-2]]" : '') . $1
+      } else {			# end
+	pop @stack;
+	$1 . (@stack ? "\@[start$stack[-1]]" : '')
+      }
+      /ge
+  }
+  1 while s/\@\[start(\w+)\](\s*)\@\[end\1\]/$2/g;
+
+  s/\@\[(\w+)\]/\@!$pr{$1}/g;
+  s/(\\\w+)\@!(\w)/$1 $2/g;
+  s/\@!//g;
+  s/\\([\{\}])/$1/g;
+
+  # Normalize the spacing
+  s/\n{3,}/\n\n/;
+  s/\A([ \t]*\n)+//;
+  # Single label is not healthy...
+  print "\n" if $last_glued and /\A=/; # POD markup needs a new paragraph
+  $last_glued = s/((\A|\n\n)(X<[^<>]+>)+)[ \t]*\n\n/$1\n/;
+
+  print;
+}
+
+sub color {
+  my($a);
+  $_ = $_[0];
+  if (/[^0-9]/ || $_ < 0 || $_ > 17)
+    { print "bad color in gphelp: $_\n"; return ""; }
+  if ($_ < 8) { $a = $_ + 30; } else { $a = $_ + 82; }
+  return "\e[0;${a}m";
+}
+
+sub TeXprint {
+  local($_) = $_[0];
+  s/\@\[obr\]/{/g;
+  s/\@\[cbr\]/}/g;
+  if ($utf8)
+  {
+    s/\@\[ouml\]/ö/g;
+    s/\@\[uuml\]/ü/g;
+    s/\@\[aacute\]/á/g;
+    s/\@\[agrave\]/à/g;
+    s/\@\[eacute\]/é/g;
+    s/\@\[pm\]/±/g;
+  }
+  else
+  {
+    s/\@\[ouml\]/"o/g;
+    s/\@\[uuml\]/"u/g;
+    s/\@\[aacute\]/'a/g;
+    s/\@\[agrave\]/`a/g;
+    s/\@\[eacute\]/'e/g;
+    s/\@\[pm\]/+\/-/g;
+  }
+  s/\@\[label\]//g;
+  s/\@\[ldollar\]/\$/g;
+  s/\@\[end(bold|code|bcode|ref|bi|bc|bg|it)\]/$ch/g;
+  s/\@\[start(bold|code|bcode|ref|bi|bc|bg)\]/$cb/g;
+  s/\@\[startit\]/$cu/g;
+  s/\@\[(dollar|empty|endl?word|endpodcode|startl?word|startpodcode)\]//g;
+  s/\@\[lt\]/</g;
+  s/\@\[gt\]/>/g;
+  s/\\([\{\}])/$1/g;
+  s/\@\[nbrk\]/ /g; print "$_\n";
+}
+
+sub to_pod {
+  $to_pod = $ARGV[1];
+  inittr();
+  $parifile = $to_pod;
+  %compress = ('.gz', 'gzip -cd',
+	       '.z', 'gzip -cd',
+	       '.Z', 'zcat',
+	      );
+  foreach $suffix (keys %compress) {
+    ($patt = $suffix) =~ s/(\W)/\\$1/;
+    if ($to_pod =~ /$patt$/) { $pipe = $compress{$suffix}; last; }
+  }
+  if ($pipe) {
+    open(DOC,"$pipe $parifile |") ||
+      die "Cannot open pipe $pipe from $parifile: $!, stopped";
+  } else {
+    open(DOC,$parifile) || die "Cannot find file $parifile: $!, stopped";
+  }
+  $/='';			# Paragraph mode
+  while (<DOC>) {
+    &TeXprint_topod();
+  }
+  if ($pipe) {
+    close(DOC) || die "Cannot close pipe `$pipe $parifile': $!, stopped";
+  } else {
+    close(DOC) || die "Cannot close file $parifile: $!, stopped";
+  }
+  cleanexit();
+}

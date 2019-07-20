@@ -1,0 +1,73 @@
+Function: idealhnf
+Section: number_fields
+C-Name: idealhnf0
+Prototype: GGDG
+Help: idealhnf(nf,u,{v}): hermite normal form of the ideal u in the number
+ field nf if v is omitted. If called as idealhnf(nf,u,v), the ideal
+ is given as uZ_K + vZ_K in the number field K defined by nf.
+Doc: gives the \idx{Hermite normal form} of the ideal $u\Z_K+v\Z_K$, where $u$
+ and $v$ are elements of the number field $K$ defined by \var{nf}.
+ \bprog
+ ? nf = nfinit(y^3 - 2);
+ ? idealhnf(nf, 2, y+1)
+ %2 =
+ [1 0 0]
+
+ [0 1 0]
+
+ [0 0 1]
+ ? idealhnf(nf, y/2, [0,0,1/3]~)
+ %3 =
+ [1/3 0 0]
+
+ [0 1/6 0]
+
+ [0 0 1/6]
+ @eprog
+
+ If $b$ is omitted, returns the HNF of the ideal defined by $u$: $u$ may be an
+ algebraic number (defining a principal ideal), a maximal ideal (as given by
+ \kbd{idealprimedec} or \kbd{idealfactor}), or a matrix whose columns give
+ generators for the ideal. This last format is a little complicated, but
+ useful to reduce general modules to the canonical form once in a while:
+
+ \item if strictly less than $N = [K:\Q]$ generators are given, $u$
+ is the $\Z_K$-module they generate,
+
+ \item if $N$ or more are given, it is \emph{assumed} that they form a
+ $\Z$-basis of the ideal, in particular that the matrix has maximal rank $N$.
+ This acts as \kbd{mathnf} since the $\Z_K$-module structure is (taken for
+ granted hence) not taken into account in this case.
+ \bprog
+ ? idealhnf(nf, idealprimedec(nf,2)[1])
+ %4 =
+ [2 0 0]
+
+ [0 1 0]
+
+ [0 0 1]
+ ? idealhnf(nf, [1,2;2,3;3,4])
+ %5 =
+ [1 0 0]
+
+ [0 1 0]
+
+ [0 0 1]
+ @eprog\noindent Finally, when $K$ is quadratic with discriminant $D_K$, we
+ allow $u =$ \kbd{Qfb(a,b,c)}, provided $b^2 - 4ac = D_K$. As usual,
+ this represents the ideal $a \Z + (1/2)(-b + \sqrt{D_K}) \Z$.
+ \bprog
+ ? K = nfinit(x^2 - 60); K.disc
+ %1 = 60
+ ? idealhnf(K, qfbprimeform(60,2))
+ %2 =
+ [2 1]
+
+ [0 1]
+ ? idealhnf(K, Qfb(1,2,3))
+   ***   at top-level: idealhnf(K,Qfb(1,2,3
+   ***                 ^--------------------
+   *** idealhnf: Qfb(1, 2, 3) has discriminant != 60 in idealhnf.
+ @eprog
+
+Variant: Also available is \fun{GEN}{idealhnf}{GEN nf, GEN a}.

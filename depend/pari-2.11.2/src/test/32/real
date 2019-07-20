@@ -1,0 +1,41 @@
+5.9 E347063955532709820
+1.7 E-347063955532709821
+  ***   at top-level: 1.<<2^64
+  ***                     ^----
+  ***   overflow in t_INT-->long assignment.
+  ***   at top-level: 1.>>2^64
+  ***                     ^----
+  ***   overflow in t_INT-->long assignment.
+0.E1
+1
+1
+0
+0
+1
+1
+0
+0
+1
+1
+0
+0
+1
+1
+1
+1
+0
+0
+0
+0
+-oo
+0
+-1
+1
+3
+4
+1
+1
+2
+[1, 1/2, 2, 2, 2/(x + 1)]
+[0, 0, 3, 3, 3/(x + 1)]
+Total time spent: 1

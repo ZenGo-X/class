@@ -1,0 +1,12 @@
+Function: nextprime
+Section: number_theoretical
+C-Name: nextprime
+Prototype: G
+Help: nextprime(x): smallest pseudoprime >= x.
+Description:
+ (gen):int        nextprime($1)
+Doc: finds the smallest pseudoprime (see
+ \tet{ispseudoprime}) greater than or equal to $x$. $x$ can be of any real
+ type. Note that if $x$ is a pseudoprime, this function returns $x$ and not
+ the smallest pseudoprime strictly larger than $x$. To rigorously prove that
+ the result is prime, use \kbd{isprime}.

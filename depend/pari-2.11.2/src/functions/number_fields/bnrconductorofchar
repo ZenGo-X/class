@@ -1,0 +1,7 @@
+Function: bnrconductorofchar
+Section: number_fields
+C-Name: bnrconductorofchar
+Prototype: GG
+Obsolete: 2015-11-11
+Help: bnrconductorofchar(bnr,chi): this function is obsolete, use bnrconductor.
+Doc: This function is obsolete, use \tev{bnrconductor}.

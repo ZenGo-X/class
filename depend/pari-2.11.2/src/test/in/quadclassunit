@@ -1,0 +1,29 @@
+default(realprecision,38);
+default(echo,1);
+test(D) =
+{
+  for (d = D, D+10^3,
+    if (!isfundamental(d),next);
+    print(d, " ", quadclassunit(d).cyc)
+  );
+}
+setrand(1); test(10^15); test(-10^15)
+
+\\ #1195
+setrand(11);quadclassunit(-8419588).cyc
+setrand(2);quadclassunit(-1459008).cyc
+setrand(7);quadclassunit(-3799812).cyc
+setrand(1); quadclassunit(-13163208).cyc
+
+\\ #1195 with non-fundamental discriminants [oo loop]
+setrand(38);quadclassunit(-29920).cyc
+
+quadclassunit(-13163208,,[0.1]).cyc
+setrand(1); quadclassunit((2^70+25)).cyc
+setrand(1); quadclassunit(8*3*5*7).cyc
+
+\\ #1700
+setrand(1);quadclassunit(-612556842419).cyc
+
+\\ #2015
+setrand(2); quadclassunit(-699,,[6,6]).cyc

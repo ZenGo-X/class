@@ -1,0 +1,15 @@
+Function: matpermanent
+Section: linear_algebra
+C-Name: matpermanent
+Prototype: G
+Help: matpermanent(x): permanent of the matrix x.
+Doc: permanent of the square matrix $x$ using Ryser's formula in Gray code
+ order.
+ \bprog
+ ? n = 20; m = matrix(n,n,i,j, i!=j);
+ ? matpermanent(m)
+ %2 = 895014631192902121
+ ? n! * sum(i=0,n, (-1)^i/i!)
+ %3 = 895014631192902121
+ @eprog\noindent This function runs in time $O(2^n n)$ for a matrix of size
+ $n$ and is not implemented for $n$ large.

@@ -1,0 +1,23 @@
+Function: _def_log
+Class: default
+Section: default
+C-Name: sd_log
+Prototype:
+Help:
+Doc: this can be either 0 (off) or 1, 2, 3
+ (on, see below for the various modes). When logging mode is turned on, \kbd{gp}
+ opens a log file, whose exact name is determined by the \kbd{logfile}
+ default. Subsequently, all the commands and results will be written to that
+ file (see \b{l}). In case a file with this precise name already existed, it
+ will not be erased: your data will be \emph{appended} at the end.
+
+ The specific positive values of \kbd{log} have the following meaning
+
+ 1: plain logfile
+
+ 2: emit color codes to the logfile (if \kbd{colors} is set).
+
+ 3: write LaTeX output to the logfile (can be further customized using
+ \tet{TeXstyle}).
+
+ The default value is \kbd{0}.

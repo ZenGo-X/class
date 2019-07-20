@@ -1,0 +1,7 @@
+Function: qfbil
+Section: linear_algebra
+C-Name: qfbil
+Prototype: GGDG
+Obsolete: 2016-08-08
+Help: qfbil(x,y,{q}): this function is obsolete, use qfeval.
+Doc: this function is obsolete, use \kbd{qfeval}.

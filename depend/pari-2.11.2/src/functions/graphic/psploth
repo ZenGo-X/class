@@ -1,0 +1,7 @@
+Function: psploth
+Section: graphic
+C-Name: psploth0
+Prototype: V=GGED0,L,D0,L,p
+Obsolete: 2018-02-01
+Help: psploth(X=a,b,expr,{flags=0},{n=0}): obsolete function.
+Doc: This function is obsolete, use plothexport and write the result to file.

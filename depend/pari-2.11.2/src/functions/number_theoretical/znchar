@@ -1,0 +1,49 @@
+Function: znchar
+Section: number_theoretical
+C-Name: znchar
+Prototype: G
+Help: znchar(D): given a datum D describing a group G = (Z/NZ)^* and
+ a Dirichlet character chi, return the pair [G,chi].
+Doc: Given a datum $D$ describing a group $(\Z/N\Z)^*$ and a Dirichlet
+ character $\chi$, return the pair \kbd{[G, chi]}, where \kbd{G} is
+ \kbd{znstar(N, 1)}) and \kbd{chi} is a GP character.
+
+ The following possibilities for $D$ are supported
+
+ \item a non-zero \typ{INT} congruent to $0,1$ modulo $4$, return the real
+ character modulo $D$ given by the Kronecker symbol $(D/.)$;
+
+ \item a \typ{INTMOD} \kbd{Mod(m, N)}, return the Conrey character
+ modulo $N$ of index $m$ (see \kbd{znconreylog}).
+
+ \item a modular form space as per \kbd{mfinit}$([N,k,\chi])$ or a modular
+ form for such a space, return the underlying Dirichlet character $\chi$
+ (which may be defined modulo a divisor of $N$ but need not be primitive).
+
+ In the remaining cases, \kbd{G} is initialized by \kbd{znstar(N, 1)}.
+
+ \item a pair \kbd{[G, chi]}, where \kbd{chi} is a standard GP Dirichlet
+ character $c = (c_j)$ on \kbd{G} (generic character \typ{VEC} or
+ Conrey characters \typ{COL} or \typ{INT}); given
+ generators $G = \oplus (\Z/d_j\Z) g_j$, $\chi(g_j) = e(c_j/d_j)$.
+
+ \item a pair \kbd{[G, chin]}, where \kbd{chin} is a \emph{normalized}
+ representation $[n, \tilde{c}]$ of the Dirichlet character $c$; $\chi(g_j)
+ = e(\tilde{c}_j / n)$ where $n$ is minimal (order of $\chi$).
+
+ \bprog
+ ? [G,chi] = znchar(-3);
+ ? G.cyc
+ %2 = [2]
+ ? chareval(G, chi, 2)
+ %3 = 1/2
+ ?  kronecker(-3,2)
+ %4 = -1
+ ? znchartokronecker(G,chi)
+ %5 = -3
+ ? mf = mfinit([28, 5/2, Mod(2,7)]); [f] = mfbasis(mf);
+ ? [G,chi] = znchar(mf); [G.mod, chi]
+ %7 = [7, [2]~]
+ ? [G,chi] = znchar(f); chi
+ %8 = [28, [0, 2]~]
+ @eprog

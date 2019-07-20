@@ -1,0 +1,32 @@
+Function: sumnuminit
+Section: sums
+C-Name: sumnuminit
+Prototype: DGp
+Help: sumnuminit({asymp}): initialize tables for Euler-MacLaurin delta
+ summation of a series with positive terms.
+Doc: initialize tables for Euler--MacLaurin delta summation of a series with
+ positive terms. If given, \kbd{asymp} is of the form $[\kbd{+oo}, \alpha]$,
+ as in \tet{intnum} and indicates the decrease rate at infinity of functions
+ to be summed. A positive
+ $\alpha > 0$ encodes an exponential decrease of type $\exp(-\alpha n)$ and
+ a negative $-2 < \alpha < -1$ encodes a slow polynomial decrease of type
+ $n^{\alpha}$.
+ \bprog
+ ? \p200
+ ? sumnum(n=1, n^-2);
+ time = 200 ms.
+ ? tab = sumnuminit();
+ time = 188 ms.
+ ? sumnum(n=1, n^-2, tab); \\ faster
+ time = 8 ms.
+
+ ? tab = sumnuminit([+oo, log(2)]); \\ decrease like 2^-n
+ time = 200 ms.
+ ? sumnum(n=1, 2^-n, tab)
+ time = 44 ms.
+
+ ? tab = sumnuminit([+oo, -4/3]); \\ decrease like n^(-4/3)
+ time = 200 ms.
+ ? sumnum(n=1, n^(-4/3), tab);
+ time = 221 ms.
+ @eprog

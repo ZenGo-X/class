@@ -1,0 +1,38 @@
+minpoly([-5,0,-1,1;0,-5,-1,-1;1,1,-5,0;-1,1,0,-5])
+minpoly([-5,0,-1,1;0,-5,-1,-1;1,1,-5,0;-1,1,0,-5]/3)
+minpoly([-5,0,-1,1;0,-5,-1,-1;1,1,-5,0;-1,1,0,-5]/a)
+minpoly([-5,0,-1,1;0,-5,-1,-1;1,1,-5,0;-1,1,0,-5]*a)
+matsnf([1,2;3,4],2)
+matsnf([-X-5,-1,-1,0;0,X^2+10*X+26,-1,-X-5;1,-X-5,-X-5,1;-1,0,0,1],2)
+minpoly([a+4/51*d,29/51*d,55/17*d,-9/17*d;-11/51*d,a+35/51*d,-11/17*d,12/17*d;23/51*d,1/51*d,a+6/17*d,-5/17*d;11/17*d,16/17*d,33/17*d,a-19/17*d])
+
+checkfrobenius(M)=
+{
+  my([F,B] = matfrobenius(M,2));
+  if(M!=B^-1*F*B, error("matfrobenius:",M));
+  F
+}
+{
+  for(i=1,15,
+      print(checkfrobenius(matrix(i,i,k,j,k>=j))));
+  for(i=1,10,
+     print(checkfrobenius(matpascal(i))));
+  for(i=1,8,
+     print(checkfrobenius(mathilbert(i))));
+}
+matsnf(matdiagonal([x,0,x]), 2)
+matsnf(matdiagonal([1+x,0,x]), 2)
+\\Bug #1208
+matsnf([0;1;2], 4)
+matsnf([0;1;2], 5)
+matsnf(Mat([0,1,2]), 4)
+matsnf(Mat([0,1,2]), 5)
+
+m=[2*x^6+x^5+2*x^4+2*x^3+x^2+2*x+2,2*x^5+x^3+2*x^2+2,x^3+x^2+x;2*x^6+x^3+x+2,2*x^5+2*x^4+x^3+2*x,x^3+2*x^2+2*x;2*x^6+x^4+x^3+2*x^2+2,2*x^5+2*x^4+2*x^3+x^2+2,x^3+2*x^2+x+2];matsnf(m*Mod(1,3), 2)
+
+default(realprecision,38);
+m=[1,0,0,1,1,1,1,1,0;1,0,0,1,1,0,1,0,0;0,0,0,0,1,0,0,1,0;0,0,0,0,1,1, 0,0,1;0,1,0,0,0,1,1,0,1;1,1,1,0,0,0,1,1,0;0,0,1,0,0,1,0,1,1;0,0,1,1,1,1,0,1,0;0, 1,0,0,0,0,1,1,0]*1.;
+round(matfrobenius(m))
+round(minpoly(m))
+
+matsnf([27,0;0,3;1,1;0,0],1+4)

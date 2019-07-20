@@ -1,0 +1,31 @@
+Function: zetamultinit
+Section: transcendental
+C-Name: zetamultinit
+Prototype: Lp
+Help: zetamultinit(maxw): initialize data to compute multiple zeta
+ values at integral s = [s1,...,sk] for s1 + ... + sk <= maxw.
+Doc: initialize data (depending on the precision) used to compute
+ multiple zeta values at
+ integral points $s = [s_1,\dots,s_k]$ for any $s_1 + \dots + s_k \leq
+ \var{maxw}$. The corresponding data is inexpensive to compute or store
+ and provides a small speedup (usually about 10\%) when multiple values are to
+ be computed at a given accuracy.
+ \bprog
+ ? for(i = 1, 2^12-1, zetamult(i))
+ time = 1,413 ms
+ ? T = zetamultinit(13); \\ instantaneous
+ ? for(i = 1, 2^12-1, zetamult(i, T)) \\ used cached data
+ time = 1,315 ms
+ ? zetamultall(12); \\ much faster !
+ time = 27 ms
+
+ ? T=zetamultinit(102); sizebyte(T) \\ small even for huge weights
+ time = 5 ms.
+ %5 = 1440504
+ ? for(i = 1, 2^5, zetamult(2^100+i))
+ time = 633 ms.
+ ? for(i = 1, 2^5, zetamult(2^100+i, T))
+ time = 550 ms.
+ @eprog\noindent
+ For small weights, \kbd{zetamultall} will be much more efficient; but it
+ is not an option when the weight gets large.

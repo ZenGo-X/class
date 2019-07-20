@@ -1,0 +1,171 @@
+default(realprecision,38);
+default(parisize,"60M");
+setrand(1429412696);bnfinit(x^2+29051222508*x-12).clgp
+setrand(1); bnfinit(x^8 + 12*x^6 + 30*x^4 + 24*x^2 + 4).reg
+setrand(1); bnfinit(x^4 - 3*x^2 + 49).reg
+bnfinit(x-1/2).clgp
+bnfinit(x^2-1/2).clgp
+bnfinit(x^2+2).tu \\ #2027
+
+nfinit(factor(polzagier(9,5))[2,1],2).disc
+nfinit(Pol([1,0,42,112,728,3248,14224,3392,289478,-804944,2966908,-11015200,17342836,-108601584,381107816,-1679988352,6252186465,-14812800240,28868620970,-27997506768,-33428758132,98285772160,-51592356424,-39975211584,55983352320,-24670808064,5337884160,-733917184,87744512])).disc
+
+setrand(3);bnfinit(x^2-(1130481^2+4)).clgp
+setrand(2);bnfinit(x^4 - x^3 + 63*x^2 - 22*x + 1004).clgp
+setrand(1);bnfinit(x^8 - 8*x^6 + 38*x^4 - 143*x^2 + 121).clgp
+bnfcertify(bnfinit(x^2-40!));
+bnfcertify(bnfinit(x^8-2));
+\\#1736
+setrand(1);bnfinit(x^3-87156*x^2-6728799*x-456533).cyc
+
+nf=nfinit(y^5-4*y^3+2*y+11);
+v = [4/3, -1, y^2+y+1, Mod(y,nf.pol),Mod(1/2,nf.pol),[1,2,3,4,5]~];
+for (i=1, #v, print( nfelttrace(nf,v[i]) ))
+for (i=1, #v, print( nfeltnorm(nf,v[i]) ))
+nfeltnorm(nf,[3,3;y,2])
+for (i=1, #v, print( nfbasistoalg(nf,v[i]) ))
+for (i=1, #v, print( nfalgtobasis(nf,v[i]) ))
+funs = [nfeltadd, nfeltdiv, nfeltdiveuc, nfeltdivrem, nfeltmod, nfeltmul];
+
+try(f) = for (i=1, #v, for (j=1,#v, print( f(nf, v[i],v[j])) ))
+for (i = 1, #funs, try(funs[i]))
+
+nfisincl(nfinit(x-1),y)
+p=x^2+3;nfbasis([p, factor(poldisc(p))])
+
+\\#1253
+k=bnfinit(z^2+19*z+6,1); bnfisunit(k,k.fu[1]^2)
+
+\\#1158
+nf=nfinit(x^2+x+1);
+nfinit(nf)
+
+\\#1180
+setrand(1);quadclassunit(572).no
+
+bnf=bnfinit(x^3-2); S=bnfsunit(bnf,idealfactor(bnf,2*3*5*7)[,1]);
+bnfissunit(bnf,S,x)
+bnfissunit(bnf,S,x+2)
+bnfissunit(bnf,S,x+100)
+bnfisunit(bnf, x+100)
+
+\\#1247
+setrand(1);bnfinit(x^2+1635847).no
+
+\\#1381
+K = bnfinit(x^2+23); L = bnrdisclist(K, 10); s = L[2];
+bnfdecodemodule(K, s[1][1])
+
+default(realprecision,19);
+K=bnfinit(x^5-x^4+x^3+100*x+20,1);
+A=idealpow(K,idealprimedec(K,5)[2],150);
+bnfisprincipal(K,A);
+default(realprecision,173);
+K=nfnewprec(K);
+bnfisprincipal(K,A)
+
+l=ideallist(K,4,0);ideallistarch(K,l,[1])
+l=ideallist(K,4,3);L=ideallistarch(K,l,[1])
+bnrdisclist(K,l)
+bnrdisclist(K,L)
+bnrdisclist(K,4,[1])
+K=nfinit([x^5-x^4+x^3+100*x+20,[1,x,x^2-x,1/2*x^4-1/2*x^3+1/2*x^2+40,x^3-x^2+x]]);
+K.index
+
+K=nfinit([x^5+9*x^4+851*x^3+18890*x^2+252376*x+529348, 39820]);
+nfcertify(K)
+
+nf=nfinit( [ x^7 + 2539107, [43] ] ); \\ #1973
+
+g=polcyclo(13);
+f=x^12-2*x^11+17*x^10-73*x^9+198*x^8-578*x^7+1533*x^6-3404*x^5+5716*x^4-8260*x^3+18652*x^2-25578*x+15601;
+nfisincl(f,g)
+
+\\#1921
+K=nfinit('x^2-2);L=nfinit('x^4-2);
+nfisincl(K,L)
+nfisincl(K.pol,L)
+nfisincl(K,L.pol)
+nfisincl(x^3-21*x-35,x^6-48*x^4-56*x^3+453*x^2+840*x+62)
+\\#2023
+nfisincl(x^3-11*x^2+42*x-49,polcompositum(x^3-x-1,x^7-x-1)[1])
+nfisincl(x^3-11*x^2+42*x-49,x^6+12*x^5+60*x^4+80*x^3-1860*x^2-12108*x-18821)
+\\#2041
+nfisincl(y^2 + 1, z^4 + 1)
+nfisincl(x^5-x^4+x^3-2*x^2+3*x-1,x^20+x^15+x^10+x^5+1)
+\\#2022
+nfisisom(K,x^2-8)
+nfisisom(x^2-8,K)
+nfisisom(nfinit(y^2 + 1), z^2 + 1)
+K = nfinit(x^2 + 1); nfisisom(K, y^2 + 1); K.pol
+
+\\#1631
+setrand(1);bnfinit(x^16-48*x^14+934*x^12-9632*x^10+57251*x^8-198568*x^6+386172*x^4-377776*x^2+137288).no
+
+K = nfinit(y^2-5);
+L = nfcompositum(K, x^5-y, polcyclo(5))
+L = nfcompositum(K, x^5-y, polcyclo(5), 1);
+[R,a,b,k] = L[1]
+a^5 - y
+liftall(b^5)
+L = nfcompositum(K, x^5-y, x^5-y)
+L = nfcompositum(K, x^5-y, polcyclo(3),2)
+L = nfcompositum(K, x^5-y, polcyclo(3),3)
+
+nfcompositum(nfinit(y),x,x^2+x+1,3)
+
+p=10^62+447;
+q=10^42+63;
+nf=nfinit([polcompositum(x^2-p,x^2-q,2), [2,p,q]]);
+idealprimedec(nf,25339)[1].gen \\ overflow in get_norm
+
+\\#1777
+nfcompositum(nfinit(y-1),x^3-2,x^3-1)
+
+\\#1796
+nfcompositum(bnfinit(y),x^3-2,x^3-1)
+
+\\ oo loop in 2.9
+K=bnfinit(x^2+2323);
+P=idealprimedec(K,23)[1];
+bnfisprincipal(K,P)
+
+\\ #2054
+D = 1460939943556665662782863549;
+K = nfinit([x^2-D,[3,7,1586327]]); setrand(426507128);
+bnfinit(K,,[0.132,0.15]);
+
+\\ test old-style nf.zk
+K=nfinit(x^2+23);
+K[7] /= 2;
+nfbasistoalg(K,[0,1]~)
+nfalgtobasis(K,x)
+K.zk
+
+nfinit(x, 3)[2]
+nfinit(1/2*x + 3/5, 3)[2]
+
+\\ ERRORS: keep at end of file
+
+nfinit([y^3+2,[1,x]])
+nfinit([y^3+2,[1,x,x^2]])
+nfinit([y^3+2,[1,y^5,y]])
+nfdisc([y^2+2,matid(3)])
+nfdisc([2*y^2+1,matid(3)])
+nfdisc([y^2+2,""])
+nfnewprec(x)
+nfnewprec(quadgen(5))
+nfnewprec(vector(5))
+nfnewprec(vector(6))
+nfnewprec(vector(8))
+nfnewprec(vector(9))
+nfnewprec(vector(16))
+nfcompositum(nfinit(x-1),x^3-2,x^3-1)
+nfcompositum(nfinit(x^2+1),x^3-2,x^3-1)
+nfcompositum(nfinit(x-1),y^3-2,y^3-1)
+nfcompositum(bnfinit(x),x^3-2,x^3-1)
+nfisincl(y^2 + 1, z^4 + z^2 + 1)
+nfisisom(x,x^0)
+nf=nfinit('a^2+1);
+idealhnf(nf,3,('a^2+1)*Mod(1,3))
+nfalgtobasis(nf,['a,'a]~)

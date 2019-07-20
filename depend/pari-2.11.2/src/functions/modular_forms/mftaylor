@@ -1,0 +1,19 @@
+Function: mftaylor
+Section: modular_forms
+C-Name: mftaylor
+Prototype: GLD0,L,p
+Help: mftaylor(F,n,{flreal=0}): F being a modular form in M_k(SL_2(Z)),
+ computes the first n+1 canonical Taylor expansion of F around tau=I. If
+ flreal=0, computes only an algebraic equivalence class. If flreal is set,
+ compute p_n such that for tau close enough to I we have
+ f(tau)=(2I/(tau+I))^ksum_{n>=0}p_n((tau-I)/(tau+I))^n.
+Doc: $F$ being a form in $M_k(SL_2(\Bbb Z))$, computes the first $n+1$
+ canonical Taylor expansion of $F$ around $\tau=I$. If \kbd{flreal=0},
+ computes only an algebraic equivalence class. If \kbd{flreal} is set,
+ compute $p_n$ such that for $\tau$ close enough to $I$ we have
+ $$f(\tau)=(2I/(\tau+I))^k\sum_{n>=0}p_n((\tau-I)/(\tau+I))^n\;.$$
+ \bprog
+ ? D=mfDelta();
+ ? mftaylor(D,8)
+ %2 = [1/1728, 0, -1/20736, 0, 1/165888, 0, 1/497664, 0, -11/3981312]
+ @eprog

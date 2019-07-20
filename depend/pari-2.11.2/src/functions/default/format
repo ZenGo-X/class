@@ -1,0 +1,33 @@
+Function: _def_format
+Class: default
+Section: default
+C-Name: sd_format
+Prototype:
+Help:
+Doc: of the form x$.n$, where x (conversion style)
+ is a letter in $\{\kbd{e},\kbd{f},\kbd{g}\}$, and $n$ (precision) is an
+ integer; this affects the way real numbers are printed:
+
+ \item If the conversion style is \kbd{e}, real numbers are printed in
+ \idx{scientific format}, always with an explicit exponent,
+ e.g.~\kbd{3.3 E-5}.
+
+ \item In style \kbd{f}, real numbers are generally printed in
+ \idx{fixed floating point format} without exponent, e.g.~\kbd{0.000033}. A
+ large real number, whose integer part is not well defined (not enough
+ significant digits), is printed in style~\kbd{e}. For instance
+ \kbd{10.\pow 100} known to ten significant digits is always printed in style
+ \kbd{e}.
+
+ \item In style \kbd{g}, non-zero real numbers are printed in \kbd{f} format,
+ except when their decimal exponent is $< -4$, in which case they are printed
+ in \kbd{e} format. Real zeroes (of arbitrary exponent) are printed in \kbd{e}
+ format.
+
+ The precision $n$ is the number of significant digits printed for real
+ numbers, except if $n<0$ where all the significant digits will be printed
+ (initial default 28, or 38 for 64-bit machines). For more powerful formatting
+ possibilities, see \tet{printf} and \tet{Strprintf}.
+
+ The default value is \kbd{"g.28"} and \kbd{"g.38"} on 32-bit and
+ 64-bit machines, respectively.

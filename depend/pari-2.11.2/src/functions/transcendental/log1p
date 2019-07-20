@@ -1,0 +1,29 @@
+Function: log1p
+Section: transcendental
+C-Name: glog1p
+Prototype: Gp
+Help: log1p(x): log(1+x)
+Doc: return $\log(1+x)$, computed in a way that is also accurate
+ when the real part of $x$ is near $0$. This is the reciprocal function
+ of \kbd{expm1}$(x) = \exp(x)-1$.
+ \bprog
+ ? default(realprecision, 10000); x = Pi*1e-100;
+ ? (expm1(log1p(x)) - x) / x
+ %2 = -7.668242895059371866 E-10019
+ ? (log1p(expm1(x)) - x) / x
+ %3 = -7.668242895059371866 E-10019
+ @eprog\noindent When $x$ is small, this function is both faster and more
+ accurate than $\log(1+x)$:
+ \bprog
+ ? \p38
+ ? x = 1e-20;
+ ? localprec(100); c = log1p(x); \\ reference point
+ ? a = log1p(x); abs((a - c)/c)
+ %6 = 0.E-38
+ ? b = log(1+x); abs((b - c)/c)  \\ slightly less accurate
+ %7 = 1.5930919111324522770 E-38
+ ? for (i=1,10^5,log1p(x))
+ time = 81 ms.
+ ? for (i=1,10^5,log(1+x))
+ time = 100 ms. \\ slower, too
+ @eprog

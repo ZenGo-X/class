@@ -1,0 +1,52 @@
+Function: lift
+Section: conversions
+C-Name: lift0
+Prototype: GDn
+Help: lift(x,{v}):
+ if v is omitted, lifts elements of Z/nZ to Z, of Qp to Q, and of K[x]/(P) to
+ K[x]. Otherwise lift only polmods with main variable v.
+Description:
+ (pol):pol        lift($1)
+ (vec):vec        lift($1)
+ (gen):gen        lift($1)
+ (pol, var):pol        lift0($1, $2)
+ (vec, var):vec        lift0($1, $2)
+ (gen, var):gen        lift0($1, $2)
+Doc:
+ if $v$ is omitted, lifts intmods from $\Z/n\Z$ in $\Z$,
+ $p$-adics from $\Q_p$ to $\Q$ (as \tet{truncate}), and polmods to
+ polynomials. Otherwise, lifts only polmods whose modulus has main
+ variable~$v$. \typ{FFELT} are not lifted, nor are List elements: you may
+ convert the latter to vectors first, or use \kbd{apply(lift,L)}. More
+ generally, components for which such lifts are meaningless (e.g. character
+ strings) are copied verbatim.
+ \bprog
+ ? lift(Mod(5,3))
+ %1 = 2
+ ? lift(3 + O(3^9))
+ %2 = 3
+ ? lift(Mod(x,x^2+1))
+ %3 = x
+ ? lift(Mod(x,x^2+1))
+ %4 = x
+ @eprog
+ Lifts are performed recursively on an object components, but only
+ by \emph{one level}: once a \typ{POLMOD} is lifted, the components of
+ the result are \emph{not} lifted further.
+ \bprog
+ ? lift(x * Mod(1,3) + Mod(2,3))
+ %4 = x + 2
+ ? lift(x * Mod(y,y^2+1) + Mod(2,3))
+ %5 = y*x + Mod(2, 3)   \\@com do you understand this one?
+ ? lift(x * Mod(y,y^2+1) + Mod(2,3), 'x)
+ %6 = Mod(y, y^2 + 1)*x + Mod(Mod(2, 3), y^2 + 1)
+ ? lift(%, y)
+ %7 = y*x + Mod(2, 3)
+ @eprog\noindent To recursively lift all components not only by one level,
+ but as long as possible, use \kbd{liftall}. To lift only \typ{INTMOD}s and
+ \typ{PADIC}s components, use \tet{liftint}. To lift only \typ{POLMOD}s
+ components, use \tet{liftpol}. Finally, \tet{centerlift} allows to lift
+ \typ{INTMOD}s and \typ{PADIC}s using centered residues (lift of smallest
+ absolute value).
+Variant: Also available is \fun{GEN}{lift}{GEN x} corresponding to
+ \kbd{lift0(x,-1)}.

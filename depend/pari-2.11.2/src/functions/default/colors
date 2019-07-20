@@ -1,0 +1,52 @@
+Function: _def_colors
+Class: default
+Section: default
+C-Name: sd_colors
+Prototype:
+Help:
+Doc: this default is only usable if \kbd{gp}
+ is running within certain color-capable terminals. For instance \kbd{rxvt},
+ \kbd{color\_xterm} and modern versions of \kbd{xterm} under X Windows, or
+ standard Linux/DOS text consoles. It causes \kbd{gp} to use a small palette of
+ colors for its output. With xterms, the colormap used corresponds to the
+ resources \kbd{Xterm*color$n$} where $n$ ranges from $0$ to $15$ (see the
+ file \kbd{misc/color.dft} for an example). Accepted values for this
+ default are strings \kbd{"$a_1$,\dots,$a_k$"} where $k\le7$ and each
+ $a_i$ is either
+
+ \noindent\item the keyword \kbd{no} (use the default color, usually
+ black on transparent background)
+
+ \noindent\item an integer between 0 and 15 corresponding to the
+ aforementioned colormap
+
+ \noindent\item a triple $[c_0,c_1,c_2]$ where $c_0$ stands for foreground
+ color, $c_1$ for background color, and $c_2$ for attributes (0 is default, 1
+ is bold, 4 is underline).
+
+ The output objects thus affected are respectively error messages,
+ history numbers, prompt, input line, output, help messages, timer (that's
+ seven of them). If $k < 7$, the remaining $a_i$ are assumed to be $no$. For
+ instance
+ %
+ \bprog
+ default(colors, "9, 5, no, no, 4")
+ @eprog
+ \noindent
+ typesets error messages in color $9$, history numbers in color $5$, output in
+ color $4$, and does not affect the rest.
+
+ A set of default colors for dark (reverse video or PC console) and light
+ backgrounds respectively is activated when \kbd{colors} is set to
+ \kbd{darkbg}, resp.~\kbd{lightbg} (or any proper prefix: \kbd{d} is
+ recognized as an abbreviation for \kbd{darkbg}). A bold variant of
+ \kbd{darkbg}, called \kbd{boldfg}, is provided if you find the former too
+ pale.
+
+ \emacs In the present version, this default is incompatible with PariEmacs.
+ Changing it will just fail silently (the alternative would be to display
+ escape sequences as is, since Emacs will refuse to interpret them).
+ You must customize color highlighting from the PariEmacs side, see its
+ documentation.
+
+ The default value is \kbd{""} (no colors).

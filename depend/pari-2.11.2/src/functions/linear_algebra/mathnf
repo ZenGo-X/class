@@ -1,0 +1,124 @@
+Function: mathnf
+Section: linear_algebra
+C-Name: mathnf0
+Prototype: GD0,L,
+Help: mathnf(M,{flag=0}): (upper triangular) Hermite normal form of M, basis
+ for the lattice formed by the columns of M. flag is optional whose value
+ range from 0 to 3 have a binary meaning. Bit 1: complete output, returns
+ a 2-component vector [H,U] such that H is the HNF of M, and U is an
+ invertible matrix such that MU=H. Bit 2: allow polynomial entries, otherwise
+ assume that M is integral. These use a naive algorithm; larger values
+ correspond to more involved algorithms and are restricted to integer
+ matrices; flag = 4: returns [H,U] using LLL reduction along the way;
+ flag = 5: return [H,U,P] where P is a permutation of row indices such that
+ P applied to M U is H.
+Doc: let $R$ be a Euclidean ring, equal to $\Z$ or to $K[X]$ for some field
+ $K$. If $M$ is a (not necessarily square) matrix with entries in $R$, this
+ routine finds the \emph{upper triangular} \idx{Hermite normal form} of $M$.
+ If the rank of $M$ is equal to its number of rows, this is a square
+ matrix. In general, the columns of the result form a basis of the $R$-module
+ spanned by the columns of $M$.
+
+ The values of $\fl$ are:
+
+ \item 0 (default): only return the Hermite normal form $H$
+
+ \item 1 (complete output): return $[H,U]$, where $H$ is the Hermite
+ normal form of $M$, and $U$ is a transformation matrix such that $MU=[0|H]$.
+ The matrix $U$ belongs to $\text{GL}(R)$. When $M$ has a large kernel, the
+ entries of $U$ are in general huge.
+
+ \noindent For these two values, we use a naive algorithm, which behaves well
+ in small dimension only. Larger values correspond to different algorithms,
+ are restricted to \emph{integer} matrices, and all output the unimodular
+ matrix $U$. From now on all matrices have integral entries.
+
+ \item $\fl=4$, returns $[H,U]$ as in ``complete output'' above, using a
+ variant of \idx{LLL} reduction along the way. The matrix $U$ is provably
+ small in the $L_2$ sense, and often close to optimal; but the
+ reduction is in general slow, although provably polynomial-time.
+
+ If $\fl=5$, uses Batut's algorithm and output $[H,U,P]$, such that $H$ and
+ $U$ are as before and $P$ is a permutation of the rows such that $P$ applied
+ to $MU$ gives $H$. This is in general faster than $\fl=4$ but the matrix $U$
+ is usually worse; it is heuristically smaller than with the default algorithm.
+
+ When the matrix is dense and the dimension is large (bigger than 100, say),
+ $\fl = 4$ will be fastest. When $M$ has maximal rank, then
+ \bprog
+   H = mathnfmod(M, matdetint(M))
+ @eprog\noindent will be even faster. You can then recover $U$ as $M^{-1}H$.
+
+ \bprog
+ ? M = matrix(3,4,i,j,random([-5,5]))
+ %1 =
+ [ 0 2  3  0]
+
+ [-5 3 -5 -5]
+
+ [ 4 3 -5  4]
+
+ ? [H,U] = mathnf(M, 1);
+ ? U
+ %3 =
+ [-1 0 -1 0]
+
+ [ 0 5  3 2]
+
+ [ 0 3  1 1]
+
+ [ 1 0  0 0]
+
+ ? H
+ %5 =
+ [19 9 7]
+
+ [ 0 9 1]
+
+ [ 0 0 1]
+
+ ? M*U
+ %6 =
+ [0 19 9 7]
+
+ [0  0 9 1]
+
+ [0  0 0 1]
+ @eprog
+
+ For convenience, $M$ is allowed to be a \typ{VEC}, which is then
+ automatically converted to a \typ{MAT}, as per the \tet{Mat} function.
+ For instance to solve the generalized extended gcd problem, one may use
+ \bprog
+ ? v = [116085838, 181081878, 314252913,10346840];
+ ? [H,U] = mathnf(v, 1);
+ ? U
+ %2 =
+ [ 103 -603    15  -88]
+
+ [-146   13 -1208  352]
+
+ [  58  220   678 -167]
+
+ [-362 -144   381 -101]
+ ? v*U
+ %3 = [0, 0, 0, 1]
+ @eprog\noindent This also allows to input a matrix as a \typ{VEC} of
+ \typ{COL}s of the same length (which \kbd{Mat} would concatenate to
+ the \typ{MAT} having those columns):
+ \bprog
+ ? v = [[1,0,4]~, [3,3,4]~, [0,-4,-5]~]; mathnf(v)
+ %1 =
+ [47 32 12]
+
+ [ 0  1  0]
+
+ [ 0  0  1]
+ @eprog
+
+Variant: Also available are \fun{GEN}{hnf}{GEN M} ($\fl=0$) and
+ \fun{GEN}{hnfall}{GEN M} ($\fl=1$). To reduce \emph{huge} relation matrices
+ (sparse with small entries, say dimension $400$ or more), you can use the
+ pair \kbd{hnfspec} / \kbd{hnfadd}. Since this is quite technical and the
+ calling interface may change, they are not documented yet. Look at the code
+ in \kbd{basemath/hnf\_snf.c}.

@@ -1,0 +1,40 @@
+#!/bin/sh
+
+# This script is intended to be run from the pari directory.  It will make the following
+# changes to all source code in preparation for making on mingw64:
+#   1.) Convert 32 bit constants to 64 bit constants (i.e. L->LL and UL->ULL),
+#   2.) Convert formatting in printf/sprintf/fprintf (i.e. %ld->%lld, %lu->%llu, etc).
+
+test -d config || cd ..
+test -d config || exit 1
+test -d src64 && rm -rf src64
+
+cd src
+for file in `find . -type f -name "*.[chy]"` ; do
+
+    outfile="../src64/$file"
+    mkdir -p `dirname $outfile`
+    echo "converting file: $file -> $outfile"
+    # Add LL to the end of any constant with 10 or more numbers
+    sed 's/\([-+({ ][0-9]\{10,\}\)\([,;:)} ]\)/\1LL\2/g' < $file > TMP
+
+    # Convert all decimal constants ending in L or UL.
+    # Note: replacing strings with lower case l breaks a couple things, namely strings like "%+1ld"
+    sed -e 's/\([-+* ,()=~&|%][0-9][0-9]*\)[L]\{1,2\}/\1LL/g' -e 's/\([-+* ,()=~&|%][0-9][0-9]*\)[uU][lL]\{1,2\}/\1ULL/g' < TMP > TMP2
+
+    # Convert all hexadecimal constants ending in L or UL.
+    sed -e 's/\(0x[0-9a-fA-F][0-9a-fA-F]*\)[lL]\{1,2\}/\1LL/g' -e 's/\(0x[0-9a-fA-F][0-9a-fA-F]*\)[uU][lL]\{1,2\}/\1ULL/g' < TMP2 > TMP
+
+    # String formatting conversions: %ld -> %lld, %lu -> %llu, %lx -> %llx.
+    # This will also handle cases like %+2ld and %0*lx
+
+    # Replace formatting with microsoft ll convention, but only inside regular printfs
+    # (and its variants)
+    # Do nothing inside of pari_printf() or pari_sprintf().
+    sed -e '/\"/ s/\(%[-+]\{0,1\}[0-9]*\)ld/\1lld/g' -e '/\"/ s/\(%[-+]\{0,1\}[0-9]*\)lu/\1llu/g' -e '/\"/ s/\(%[-+]\{0,1\}[0-9]*\)lx/\1llx/g' -e '/\"/ s/\(%[0-9]\*\)lx/\1llx/g' < TMP > $outfile
+
+    # clean up
+    rm TMP TMP2;
+done
+
+echo "Done."

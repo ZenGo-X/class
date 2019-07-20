@@ -1,0 +1,24 @@
+Function: msatkinlehner
+Section: modular_symbols
+C-Name: msatkinlehner
+Prototype: GLDG
+Help: msatkinlehner(M,Q,{H}): M being a full modular symbol space of level N,
+ as given by msinit, let Q | N, (Q,N/Q) = 1, and let H be a subspace stable
+ under the Atkin-Lehner involution w_Q. Return the matrix of w_Q
+ acting on H (M if omitted).
+Doc: Let $M$ be a full modular symbol space of level $N$,
+ as given by \kbd{msinit}, let $Q \mid N$, $(Q,N/Q) = 1$,
+ and let $H$ be a subspace stable under the Atkin-Lehner involution $w_Q$.
+ Return the matrix of $w_Q$ acting on $H$ ($M$ if omitted).
+ \bprog
+ ? M = msinit(36,2); \\ M_2(Gamma_0(36))
+ ? w = msatkinlehner(M,4); w^2 == 1
+ %2 = 1
+ ? #w   \\ involution acts on a 13-dimensional space
+ %3 = 13
+ ? M = msinit(36,2, -1); \\ M_2(Gamma_0(36))^-
+ ? w = msatkinlehner(M,4); w^2 == 1
+ %5 = 1
+ ? #w
+ %6 = 4
+ @eprog

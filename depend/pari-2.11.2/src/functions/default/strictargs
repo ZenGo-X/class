@@ -1,0 +1,28 @@
+Function: _def_strictargs
+Class: default
+Section: default
+C-Name: sd_strictargs
+Prototype:
+Help:
+Doc: this toggle is either 1 (on) or 0 (off). If on, all arguments to \emph{new}
+ user functions are mandatory unless the function supplies an explicit default
+ value.
+ Otherwise arguments have the default value $0$.
+
+ In this example,
+ \bprog
+   fun(a,b=2)=a+b
+ @eprog
+ \kbd{a} is mandatory, while \kbd{b} is optional. If \kbd{strictargs} is on:
+ \bprog
+ ? fun()
+  ***   at top-level: fun()
+  ***                 ^-----
+  ***   in function fun: a,b=2
+  ***                    ^-----
+  ***   missing mandatory argument 'a' in user function.
+ @eprog
+ This applies to functions defined while \kbd{strictargs} is on. Changing \kbd{strictargs}
+ does not affect the behavior of previously defined functions.
+
+ The default value is \kbd{0}.

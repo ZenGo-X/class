@@ -1,0 +1,13 @@
+Function: listpop
+Section: programming/specific
+C-Name: listpop0
+Prototype: vWD0,L,
+Help: listpop(list,{n}): removes n-th element from list. If n is
+ omitted or greater than the current list length, removes last element.
+Description:
+ (list, small):void     listpop($1, $2)
+Doc:
+ removes the $n$-th element of the list
+ \var{list} (which must be of type \typ{LIST}). If $n$ is omitted,
+ or greater than the list current length, removes the last element.
+ If the list is already empty, do nothing. This runs in time $O(\#L - n + 1)$.

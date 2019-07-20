@@ -1,0 +1,475 @@
+% Copyright (c) 2015  The PARI Group
+%
+% This file is part of the PARI/GP documentation
+%
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU General Public License
+\chapter{$L$-functions}
+
+\section{Accessors}
+
+\fun{long}{is_linit}{GEN data}
+
+\fun{GEN}{ldata_get_an}{GEN ldata}
+
+\fun{GEN}{ldata_get_dual}{GEN ldata}
+
+\fun{long}{ldata_isreal}{GEN ldata}
+
+\fun{GEN}{ldata_get_gammavec}{GEN ldata}
+
+\fun{long}{ldata_get_degree}{GEN ldata}
+
+\fun{long}{ldata_get_k}{GEN ldata}
+
+\fun{GEN}{ldata_get_conductor}{GEN ldata}
+
+\fun{GEN}{ldata_get_rootno}{GEN ldata}
+
+\fun{GEN}{ldata_get_residue}{GEN ldata}
+
+\fun{GEN}{ldata_vecan}{GEN ldata, long L, long prec}
+
+\fun{long}{ldata_get_type}{GEN ldata}
+
+\fun{long}{linit_get_type}{GEN linit}
+
+\fun{GEN}{linit_get_ldata}{GEN linit}
+
+\fun{GEN}{linit_get_tech}{GEN linit}
+
+\fun{GEN}{lfun_get_domain}{GEN tech}
+
+\fun{GEN}{lfun_get_dom}{GEN tech}
+
+\fun{long}{lfun_get_bitprec}{GEN tech}
+
+\fun{GEN}{lfun_get_factgammavec}{GEN tech}
+
+\fun{GEN}{lfun_get_step}{GEN tech}
+
+\fun{GEN}{lfun_get_pol}{GEN tech}
+
+\fun{GEN}{lfun_get_Residue}{GEN tech}
+
+\fun{GEN}{lfun_get_k2}{GEN tech}
+
+\fun{GEN}{lfun_get_w2}{GEN tech}
+
+\fun{GEN}{lfun_get_expot}{GEN tech}
+
+\fun{long}{lfun_get_bitprec}{GEN tech}
+
+\fun{GEN}{lfunprod_get_fact}{GEN tech}
+
+\fun{GEN}{theta_get_an}{GEN tdata}
+
+\fun{GEN}{theta_get_K}{GEN tdata}
+
+\fun{GEN}{theta_get_R}{GEN tdata}
+
+\fun{long}{theta_get_bitprec}{GEN tdata}
+
+\fun{long}{theta_get_m}{GEN tdata}
+
+\fun{GEN}{theta_get_tdom}{GEN tdata}
+
+\fun{GEN}{theta_get_sqrtN}{GEN tdata}
+
+\section{Conversions and constructors}
+
+\fun{GEN}{lfunmisc_to_ldata}{GEN ldata}
+
+\fun{GEN}{lfunmisc_to_ldata_shallow}{GEN ldata}
+
+\fun{GEN}{lfunrtopoles}{GEN r}
+
+\fun{int}{sdomain_isincl}{GEN dom, GEN dom0}
+
+\section{Variants of GP functions}
+
+\fun{GEN}{lfun}{GEN ldata, GEN s, long bitprec}
+
+\fun{GEN}{lfuninit}{GEN ldata, GEN dom, long der, long bitprec}
+
+\fun{GEN}{lfuninit_make}{long t, GEN ldata, GEN molin, GEN domain}
+
+\fun{GEN}{lfunlambda}{GEN ldata, GEN s, long bitprec}
+
+\fun{long}{lfunthetacost}{GEN ldata, GEN tdom, long m, long bitprec}:
+ \kbd{lfunthetacost0} when the first argument is known to be an \kbd{Ldata}.
+
+\fun{GEN}{lfunthetacheckinit}{GEN data, GEN tinf, long m, long bitprec}
+
+\fun{GEN}{lfunrootno}{GEN data, long bitprec}
+
+\fun{GEN}{lfunzetakinit}{GEN pol, GEN dom, long der, long flag, long bitprec}
+
+\fun{GEN}{lfunellmfpeters}{GEN E, long bitprec}
+
+\fun{GEN}{ellanalyticrank}{GEN E, long prec} DEPRECATED.
+
+\fun{GEN}{ellL1}{GEN E, long prec} DEPRECATED.
+
+\section{Inverse Mellin transforms of Gamma products}
+
+\fun{GEN}{gammamellininv}{GEN Vga, GEN s, long m, long bitprec}
+
+\fun{GEN}{gammamellininvinit}{GEN Vga, long m, long bitprec}
+
+\fun{GEN}{gammamellininvrt}{GEN K, GEN s, long bitprec}
+
+\fun{double}{dbllambertW0}{double a}
+
+\fun{double}{dbllambertW_1}{double a}
+
+\fun{double}{dbllemma526}{double a, double b, double c, long B}
+
+\fun{double}{dblcoro526}{double a, double c, long B}
+
+\newpage
+
+\chapter{Modular symbols}
+
+\fun{void}{checkms}{GEN W} raise an exception if $W$ is not an \var{ms}
+structure from \kbd{msinit}.
+
+\fun{void}{checkmspadic}{GEN W} raise an exception if $W$ is not an
+\var{mspadic} structure from \kbd{mspadicinit}.
+
+Variants of \kbd{mfnumcusps} :
+
+\fun{ulong}{mfnumcuspsu}{ulong n}
+
+\fun{GEN}{mfnumcusps_fact}{GEN fa} where \kbd{fa} is \kbd{factor}$(n)$.
+
+\fun{ulong}{mfnumcuspsu_fact}{GEN fa} where \kbd{fa} is \kbd{factoru}$(n)$.
+
+\chapter{Modular forms}
+
+\section{Implementation of public data structures}
+
+\fun{void}{checkMF}{GEN mf} raise an exception if the argument is not a
+modular form space.
+
+\fun{GEN}{checkMF_i}{GEN mf} return the underlying modular form space
+if \kbd{mf} is either directly a modular form space from \kbd{mfinit}
+or a symbol from \kbd{mfsymbol}. Return \kbd{NULL} otherwise.
+
+\fun{int}{checkmf_i}{GEN mf} return $1$ if the argument is a modular form
+and $0$ otherwise.
+
+\subsec{Accessors for modular form spaces}
+
+Shallow functions; assume that their argument is a modular form space
+is created by \kbd{mfinit} and checked using \kbd{checkMF}.
+
+\fun{GEN}{MF_get_gN}{GEN mf} return the level $N$ as a \typ{INT}.
+
+\fun{long}{MF_get_N}{GEN mf} return the level $N$ as a \kbd{long}.
+
+\fun{GEN}{MF_get_gk}{GEN mf} return the level $k$ as a \typ{INT}.
+
+\fun{long}{MF_get_k}{GEN mf} return the level $k$ as a \kbd{long}.
+
+\fun{long}{MF_get_r}{GEN mf} assuming the level is a half-integer, return
+the integer $r = k - (1/2)$.
+
+\fun{GEN}{MF_get_CHI}{GEN mf} return the nebentypus $\chi$, which is a
+ special form of character structure attached to Dirichlet characters (see
+ next section). Its values are given as algebraic numbers: either $\pm1$ or
+ \typ{POLMOD} in $t$.
+
+\fun{long}{MF_get_space}{GEN mf} returns the space type, corresponding
+to \kbd{mfinit}'s \kbd{space} flag. The current list is
+
+\bprog
+mf_NEW, mf_CUSP, mf_OLD, mf_EISEN, mf_FULL
+@eprog
+
+\fun{GEN}{MF_get_basis}{GEN mf} return the $\Q$-basis of the space,
+concatenation of \tet{MF_get_E} and \tet{MF_get_S}, in this order; the forms
+have coefficients in $\Q(\chi)$. Low-level version of \kbd{mfbasis}.
+
+\fun{long}{MF_get_dim}{GEN mf} returns the dimension $d$ of the space. It
+is the cardinality of \tet{MF_get_basis}.
+
+\fun{GEN}{MF_get_E}{GEN mf} returns a $\Q$-basis for the subspace
+spanned by Eisenstein series in the space; the forms have coefficients in
+$\Q(\chi)$.
+
+\fun{GEN}{MF_get_S}{GEN mf} returns a $\Q$-basis for the cuspidal subspace
+in the space; the forms have coefficients in $\Q(\chi)$.
+
+\fun{GEN}{MF_get_fields}{GEN mf} returns the vector of polynomials defining
+each Galois orbit of newforms over $\Q(\chi)$. Uses memoization: a first call
+splits the space and may be costly; subsequent calls return the cached
+result.
+
+\fun{GEN}{MF_get_newforms}{GEN mf} returns a vector \kbd{vF} containing the
+coordinates of the eigenforms on \tet{MF_get_basis} (\kbd{mftobasis} form).
+Low-level version of
+\kbd{mfeigenbasis}, whose elements are recovered as \kbd{mflinear(mf,
+gel(vF,i))}. Uses memoization, sharing the same data as
+\kbd{MF\_get\_fields}. Note that it is much more efficient to use
+\kbd{mfcoefs(mf,)} then multiply by this vector than to compute the
+coefficients of eigenforms from \kbd{mfeigenbasis} individually.
+
+The following accessors are technical,
+
+\fun{GEN}{MF_get_M}{GEN mf} the $(1+m) \times d$ matrix whose $j$-th column
+contain the coefficients of the $j$-th entry in \tet{MF_get_basis}, $m$
+is the optimal ``Sturm bound'' for the space: the maximum of the $v_\infty(f)$
+over non-zero forms. It has entries in $\Q(\chi)$.
+
+\fun{GEN}{MF_get_Mindex}{GEN mf} is a \typ{VECSMALL} containing $d$ row
+indices, the corresponding rows of $M$ form an invertible matrix $M_0$.
+
+\fun{GEN}{MF_get_Minv}{GEN mf} the inverse of $M_0$ in a form suitable for fast
+multiplication.
+
+\fun{GEN}{MFcusp_get_vMjd}{GEN mf} valid only for a full
+\emph{cuspidal} space. Then the functions in \tet{MF_get_S} are
+of the form $B_d T_j Tr^{new}_M$. This returns the vector of triples
+(\typ{VECSMALL}) $[M,j,d]$, in the same order.
+
+\fun{GEN}{MFnew_get_vj}{GEN mf} valid only for a \emph{new} space. Then
+the functions in \tet{MF_get_S} are of the form $T_j Tr^{new}_N$. This
+returns a \typ{VECSMALL} of the Hecke indices $j$, in the same order.
+
+\subsec{Accessors for individual modular forms}
+
+\fun{GEN}{mf_get_gN}{GEN F} return the level of $F$, which may be a multiple of
+the conductor, as a \typ{INT}
+
+\fun{long}{mf_get_N}{GEN F} return the level as a \kbd{long}.
+
+\fun{GEN}{mf_get_gk}{GEN F} return the weight of $F$ as a \typ{INT}
+or a \typ{FRAC} with denominator $2$ (half-integral weight).
+
+\fun{long}{mf_get_k}{GEN F} return the weight as a \kbd{long}; if the weight is
+not integral, this raises an exception.
+
+\fun{long}{mf_get_r}{GEN F} assuming $F$ is a modular form of half-integral
+weight $k = (2r+1)/2$, return $r = k - (1/2)$.
+
+\fun{GEN}{mf_get_CHI}{GEN F} return the nebentypus, which is a special form of
+character structure attached to Dirichlet characters (see next section). Its
+values are given as algebraic numbers: either $\pm1$ or \typ{POLMOD}
+in $t$.
+
+\fun{GEN}{mf_get_field}{GEN F} return the polynomial (in variable $y$)
+ defining $\Q(f)$ over $\Q(\chi)$.
+
+\fun{GEN}{mf_get_NK}{GEN F} return the tag attached to $F$: a vector containing
+\kbd{gN}, \kbd{gk}, \kbd{CHI}, \kbd{field}. Never use its component directly,
+use individual accessors as above.
+
+\fun{long}{mf_get_type}{GEN F} returns a symbolic name for the constructur
+used to create the form, e.g. \kbd{t\_MF\_EISEN} for a general Eisenstein
+series. A form has a recursive structure represented by a tree: its
+definition may involve other forms, e.g. the tree attached to $T_n f$
+contains $f$ as a subtree. Such trees have \emph{leaves}, forms
+which do not contain a strict subtree, e.g. \kbd{t\_MF\_DELTA} is a leaf,
+attached to Ramanujan's $\Delta$.
+
+Here is the current list of types; since the names are liable to change,
+they are not documented at this point. Use \kbd{mfdescribe} to visualize
+their mathematical structure.
+\bprog
+/*leaves*/
+  t_MF_CONST, t_MF_EISEN, t_MF_Ek, t_MF_DELTA, t_MF_ETAQUO, t_MF_ELL,
+  t_MF_DIHEDRAL, t_MF_THETA, t_MF_TRACE, t_MF_NEWTRACE,
+/*recursive*/
+  t_MF_MUL, t_MF_POW, t_MF_DIV, t_MF_BRACKET, t_MF_LINEAR, t_MF_LINEAR_BHN,
+  t_MF_SHIFT, t_MF_DERIV, t_MF_DERIVE2, t_MF_TWIST, t_MF_HECKE,
+  t_MF_BD,
+@eprog
+
+\subsec{Nebentypus} The characters stored in modular forms and modular form
+spaces have a special structure. One can recover the parameters
+of an ordinary Dirichlet character by \kbd{G = gel(CHI,1)} (the underlying
+\kbd{znstar}) and \kbd{chi = gel(CHI,2)} (the underlying character in
+\kbd{znconreylog} form).
+
+\fun{long}{mfcharmodulus}{GEN CHI} the modulus of $\chi$.
+
+\fun{long}{mfcharorder}{GEN CHI} the order of $\chi$.
+
+\fun{GEN}{mfcharpol}{GEN CHI} the cyclotomic polynomial $\Phi_n$
+defining $\Q(\chi)$, always normalized so that $n$ is not $2$ mod $4$.
+
+\subsec{Miscellaneous functions}
+
+\fun{long}{mfnewdim}{long N, long k, GEN CHI} dimension of the new part
+of the cuspidal space.
+
+\fun{long}{mfcuspdim}{long N, long k, GEN CHI} dimension of the cuspidal space.
+
+\fun{long}{mfolddim}{long N, long k, GEN CHI} dimension of the old part
+of the cuspidal space.
+
+\fun{long}{mfeisensteindim}{long N, long k, GEN CHI} dimension of the
+Eisenstein subspace.
+
+\fun{long}{mffulldim}{long N, long k, GEN CHI} dimension of the full space.
+
+
+
+\fun{GEN}{mfeisensteinspaceinit}{GEN NK}
+
+\fun{GEN}{mfdiv_val}{GEN F, GEN G, long vG}
+
+
+\fun{GEN}{mfembed}{GEN E, GEN v}
+
+\fun{GEN}{mfmatembed}{GEN E, GEN v}
+
+\fun{GEN}{mfvecembed}{GEN E, GEN v}
+
+
+\fun{long}{mfsturmNgk}{long N, GEN k}
+
+\fun{long}{mfsturmNk}{long N, long k}
+
+\fun{long}{mfsturm_mf}{GEN mf}
+
+\fun{long}{mfiscuspidal}{GEN mf, GEN F}
+
+\fun{GEN}{mftobasisES}{GEN mf, GEN F}
+
+\fun{GEN}{mftocol}{GEN F, long lim, long d}
+
+\fun{GEN}{mfvectomat}{GEN vF, long lim, long d}
+
+\newpage
+
+\chapter{Plots}
+
+A \tet{PARI_plot} canvas is a record of dimensions, with the following fields:
+\bprog
+  long width;  /* window width */
+  long height; /* window height */
+  long hunit;  /* length of horizontal 'ticks' */
+  long vunit;  /* length of vertical 'ticks' */
+  long fwidth; /* font width */
+  long fheight;/* font height */
+  void (*draw)(PARI_plot *T, GEN w, GEN x, GEN y);
+@eprog\noindent The \kbd{draw} method performs the actual drawing of
+a \typ{VECSMALL} w (rectwindow indices); $x$ and $y$ are \typ{VECSMALL}s
+of the same length and rectwindow $w[i]$ is drawn with its upper left
+corner at offset $(x[i],y[i])$. No plot engine is available in \kbd{libpari}
+by default, since thie would introduce a dependency on extra graphical
+libraries. See the files \kbd{src/graph/plot*} for basic implementations of
+various plot engines: \kbd{plotsvg} is particularly simple (\kbd{draw} is a
+1-liner).
+
+\fun{void}{pari_set_plot_engine}{void (*T)(PARI_plot *)} installs the
+graphical engine $T$ and initializes the graphical subsystem. No routine in
+this chapter will work without this initialization.
+
+\fun{void}{pari_kill_plot_engine}{void} closes the graphical subsystem and
+frees the ressources it occupies.
+
+\subsec{Highlevel function}
+Those functions plot $f(E,x)$ for $x\in [a,b]$, using $n$ regularly spaced
+points (by default).
+
+\fun{GEN}{ploth}{void *E, GEN(*f)(void*,GEN), GEN a, GEN b, long flags,long
+n, long prec} draw physically.
+
+\fun{GEN}{plotrecth}{void *E, GEN(*f)(void*,GEN), long w, GEN a,GEN b, ulong
+flags,long n, long prec} draw in rectwindow $w$.
+
+\subsec{Function }
+
+\fun{void}{plotbox}{long ne, GEN gx2, GEN gy2}
+
+\fun{void}{plotclip}{long rect}
+
+\fun{void}{plotcolor}{long ne, long color}
+
+\fun{void}{plotcopy}{long source, long dest, GEN xoff, GEN yoff, long flag}
+
+\fun{GEN}{plotcursor}{long ne}
+
+\fun{void}{plotdraw}{GEN list, long flag}
+
+\fun{GEN}{plothraw}{GEN listx, GEN listy, long flag}
+
+\fun{GEN}{plothsizes}{long flag}
+
+\fun{void}{plotinit}{long ne, GEN x, GEN y, long flag}
+
+\fun{void}{plotkill}{long ne}
+
+\fun{void}{plotline}{long ne, GEN x2, GEN y2}
+
+\fun{void}{plotlines}{long ne, GEN listx, GEN listy, long flag}
+
+\fun{void}{plotlinetype}{long ne, long t}
+
+\fun{void}{plotmove}{long ne, GEN x, GEN y}
+
+\fun{void}{plotpoints}{long ne, GEN listx, GEN listy}
+
+\fun{void}{plotpointsize}{long ne, GEN size}
+
+\fun{void}{plotpointtype}{long ne, long t}
+
+\fun{void}{plotrbox}{long ne, GEN x2, GEN y2}
+
+\fun{GEN}{plotrecthraw}{long ne, GEN data, long flags}
+
+\fun{void}{plotrline}{long ne, GEN x2, GEN y2}
+
+\fun{void}{plotrmove}{long ne, GEN x, GEN y}
+
+\fun{void}{plotrpoint}{long ne, GEN x, GEN y}
+
+\fun{void}{plotscale}{long ne, GEN x1, GEN x2, GEN y1, GEN y2}
+
+\fun{void}{plotstring}{long ne, char *x, long dir}
+
+\subsec{Obsolete functions} These draw directly to a PostScript file
+specified by a global variable and should no longer be used. Use
+\kbd{plotexport} and friends instead.
+
+\fun{void}{psdraw}{GEN list, long flag}
+
+\fun{GEN}{psplothraw}{GEN listx, GEN listy, long flag}
+
+\fun{GEN}{psploth}{void *E, GEN(*f)(void*,GEN), GEN a, GEN b, long flags,
+long n, long prec} draw to a PostScript file.
+
+
+\subsec{Dump rectwindows to a PostScript or SVG file}
+
+$w,x,y$ are three \typ{VECSMALL}s indicating the rectwindows to dump, at
+which offsets. If $T$ is \kbd{NULL}, rescale with respect to the installed
+graphic engine dimensions; else with respect to $T$.
+
+\fun{char*}{rect2ps}{GEN w, GEN x, GEN y, PARI_plot *T}
+
+\fun{char*}{rect2ps_i}{GEN w, GEN x, GEN y, PARI_plot *T, int plotps}
+if \kbd{plotps} is $0$, as above; else private version used to implement
+the \kbd{plotps} graphic engine (do not rescale, rotate to portrait
+orientation).
+
+\fun{char*}{rect2svg}{GEN w, GEN x, GEN y, PARI_plot *T}
+
+\subsec{Technical functions exported for convenience}
+
+\fun{void}{pari_plot_by_file}{const char *env, const char *suf, const char *img}
+backend used by the \kbd{plotps} and \kbd{plotsvg} graphic engines.
+
+\fun{void}{colorname_to_rgb}{const char *s, int *r, int *g, int *b} convert
+an \kbd{X11} colorname to RGB values.
+
+\fun{void}{color_to_rgb}{GEN c, int *r, int *g, int *b} convert a pari color
+(\typ{VECSMALL} RGB triple or \typ{STR} name) to RGB values.
+
+\fun{void}{long_to_rgb}{long c, int *r, int *g, int *b} split a standard
+hexadecimal color value \kbd{0xfdf5e6} to its rgb components (\kbd{0xfd},
+\kbd{0xf5}, \kbd{0xe6}).
+\newpage

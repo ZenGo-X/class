@@ -1,0 +1,16 @@
+Function: mfshift
+Section: modular_forms
+C-Name: mfshift
+Prototype: GL
+Help: mfshift(F,s): Divide the form F by q^s omitting the remainder if there
+ is one; s can be negative.
+Doc: Divide the generalized modular form $F$ by $q^s$, omitting the remainder
+ if there is one. One can have $s<0$.
+ \bprog
+ ? D=mfDelta(); mfcoefs(mfshift(D,1), 4)
+ %1 = [1, -24, 252, -1472, 4830]
+ ? mfcoefs(mfshift(D,2), 4)
+ %2 = [-24, 252, -1472, 4830, -6048]
+ ? mfcoefs(mfshift(D,-1), 4)
+ %3 = [0, 0, 1, -24, 252]
+ @eprog

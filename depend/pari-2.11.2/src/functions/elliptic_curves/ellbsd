@@ -1,0 +1,32 @@
+Function: ellbsd
+Section: elliptic_curves
+C-Name: ellbsd
+Prototype: Gp
+Help: ellbsd(E): E being an elliptic curve over a number field,
+ returns a real number c such that the BSD conjecture predicts that
+ lfun(E,1,r)/r! = c*R*S where r is the rank, R is the regulator and S is the
+ cardinal of the Tate-Shafarevich group.
+Doc:
+ The object $E$ being an elliptic curve over a number field, returns a real
+ number $c$ such that the BSD conjecture predicts that
+ $L_{E}^{(r)}(1)/r! = c\*R\*S$ where $r$ is the rank, $R$ the regulator and
+ $S$ the cardinal of the Tate-Shafarevich group.
+
+ \bprog
+ ? e = ellinit([0,-1,1,-10,-20]); \\ rank 0
+ ? ellbsd(e)
+ %2 = 0.25384186085591068433775892335090946105
+ ? lfun(e,1)
+ %3 = 0.25384186085591068433775892335090946104
+ ? e = ellinit([0,0,1,-1,0]); \\ rank 1
+ ? P = ellheegner(e);
+ ? ellbsd(e)*ellheight(e,P)
+ %6 = 0.30599977383405230182048368332167647445
+ ? lfun(e,1,1)
+ %7 = 0.30599977383405230182048368332167647445
+ ? e = ellinit([1+a,0,1,0,0],nfinit(a^2+1)); \\ rank 0
+ ? ellbsd(e)
+ %9 = 0.42521832235345764503001271536611593310
+ ? lfun(e,1)
+ %10 = 0.42521832235345764503001271536611593309
+ @eprog

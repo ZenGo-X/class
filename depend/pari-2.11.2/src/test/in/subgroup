@@ -1,0 +1,16 @@
+G=[53835600, 29]
+do(h,G)=print(mathnf(concat(h,matdiagonal(G))));
+forsubgroup(h=G,[5], do(h,G))
+forsubgroup(h=G,[10], do(h,G))
+subgrouplist(G,[12])
+forsubgroup(h=[],[1],print(h))
+forsubgroup(h=[],[2],print(h))
+forsubgroup(h=[],2,print(h))
+forsubgroup(h=[2,3],2,print(h))
+forsubgroup(h=matid(2),2,print(h))
+default(debug,5);
+#subgrouplist(vector(4,i,2))
+default(debug,0);
+subgrouplist(1)
+subgrouplist([2,2],[2]~)
+subgrouplist([2,2],-1)

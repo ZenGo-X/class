@@ -1,0 +1,22 @@
+Function: digits
+Section: conversions
+C-Name: digits
+Prototype: GDG
+Help: digits(x,{b=10}): gives the vector formed by the digits of x in base b (x and b
+ integers).
+Doc:
+ outputs the vector of the digits of $|x|$ in base $b$, where $x$ and $b$ are
+ integers ($b = 10$ by default). See \kbd{fromdigits} for the reverse
+ operation.
+
+ \bprog
+ ? digits(123)
+ %1 = [1, 2, 3, 0]
+
+ ? digits(10, 2) \\ base 2
+ %2 = [1, 0, 1, 0]
+ @eprog\noindent By convention, $0$ has no digits:
+ \bprog
+ ? digits(0)
+ %3 = []
+ @eprog

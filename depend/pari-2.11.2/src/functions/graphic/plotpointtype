@@ -1,0 +1,12 @@
+Function: plotpointtype
+Section: graphic
+C-Name: plotpointtype
+Prototype: vLL
+Obsolete: 2007-05-11
+Help: plotpointtype(w,type): this function is obsolete; no graphing engine
+ implement this functionality.
+Doc: This function is obsolete and currently a no-op.
+
+ change the type of points subsequently plotted in rectwindow $w$.
+ $\var{type} = -1$ corresponds to a dot, larger values may correspond to
+ something else. $w = -1$ changes highlevel plotting.

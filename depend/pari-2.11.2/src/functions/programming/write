@@ -1,0 +1,13 @@
+Function: write
+Section: programming/specific
+C-Name: write0
+Prototype: vss*
+Help: write(filename,{str}*): appends the remaining arguments (same output as
+ print) to filename.
+Doc: writes (appends) to \var{filename} the remaining arguments, and appends a
+ newline (same output as \kbd{print}).
+
+ \misctitle{Variant} The high-level function \kbd{write} is expensive when many
+ consecutive writes are expected because it cannot use buffering. The low-level
+ interface \kbd{fileopen} / \kbd{filewrite} / \kbd{fileclose} is more efficient.
+ %\syn{NO}

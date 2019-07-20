@@ -1,0 +1,8 @@
+Function: [_.._]
+Section: programming/internals
+C-Name: vecrange
+Prototype: GG
+Help: [a..b] = [a,a+1,...,b]
+Description:
+ (gen,gen):vec     vecrange($1, $2)
+ (small,small):vec vecrangess($1, $2)

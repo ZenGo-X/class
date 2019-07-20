@@ -1,0 +1,47 @@
+Function: denominator
+Section: conversions
+C-Name: denominator
+Prototype: GDG
+Help: denominator(f,{D}): denominator of f.
+Doc:
+ denominator of $f$. The meaning of this is clear when $f$ is a rational number
+ or function. If $f$ is an integer or a polynomial, it is treated as a rational
+ number or function, respectively, and the result is equal to $1$. For
+ polynomials, you probably want to use
+ \bprog
+ denominator( content(f) )
+ @eprog\noindent instead. As for modular objects, \typ{INTMOD} and \typ{PADIC}
+ have denominator $1$, and the denominator of a \typ{POLMOD} is the
+ denominator of its lift.
+
+ If $f$ is a recursive structure, for instance a vector or matrix, the lcm
+ of the denominators of its components (a common denominator) is computed.
+ This also applies for \typ{COMPLEX}s and \typ{QUAD}s.
+
+ \misctitle{Warning} Multivariate objects are created according to variable
+ priorities, with possibly surprising side effects ($x/y$ is a polynomial, but
+ $y/x$ is a rational function). See \secref{se:priority}.
+
+ The optional argument $D$ allows to control over which ring we compute the
+ denominator and get a more predictable behaviour:
+
+ \item $1$: we only consider the underlying $\Q$-structure and the
+ denominator is a (positive) rational integer
+
+ \item a simple variable, say \kbd{'x}: all entries as rational functions
+ in $K(x)$ and the denominator is a polynomial in $x$.
+
+ \bprog
+ ? f = x + 1/y + 1/2;
+ ? denominator(f) \\ a t_POL in x
+ %2 = 1
+ ? denominator(f, 1) \\ Q-denominator
+ %3 = 2
+ ? denominator(f, x) \\ as a t_POL in x, seen above
+ %4 = 1
+ ? denominator(f, y) \\ as a rational function in y
+ %5 = 2*y
+ @eprog
+Variant: Also available are
+ \fun{GEN}{denom}{GEN x}  which implements the not very useful default
+ behaviour ($D$ is \kbd{NULL}) and \fun{GEN}{Q_denom}{GEN x} ($D = 1$).

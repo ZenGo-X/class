@@ -1,0 +1,15 @@
+Function: sqrtnint
+Section: number_theoretical
+C-Name: sqrtnint
+Prototype: GL
+Help: sqrtnint(x,n): integer n-th root of x, where x is non-negative integer.
+Description:
+ (gen,small):int sqrtnint($1, $2)
+Doc: returns the integer $n$-th root of $x$, i.e. the largest integer $y$ such
+ that $y^n \leq x$, where $x$ is a non-negative integer.
+ \bprog
+ ? N = 120938191237; sqrtnint(N, 5)
+ %1 = 164
+ ? N^(1/5)
+ %2 = 164.63140849829660842958614676939677391
+ @eprog\noindent The special case $n = 2$ is \tet{sqrtint}

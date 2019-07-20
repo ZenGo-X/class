@@ -1,0 +1,941 @@
+% Copyright (c) 2000  The PARI Group
+%
+% This file is part of the PARI/GP documentation
+%
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU General Public License
+\chapter{Elliptic curves and arithmetic geometry}
+
+This chapter is quite short, but is added as a placeholder, since
+we expect the library to expand in that direction.
+
+\section{Elliptic curves}
+Elliptic curves are represented in the Weierstrass model
+$$ (E): y^2z + a_1xyz + a_3 yz = x^3 + a_2 x^2z + a_4 xz^2 + a_6z^3, $$
+by the $5$-tuple $[a_1,a_2,a_3,a_4,a_6]$. Points in the projective
+plane are represented as follows: the point at infinity $(0:1:0)$ is coded
+as \kbd{[0]}, a finite point $(x:y:1)$ outside the projective line at infinity
+$z = 0$ is coded as $[x,y]$. Note that other points at infinity than $(0:1:0)$
+cannot be represented; this is harmless, since they do not belong to any of
+the elliptic curves $E$ above.
+
+\emph{Points on the curve} are just projective points as described above,
+they are not tied to a curve in any way: the same point may be used in
+conjunction with different curves, provided it satisfies their equations (if
+it does not, the result is usually undefined). In particular, the point at
+infinity belongs to all elliptic curves.
+
+As with \tet{factor} for polynomial factorization, the $5$-tuple
+$[a_1,a_2,a_3,a_4,a_6]$ implicitly defines a base ring over which the curve
+is defined. Point coordinates must be operation-compatible with this
+base ring (\kbd{gadd}, \kbd{gmul}, \kbd{gdiv} involving them should not give
+errors).
+
+\subsec{Types of elliptic curves}
+
+We call a $5$-tuble as above an \kbd{ell5}; most functions require an
+\kbd{ell} structure, as returned by \tet{ellinit}, which contains additional
+data (usually dynamically computed as needed), depending on the base field.
+
+\fun{GEN}{ellinit}{GEN E, GEN D, long prec}, returns an \tet{ell} structure,
+attached to the elliptic curve $E$ : either an \kbd{ell5}, a pair $[a_4,a_6]$
+or a \typ{STR} in Cremona's notation, e.g. \kbd{"11a1"}. The optional $D$
+(\kbd{NULL} to omit) describes the domain over which the curve is defined.
+
+\subsec{Type checking}
+
+\fun{void}{checkell}{GEN e} raise an error unless $e$ is an \var{ell}.
+
+\fun{int}{checkell_i}{GEN e} return $1$ if $e$ is an \var{ell} and $0$
+otherwise.
+
+\fun{void}{checkell5}{GEN e} raise an error unless $e$ is an \var{ell}
+or an \var{ell5}.
+
+\fun{void}{checkellpt}{GEN z} raise an error unless $z$ is a point
+(either finite or at infinity).
+
+\fun{long}{ell_get_type}{GEN e} returns the domain type over which the curve
+is defined, one of
+
+  \tet{t_ELL_Q} the field of rational numbers;
+
+  \tet{t_ELL_NF} a number field;
+
+  \tet{t_ELL_Qp} the field of $p$-adic numbers, for some prime $p$;
+
+  \tet{t_ELL_Fp} a prime finite field, base field elements are represented as
+  \kbd{Fp}, i.e.~a \typ{INT} reduced modulo~$p$;
+
+  \tet{t_ELL_Fq} a non-prime finite field (a prime finite field can also be
+  represented by this subtype, but this is inefficient), base field elements
+  are represented as \typ{FFELT};
+
+  \tet{t_ELL_Rg} none of the above.
+
+\fun{void}{checkell_Fq}{GEN e} checks whether $e$ is an \kbd{ell}, defined
+over a finite field (either prime or non-prime). Otherwise the function
+raises a \tet{pari_err_TYPE} exception.
+
+\fun{void}{checkell_Q}{GEN e} checks whether $e$ is an \kbd{ell}, defined
+over $\Q$. Otherwise the function raises a \tet{pari_err_TYPE} exception.
+
+\fun{void}{checkell_Qp}{GEN e} checks whether $e$ is an \kbd{ell}, defined
+over some $\Q_p$. Otherwise the function raises a \tet{pari_err_TYPE}
+exception.
+
+\fun{void}{checkellisog}{GEN v} raise an error unless $v$ is an isogeny,
+from \tet{ellisogeny}.
+
+\subsec{Extracting info from an \kbd{ell} structure}
+
+These functions expect an \kbd{ell} argument. If the required data is not
+part of the structure, it is computed then inserted, and the new value is
+returned.
+
+\subsubsec{All domains}
+
+\fun{GEN}{ell_get_a1}{GEN e}
+
+\fun{GEN}{ell_get_a2}{GEN e}
+
+\fun{GEN}{ell_get_a3}{GEN e}
+
+\fun{GEN}{ell_get_a4}{GEN e}
+
+\fun{GEN}{ell_get_a6}{GEN e}
+
+\fun{GEN}{ell_get_b2}{GEN e}
+
+\fun{GEN}{ell_get_b4}{GEN e}
+
+\fun{GEN}{ell_get_b6}{GEN e}
+
+\fun{GEN}{ell_get_b8}{GEN e}
+
+\fun{GEN}{ell_get_c4}{GEN e}
+
+\fun{GEN}{ell_get_c6}{GEN e}
+
+\fun{GEN}{ell_get_disc}{GEN e}
+
+\fun{GEN}{ell_get_j}{GEN e}
+
+\subsubsec{Curves over $\Q$}
+
+\fun{GEN}{ellQ_get_N}{GEN e} returns the curve conductor
+
+\fun{void}{ellQ_get_Nfa}{GEN e, GEN *N, GEN *faN} sets $N$ to the conductor
+and \kbd{faN} to its factorization
+
+\fun{int}{ell_is_integral}{GEN e} return $1$ if $e$ is given by an integral
+model, and $0$ otherwise.
+
+\fun{long}{ellQ_get_CM}{GEN e} if $e$ has CM by a principal imaginary
+quadratic order, return its discriminant. Else return $0$.
+
+\fun{long}{ellap_CM_fast}{GEN e, ulong p, long CM} assuming that $p$
+does not divide the discriminant of $E$ (in particular, $E$ has good
+reduction at $p$), and that \kbd{CM} is as given by \tet{ellQ_get_CM},
+return the trace of Frobenius for $E/\F_p$. This is meant to quickly compute
+lots of $a_p$, esp.~when $e$ has CM by a principal quadratic order.
+
+\fun{long}{ellrootno_global}{GEN e} returns the global root number
+$c\in \{-1,1\}$.
+
+\fun{GEN}{ellheightoo}{GEN E, GEN P, long prec} given $P = [x,y]$ an affine
+point on $E$, return
+$$
+\lambda_\infty(P) + \dfrac{1}{12}\log|\disc E| =
+ \dfrac{1}{2} \text{real}(z\eta(z)) - \log |\sigma(E,z)|
+\in \R, $$
+where $\lambda_\infty(P)$ is the canonical local height at infinity
+and $z$ is \kbd{ellpointtoz}$(E,P)$. This
+is computed using Mestre's (quadratically convergent) AGM algorithm.
+
+\fun{long}{ellorder_Q}{GEN E, GEN P} return the order of $P\in E(\Q)$, using
+the impossible value $0$ for a point of infinite order. Ultimately called
+by the generic \tet{ellorder} function.
+
+\fun{GEN}{point_to_a4a6}{GEN E, GEN P, GEN p, GEN *a4} given $E/\Q$,
+$p\neq 2,3$ not dividing the discriminant of $E$ and $P\in E(\Q)$ outside the
+kernel of reduction, return the image of $P$ on the short Weierstrass
+model $y^2 = x^3 + a_4x + a_6$ isomorphic to the reduction $E_p$ of $E$ at $p$.
+Also set \kbd{a4} to the $a_4$ coefficient in the above model. This function
+allows quick computations modulo varying primes $p$, avoiding the overhead of
+\kbd{ellinit}$(E,p)$, followed by a change of coordinates. It produces data
+suitable for \kbd{FpE} routines.
+
+\fun{GEN}{point_to_a4a6_Fl}{GEN E, GEN P, ulong p, ulong *pa4} as
+\tet{point_to_a4a6}, returning a \kbd{Fle}.
+
+\fun{GEN}{elldatagenerators}{GEN E} returns generators for $E(\Q)$
+extracted from Cremona's table.
+
+\fun{GEN}{ellanal_globalred}{GEN e, GEN *v} takes an \var{ell} over $\Q$
+and returns a global minimal model $E$ (in \kbd{ellinit} form, over $\Q$) for
+$e$ suitable for analytic computations related to the curve $L$ series: it
+contains \kbd{ellglobalred} data, as well as global and local root numbers. If
+\kbd{v} is not \kbd{NULL}, set \kbd{*v} to the needed change of variable:
+\kbd{NULL} if $e$ was already the standard minimal model, such that $E =
+\kbd{ellchangecurve(e,v)}$ otherwise. Compared to the direct use of
+\kbd{ellchangecurve} followed by \kbd{ellrootno}, this function avoids
+converting unneeded dynamic data and avoids potential memory leaks
+(the changed curve would have had to be deleted using \tet{obj_free}). The
+original curve $e$ is updated as well with the same information.
+
+\fun{GEN}{ellanal_globalred_all}{GEN e, GEN *v, GEN *N, GEN *tam} as
+\tet{ellanal_globalred}; further set \kbd{*N} to the curve conductor
+and \kbd{*tam} to the product of the local Tamagawa numbers, including
+the factor at infinity (multiply by the number of connected components
+of $e(\R)$).
+
+\fun{GEN}{ellintegralmodel}{GEN e, GEN *pv} return an integral model
+for $e$ (in \kbd{ellinit} form, over $\Q$). Set $v = \kbd{NULL}$ (already
+integral, we returned $e$ itself), else to the variable change
+$[u,0,0,0]$ making $e$ integral. We have $u = 1/t$, $t > 1$.
+
+\fun{GEN}{ellintegralmodel_i}{GEN e, GEN *pv} shallow version of
+ \kbd{ellintegralmodel}.
+
+\misctitle{Deprecated routines}
+
+\fun{GEN}{elltors0}{GEN e, long flag} this function is deprecated; use
+\tet{elltors}
+
+\subsubsec{Curves over a number field \var{nf}}
+
+Let $K$ be the number field over which $E$ is defined, given by
+a \var{nf} or \var{bnf} structure.
+
+\fun{GEN}{ellnf_get_nf}{GEN E} returns the underlying \kbd{nf}.
+
+\fun{GEN}{ellnf_get_bnf}{GEN x} returns \kbd{NULL} if $K$ does not contain
+a \var{bnf} structure, else return the \var{bnf}.
+
+\fun{GEN}{ellnf_vecarea}{GEN E} returns the vector of the period lattices areas
+of all the complex embeddings of \kbd{E} in the same order as \kbd{E.nf.roots}.
+
+\fun{GEN}{ellnf_veceta}{GEN E} returns the vector of the quasi-periods of
+all the complex embeddings of \kbd{E} in the same order as \kbd{E.nf.roots}.
+
+\fun{GEN}{ellnf_vecomega}{GEN E} returns the vector of the periods of
+all the complex embeddings of \kbd{E} in the same order as \kbd{E.nf.roots}.
+
+\subsubsec{Curves over $\Q_p$}
+
+\fun{GEN}{ellQp_get_p}{GEN E} returns $p$
+
+\fun{long}{ellQp_get_prec}{GEN E} returns the default $p$-adic accuracy to
+which we must compute approximate results attached to $E$.
+
+\fun{GEN}{ellQp_get_zero}{GEN x} returns $O(p^n)$, where $n$ is the default
+$p$-adic accuracy as above.
+
+The following functions are only defined when $E$ has multiplicative
+reduction (Tate curves):
+
+\fun{GEN}{ellQp_Tate_uniformization}{GEN E, long prec} returns a
+\typ{VEC} containing $u^2, u, q, [a,b]$, at $p$-adic precision \kbd{prec}.
+
+\fun{GEN}{ellQp_u}{GEN E, long prec} returns $u$.
+
+\fun{GEN}{ellQp_u2}{GEN E, long prec} returns $u^2$.
+
+\fun{GEN}{ellQp_q}{GEN E, long prec} returns the Tate period $q$.
+
+\fun{GEN}{ellQp_ab}{GEN E, long prec} returns $[a,b]$.
+
+\fun{GEN}{ellQp_AGM}{GEN E, long prec} returns $[a,b,R,v]$, where
+$v$ is an integer, $a, b, R$ are vectors describing the sequence of
+$2$-isogenous curves $E_i: y^2 = x(x+A_i)(x+A_i-B_i)$, $i \geq 1$
+converging to the singular curve $E_\infty: y^2 = x^2(x+M)$. We have
+$a[i] = A[i] p^v$, $b[i] = B[i] p^v$, $R[i] = A_i - B_i$. These are used in
+\kbd{ellpointtoz} and \kbd{ellztopoint}.
+
+\fun{GEN}{ellQp_L}{GEN E, long prec} returns the ${\cal L}$-invariant $L$.
+
+\fun{GEN}{ellQp_root}{GEN E, long prec} returns $e_1$.
+
+\subsubsec{Curves over a finite field $\F_q$}
+
+\fun{GEN}{ellff_get_p}{GEN E} returns the characteristic
+
+\fun{GEN}{ellff_get_field}{GEN E} returns $p$ if $\F_q$ is a prime field, and
+a \typ{FFELT} belonging to $\F_q$ otherwise.
+
+\fun{GEN}{ellff_get_card}{GEN E} returns $\#E(\F_q)$
+
+\fun{GEN}{ellff_get_gens}{GEN E} returns a minimal set of generators for
+$E(\F_q)$.
+
+\fun{GEN}{ellff_get_group}{GEN E} returns \kbd{ellgroup}$(E)$.
+
+\fun{GEN}{ellff_get_m}{GEN E} returns the \typ{INT} $m$ as needed by the
+\kbd{gen\_ellgroup} function (the order of the pairing required to verify a
+generating set).
+
+\fun{GEN}{ellff_get_o}{GEN E} returns $[d, \kbd{factor{d}}]$, where $d$ is
+the exponent of $E(\F_q)$.
+
+\fun{GEN}{ellff_get_D}{GEN E} returns the elementary divisors for $E(\F_q)$
+in a form suitable for \tet{gen_ellgens}: either $[d_1]$ or $[d_1,d_2]$,
+where $d_1$ is in \tet{elff_get_o} format.
+
+$[d, \kbd{factor{d}}]$, where $d$ is
+the exponent of $E(\F_q)$.
+
+\fun{GEN}{ellff_get_a4a6}{GEN E} returns a canonical ``short model'' for $E$,
+and the corresponding change of variable $[u,r,s,t]$. For $p\neq 2,3$,
+this is $[A_4,A_6,[u,r,s,t]]$, corresponding to $y^2 = x^3 + A_4x + A_6$,
+where $A_4 = -27c_4$, $A_6 = -54c_6$, $[u,r,s,t] = [6, 3b_2,3a_1,108a_3]$.
+
+\item If $p = 3$ and the curve is ordinary ($b_2\neq 0$), this is
+$[[b_2], A_6, [1,v,-a_1,-a_3]]$, corresponding to
+$$y^2 = x^3 + b_2 x^2 + A_6,$$
+where $v = b_4/b_2$, $A_6 = b_6 - v(b_4+v^2)$.
+
+\item If $p = 3$ and the curve is supersingular ($b_2 = 0$), this is
+$[-b_4, b_6, [1,0,-a_1,-a_3]]$, corresponding to
+$$y^2 = x^3 + 2b_4 x + b_6.$$
+
+\item If $p = 2$ and the curve is ordinary ($a_1 \neq 0$), return
+$[A_2,A_6,[a_1^{-1}, da_1^{-2}, 0, (a_4+d^2)a_1^{-1}]]$, corresponding to
+$$ y^2 + xy = x^3 + A_2 x^2 + A_6,$$
+where
+$d = a_3/a_1$, $a_1^2 A_2 = (a_2 + d)$ and
+$$ a_1^6 A_6 = d^3 + a_2 d^2 + a_4 d + a_6 + (a_4^2 + d^4)a_1^{-2}.$$
+
+\item If $p = 2$ and the curve is supersingular ($a_1 = 0$, $a_3\neq 0$), return
+$[[a_3, A_4, 1/a_3], A_6, [1,a_2,0,0]]$, corresponding to
+$$ y^2 + a_3 y = x^3 + A_4 x + A_6,$$
+where $A_4 = a_2^2 + a_4$, $ A_6 = a_2a_4 + a_6$. The value $1/a_3$ is
+included in the vector since it is frequently needed in computations.
+
+\subsubsec{Curves over $\C$} (This includes curves over $\Q$!)
+
+\fun{long}{ellR_get_prec}{GEN E} return the default accuracy to
+which we must compute approximate results attached to $E$.
+
+\fun{GEN}{ellR_ab}{GEN E, long prec} return $[a,b]$
+
+\fun{GEN}{ellR_omega}{GEN x, long prec} return periods
+$[\omega_1,\omega_2]$.
+
+\fun{GEN}{ellR_eta}{GEN E, long prec} return quasi-periods
+$[\eta_1,\eta_2]$.
+
+\fun{GEN}{ellR_area}{GEN x, long prec} return the area
+$(\Im(\omega_1\*\overline{\omega_2}))$.
+
+\fun{GEN}{ellR_roots}{GEN E, long prec} return $[e_1,e_2,e_3]$. If $E$ is
+defined over $\R$, then $e_1$ is real. If furthermore $\disc E > 0$, then
+$e_1 > e_2 > e_3$.
+
+\fun{long}{ellR_get_sign}{GEN E} if $E$ is defined over $\R$ returns the
+signe of its discriminant, otherwise return $0$.
+
+\subsec{Points}
+
+\fun{int}{ell_is_inf}{GEN z} tests whether the point $z$ is the point at
+infinity.
+
+\fun{GEN}{ellinf}{} returns the point at infinity \kbd{[0]}.
+
+\subsec{Change of variables}
+
+\fun{GEN}{ellchangeinvert}{GEN w} given a change of variables $w =
+[u,r,s,t]$, returns the inverse change of variables $w'$, such that if $E' =
+\kbd{ellchangecurve(E, w)}$, then $E = \kbd{ellchangecurve}(E, w')$.
+
+\subsec{Generic helper functions}
+
+The naming scheme assumes an affine equation
+$F(x,y) = f(x) - (y^2 + h(x)y) = 0$
+in standard Weierstrass form: $f = x^3+a_2x^2+a_4x+a_6$, $h = a_1x + a_3$.
+Unless mentionned otherwise, these routine assume that all arguments are
+compatible with generic functions of \kbd{gadd} or \kbd{gmul} type. In
+particular they do not handle elements in number field in \kbd{nfalgtobasis}
+format.
+
+\fun{GEN}{ellbasechar}{GEN E} returns the characteristic of the base ring over
+which $E$ is defined.
+
+\fun{GEN}{ec_bmodel}{GEN E} returns the polynomial $4x^3 + b_2x^2 + 2b_4x +
+b_6$.
+
+\fun{GEN}{ec_f_evalx}{GEN E, GEN x} returns $f(x)$.
+
+\fun{GEN}{ec_h_evalx}{GEN E, GEN x} returns $h(x)$.
+
+\fun{GEN}{ec_dFdx_evalQ}{GEN E, GEN Q} returns $3x^2 + 2a_2x + a_4 -a_1y$,
+where $Q = [x,y]$.
+
+\fun{GEN}{ec_dFdy_evalQ}{GEN E, GEN Q} returns $-(2y + a_1 x + a_3)$,
+where $Q = [x,y]$.
+
+\fun{GEN}{ec_dmFdy_evalQ}{GEN e, GEN Q} returns $2y + a_1 x + a_3$,
+where $Q = [x,y]$.
+
+\fun{GEN}{ec_2divpol_evalx}{GEN E, GEN x} returns
+$4x^3 + b_2\*x^2 + 2\*b_4x + b_6$. This function supports inputs
+in \kbd{nfalgtobasis} format.
+
+\fun{GEN}{ec_half_deriv_2divpol_evalx}{GEN E, GEN x} returns
+$6\*x^2 + b_2\*x + b_4$.
+
+\fun{GEN}{ec_3divpol_evalx}{GEN E, GEN x} returns
+$3\*x^4 + b_2\*x^2 + 3\*b_4\*x^2 + 3\*b_6\*x + b_8$.
+
+\subsec{Functions to handle elliptic curves over finite fields}
+
+\subsubsec{Tolerant routines}
+
+\fun{GEN}{ellap}{GEN E, GEN p} given a prime number $p$ and an elliptic curve
+defined over $\Q$ or $\Q_p$ (assumed integral and minimal at $p$), computes
+the  trace of  Frobenius  $a_p = p+1 - \#E(\F_p)$. If $E$ is defined over
+a non-prime finite field $\F_q$, ignore $p$ and return $q+1 - \#E(\F_q)$.
+When $p$ is implied ($E$ defined over $\Q_p$ or a finite field), $p$ can be
+omitted (set to \kbd{NULL}).
+
+\subsubsec{Curves defined a non-prime finite field}
+In this subsection, we assume that \tet{ell_get_type}$(E)$ is \tet{t_ELL_Fq}.
+(As noted above, a curve defined over $\Z/p\Z$ can be represented as a
+\tet{t_ELL_Fq}.)
+
+\fun{GEN}{FF_elltwist}{GEN E} returns the coefficients
+$[a_1,a_2,a_3,a_4,a_6]$ of the quadratic twist of $E$.
+
+\fun{GEN}{FF_ellmul}{GEN E, GEN P, GEN n} returns $[n]P$ where $n$ is an
+integer and $P$ is a point on the curve $E$.
+
+\fun{GEN}{FF_ellrandom}{GEN E} returns a random point in $E(\F_q)$.
+This function never returns the point at infinity, unless this is the
+only point on the curve.
+
+\fun{GEN}{FF_ellorder}{GEN E, GEN P, GEN o} returns the order of the point
+$P$, where $o$ is a multiple of the order of $P$, or its factorization.
+
+\fun{GEN}{FF_ellcard}{GEN E} returns $\#E(\F_q)$.
+
+\fun{GEN}{FF_ellcard_SEA}{GEN E, long s}
+This function returns $\#E(\F_q)$, using the Schoof-Elkies-Atkin
+algorithm.  Assume $p\neq 2,3$.
+The parameter $s$ has the same meaning as in \kbd{Fp\_ellcard\_SEA}.
+
+\fun{GEN}{FF_ellgens}{GEN E} returns the generators of the group $E(\F_q)$.
+
+\fun{GEN}{FF_elllog}{GEN E, GEN P, GEN G, GEN o} Let \kbd{G} be a point of
+order \kbd{o}, return $e$ such that $[e]P=G$. If $e$ does not exists, the
+result is undefined.
+
+\fun{GEN}{FF_ellgroup}{GEN E, GEN *pm} returns the structure of the Abelian
+group $E(\F_q)$ and set \kbd{*pm} to $m$ (see \kbd{gen\_ellgens}).
+
+\fun{GEN}{FF_ellweilpairing}{GEN E, GEN P, GEN Q, GEN m} returns the
+Weil pairing of the points of $m$-torsion $P$ and $Q$.
+
+\fun{GEN}{FF_elltatepairing}{GEN E, GEN P, GEN Q, GEN m} returns the Tate
+pairing of $P$ and $Q$, where $[m]P = 0$.
+
+\section{Arithmetic on elliptic curve over a finite field in simple form}
+
+The functions in this section no longer operate on elliptic curve structures,
+as seen up to now. They are used to implement those higher-level functions
+without using cached information and thus require suitable explicitly
+enumerated data.
+
+\subsec{Helper functions}
+
+\fun{GEN}{elltrace_extension}{GEN t, long n, GEN q} Let $E$ some elliptic curve
+over $\F_q$ such that the trace of the Frobenius is $t$, returns the trace of
+the Frobenius over $\F_q^n$.
+
+\subsec{Elliptic curves over $\F_p$, $p>3$}
+
+Let $p$ a prime number and $E$ the elliptic curve given by the equation
+$E:y^2=x^3+a_4\*x+a_6$, with $a_4$ and $a_6$ in $\F_p$. A \kbd{FpE} is a
+point of $E(\F_p)$.  Since an affine point and $a_4$ determine an unique
+$a6$, most functions do not take $a_6$ as an argument. A \kbd{FpE} is either
+the point at infinity (\kbd{ellinf()}) or a $FpV$ whith two components. The
+parameters $a_4$ and $a_6$ are given as \typ{INT}s when required.
+
+\fun{GEN}{Fp_ellj}{GEN a4, GEN a6, GEN p}
+returns the $j$-invariant of the curve $E$.
+
+\fun{int}{Fp_elljissupersingular}{GEN j, GEN p} returns $1$ if $j$ is the
+$j$-invariant of a supersingular curve over $\F_p$, $0$ otherwise.
+
+\fun{GEN}{Fp_ellcard}{GEN a4, GEN a6, GEN p} returns the cardinality of the
+group $E(\F_p)$.
+
+\fun{GEN}{Fp_ellcard_SEA}{GEN a4, GEN a6, GEN p, long s}
+This function returns $\#E(\F_p)$, using the Schoof-Elkies-Atkin algorithm.
+If the \kbd{seadata} package is installed, the function will be faster.
+
+The extra flag \kbd{s}, if set to a non-zero value, causes the computation to
+return \kbd{gen\_0} (an impossible cardinality) if one of the small primes
+$\ell$ divides the curve order but does not divide $s$.
+For cryptographic applications, where one is usually interested in curves of
+prime order, setting $s=1$ efficiently weeds out most uninteresting curves; if
+curves of order a power of $2$ times a prime are acceptable, set $s=2$.
+If moreover \kbd{s} is negative, similar checks are performed for the
+twist of the curve.
+
+\fun{GEN}{Fp_ffellcard}{GEN a4, GEN a6, GEN q, long n, GEN p} returns the
+cardinality of the group $E(\F_q)$ where $q=p^n$.
+
+\fun{GEN}{Fp_ellgroup}{GEN a4, GEN a6, GEN N, GEN p, GEN *pm} returns the
+group structure $D$ of the group $E(\F_p)$, which is assumed to be of order $N$
+and set \kbd{*pm} to $m$.
+
+\fun{GEN}{Fp_ellgens}{GEN a4, GEN a6, GEN ch, GEN D, GEN m, GEN p} returns
+generators of the group $E(\F_p)$ with the base change \kbd{ch} (see
+\kbd{FpE\_changepoint}), where $D$ and $m$ are as returned by
+\kbd{Fp\_ellgroup}.
+
+\fun{GEN}{Fp_elldivpol}{GEN a4, GEN a6, long n, GEN p} returns the $n$-division
+polynomial of the elliptic curve $E$.
+
+\fun{void}{Fp_elltwist}{GEN a4, GEN a6, GEN p, GEN *pA4, GEN *pA6}
+sets \kbd{*pA4} and \kbd{*pA6} to the corresponding parameters for the
+quadratic twist of $E$.
+
+\subsec{\kbd{FpE}}
+
+\fun{GEN}{FpE_add}{GEN P, GEN Q, GEN a4, GEN p} returns the sum $P+Q$
+in the group $E(\F_p)$, where $E$ is defined by $E:y^2=x^3+a_4\*x+a_6$,
+for any value of $a_6$ compatible with the points given.
+
+\fun{GEN}{FpE_sub}{GEN P, GEN Q, GEN a4, GEN p} returns $P-Q$.
+
+\fun{GEN}{FpE_dbl}{GEN P, GEN a4, GEN p} returns $2.P$.
+
+\fun{GEN}{FpE_neg}{GEN P, GEN p} returns $-P$.
+
+\fun{GEN}{FpE_mul}{GEN P, GEN n, GEN a4, GEN p} return $n.P$.
+
+\fun{GEN}{FpE_changepoint}{GEN P, GEN m, GEN a4, GEN p} returns the image
+$Q$ of the point $P$ on the curve $E:y^2=x^3+a_4\*x+a_6$ by the coordinate
+change $m$ (which is a \kbd{FpV}).
+
+\fun{GEN}{FpE_changepointinv}{GEN P, GEN m, GEN a4, GEN p} returns the image
+$Q$ on the curve $E:y^2=x^3+a_4\*x+a_6$ of the point $P$ by the inverse of the
+coordinate change $m$ (which is a \kbd{FpV}).
+
+\fun{GEN}{random_FpE}{GEN a4, GEN a6, GEN p} returns a random point on
+$E(\F_p)$, where $E$ is defined by $E:y^2=x^3+a_4\*x+a_6$.
+
+\fun{GEN}{FpE_order}{GEN P, GEN o, GEN a4, GEN p} returns the order of $P$ in
+the group $E(\F_p)$, where $o$ is a multiple of the order of $P$, or its
+factorization.
+
+\fun{GEN}{FpE_log}{GEN P, GEN G, GEN o, GEN a4, GEN p} Let \kbd{G} be a
+point of order \kbd{o}, return $e$ such that $e.P=G$. If $e$ does not exists,
+the result is currently undefined.
+
+\fun{GEN}{FpE_tatepairing}{GEN P, GEN Q, GEN m, GEN a4, GEN p} returns the
+Tate pairing of the point of $m$-torsion $P$ and the point $Q$.
+
+\fun{GEN}{FpE_weilpairing}{GEN P, GEN Q, GEN m, GEN a4, GEN p} returns the
+Weil pairing of the points of $m$-torsion $P$ and $Q$.
+
+\fun{GEN}{FpE_to_mod}{GEN P, GEN p} returns $P$ as a vector of \typ{INTMOD}s.
+
+\fun{GEN}{RgE_to_FpE}{GEN P, GEN p} returns the \kbd{FpE} obtained by applying
+\kbd{Rg\_to\_Fp} coefficientwise.
+
+\subsec{\kbd{Fle}}
+Let $p$ be a prime \kbd{ulong}, and $E$ the elliptic curve given by the
+equation $E:y^2=x^3+a_4\*x+a_6$, where $a_4$ and $a_6$ are \kbd{ulong}.
+A \kbd{Fle} is either the point at infinity (\kbd{ellinf()}), or a \kbd{Flv}
+with two components $[x,y]$.
+
+\fun{long}{Fl_elltrace}{ulong a4, ulong a6, ulong p} returns the trace $t$ of
+the Frobenius of $E(\F_p)$. The cardinality of $E(\F_p)$ is thus $p+1-t$,
+which might not fit in an \kbd{ulong}.
+
+\fun{long}{Fl_elltrace_CM}{long CM, ulong a4, ulong a6, ulong p} as
+\tet{Fl_elltrace}. If \kbd{CM} is $0$, use the standard algorithm; otherwise
+assume the curve has CM by a principal imaginary quadratic order of
+discriminant \kbd{CM} and use a faster algorithm. Useful when the curve is
+the reduction of $E/\Q$, which has CM by a principal order, and we need the
+trace of Frobenius for many distinct $p$, see \tet{ellQ_get_CM}.
+
+\fun{ulong}{Fl_elldisc}{ulong a4, ulong a6, ulong p}
+returns the discriminant of the curve $E$.
+
+\fun{ulong}{Fl_elldisc_pre}{ulong a4, ulong a6, ulong p, ulong pi}
+returns the discriminant of the curve $E$, assuming $pi$ is the pseudo inverse
+of $p$.
+
+\fun{ulong}{Fl_ellj}{ulong a4, ulong a6, ulong p}
+returns the $j$-invariant of the curve $E$.
+
+\fun{ulong}{Fl_ellj_pre}{ulong a4, ulong a6, ulong p, ulong pi}
+returns the $j$-invariant of the curve $E$, assuming $pi$ is the pseudo inverse
+of $p$.
+
+\fun{void}{Fl_ellj_to_a4a6}{ulong j, ulong p, ulong *pa4, ulong *pa6}
+sets \kbd{*pa4} to $a_4$ and \kbd{*pa6} to $a_6$ where $a_4$ and $a_6$
+define a fixed elliptic curve with $j$-invariant $j$.
+
+\fun{void}{Fl_elltwist}{ulong a4, ulong a6, ulong p, ulong *pA4, ulong *pA6}
+set \kbd{*pA4} to $A_4$ and \kbd{*pA6} to $A_6$ where $A_4$ and $A_6$
+define the twist of $E$.
+
+\fun{void}{Fl_elltwist_disc}{ulong a4, ulong a6, ulong D, ulong p, ulong *pA4,
+ulong *pA6}
+sets \kbd{*pA4} to $A_4$ and \kbd{*pA6} to $A_6$ where $A_4$ and $A_6$
+define the twist of $E$ by the discriminant $D$.
+
+\fun{GEN}{Fle_add}{GEN P, GEN Q, ulong a4, ulong p}
+
+\fun{GEN}{Fle_dbl}{GEN P, ulong a4, ulong p}
+
+\fun{GEN}{Fle_sub}{GEN P, GEN Q, ulong a4, ulong p}
+
+\fun{GEN}{Fle_mul}{GEN P, GEN n, ulong a4, ulong p}
+
+\fun{GEN}{Fle_mulu}{GEN P, ulong n, ulong a4, ulong p}
+
+\fun{GEN}{Fle_order}{GEN P, GEN o, ulong a4, ulong p}
+
+\fun{GEN}{Fle_log}{GEN P, GEN G, GEN o, ulong a4, ulong p}
+
+\fun{GEN}{random_Fle}{ulong a4, ulong a6, ulong p}
+
+\fun{GEN}{random_Fle_pre}{ulong a4, ulong a6, ulong p, ulong pi}
+
+\fun{GEN}{Fle_changepoint}{GEN x, GEN ch, ulong p}, \kbd{ch} is assumed
+to give the change of coordinates $[u,r,s,t]$ as a \typ{VECSMALL}.
+
+\fun{GEN}{Fle_changepointinv}{GEN x, GEN ch, ulong p}, as \tet{Fle_changepoint}
+
+\subsec{\kbd{FpJ}}
+
+Let $p$ be a prime \typ{INT}, and $E$ the elliptic curve given by the
+equation $E:y^2=x^3+a_4\*x+a_6$, where $a_4$ and $a_6$ are \typ{INT}.
+A \kbd{FpJ} is a \kbd{FpV} with three components $[x,y,z]$, representing
+the affine point $[x/z^2,y/z^3]$ in Jacobian coordinates, the point at
+infinity being represented by $[1, 1, 0]$. The following must holds:
+$y^2=x^3+a_4\*x\*z^4+a_6\*z^6$. For all non-zero $u$, the points
+$[u^2\*x,u^3\*y,u\*z]$ and $[x,y,z]$ are representing the same affine point.
+
+\fun{GEN}{FpJ_add}{GEN P, GEN Q, GEN a4, GEN p}
+
+\fun{GEN}{FpJ_dbl}{GEN P, GEN a4, GEN p}
+
+\fun{GEN}{FpJ_mul}{GEN P, GEN n, GEN a4, GEN p};
+
+\fun{GEN}{FpJ_neg}{GEN P, GEN p} return $-P$.
+
+\fun{GEN}{FpJ_to_FpE}{GEN P, GEN p} return the corresponding \kbd{FpE}.
+
+\fun{GEN}{FpE_to_FpJ}{GEN P} return the corresponding \kbd{FpJ}.
+
+\subsec{\kbd{Flj}}
+
+Below, \kbd{pi} is assumed to be the precomputed inverse of $p$.
+
+\fun{GEN}{Fle_to_Flj}{GEN P} convert a \kbd{Fle} to an equivalent \kbd{Flj}.
+
+\fun{GEN}{Flj_to_Fle_pre}{GEN P} convert a \kbd{Flj} to the equivalent
+\kbd{Fle}.
+
+\fun{GEN}{Flj_add_pre}{GEN P, GEN Q, ulong a4, ulong p, ulong pi}
+
+\fun{GEN}{Flj_dbl_pre}{GEN P, ulong a4, ulong p, ulong pi}
+
+\fun{GEN}{Flj_neg}{GEN P, ulong p} return $-P$.
+
+\fun{GEN}{Flj_mulu_pre}{GEN P, ulong n, ulong a4, ulong p, ulong pi}
+
+\fun{GEN}{random_Flj_pre}{ulong a4, ulong a6, ulong p, ulong pi}
+
+\subsec{Elliptic curves over $\F_{2^n}$}
+Let $T$ be an irreducible \kbd{F2x} and $E$ the
+elliptic curve given by either the equation
+$E:y^2+x*y=x^3+a_2\*x^2+a_6$, where $a_2, a_6$ are \kbd{F2x} in
+$\F_2[X]/(T)$ (ordinary case) or $E:y^2+a_3*y=x^3+a_4\*x+a_6$, where
+$a_3, a_4, a_6$ are \kbd{F2x} in $\F_2[X]/(T)$ (supersingular case).
+
+A \kbd{F2xqE} is a point of $E(\F_2[X]/(T))$.  In the supersingular case, the
+parameter \kbd{a2} is actually the \typ{VEC} $[a_3,a_4,a_3^{-1}]$.
+
+\fun{GEN}{F2xq_ellcard}{GEN a2, GEN a6, GEN T}
+Return the order of the group $E(\F_2[X]/(T))$.
+
+\fun{GEN}{F2xq_ellgroup}{GEN a2, GEN a6, GEN N, GEN T, GEN *pm}
+Return the group structure $D$ of the group $E(\F_2[X]/(T))$,
+which is assumed to be of order $N$ and set \kbd{*pm} to $m$.
+
+\fun{GEN}{F2xq_ellgens}{GEN a2, GEN a6, GEN ch, GEN D, GEN m, GEN T}
+Returns generators of the group $E(\F_2[X]/(T))$ with the base change \kbd{ch}
+(see \kbd{F2xqE\_changepoint}), where $D$ and $m$ are as returned by
+\kbd{F2xq\_ellgroup}.
+
+\fun{void}{F2xq_elltwist}{GEN a4, GEN a6, GEN T, GEN *a4t, GEN *a6t}
+sets \kbd{*a4t} and \kbd{*a6t} to the parameters of the quadratic twist of $E$.
+
+\subsec{\kbd{F2xqE}}
+
+\fun{GEN}{F2xqE_changepoint}{GEN P, GEN m, GEN a2, GEN T} returns the image
+$Q$ of the point $P$ on the curve $E:y^2+x*y=x^3+a_2\*x^2+a_6$ by the coordinate
+change $m$ (which is a \kbd{F2xqV}).
+
+\fun{GEN}{F2xqE_changepointinv}{GEN P, GEN m, GEN a2, GEN T} returns the image
+$Q$ on the curve $E:y^2=x^3+a_4\*x+a_6$ of the point $P$ by the inverse of the
+coordinate change $m$ (which is a \kbd{F2xqV}).
+
+\fun{GEN}{F2xqE_add}{GEN P, GEN Q, GEN a2, GEN T}
+
+\fun{GEN}{F2xqE_sub}{GEN P, GEN Q, GEN a2, GEN T}
+
+\fun{GEN}{F2xqE_dbl}{GEN P, GEN a2, GEN T}
+
+\fun{GEN}{F2xqE_neg}{GEN P, GEN a2, GEN T}
+
+\fun{GEN}{F2xqE_mul}{GEN P, GEN n, GEN a2, GEN T}
+
+\fun{GEN}{random_F2xqE}{GEN a2, GEN a6, GEN T}
+
+\fun{GEN}{F2xqE_order}{GEN P, GEN o, GEN a2, GEN T} returns the order of $P$ in
+the group $E(\F_2[X]/(T))$, where $o$ is a multiple of the order of $P$, or its
+factorization.
+
+\fun{GEN}{F2xqE_log}{GEN P, GEN G, GEN o, GEN a2, GEN T} Let \kbd{G} be a
+point of order \kbd{o}, return $e$ such that $e.P=G$. If $e$ does not exists,
+the result is currently undefined.
+
+\fun{GEN}{F2xqE_tatepairing}{GEN P, GEN Q, GEN m, GEN a2, GEN T} returns the
+Tate pairing of the point of $m$-torsion $P$ and the point $Q$.
+
+\fun{GEN}{F2xqE_weilpairing}{GEN Q, GEN Q, GEN m, GEN a2, GEN T} returns the
+Weil pairing of the points of $m$-torsion $P$ and $Q$.
+
+\fun{GEN}{RgE_to_F2xqE}{GEN P, GEN T} returns the \kbd{F2xqE} obtained by
+applying \kbd{Rg\_to\_F2xq} coefficientwise.
+
+\subsec{Elliptic curves over $\F_q$, small characteristic $p>2$ }
+Let $p > 2$ be a prime \kbd{ulong}, $T$ an irreducible \kbd{Flx} mod $p$, and
+$E$ the elliptic curve given by the equation $E:y^2=x^3+a_4\*x+a_6$, where $a_4$
+and $a_6$ are \kbd{Flx} in $\F_p[X]/(T)$.  A \kbd{FlxqE} is a point of
+$E(\F_p[X]/(T))$.
+
+In the special case $p = 3$, ordinary elliptic curves ($j(E)\neq 0$) cannot
+be represented as above, but admit a model $E:y^2 = x^3+a_2\*x^2+a_6$ with
+$a_2$ and $a_6$ being \kbd{Flx} in $\F_3[X]/(T)$. In that case, the parameter
+\kbd{a2} is actually stored as a \typ{VEC}, $[a_2]$, to avoid ambiguities.
+
+\fun{GEN}{Flxq_ellj}{GEN a4, GEN a6, GEN T, ulong p}
+returns the $j$-invariant of the curve $E$.
+
+\fun{void}{Flxq_ellj_to_a4a6}{GEN j, GEN T, ulong p, GEN *pa4, GEN *pa6}
+sets \kbd{*pa4} to $a_4$ and \kbd{*pa6} to $a_6$ where $a_4$ and $a_6$
+define a fixed elliptic curve with $j$-invariant $j$.
+
+\fun{GEN}{Flxq_ellcard}{GEN a4, GEN a6, GEN T, ulong p}
+returns the order of $E(\F_p[X]/(T))$.
+
+\fun{GEN}{Flxq_ellgroup}{GEN a4, GEN a6, GEN N, GEN T, ulong p, GEN *pm}
+returns the group structure $D$ of the group $E(\F_p[X]/(T))$,
+which is assumed to be of order $N$ and sets \kbd{*pm} to $m$.
+
+\fun{GEN}{Flxq_ellgens}{GEN a4, GEN a6, GEN ch, GEN D, GEN m, GEN T, ulong p}
+returns generators of the group $E(\F_p[X]/(T))$ with the base change \kbd{ch}
+(see \kbd{FlxqE\_changepoint}), where $D$ and $m$ are as returned by
+\kbd{Flxq\_ellgroup}.
+
+\fun{void}{Flxq_elltwist}{GEN a4, GEN a6, GEN T, ulong p, GEN *pA4, GEN *pA6}
+sets \kbd{*pA4} and \kbd{*pA6} to the corresponding parameters for the
+quadratic twist of $E$.
+
+\subsec{\kbd{FlxqE}}
+
+Let $p > 2$ be a prime number.
+
+\fun{GEN}{FlxqE_changepoint}{GEN P, GEN m, GEN a4, GEN T, ulong p} returns
+the image $Q$ of the point $P$ on the curve $E:y^2=x^3+a_4\*x+a_6$ by the
+coordinate change $m$ (which is a \kbd{FlxqV}).
+
+\fun{GEN}{FlxqE_changepointinv}{GEN P, GEN m, GEN a4, GEN T, ulong p} returns
+the image $Q$ on the curve $E:y^2=x^3+a_4\*x+a_6$ of the point $P$ by the
+inverse of the coordinate change $m$ (which is a \kbd{FlxqV}).
+
+\fun{GEN}{FlxqE_add}{GEN P, GEN Q, GEN a4, GEN T, ulong p}
+
+\fun{GEN}{FlxqE_sub}{GEN P, GEN Q, GEN a4, GEN T, ulong p}
+
+\fun{GEN}{FlxqE_dbl}{GEN P, GEN a4, GEN T, ulong p}
+
+\fun{GEN}{FlxqE_neg}{GEN P, GEN T, ulong p}
+
+\fun{GEN}{FlxqE_mul}{GEN P, GEN n, GEN a4, GEN T, ulong p}
+
+\fun{GEN}{random_FlxqE}{GEN a4, GEN a6, GEN T, ulong p}
+
+\fun{GEN}{FlxqE_order}{GEN P, GEN o, GEN a4, GEN T, ulong p} returns the
+order of $P$ in the group $E(\F_p[X]/(T))$, where $o$ is a multiple of the
+order of $P$, or its factorization.
+
+\fun{GEN}{FlxqE_log}{GEN P, GEN G, GEN o, GEN a4, GEN T, ulong p} Let \kbd{G}
+be a point of order \kbd{o}, return $e$ such that $e.P=G$. If $e$ does not
+exists, the result is currently undefined.
+
+\fun{GEN}{FlxqE_tatepairing}{GEN P, GEN Q, GEN m, GEN a4, GEN T, ulong p}
+returns the Tate pairing of the point of $m$-torsion $P$ and the point $Q$.
+
+\fun{GEN}{FlxqE_weilpairing}{GEN P, GEN Q, GEN m, GEN a4, GEN T, ulong p}
+returns the Weil pairing of the points of $m$-torsion $P$ and $Q$.
+
+\fun{GEN}{RgE_to_FlxqE}{GEN P, GEN T, ulong p} returns the \kbd{FlxqE}
+obtained by applying \kbd{Rg\_to\_Flxq} coefficientwise.
+
+\subsec{Elliptic curves over $\F_q$, large characteristic }
+
+Let $p > 3$ be a prime number, $T$ an irreducible polynomial mod $p$, and $E$
+the elliptic curve given by the equation $E:y^2=x^3+a_4\*x+a_6$ with $a_4$ and
+$a_6$ in $\F_p[X]/(T)$.  A \kbd{FpXQE} is a point of $E(\F_p[X]/(T))$.
+
+\fun{GEN}{FpXQ_ellj}{GEN a4, GEN a6, GEN T, GEN p}
+returns the $j$-invariant of the curve $E$.
+
+\fun{int}{FpXQ_elljissupersingular}{GEN j, GEN T, GEN p} returns $1$ if $j$ is
+the $j$-invariant of a supersingular curve over $\F_p[X]/(T)$, $0$ otherwise.
+
+\fun{GEN}{FpXQ_ellcard}{GEN a4, GEN a6, GEN T, GEN p}
+returns the order of $E(\F_p[X]/(T))$.
+
+\fun{GEN}{Fq_ellcard_SEA}{GEN a4, GEN a6, GEN q, GEN T, GEN p, long s}
+This function returns $\#E(\F_p[X]/(T))$, using the Schoof-Elkies-Atkin
+algorithm.
+Assume $p\neq 2,3$, and $q$ is the cardinality of $\F_p[X]/(T)$.
+The parameter $s$ has the same meaning as in \kbd{Fp\_ellcard\_SEA}.
+If the \kbd{seadata} package is installed, the function will be faster.
+
+\fun{GEN}{FpXQ_ellgroup}{GEN a4, GEN a6, GEN N, GEN T, GEN p, GEN *pm}
+Return the group structure $D$ of the group $E(\F_p[X]/(T))$,
+which is assumed to be of order $N$ and set \kbd{*pm} to $m$.
+
+\fun{GEN}{FpXQ_ellgens}{GEN a4, GEN a6, GEN ch, GEN D, GEN m, GEN T, GEN p}
+Returns generators of the group $E(\F_p[X]/(T))$ with the base change \kbd{ch}
+(see \kbd{FpXQE\_changepoint}), where $D$ and $m$ are as returned by
+\kbd{FpXQ\_ellgroup}.
+
+\fun{GEN}{FpXQ_elldivpol}{GEN a4, GEN a6, long n, GEN T, GEN p} returns the
+$n$-division polynomial of the elliptic curve $E$.
+
+\fun{GEN}{Fq_elldivpolmod}{GEN a4,GEN a6, long n, GEN h, GEN T, GEN p}
+returns the $n$-division polynomial of the elliptic curve $E$ modulo the
+polynomial $h$.
+
+\fun{void}{FpXQ_elltwist}{GEN a4, GEN a6, GEN T, GEN p, GEN *pA4, GEN *pA6}
+sets \kbd{*pA4} and \kbd{*pA6} to the corresponding parameters for the
+quadratic twist of $E$.
+
+\subsec{\kbd{FpXQE}}
+
+\fun{GEN}{FpXQE_changepoint}{GEN P, GEN m, GEN a4, GEN T, GEN p} returns the
+image $Q$ of the point $P$ on the curve $E:y^2=x^3+a_4\*x+a_6$ by the
+coordinate change $m$ (which is a \kbd{FpXQV}).
+
+\fun{GEN}{FpXQE_changepointinv}{GEN P, GEN m, GEN a4, GEN T, GEN p} returns
+the image $Q$ on the curve $E:y^2=x^3+a_4\*x+a_6$ of the point $P$ by the
+inverse of the coordinate change $m$ (which is a \kbd{FpXQV}).
+
+\fun{GEN}{FpXQE_add}{GEN P, GEN Q, GEN a4, GEN T, GEN p}
+
+\fun{GEN}{FpXQE_sub}{GEN P, GEN Q, GEN a4, GEN T, GEN p}
+
+\fun{GEN}{FpXQE_dbl}{GEN P, GEN a4, GEN T, GEN p}
+
+\fun{GEN}{FpXQE_neg}{GEN P, GEN T, GEN p}
+
+\fun{GEN}{FpXQE_mul}{GEN P, GEN n, GEN a4, GEN T, GEN p}
+
+\fun{GEN}{random_FpXQE}{GEN a4, GEN a6, GEN T, GEN p}
+
+\fun{GEN}{FpXQE_log}{GEN P, GEN G, GEN o, GEN a4, GEN T, GEN p} Let \kbd{G} be a
+point of order \kbd{o}, return $e$ such that $e.P=G$. If $e$ does not exists,
+the result is currently undefined.
+
+\fun{GEN}{FpXQE_order}{GEN P, GEN o, GEN a4, GEN T, GEN p} returns the order
+of $P$ in the group $E(\F_p[X]/(T))$, where $o$ is a multiple of the order of
+$P$, or its factorization.
+
+\fun{GEN}{FpXQE_tatepairing}{GEN P,GEN Q, GEN m, GEN a4, GEN T, GEN p}
+returns the Tate pairing of the point of $m$-torsion $P$ and the point $Q$.
+
+\fun{GEN}{FpXQE_weilpairing}{GEN P,GEN Q, GEN m, GEN a4, GEN T, GEN p}
+returns the Weil pairing of the points of $m$-torsion $P$ and $Q$.
+
+\fun{GEN}{RgE_to_FpXQE}{GEN P, GEN T, GEN p} returns the \kbd{FpXQE} obtained
+by applying \kbd{Rg\_to\_FpXQ} coefficientwise.
+
+\section{Functions related to modular polynomials}
+
+Variants of \tet{polmodular}, returning the modular polynomial of prime
+level $L$ for the invariant coded by \kbd{inv} (0: $j$, 1: Weber-$f$, see
+\tet{polclass} for the full list).
+
+\fun{GEN}{polmodular_ZXX}{long L, long inv, long xvar, long yvar}
+returns a bivariate polynomial in variables \kbd{xvar} and
+\kbd{yvar}.
+
+\fun{GEN}{polmodular_ZM}{long L, long inv} returns a matrix of
+(integral) coefficients.
+
+\fun{GEN}{Fp_polmodular_evalx}{long L, long inv, GEN J, GEN p, long v,
+int derivs} returns the modular polynomial evaluated
+at $J$ modulo the prime $p$ in the variable $v$ (if \kbd{derivs} is non-zero,
+returns a vector containing the modular polynomial and its first and second
+derivatives, all evaluated at $J$ modulo~$p$).
+
+\subsec{Functions related to modular invariants}
+
+\fun{void}{check_modinv}{long inv} report an error if \kbd{inv} is not a
+valid code for a mdular invariant.
+
+\fun{int}{modinv_good_disc}{long inv, long D} test whether the
+invariant \kbd{inv} is defined for the discriminant \kbd{D}.
+
+\fun{int}{modinv_good_prime}{long inv, long D} test whether the
+invariant \kbd{inv} is defined for the prime \kbd{p}.
+
+\fun{long}{modinv_height_factor}{long inv} return the height factor
+of the modular invariant \kbd{inv} with respect to the $j$-invariant.
+This is an integer $n$ such that the $j$-invariant is asymptotically
+of the order of the $n$-th power of the invariant \kbd{inv}.
+
+\fun{long}{modinv_is_Weber}{long inv} test whether the invariant
+\kbd{inv} is a power of Weber $f$.
+
+\fun{long}{modinv_is_double_eta}{long inv} test whether the invariant
+\kbd{inv} is a double $\eta$ quotient.
+
+\fun{long}{disc_best_modinv}{long D} the integer $D$ being a negative discriminant,
+return the modular invariant compatible with $D$ with the highest height
+factor.
+
+\fun{GEN}{Fp_modinv_to_j}{GEN x, long inv, GEN p} Let $\Phi$ the modular equation
+between $j$ and the modular invariant \kbd{inv}, return $y$ such that
+$\Phi(y,x)=0\pmod{p}$.
+
+\section{Other curves}
+
+The following functions deal with hyperelliptic curves in weighted projective
+space $\P_{(1,d,1)}$, with coordinates $(x,y,z)$ and a model of the form
+$ y^2 = T(x,z)$, where $T$ is homogeneous of degree $2d$, and squarefree.
+Thus the curve is nonsingular of genus $d-1$.
+
+\fun{long}{hyperell_locally_soluble}{GEN T, GEN p} assumes that $T\in\Z[X]$ is
+integral. Returns $1$ if the curve is locally soluble over $\Q_p$, $0$
+otherwise.
+
+\fun{long}{nf_hyperell_locally_soluble}{GEN nf, GEN T, GEN pr} let $K$
+be a number field, attached to \kbd{nf}, \kbd{pr} a \var{prid} attached
+to some maximal ideal $\goth{p}$; assumes that $T\in\Z_K[X]$ is integral.
+Returns $1$ if the curve is locally soluble over $K_{\goth{p}}$.
+
+\newpage

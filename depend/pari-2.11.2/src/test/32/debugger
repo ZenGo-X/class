@@ -1,0 +1,126 @@
+   echo = 1
+? default(breakloop,1)
+? my(bound=100,step=20,halt=41);check(B)=my(bi=[B^2]);for(i=1,bound,my(p=i+step,N=p^2);if(i==halt,error("check:",N)))
+(B)->my(bound=100,step=20,halt=41);my(bi=[B^2]);for(i=1,bound,my(p=i+step,N=
+p^2);if(i==halt,error("check:",N)))
+? check(1000);
+  ***   at top-level: check(1000)
+  ***                 ^-----------
+  ***   in function check: ...i+step,N=p^2);if(i==halt,error("check:",N)))
+  ***                                                  ^-------------------
+  ***   user error: check:3721
+  ***   Break loop: type 'break' to go back to GP prompt
+break> [bound,step,halt,i,p,N,bi,B]
+[100, 20, 41, 41, 61, 3721, [1000000], 1000]
+break> break
+
+? [bound,step,halt,i,p,N,bi,B]
+[bound, step, halt, i, p, N, bi, B]
+? my(p=120);for(i=1,100,1/0)
+  ***   at top-level: my(p=120);for(i=1,100,1/0)
+  ***                                        ^---
+  *** _/_: impossible inverse in gdiv: 0.
+  ***   Break loop: type 'break' to go back to GP prompt
+break> [p,i]
+[120, 1]
+break> dbg_err()
+error("impossible inverse in gdiv: 0.")
+break> break
+
+? fun(N)=check(N^2+1);
+? fun(20);
+  ***   at top-level: fun(20)
+  ***                 ^-------
+  ***   in function fun: check(N^2+1)
+  ***                    ^------------
+  ***   in function check: ...i+step,N=p^2);if(i==halt,error("check:",N)))
+  ***                                                  ^-------------------
+  ***   user error: check:3721
+  ***   Break loop: type 'break' to go back to GP prompt
+break> N
+3721
+break> dbg_up(4)
+  ***   at top-level: fun(20)
+  ***                 ^-------
+  ***   in function fun: check(N^2+1)
+  ***                    ^------------
+break> N
+20
+break> break
+
+? f(N,x)=my(z=x^2+1);breakpoint();gcd(N,z^2+1-z);
+? f(221,3)
+  ***   at top-level: f(221,3)
+  ***                 ^--------
+  ***   in function f: my(z=x^2+1);breakpoint();gcd(N,z^2+1-z)
+  ***                              ^---------------------------
+
+  ***   Break loop: <Return> to continue; 'break' to go back to GP prompt
+break> z
+10
+13
+? z
+z
+? iferrname("e_VAR",vector(10000,i,1/(i-100)),E,Vec(E))
+  ***   at top-level: ...("e_VAR",vector(10000,i,1/(i-100)),E,Vec(E))
+  ***                                             ^-------------------
+  *** _/_: impossible inverse in gdiv: 0.
+  ***   Break loop: type 'break' to go back to GP prompt
+break> i
+100
+break> break
+
+? f()=1/0
+()->1/0
+? f();
+  ***   at top-level: f()
+  ***                 ^---
+  ***   in function f: 1/0
+  ***                   ^--
+  *** _/_: impossible inverse in gdiv: 0.
+  ***   Break loop: type 'break' to go back to GP prompt
+break> allocatemem(10^7)
+  ***   Warning: new stack size = 10000000 (9.537 Mbytes).
+? for(i=1,10,if(i==2,1/0));
+  ***   at top-level: for(i=1,10,if(i==2,1/0))
+  ***                                     ^----
+  *** _/_: impossible inverse in gdiv: 0.
+  ***   Break loop: type 'break' to go back to GP prompt
+break> i
+2
+break> N=5
+5
+break> M=6;1/0
+  ***   at top-level: for(i=1,10,if(i==2,1/0))
+  ***                                     ^----
+  ***   in anonymous function: M=6;1/0
+  ***                               ^--
+  *** _/_: impossible inverse in gdiv: 0.
+  ***   Break loop: type 'break' to go back to GP prompt
+break[2]> break
+
+  ***   at top-level: for(i=1,10,if(i==2,1/0))
+  ***                                     ^----
+break> N
+5
+break> M
+M
+break> break
+
+? F1(T)=1/0;
+? F1(2)
+  ***   at top-level: F1(2)
+  ***                 ^-----
+  ***   in function F1: 1/0
+  ***                    ^--
+  *** _/_: impossible inverse in gdiv: 0.
+  ***   Break loop: type 'break' to go back to GP prompt
+break> dbg_up
+  ***   at top-level: F1(2)
+  ***                 ^-----
+break> T
+T
+break> break
+
+? print("Total time spent: ",gettime);
+Total time spent: 1

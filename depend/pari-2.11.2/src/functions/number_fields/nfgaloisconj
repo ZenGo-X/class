@@ -1,0 +1,50 @@
+Function: nfgaloisconj
+Section: number_fields
+C-Name: galoisconj0
+Prototype: GD0,L,DGp
+Help: nfgaloisconj(nf,{flag=0},{d}): list of conjugates of a root of the
+ polynomial x=nf.pol in the same number field. flag is optional (set to 0 by
+ default), meaning 0: use combination of flag 4 and 1, always complete; 1:
+ use nfroots; 4: use Allombert's algorithm, complete if the field is Galois of
+ degree <= 35 (see manual for details). nf can be simply a polynomial.
+Doc: $\var{nf}$ being a number field as output by \kbd{nfinit}, computes the
+ conjugates of a root $r$ of the non-constant polynomial $x=\var{nf}[1]$
+ expressed as polynomials in $r$. This also makes sense when the number field
+ is not \idx{Galois} since some conjugates may lie in the field.
+ $\var{nf}$ can simply be a polynomial.
+
+ If no flags or $\fl=0$, use a combination of flag $4$ and $1$ and the result
+ is always complete. There is no point whatsoever in using the other flags.
+
+ If $\fl=1$, use \kbd{nfroots}: a little slow, but guaranteed to work in
+ polynomial time.
+
+ If $\fl=4$, use \kbd{galoisinit}: very fast, but only applies to (most)
+ Galois fields. If the field is Galois with weakly super-solvable Galois
+ group (see \tet{galoisinit}), return the complete list of automorphisms, else
+ only the identity element. If present, $d$ is assumed to be a multiple of the
+ least common denominator of the conjugates expressed as polynomial in a root
+ of \var{pol}.
+
+ This routine can only compute $\Q$-automorphisms, but it may be used to get
+ $K$-automorphism for any base field $K$ as follows:
+ \bprog
+ rnfgaloisconj(nfK, R) = \\ K-automorphisms of L = K[X] / (R)
+ {
+   my(polabs, N,al,S, ala,k, vR);
+   R *= Mod(1, nfK.pol); \\ convert coeffs to polmod elts of K
+   vR = variable(R);
+   al = Mod(variable(nfK.pol),nfK.pol);
+   [polabs,ala,k] = rnfequation(nfK, R, 1);
+   Rt = if(k==0,R,subst(R,vR,vR-al*k));
+   N = nfgaloisconj(polabs) % Rt; \\ Q-automorphisms of L
+   S = select(s->subst(Rt, vR, Mod(s,Rt)) == 0, N);
+   if (k==0, S, apply(s->subst(s,vR,vR+k*al)-k*al,S));
+ }
+ K  = nfinit(y^2 + 7);
+ rnfgaloisconj(K, x^4 - y*x^3 - 3*x^2 + y*x + 1)  \\ K-automorphisms of L
+ @eprog
+
+Variant: Use directly
+ \fun{GEN}{galoisconj}{GEN nf, GEN d}, corresponding to $\fl = 0$, the others
+ only have historical interest.

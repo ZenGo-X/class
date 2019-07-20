@@ -1,0 +1,48 @@
+Function: alarm
+Section: programming/specific
+C-Name: gp_alarm
+Prototype: D0,L,DE
+Help: alarm({s = 0},{code}): if code is omitted, trigger an "e_ALARM"
+ exception after s seconds, cancelling any previously set alarm; stop a pending
+ alarm if s = 0 or is omitted. Otherwise, evaluate code, aborting after s
+ seconds.
+Doc: if \var{code} is omitted, trigger an \var{e\_ALARM} exception after $s$
+ seconds, cancelling any previously set alarm; stop a pending alarm if $s =
+ 0$ or is omitted.
+
+ Otherwise, if $s$ is positive, the function evaluates \var{code},
+ aborting after $s$ seconds. The return value is the value of \var{code} if
+ it ran to completion before the alarm timeout, and a \typ{ERROR} object
+ otherwise.
+ \bprog
+   ? p = nextprime(10^25); q = nextprime(10^26); N = p*q;
+   ? E = alarm(1, factor(N));
+   ? type(E)
+   %3 = "t_ERROR"
+   ? print(E)
+   %4 = error("alarm interrupt after 964 ms.")
+   ? alarm(10, factor(N));   \\ enough time
+   %5 =
+   [ 10000000000000000000000013 1]
+
+   [100000000000000000000000067 1]
+ @eprog\noindent Here is a more involved example: the function
+ \kbd{timefact(N,sec)} below tries to factor $N$ and gives up after \var{sec}
+ seconds, returning a partial factorization.
+ \bprog
+ \\ Time-bounded partial factorization
+ default(factor_add_primes,1);
+ timefact(N,sec)=
+ {
+   F = alarm(sec, factor(N));
+   if (type(F) == "t_ERROR", factor(N, 2^24), F);
+ }
+ @eprog\noindent We either return the factorization directly, or replace the
+ \typ{ERROR} result by a simple bounded factorization \kbd{factor(N, 2\pow 24)}.
+ Note the \tet{factor_add_primes} trick: any prime larger than $2^{24}$
+ discovered while attempting the initial factorization is stored and
+ remembered. When the alarm rings, the subsequent bounded factorization finds
+ it right away.
+
+ \misctitle{Caveat} It is not possible to set a new alarm \emph{within}
+ another \kbd{alarm} code: the new timer erases the parent one.

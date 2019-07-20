@@ -1,0 +1,18 @@
+Function: algdim
+Section: algebras
+C-Name: algdim
+Prototype: lGD0,L,
+Help: algdim(al,{abs=0}): dimension of the algebra al.
+Doc: If \var{al} is a table algebra output by \tet{algtableinit} or if~$abs=1$,
+ returns the dimension of \var{al} over its prime subfield ($\Q$ or $\F_p$).
+ If~\var{al} is a central simple algebra output by \tet{alginit} and~$abs=0$,
+ returns the dimension of \var{al} over its center.
+
+ \bprog
+ ? nf = nfinit(y^3-y+1);
+ ? A = alginit(nf, [-1,-1]);
+ ? algdim(A)
+ %3 = 4
+ ? algdim(A,1)
+ %4 = 12
+ @eprog

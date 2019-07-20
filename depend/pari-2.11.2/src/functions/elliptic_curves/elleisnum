@@ -1,0 +1,33 @@
+Function: elleisnum
+Section: elliptic_curves
+C-Name: elleisnum
+Prototype: GLD0,L,p
+Help: elleisnum(w,k,{flag=0}): k being an even positive integer, computes the
+ numerical value of the Eisenstein series of weight k at the lattice
+ w, as given by ellperiods. When flag is non-zero and k=4 or 6, this gives the
+ elliptic invariants g2 or g3 with the correct normalization.
+Doc: $k$ being an even positive integer, computes the numerical value of the
+ Eisenstein series of weight $k$ at the lattice $w$, as given by
+ \tet{ellperiods}, namely
+ $$
+ (2i \pi/\omega_2)^k
+ \Big(1 + 2/\zeta(1-k) \sum_{n\geq 1} n^{k-1}q^n / (1-q^n)\Big),
+ $$
+ where $q = \exp(2i\pi \tau)$ and $\tau:=\omega_1/\omega_2$ belongs to the
+ complex upper half-plane. It is also possible to directly input $w =
+ [\omega_1,\omega_2]$, or an elliptic curve $E$ as given by \kbd{ellinit}.
+ \bprog
+ ? w = ellperiods([1,I]);
+ ? elleisnum(w, 4)
+ %2 = 2268.8726415508062275167367584190557607
+ ? elleisnum(w, 6)
+ %3 = -3.977978632282564763 E-33
+ ? E = ellinit([1, 0]);
+ ? elleisnum(E, 4, 1)
+ %5 = -47.999999999999999999999999999999999998
+ @eprog
+
+ When \fl\ is non-zero and $k=4$ or 6, returns the elliptic invariants $g_2$
+ or $g_3$, such that
+ $$y^2 = 4x^3 - g_2 x - g_3$$
+ is a Weierstrass equation for $E$.

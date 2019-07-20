@@ -1,0 +1,90 @@
+padicprec(1,2)
+padicappr(x,O(2))
+padicappr(x^2+1+O(3), Mod(-1+O(5^10),y^2-2))
+padicappr(x^2+1+O(3), -1+O(5^10))
+padicappr('x,Mod(0,'t)+O(7^10))
+padicappr(x^2+Mod(O(3^2),t^2+1),Mod(0,t^2+1)+O(3^2))
+
+factorpadic(y^2+3^5,3,5)
+factor(x^2*(1+O(5^2)))
+factorpadic(x^2*(x+1)^3*(x+2)*(1+O(5^2)), 5, 2)
+factorpadic(x^2, 5, 2)
+factorpadic(3*x + O(2^5),2,5)
+
+p=2^64+13; liftint(padicappr((x-1)^30+p^30, 1+O(p^40)))
+
+test(p, e = 1)=
+{ my (N = 7*p^2);
+  for (i=0,10,if (!ispower(i+O(p^e), N), print([i,p,e])));
+  for (i=1,10,if (!ispower((i+O(p^e))^N, N), error([i,p,e])));
+}
+test(2)
+test(2,2)
+test(2,3)
+test(3)
+test(3,3)
+test(11,3)
+test(nextprime(2^64),3)
+polrootspadic(x^3-x+8, 2, 6)
+f = subst(x^3-x+8, x, x + Mod(y,y^2+y+1));
+padicappr(f, Mod(1+O(2^10)-y, y^2+y+1))
+\\#1424
+lift(1/2 + O(2))
+
+s=3+3^2+O(3^5)
+t=2+2^2+O(2^5)
+f=[cosh,sinh,tanh,cotanh];
+{
+for (i=1,#f,
+  print(f[i](s));
+  print(f[i](O(x)));
+)
+}
+gamma(s)
+gamma(t)
+p=2^64+13;
+gamma(3 + O(p^2))
+gamma(-3 + O(p^2))
+lngamma(17+O(3^5))
+gamma(1/5+O(2^2))
+gamma(1/5+O(2^3))
+gamma(123+O(2^7))
+gamma(123+O(2^8))
+gamma(29+O(2^5))
+gamma(29+O(2^6))
+
+I + O(5^3)
+log(1+4+O(2^10))
+log(1+3+O(3^10))
+log(1+5+O(5^10))
+log(1+101+O(101^10))
+
+T = x^12 + 208*x^6 + 64; phi = polcyclo(9);
+prec = 10; p = 3;
+v = factorpadic(T, p, prec)[,1];
+liftall( padicappr(phi, Mod(-2+O(p^prec),  v[1])) )
+
+T = teichmuller([17,10]);
+for(i=1,16,if (teichmuller(i+O(17^10),T) != teichmuller(i+O(17^10)), error(i)))
+
+\\#1793
+padicappr(x^3+1,-2+O(2^5))
+padicappr(x^3+1,Mod(-2+O(2^5),y^3+3))
+
+newtonpoly(x^4+3*x^2+27*x+x+81,3)
+newtonpoly(x^4+3*x^2+27*x,3)
+newtonpoly(x^4+y*x^2+y^3*x,y)
+
+\\#1863
+f=x^9+42*x^7-16*x^6+504*x^5-336*x^4+1560*x^3-1008*x^2+64;
+factorpadic(f,2,3)
+\\#1876
+factorpadic(2*x^4+x^2,2,2)
+polrootspadic(2*x^4+x^2,2,2)
+\\#1905
+polrootspadic(x,3,10)
+
+T = y^32 - 8*y^31 + 132*y^30 - 872*y^29 + 7978*y^28 - 43984*y^27 + 278592*y^26 - 1280230*y^25 + 6016836*y^24 - 22767800*y^23 + 83696182*y^22 - 259841076*y^21 + 772364746*y^20 - 1922859142*y^19 + 4097944748*y^18 - 7433491240*y^17 + 18853991151*y^16 - 45141140592*y^15 + 200971321044*y^14 - 495395957226*y^13 + 841610071252*y^12 - 313005796720*y^11 - 2973750987680*y^10 + 5018975002436*y^9 + 29214528458769*y^8 - 73301518803394*y^7 + 195023156598096*y^6 - 265879507425724*y^5 + 441249179094943*y^4 - 310432057395848*y^3 + 286093590632140*y^2 - 68137080187062*y + 169311946842369;
+fa=factorpadic(T,2,1); [poldegree(P) | P <- fa[,1]]
+fa=factorpadic(T,2,15); [poldegree(P) | P <- fa[,1]]
+

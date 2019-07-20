@@ -1,0 +1,12 @@
+Function: pollegendre
+Section: polynomials
+C-Name: pollegendre_eval
+Prototype: LDG
+Help: pollegendre(n,{a='x}): legendre polynomial of degree n evaluated at a.
+Description:
+  (small,?var):gen    pollegendre($1,$2)
+  (small,gen):gen     pollegendre_eval($1,$2)
+Doc: $n^{\text{th}}$ \idx{Legendre polynomial} evaluated at $a$ (\kbd{'x} by
+ default).
+Variant: To obtain the $n$-th Legendre polynomial in variable $v$,
+ use \fun{GEN}{pollegendre}{long n, long v}.

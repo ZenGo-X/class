@@ -1,0 +1,25 @@
+Function: polchebyshev
+Section: polynomials
+C-Name: polchebyshev_eval
+Prototype: LD1,L,DG
+Help: polchebyshev(n,{flag=1},{a='x}): Chebychev polynomial of the first (flag
+ = 1) or second (flag = 2) kind, of degree n, evaluated at a.
+Description:
+ (small,?1,?var):gen polchebyshev1($1,$3)
+ (small,2,?var):gen  polchebyshev2($1,$3)
+ (small,small,?var):gen polchebyshev($1,$2,$3)
+Doc: returns the $n^{\text{th}}$
+ \idx{Chebyshev} polynomial of the first kind $T_n$ ($\fl=1$) or the second
+ kind $U_n$ ($\fl=2$), evaluated at $a$ (\kbd{'x} by default). Both series of
+ polynomials satisfy the 3-term relation
+ $$ P_{n+1} = 2xP_n - P_{n-1}, $$
+ and are determined by the initial conditions $U_0 = T_0 = 1$, $T_1 = x$,
+ $U_1 = 2x$. In fact $T_n' = n U_{n-1}$ and, for all complex numbers $z$, we
+ have $T_n(\cos z) = \cos (nz)$ and $U_{n-1}(\cos z) = \sin(nz)/\sin z$.
+ If $n \geq 0$, then these polynomials have degree $n$.  For $n < 0$,
+ $T_n$ is equal to $T_{-n}$ and $U_n$ is equal to $-U_{-2-n}$.
+ In particular, $U_{-1} = 0$.
+Variant: Also available are
+ \fun{GEN}{polchebyshev}{long n, long flag, long v},
+ \fun{GEN}{polchebyshev1}{long n, long v} and
+ \fun{GEN}{polchebyshev2}{long n, long v} for $T_n$ and $U_n$ respectively.

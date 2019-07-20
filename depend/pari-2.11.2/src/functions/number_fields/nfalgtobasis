@@ -1,0 +1,20 @@
+Function: nfalgtobasis
+Section: number_fields
+C-Name: algtobasis
+Prototype: GG
+Help: nfalgtobasis(nf,x): transforms the algebraic number x into a column
+ vector on the integral basis nf.zk.
+Doc: Given an algebraic number $x$ in the number field $\var{nf}$,
+ transforms it to a column vector on the integral basis \kbd{\var{nf}.zk}.
+ \bprog
+ ? nf = nfinit(y^2 + 4);
+ ? nf.zk
+ %2 = [1, 1/2*y]
+ ? nfalgtobasis(nf, [1,1]~)
+ %3 = [1, 1]~
+ ? nfalgtobasis(nf, y)
+ %4 = [0, 2]~
+ ? nfalgtobasis(nf, Mod(y, y^2+4))
+ %5 = [0, 2]~
+ @eprog
+ This is the inverse function of \kbd{nfbasistoalg}.

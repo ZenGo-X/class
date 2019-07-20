@@ -1,0 +1,22 @@
+Function: breakpoint
+Class: gp
+Section: programming/control
+C-Name: pari_breakpoint
+Prototype: v
+Help: breakpoint(): interrupt the program and enter the breakloop. The program
+ continues when the breakloop is exited.
+Doc: Interrupt the program and enter the breakloop. The program continues when
+ the breakloop is exited.
+ \bprog
+ ? f(N,x)=my(z=x^2+1);breakpoint();gcd(N,z^2+1-z);
+ ? f(221,3)
+   ***   at top-level: f(221,3)
+   ***                 ^--------
+   ***   in function f: my(z=x^2+1);breakpoint();gcd(N,z
+   ***                              ^--------------------
+   ***   Break loop: type <Return> to continue; 'break' to go back to GP
+ break> z
+ 10
+ break>
+ %2 = 13
+ @eprog

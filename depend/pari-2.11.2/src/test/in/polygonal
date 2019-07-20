@@ -1,0 +1,5 @@
+P(n,s)=((s-2)*n^2-(s-4)*n)>>1;
+test(s)=for(n=0,10, if (!ispolygonal(P(n,s),s,&N) || N != n, error([n,s])));
+
+for (s=4,10, test(s))
+for (s=2^64, 2^64+10, test(s))

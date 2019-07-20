@@ -1,0 +1,18 @@
+Function: rnfeltnorm
+Section: number_fields
+C-Name: rnfeltnorm
+Prototype: GG
+Help: rnfeltnorm(rnf,x): returns the relative norm N_{L/K}(x), as an element
+ of K.
+Doc: $\var{rnf}$ being a relative number field extension $L/K$ as output by
+ \kbd{rnfinit} and $x$ being an element of $L$, returns the relative norm
+ $N_{L/K}(x)$ as an element of $K$.
+ \bprog
+ ? K = nfinit(y^2+1); L = rnfinit(K, x^2-y);
+ ? rnfeltnorm(L, Mod(x, L.pol))
+ %2 = Mod(x, x^2 + Mod(-y, y^2 + 1))
+ ? rnfeltnorm(L, 2)
+ %3 = 4
+ ? rnfeltnorm(L, Mod(x, x^2-y))
+ @eprog
+

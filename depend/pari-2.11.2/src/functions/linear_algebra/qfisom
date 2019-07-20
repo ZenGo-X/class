@@ -1,0 +1,27 @@
+Function: qfisom
+Section: linear_algebra
+C-Name: qfisom0
+Prototype: GGDGDG
+Help: qfisom(G,H,{fl},{grp}): find an isomorphism between the integral positive
+ definite quadratic forms G and H if it exists. G can also be given by a
+ qfisominit structure which is preferable if several forms need to be compared
+ to G.
+Doc:
+ $G$, $H$ being square and symmetric matrices with integer entries representing
+ positive definite quadratic forms, return an invertible matrix $S$ such that
+ $G={^t}S\*H\*S$. This defines a isomorphism between the corresponding lattices.
+ Since this requires computing the minimal vectors, the computations can
+ become very lengthy as the dimension grows.
+ See \kbd{qfisominit} for the meaning of \var{fl}.
+ If \var{grp} is given it must be the automorphism group of $H$. It will be used
+ to speed up the computation.
+
+ $G$ can also be given by an \kbd{qfisominit} structure which is preferable if
+ several forms $H$ need to be compared to $G$.
+
+ This function implements an algorithm of Plesken and Souvignier, following
+ Souvignier's implementation.
+
+Variant: Also available is \fun{GEN}{qfisom}{GEN G, GEN H, GEN fl, GEN grp}
+ where $G$ is a vector of \kbd{zm}, and $H$ is a \kbd{zm}, and $grp$ is
+ either \kbd{NULL} or a vector of \kbd{zm}.

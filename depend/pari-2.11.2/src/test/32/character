@@ -1,0 +1,93 @@
+
+[15 12]
+
+[ 0  1]
+
+[14, 4]
+15
+
+[20 0]
+
+[ 0 1]
+
+
+[20 0]
+
+[ 0 1]
+
+
+[20 0]
+
+[ 0 1]
+
+[0, 0]
+[0, 0]~
+1
+[18, 0]
+[0, 18]~
+69
+[3, 0]
+[0, 3]~
+33
+[19, 0]
+[0, 19]~
+[0, 19]~
+20
+20
+20
+67
+[13, 1]
+[1, 13]~
+[1, 13]~
+[1, 13]~
+[1, 13]~
+23
+[9, 1]
+[1, 9]~
+[1, 9]~
+[1, 9]~
+[1, 9]~
+* 100
+1: [100, 1]
+49: [20, 5]
+51: [-100, -4]
+99: [-20, -20]
+* 8
+1: [4, 1]
+3: [-8, -8]
+5: [8, 8]
+7: [-4, -4]
+* 5
+1: [25, 1]
+4: [5, 5]
+* 1
+1: [1, 1]
+[[]~, []~, 0, 1]
+[[2]~, [2]~, 4, 2]
+[[0]~, [0]~, 1, 1]
+[[3]~, [3]~, 3, 4]
+[13, [0, 19]~, 13, 20]
+[[0, 19]~, [1, 0]~, 51, 20]
+[[10, 1], [1, 10]~, 99, 2]
+  ***   at top-level: znchar(0)
+  ***                 ^---------
+  *** znchar: incorrect type in znchar (t_INT).
+  ***   at top-level: znchar(2)
+  ***                 ^---------
+  *** znchar: incorrect type in znchar (t_INT).
+  ***   at top-level: znchar(3)
+  ***                 ^---------
+  *** znchar: incorrect type in znchar (t_INT).
+  ***   at top-level: znchar([]~)
+  ***                 ^-----------
+  *** znchar: incorrect type in znchar (t_COL).
+  ***   at top-level: znchar([1,2,3])
+  ***                 ^---------------
+  *** znchar: incorrect type in znchar (t_VEC).
+  ***   at top-level: znchar([1,2])
+  ***                 ^-------------
+  *** znchar: incorrect type in znchar (t_VEC).
+  ***   at top-level: znchar([znstar(100,1),[1,2,3]])
+  ***                 ^-------------------------------
+  *** znchar: incorrect type in znchar (t_VEC).
+Total time spent: 0

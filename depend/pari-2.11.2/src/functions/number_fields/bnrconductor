@@ -1,0 +1,40 @@
+Function: bnrconductor
+Section: number_fields
+C-Name: bnrconductor0
+Prototype: GDGDGD0,L,
+Help: bnrconductor(A,{B},{C},{flag=0}): conductor f of the subfield of
+ the ray class field given by A,B,C. flag is optional and
+ can be 0: default, 1: returns [f, Cl_f, H], H subgroup of the ray class
+ group modulo f defining the extension, 2: returns [f, bnr(f), H].
+Doc: conductor $f$ of the subfield of a ray class field as defined by $[A,B,C]$
+ (of type \kbd{[\var{bnr}]},
+ \kbd{[\var{bnr}, \var{subgroup}]},
+ \kbd{[\var{bnf}, \var{modulus}]} or
+ \kbd{[\var{bnf}, \var{modulus}, \var{subgroup}]},
+ \secref{se:CFT})
+
+ If $\fl = 0$, returns $f$.
+
+ If $\fl = 1$, returns $[f, Cl_f, H]$, where $Cl_f$ is the ray class group
+ modulo $f$, as a finite abelian group; finally $H$ is the subgroup of $Cl_f$
+ defining the extension.
+
+ If $\fl = 2$, returns $[f, \var{bnr}(f), H]$, as above except $Cl_f$ is
+ replaced by a \kbd{bnr} structure, as output by $\tet{bnrinit}(,f)$, without
+ generators unless the input contained a \var{bnr} with generators.
+
+ In place of a subgroup $H$, this function also accepts a character
+ \kbd{chi}  $=(a_j)$, expressed as usual in terms of the generators
+ \kbd{bnr.gen}: $\chi(g_j) = \exp(2i\pi a_j / d_j)$, where $g_j$ has
+ order $d_j = \kbd{bnr.cyc[j]}$. In which case, the function returns
+ respectively
+
+ If $\fl = 0$, the conductor $f$ of $\text{Ker} \chi$.
+
+ If $\fl = 1$, $[f, Cl_f, \chi_f]$, where $\chi_f$ is $\chi$ expressed
+ on the minimal ray class group, whose modulus is the conductor.
+
+ If $\fl = 2$, $[f, \var{bnr}(f), \chi_f]$.
+
+Variant:
+ Also available is \fun{GEN}{bnrconductor}{GEN bnr, GEN H, long flag}

@@ -1,0 +1,28 @@
+Function: algindex
+Section: algebras
+C-Name: algindex
+Prototype: lGDG
+Help: algindex(al,{pl}): the index of the central simple algebra al. If pl is
+ set, it should be a prime ideal of the center or an integer between 1 and
+ r1+r2, and in that case return the local index at the place pl instead.
+Doc: Returns the index of the central simple algebra~$A$ over~$K$ (as output by
+ alginit), that is the degree~$e$ of the unique central division algebra~$D$
+ over $K$ such that~$A$ is isomorphic to some matrix algebra~$M_k(D)$. If
+ \var{pl} is set, it should be a prime ideal of~$K$ or an integer between~$1$
+ and~$r_1+r_2$, and in that case return the local index at the place \var{pl}
+ instead.
+
+ \bprog
+ ? nf = nfinit(y^2-5);
+ ? A = alginit(nf, [-1,y]);
+ ? algindex(A, 1)
+ %3 = 2
+ ? algindex(A, 2)
+ %4 = 1
+ ? algindex(A, idealprimedec(nf,2)[1])
+ %5 = 2
+ ? algindex(A, idealprimedec(nf,5)[1])
+ %6 = 1
+ ? algindex(A)
+ %7 = 2
+ @eprog

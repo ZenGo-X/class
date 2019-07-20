@@ -1,0 +1,76 @@
+if test "$optimization" = profiling; then
+  which_graphic_lib=none
+fi
+
+_graphic_list="which_graphic_lib X11 X11_INC X11_LIBS \
+FLTK_LIBS QTDIR QTLIB"
+
+if test -n "$with_fltk"; then which_graphic_lib=fltk; fi
+if test -n "$with_qt";   then which_graphic_lib=Qt; fi
+if test "$fastread" != yes; then
+  cat << EOT
+==========================================================================
+GP contains high resolution plotting functions. Choose among
+      none      X11      fltk      Qt      win32      ps     svg
+EOT
+  echo $n ..."Use which graphic library (\"none\" means no hi-res plot) ? $c"
+  rep="none X11 fltk Qt win32 ps";
+  dflt=$which_graphic_lib; . ./myread
+  which_graphic_lib=$ans
+fi
+
+case $osname in
+  mingw|cygwin) case $which_graphic_lib in
+                  auto) which_graphic_lib=win32;;
+                esac;;
+esac
+case $which_graphic_lib in
+  auto|X11|x11)
+  . ./get_X11  # X11,X11_INC,X11_LIBS.
+    if test -z "$X11_LIBS"; then
+      case $which_graphic_lib in X11|x11) which_graphic_lib=none;; esac
+    else
+      which_graphic_lib=X11
+    fi;;
+esac
+case $which_graphic_lib in
+  auto|fltk)
+    case $osname in
+      darwin) ;; # fltk brings in CoreFoundation, incompatible with pari_daemon
+      *). ./get_fltk # FLTK_LIBS ;;
+        if test -z "$FLTK_LIBS"; then
+          case $which_graphic_lib in fltk) which_graphic_lib=none;; esac
+        else
+          which_graphic_lib=fltk
+        fi;;
+    esac;;
+esac
+# TODO: Check whether Qt + pari_daemon() work on darwin [ probably not ]
+case $which_graphic_lib in
+  Qt|qt)
+    . ./get_Qt   # QTDIR, QTLIB
+    if test -z "$QTDIR"; then
+      case $which_graphic_lib in qt|Qt) which_graphic_lib=none;; esac
+    # Never automatically pick Qt
+    fi;;
+esac
+case $which_graphic_lib in
+  auto|svg) which_graphic_lib=svg;;
+esac
+case $which_graphic_lib in
+  auto|PS|ps) which_graphic_lib=ps;;
+esac
+case $which_graphic_lib in
+  X11|fltk|Qt4|ps|svg)
+    if test "$has_waitpid" = no -o "$has_setsid" = no; then
+      echo "### Missing waitpid() or setsid(), no Hi-Res graphing window"
+      which_graphic_lib=none
+    fi;;
+esac
+
+case $osname in
+  linux|gnu*|*bsd) gp_mime_open="xdg-open";;
+  darwin)          gp_mime_open="open -W";;
+esac
+
+echo "Hi-Res Graphics: $which_graphic_lib"

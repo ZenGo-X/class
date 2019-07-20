@@ -1,0 +1,12 @@
+Function: prodnumrat
+Section: sums
+C-Name: prodnumrat
+Prototype: GLp
+Help: prodnumrat(F,a): product from n = a to infinity of F(n), where F-1
+ is a rational function of degree less than or equal to -2.
+Doc: $\prod_{n\ge a}F(n)$, where $F-1$ is a rational function of degree less
+ than or equal to $-2$.
+ \bprog
+ ? prodnumrat(1+1/x^2,1)
+ %1 = 3.6760779103749777206956974920282606665
+ @eprog

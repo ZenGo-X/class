@@ -1,0 +1,33 @@
+Function: mfgaloistype
+Section: modular_forms
+C-Name: mfgaloistype
+Prototype: GDG
+Help: mfgaloistype(NK,{F}): NK being either [N,1,CHI] or an mf
+ output by mfinit in weight 1 , gives the vector of
+ types of Galois representations attached to each cuspidal eigenform,
+ unless the eigenform F is specified, in which case only for F.
+ Types A_4, S_4, A_5 are represented by minus their cardinality -12, -24,
+ or -60, and type D_n is represented by its cardinality, the integer 2*n.
+Doc: \kbd{NK} being either \kbd{[N,1,CHI]} or an \kbd{mf} output by
+ \kbd{mfinit} in weight $1$, gives the vector of types of Galois
+ representations attached to each cuspidal eigenform,
+ unless the modular form \kbd{F} is specified, in which case only for \kbd{F}
+ (note that it is not tested whether \kbd{F} belongs to the correct modular
+ form space, nor whether it is a cuspidal eigenform). Types $A_4$, $S_4$,
+ $A_5$ are represented by minus their cardinality $-12$, $-24$, or $-60$,
+ and type $D_n$ is represented by its cardinality, the integer $2n$:
+ \bprog
+ ? mfgaloistype([124,1, Mod(67,124)]) \\ A4
+ %1 = [-12]
+ ? mfgaloistype([148,1, Mod(105,148)]) \\ S4
+ %2 = [-24]
+ ? mfgaloistype([633,1, Mod(71,633)]) \\ D10, A5
+ %3 = [10, -60]
+ ? mfgaloistype([239,1, -239]) \\ D6, D10, D30
+ %4 = [6, 10, 30]
+ ? mfgaloistype([71,1, -71])
+ %5 = [14]
+ ? mf = mfinit([239,1, -239],0); F = mfeigenbasis(mf)[2];
+ ? mfgaloistype(mf, F)
+ %7 = 10
+ @eprog

@@ -1,0 +1,40 @@
+Function: component
+Section: conversions
+C-Name: compo
+Prototype: GL
+Help: component(x,n): the n'th component of the internal representation of
+ x. For vectors or matrices, it is simpler to use x[]. For list objects such
+ as nf, bnf, bnr or ell, it is much easier to use member functions starting
+ with ".".
+Description:
+ (error,small):gen     err_get_compo($1, $2)
+ (gen,small):gen       compo($1,$2)
+Doc: extracts the $n^{\text{th}}$-component of $x$. This is to be understood
+ as follows: every PARI type has one or two initial \idx{code words}. The
+ components are counted, starting at 1, after these code words. In particular
+ if $x$ is a vector, this is indeed the $n^{\text{th}}$-component of $x$, if
+ $x$ is a matrix, the $n^{\text{th}}$ column, if $x$ is a polynomial, the
+ $n^{\text{th}}$ coefficient (i.e.~of degree $n-1$), and for power series,
+ the $n^{\text{th}}$ significant coefficient.
+
+ For polynomials and power series, one should rather use \tet{polcoeff}, and
+ for vectors and matrices, the \kbd{[$\,$]} operator. Namely, if $x$ is a
+ vector, then \tet{x[n]} represents the $n^{\text{th}}$ component of $x$. If
+ $x$ is a matrix, \tet{x[m,n]} represents the coefficient of row \kbd{m} and
+ column \kbd{n} of the matrix, \tet{x[m,]} represents the $m^{\text{th}}$
+ \emph{row} of $x$, and \tet{x[,n]} represents the $n^{\text{th}}$
+ \emph{column} of $x$.
+
+ Using of this function requires detailed knowledge of the structure of the
+ different PARI types, and thus it should almost never be used directly.
+ Some useful exceptions:
+ \bprog
+     ? x = 3 + O(3^5);
+     ? component(x, 2)
+     %2 = 81   \\ p^(p-adic accuracy)
+     ? component(x, 1)
+     %3 = 3    \\ p
+     ? q = Qfb(1,2,3);
+     ? component(q, 1)
+     %5 = 1
+ @eprog

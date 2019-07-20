@@ -1,0 +1,9 @@
+Function: while
+Section: programming/control
+C-Name: whilepari
+Prototype: vEI
+Help: while(a,seq): while a is nonzero evaluate the expression sequence seq.
+ Otherwise 0.
+Doc: while $a$ is non-zero, evaluates the expression sequence \var{seq}. The
+ test is made \emph{before} evaluating the $seq$, hence in particular if $a$
+ is initially equal to zero the \var{seq} will not be evaluated at all.

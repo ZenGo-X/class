@@ -1,0 +1,52 @@
+Function: issquare
+Section: number_theoretical
+C-Name: issquareall
+Prototype: lGD&
+Help: issquare(x,{&n}): true(1) if x is a square, false(0) if not. If n is
+ given puts the exact square root there if it was computed.
+Description:
+ (int):bool        Z_issquare($1)
+ (gen):bool        issquare($1)
+ (int, &int):bool  Z_issquareall($1, &$2)
+ (gen, &gen):bool  issquareall($1, &$2)
+Doc: true (1) if $x$ is a square, false (0)
+ if not. What ``being a square'' means depends on the type of $x$: all
+ \typ{COMPLEX} are squares, as well as all non-negative \typ{REAL}; for
+ exact types such as \typ{INT}, \typ{FRAC} and \typ{INTMOD}, squares are
+ numbers of the form $s^2$ with $s$ in $\Z$, $\Q$ and $\Z/N\Z$ respectively.
+ \bprog
+ ? issquare(3)          \\ as an integer
+ %1 = 0
+ ? issquare(3.)         \\ as a real number
+ %2 = 1
+ ? issquare(Mod(7, 8))  \\ in Z/8Z
+ %3 = 0
+ ? issquare( 5 + O(13^4) )  \\ in Q_13
+ %4 = 0
+ @eprog
+ If $n$ is given, a square root of $x$ is put into $n$.
+ \bprog
+ ? issquare(4, &n)
+ %1 = 1
+ ? n
+ %2 = 2
+ @eprog
+ For polynomials, either we detect that the characteristic is 2 (and check
+ directly odd and even-power monomials) or we assume that $2$ is invertible
+ and check whether squaring the truncated power series for the square root
+ yields the original input.
+
+ For \typ{POLMOD} $x$, we only support \typ{POLMOD}s of \typ{INTMOD}s
+ encoding finite fields, assuming without checking that the intmod modulus
+ $p$ is prime and that the polmod modulus is irreducible modulo $p$.
+ \bprog
+ ? issquare(Mod(Mod(2,3), x^2+1), &n)
+ %1 = 1
+ ? n
+ %2 = Mod(Mod(2, 3)*x, Mod(1, 3)*x^2 + Mod(1, 3))
+ @eprog
+
+Variant: Also available is \fun{long}{issquare}{GEN x}. Deprecated
+ GP-specific functions \fun{GEN}{gissquare}{GEN x} and
+ \fun{GEN}{gissquareall}{GEN x, GEN *pt} return \kbd{gen\_0} and \kbd{gen\_1}
+ instead of a boolean value.

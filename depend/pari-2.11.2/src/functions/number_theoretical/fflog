@@ -1,0 +1,58 @@
+Function: fflog
+Section: number_theoretical
+C-Name: fflog
+Prototype: GGDG
+Help: fflog(x,g,{o}): return the discrete logarithm of the finite field
+ element x in base g. If present, o must represents the multiplicative
+ order of g. If no o is given, assume that g is a primitive root.
+Doc: discrete logarithm of the finite field element $x$ in base $g$,
+ i.e.~an $e$ in $\Z$ such that $g^e = o$. If
+ present, $o$ represents the multiplicative order of $g$, see
+ \secref{se:DLfun}; the preferred format for
+ this parameter is \kbd{[ord, factor(ord)]}, where \kbd{ord} is the
+ order of $g$. It may be set as a side effect of calling \tet{ffprimroot}.
+
+ If no $o$ is given, assume that $g$ is a primitive root. The result is
+ undefined if $e$ does not exist. This function uses
+
+ \item a combination of generic discrete log algorithms (see \tet{znlog})
+
+ \item a cubic sieve index calculus algorithm for large fields of degree at
+ least $5$.
+
+ \item Coppersmith's algorithm for fields of characteristic at most $5$.
+
+ \bprog
+ ? t = ffgen(ffinit(7,5));
+ ? o = fforder(t)
+ %2 = 5602   \\@com \emph{not} a primitive root.
+ ? fflog(t^10,t)
+ %3 = 10
+ ? fflog(t^10,t, o)
+ %4 = 10
+ ? g = ffprimroot(t, &o);
+ ? o   \\ order is 16806, bundled with its factorization matrix
+ %6 = [16806, [2, 1; 3, 1; 2801, 1]]
+ ? fforder(g, o)
+ %7 = 16806
+ ? fflog(g^10000, g, o)
+ %8 = 10000
+ @eprog
+
+Function: _Flxq_log_Coppersmith_worker
+C-Name: Flxq_log_Coppersmith_worker
+Prototype: GLGG
+Section: programming/internals
+Help: Flxq_log_Coppersmith_worker: worker for Flxq_log_Coppersmith
+
+Function: _F2xq_log_Coppersmith_worker
+C-Name: F2xq_log_Coppersmith_worker
+Prototype: GLGG
+Section: programming/internals
+Help: F2xq_log_Coppersmith_worker: worker for F2xq_log_Coppersmith
+
+Function: _Fp_log_sieve_worker
+C-Name: Fp_log_sieve_worker
+Prototype: LLGGGGGG
+Section: programming/internals
+Help: Fp_log_sieve_worker: worker for Fp_log_sieve

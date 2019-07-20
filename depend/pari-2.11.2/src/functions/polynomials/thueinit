@@ -1,0 +1,72 @@
+Function: thueinit
+Section: polynomials
+C-Name: thueinit
+Prototype: GD0,L,p
+Help: thueinit(P,{flag=0}): initialize the tnf corresponding to P, that will
+ be used to solve Thue equations P(x,y) = some-integer. If flag is non-zero,
+ certify the result unconditionaly. Otherwise, assume GRH (much faster of
+ course).
+Doc: initializes the \var{tnf} corresponding to $P$, a non-constant
+ univariate polynomial with integer coefficients.
+ The result is meant to be used in conjunction with \tet{thue} to solve Thue
+ equations $P(X / Y)Y^{\deg P} = a$, where $a$ is an integer. Accordingly,
+ $P$ must either have at least two distinct irreducible factors over $\Q$,
+ or have one irreducible factor $T$ with degree $>2$ or two conjugate
+ complex roots: under these (necessary and sufficient) conditions, the
+ equation has finitely many integer solutions.
+ \bprog
+ ? S = thueinit(t^2+1);
+ ? thue(S, 5)
+ %2 = [[-2, -1], [-2, 1], [-1, -2], [-1, 2], [1, -2], [1, 2], [2, -1], [2, 1]]
+ ? S = thueinit(t+1);
+  ***   at top-level: thueinit(t+1)
+  ***                 ^-------------
+  *** thueinit: domain error in thueinit: P = t + 1
+ @eprog\noindent The hardest case is when $\deg P > 2$ and $P$ is irreducible
+ with at least one real root. The routine then uses Bilu-Hanrot's algorithm.
+
+ If $\fl$ is non-zero, certify results unconditionally. Otherwise, assume
+ \idx{GRH}, this being much faster of course. In the latter case, the result
+ may still be unconditionally correct, see \tet{thue}. For instance in most
+ cases where $P$ is reducible (not a pure power of an irreducible), \emph{or}
+ conditional computed class groups are trivial \emph{or} the right hand side
+ is $\pm1$, then results are unconditional.
+
+ \misctitle{Note} The general philosophy is to disprove the existence of large
+ solutions then to enumerate bounded solutions naively. The implementation
+ will overflow when there exist huge solutions and the equation has degree
+ $> 2$ (the quadratic imaginary case is special, since we can stick to
+ \kbd{bnfisintnorm}, there are no fundamental units):
+ \bprog
+ ? thue(t^3+2, 10^30)
+  ***   at top-level: L=thue(t^3+2,10^30)
+  ***                   ^-----------------
+  *** thue: overflow in thue (SmallSols): y <= 80665203789619036028928.
+ ? thue(x^2+2, 10^30)  \\ quadratic case much easier
+ %1 = [[-1000000000000000, 0], [1000000000000000, 0]]
+ @eprog
+
+ \misctitle{Note} It is sometimes possible to circumvent the above, and in any
+ case obtain an important speed-up, if you can write $P = Q(x^d)$ for some $d >
+ 1$ and $Q$ still satisfying the \kbd{thueinit} hypotheses. You can then solve
+ the equation attached to $Q$ then eliminate all solutions $(x,y)$ such that
+ either $x$ or $y$ is not a $d$-th power.
+ \bprog
+ ? thue(x^4+1, 10^40); \\ stopped after 10 hours
+ ? filter(L,d) =
+     my(x,y); [[x,y] | v<-L, ispower(v[1],d,&x)&&ispower(v[2],d,&y)];
+ ? L = thue(x^2+1, 10^40);
+ ? filter(L, 2)
+ %4 = [[0, 10000000000], [10000000000, 0]]
+ @eprog\noindent The last 2 commands use less than 20ms.
+
+ \misctitle{Note} When $P$ is irreducible without a real root, the equation
+ can be solved unconditionnally in time $|a|^{1/\deg P}$. When this
+ latter quantity is huge and the equation has no solutions, this fact
+ may still be ascertained via arithmetic conditions but this now implies
+ solving norm equations, computing a \var{bnf} and possibly assuming the GRH.
+ When there is no real root, the code does not compute a \var{bnf}
+ (with certification if $\fl = 1$) if it expects this to be an ``easy''
+ computation (because the result would only be used for huge values of $a$).
+ See \kbd{thue} for a way to compute an expensive \var{bnf} on your own and
+ still get a result where this default cheap strategy fails.

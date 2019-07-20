@@ -1,0 +1,9 @@
+Function: dirdiv
+Section: number_theoretical
+C-Name: dirdiv
+Prototype: GG
+Help: dirdiv(x,y): division of the Dirichlet series x by the Dirichlet
+ series y.
+Doc: $x$ and $y$ being vectors of perhaps different
+ lengths but with $y[1]\neq 0$ considered as \idx{Dirichlet series}, computes
+ the quotient of $x$ by $y$, again as a vector.

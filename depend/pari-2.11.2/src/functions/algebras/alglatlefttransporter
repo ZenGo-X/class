@@ -1,0 +1,20 @@
+Function: alglatlefttransporter
+Section: algebras
+C-Name: alglatlefttransporter
+Prototype: GGG
+Help: alglatlefttransporter(al,lat1,lat2): the set of x in al such that x*lat1
+ is contained in lat2.
+Doc: Given an algebra \var{al} and two lattices \var{lat1} and \var{lat2}
+ in~\var{al}, computes the left transporter from \var{lat1} to~\var{lat2}, i.e.
+ the set of~$x\in al$ such that~$x\cdot lat1 \subset lat2$.
+ \bprog
+ ? al = alginit(nfinit(y^2+7), [-1,-1]);
+ ? lat1 = alglathnf(al,[1,-1,0,1,2,0,5,2]~);
+ ? lat2 = alglathnf(al,[0,1,-2,-1,0,0,3,1]~);
+ ? tr = alglatlefttransporter(al,lat1,lat2);
+ ? a = alglatelement(al,tr,[0,0,0,0,0,0,1,0]~);
+ ? alglatsubset(al,alglatmul(al,a,lat1),lat2)
+ %6 = 1
+ ? alglatsubset(al,alglatmul(al,lat1,a),lat2)
+ %7 = 0
+ @eprog

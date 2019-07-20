@@ -1,0 +1,47 @@
+Function: nfsplitting
+Section: number_fields
+C-Name: nfsplitting
+Prototype: GDG
+Help: nfsplitting(P,{d}): defining polynomial over Q for the splitting field of
+ P, that is the smallest field over which P is totally split. P can also be
+ given by a nf structure. If d is given, it must be a multiple of the splitting
+ field degree.
+Doc: defining polynomial over~$\Q$ for the splitting field of \var{P},
+ that is the smallest field over which $P$ is totally split. If $P$
+ can also be given by a~\kbd{nf} structure, which is more efficient.
+ If $d$ is given, it must be a multiple of the splitting field degree.
+ Note that if $P$ is reducible the splitting field degree can be smaller
+ than the degree of $P$.
+ \bprog
+ ? K = nfinit(x^3-2);
+ ? nfsplitting(K)
+ %2 = x^6 + 108
+ ? nfsplitting(x^8-2)
+ %3 = x^16 + 272*x^8 + 64
+ ? S = nfsplitting(x^6-8) // reducible
+ %4 = x^4+2*x^2+4
+ ? lift(nfroots(subst(S,x,a),x^6-8))
+ %5 = [-a,a,-1/2*a^3-a,-1/2*a^3,1/2*a^3,1/2*a^3+a]
+ @eprog
+ \noindent
+ Specifying the degree of the splitting field can make the computation faster.
+ \bprog
+ ? nfsplitting(x^17-123);
+ time = 3,607 ms.
+ ? poldegree(%)
+ %2 = 272
+ ? nfsplitting(x^17-123,272);
+ time = 150 ms.
+ ? nfsplitting(x^17-123,273);
+  *** nfsplitting: Warning: ignoring incorrect degree bound 273
+ time = 3,611 ms.
+ @eprog
+ \noindent
+ The complexity of the algorithm is polynomial in the degree $d$ of the
+ splitting field and the bitsize of $T$; if $d$ is large the result will
+ likely be unusable, e.g. \kbd{nfinit} will not be an option:
+ \bprog
+ ? nfsplitting(x^6-x-1)
+ [... degree 720 polynomial deleted ...]
+ time = 11,020 ms.
+ @eprog

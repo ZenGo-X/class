@@ -1,0 +1,21 @@
+default(parisize,"10M");
+default(realprecision,38);
+setrand(1); K=bnfinit(x^2+31);bnrL1(bnrinit(K,1))
+setrand(1); K=bnfinit(x^2-3);
+setrand(1); bnrL1(bnrinit(K,5),,5)
+setrand(1); bnrL1(bnrinit(K,[5,[1,0]]),,5)
+\\ avoid 32/64-bit discrepancy for near-0 components
+filter(v)= apply(x->if(abs(imag(x[2])) < 1e-38, real(x),x), v);
+setrand(1); filter( bnrL1(bnrinit(K,[5,[1,1]]),,5) )
+setrand(1); K=bnfinit(x^2-168);\\#1601
+setrand(1); bnrL1(bnrinit(K,[6,[1,1]]),,5)
+
+P=x^5-x^4-5*x^3+4*x^2+3*x-1;
+S=x^10-26*x^8+233*x^6-832*x^4+1024*x^2-401;
+bnf=bnfinit(a^2-401*25);
+cond=rnfconductor(bnf,P);
+bnr=bnrinit(bnf,cond[1]);
+real(bnrL1(bnr,cond[3],1))
+
+default(realprecision,100);
+bnrL1(bnrinit(bnfinit(Q),[5,[1]],1))[1]

@@ -1,0 +1,29 @@
+p = nextprime(10^6);
+q = nextprime(p+1);
+a = 2*3*5*7;
+
+sigma2(x) = sigma(x, 2);
+sigma3(x) = sigma(x, 3);
+fun = [ispowerful, moebius, core, omega, bigomega, eulerphi, numdiv, sigma, sigma2, sigma3];
+
+vec(n) = vector(#fun, i, fun[i](n));
+args = [a, a*p, a*p*q, a*p^2*q, -a*p];
+vals = vector(#args, i, vec(args[i]))
+TEST() =
+{
+  for (i=1,#args,
+    my(n = args[i]);
+    print("Testing ", n, ", addprimes = ", addprimes());
+    if (vec(n) != vals[i], error(n))
+  );
+}
+
+addprimes(p);
+TEST();
+addprimes([p,q]);
+TEST();
+removeprimes(p);
+TEST();
+removeprimes(addprimes())
+addprimes([p,q,1009]);
+removeprimes([p,q])

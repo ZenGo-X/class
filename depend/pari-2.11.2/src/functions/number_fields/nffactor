@@ -1,0 +1,39 @@
+Function: nffactor
+Section: number_fields
+C-Name: nffactor
+Prototype: GG
+Help: nffactor(nf,T): factor polynomial T in number field nf.
+Doc: factorization of the univariate
+ polynomial $T$ over the number field $\var{nf}$ given by \kbd{nfinit}; $T$
+ has coefficients in $\var{nf}$ (i.e.~either scalar, polmod, polynomial or
+ column vector). The factors are sorted by increasing degree.
+
+ The main variable of $\var{nf}$ must be of \emph{lower}
+ priority than that of $T$, see \secref{se:priority}. However if
+ the polynomial defining the number field occurs explicitly  in the
+ coefficients of $T$ as modulus of a \typ{POLMOD} or as a \typ{POL}
+ coefficient, its main variable must be \emph{the same} as the main variable
+ of $T$. For example,
+ \bprog
+ ? nf = nfinit(y^2 + 1);
+ ? nffactor(nf, x^2 + y); \\@com OK
+ ? nffactor(nf, x^2 + Mod(y, y^2+1)); \\ @com OK
+ ? nffactor(nf, x^2 + Mod(z, z^2+1)); \\ @com WRONG
+ @eprog
+
+ It is possible to input a defining polynomial for \var{nf}
+ instead, but this is in general less efficient since parts of an \kbd{nf}
+ structure will then be computed internally. This is useful in two
+ situations: when you do not need the \kbd{nf} elsewhere, or when you cannot
+ initialize an \kbd{nf} due to integer factorization difficulties when
+ attempting to compute the field discriminant and maximal order. In all
+ cases, the function runs in polynomial time using Belabas's variant
+ of \idx{van Hoeij}'s algorithm, which copes with hundreds of modular factors.
+
+ \misctitle{Caveat} \kbd{nfinit([T, listP])} allows to compute in polynomial
+ time a conditional \var{nf} structure, which sets \kbd{nf.zk} to an order
+ which is not guaranteed to be maximal at all primes. Always either use
+ \kbd{nfcertify} first (which may not run in polynomial time) or make sure
+ to input \kbd{nf.pol} instead of the conditional \var{nf}: \kbd{nffactor} is
+ able to recover in polynomial time in this case, instead of potentially
+ missing a factor.

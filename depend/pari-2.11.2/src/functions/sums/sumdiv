@@ -1,0 +1,14 @@
+Function: sumdiv
+Section: sums
+C-Name: sumdivexpr
+Prototype: GVE
+Help: sumdiv(n,X,expr): sum of expression expr, X running over the divisors
+ of n.
+Doc: sum of expression \var{expr} over the positive divisors of $n$.
+ This function is a trivial wrapper essentially equivalent to
+ \bprog
+   D = divisors(n);
+   for (i = 1, #D, X = D[i]; eval(expr))
+ @eprog\noindent (except that \kbd{X} is lexically scoped to the \kbd{sumdiv}
+ loop). If \var{expr} is a multiplicative function, use \tet{sumdivmult}.
+ %\syn{NO}

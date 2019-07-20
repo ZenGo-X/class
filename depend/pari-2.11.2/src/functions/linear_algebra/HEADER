@@ -1,0 +1,21 @@
+Function: _header_linear_algebra
+Class: header
+Section: linear_algebra
+Doc:
+ \section{Vectors, matrices, linear algebra and sets}
+ \label{se:linear_algebra}
+
+ Note that most linear algebra functions operating on subspaces defined by
+ generating sets (such as \tet{mathnf}, \tet{qflll}, etc.) take matrices as
+ arguments. As usual, the generating vectors are taken to be the
+ \emph{columns} of the given matrix.
+
+ Since PARI does not have a strong typing system, scalars live in
+ unspecified commutative base rings. It is very difficult to write
+ robust linear algebra routines in such a general setting. We thus
+ assume that the base ring is a domain and work over its field of
+ fractions. If the base ring is \emph{not} a domain, one gets an error as soon
+ as a non-zero pivot turns out to be non-invertible. Some functions,
+ e.g.~\kbd{mathnf} or \kbd{mathnfmod}, specifically assume that the base ring is
+ $\Z$.
+

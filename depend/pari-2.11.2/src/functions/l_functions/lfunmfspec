@@ -1,0 +1,13 @@
+Function: lfunmfspec
+Section: l_functions
+C-Name: lfunmfspec
+Prototype: Gb
+Help: lfunmfspec(L): L corresponding to a modular form, returns
+  [valeven,valodd,omminus,omplus], where valeven (resp., valodd) is the vector
+  of even (resp., odd) periods, and omminus and omplus the corresponding
+  real numbers omega^- and omega^+. For the moment, only for modular forms of even weight.
+Doc: returns \kbd{[valeven,valodd,omminus,omplus]},
+  where \kbd{valeven} (resp., \kbd{valodd}) is the vector of even (resp., odd)
+  periods of the modular form given by \kbd{L}, and \kbd{omminus} and
+  \kbd{omplus} the corresponding real numbers $\omega^-$ and $\omega^+$
+  normalized in a noncanonical way. For the moment, only for modular forms of even weight.

@@ -1,0 +1,18 @@
+Function: ellheight
+Section: elliptic_curves
+C-Name: ellheight0
+Prototype: GGDGp
+Help: ellheight(E,P,{Q}): canonical height of point P on elliptic curve E,
+ resp. the value of the attached bilinear form at (P,Q).
+Doc: global N\'eron-Tate height $h(P)$ of the point $P$ on the elliptic curve
+ $E$, defined over $\Q$ or a number field, using the same normalization as
+ Cremona's \emph{Algorithms for modular elliptic curves}. $E$ must be an
+ \kbd{ell} as output by \kbd{ellinit}; it needs not be given by a minimal
+ model although the computation will be faster if it is. The height of a
+ torsion point is exactly 0, else a positive real number.
+
+ If the argument $Q$ is present, computes the value of the bilinear
+ form $(h(P+Q)-h(P-Q)) / 4$.
+
+Variant: Also available is \fun{GEN}{ellheight}{GEN E, GEN P, long prec}
+ ($Q$ omitted).

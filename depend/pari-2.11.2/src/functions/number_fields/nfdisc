@@ -1,0 +1,47 @@
+Function: nfdisc
+Section: number_fields
+C-Name: nfdisc
+Prototype: G
+Help: nfdisc(T): discriminant of the number field defined by
+ the polynomial T. An argument [T,listP] is possible, where listP is a list
+ of primes or a prime bound.
+Doc: \idx{field discriminant} of the number field defined by the integral,
+ preferably monic, irreducible polynomial $T(X)$. Returns the discriminant of
+ the number field $\Q[X]/(T)$, using the Round $4$ algorithm.
+
+ \misctitle{Local discriminants, valuations at certain primes}
+
+ As in \kbd{nfbasis}, the argument $T$ can be replaced by $[T,\var{listP}]$,
+ where \kbd{listP} is as in \kbd{nfbasis}: a vector of
+ pairwise coprime integers (usually distinct primes), a factorization matrix,
+ or a single integer. In that case, the function returns the discriminant of
+ an order whose basis is given by \kbd{nfbasis(T,listP)}, which need not be
+ the maximal order, and whose valuation at a prime entry in \kbd{listP} is the
+ same as the valuation of the field discriminant.
+
+ In particular, if \kbd{listP} is $[p]$ for a prime $p$, we can
+ return the $p$-adic discriminant of the maximal order of $\Z_p[X]/(T)$,
+ as a power of $p$, as follows:
+ \bprog
+ ? padicdisc(T,p) = p^valuation(nfdisc([T,[p]]), p);
+ ? nfdisc(x^2 + 6)
+ %2 = -24
+ ? padicdisc(x^2 + 6, 2)
+ %3 = 8
+ ? padicdisc(x^2 + 6, 3)
+ %4 = 3
+ @eprog\noindent The following function computes the discriminant of the
+ maximal order under the assumption that $P$ is a vector of prime numbers
+ containing (at least) all prime divisors of the field discriminant:
+ \bprog
+ globaldisc(T, P) =
+ { my (D = nfdisc([T, P]));
+   sign(D) * factorback(P, [valuation(D,p) | p <-P]);
+ }
+ ? globaldisc(x^2 + 6, [2, 3, 5])
+ %1 = -24
+ @eprog
+
+ \synt{nfdisc}{GEN T} (\kbd{listP = NULL}). Also available is
+ \fun{GEN}{nfbasis}{GEN T, GEN *d, GEN listP = NULL}, which returns the order
+ basis, and where \kbd{*d} receives the order discriminant.

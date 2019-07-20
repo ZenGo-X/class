@@ -1,0 +1,116 @@
+Function: ellpadicL
+Section: elliptic_curves
+C-Name: ellpadicL
+Prototype: GGLDGD0,L,DG
+Help: ellpadicL(E, p, n, {s = 0}, {r = 0}, {D = 1}): returns the value
+ on a character of Z_p^* represented by an integer s or a vector [s1,s2]
+ of the derivative of order r of the p-adic L-function of
+ the elliptic curve E (twisted by D, if present).
+Doc: Returns the value (or $r$-th derivative) on a character $\chi^s$ of
+ $\Z_p^*$ of the $p$-adic $L$-function of the elliptic curve $E/\Q$, twisted by
+ $D$, given modulo $p^n$.
+
+ \misctitle{Characters} The set of continuous characters of
+ $\text{Gal}(\Q(\mu_{p^{\infty}})/ \Q)$ is identified to $\Z_p^*$ via the
+ cyclotomic character $\chi$ with values in $\overline{\Q_p}^*$. Denote by
+ $\tau:\Z_p^*\to\Z_p^*$ the Teichm\"uller character, with values
+ in the $(p-1)$-th roots of $1$ for $p\neq 2$, and $\{-1,1\}$ for $p = 2$;
+ finally, let
+ $\langle\chi\rangle =\chi \tau^{-1}$, with values in $1 + 2p\Z_p$.
+ In GP, the continuous character of
+ $\text{Gal}(\Q(\mu_{p^{\infty}})/ \Q)$ given by $\langle\chi\rangle^{s_1}
+ \tau^{s_2}$ is represented by the pair of integers $s=(s_1,s_2)$, with $s_1
+ \in \Z_p$ and $s_2 \bmod p-1$ for $p > 2$, (resp. mod $2$ for $p = 2$); $s$
+ may be also an integer, representing $(s,s)$ or $\chi^s$.
+
+ \misctitle{The $p$-adic $L$ function}
+ The $p$-adic $L$ function $L_p$ is defined on the set of continuous
+ characters of $\text{Gal}(\Q(\mu_{p^{\infty}})/ \Q)$, as $\int_{\Z_p^*}
+ \chi^s d \mu$ for a certain $p$-adic distribution $\mu$ on $\Z_p^*$. The
+ derivative is given by
+ $$L_p^{(r)}(E, \chi^s) = \int_{\Z_p^*} \log_p^r(a) \chi^s(a) d\mu(a).$$
+ More precisely:
+
+ \item When $E$ has good supersingular reduction, $L_p$ takes its
+ values in $D := H^1_{dR}(E/\Q)\otimes_\Q \Q_p$ and satisfies
+ $$(1-p^{-1} F)^{-2} L_p(E, \chi^0)= (L(E,1) / \Omega) \cdot \omega$$
+ where $F$ is the Frobenius, $L(E,1)$ is the value of the complex $L$
+ function at $1$, $\omega$ is the N\'eron differential
+ and $\Omega$ the attached period on $E(\R)$. Here, $\chi^0$ represents
+ the trivial character.
+
+ The function returns the components of $L_p^{(r)}(E,\chi^s)$ in
+ the basis $(\omega, F \omega)$.
+
+ \item When $E$ has ordinary good reduction, this method only defines
+ the projection of $L_p(E,\chi^s)$ on the $\alpha$-eigenspace,
+ where $\alpha$ is the unit eigenvalue for $F$. This is what the function
+ returns. We have
+ $$(1- \alpha^{-1})^{-2} L_{p,\alpha}(E,\chi^0)= L(E,1) / \Omega.$$
+
+ Two supersingular examples:
+ \bprog
+ ? cxL(e) = bestappr( ellL1(e) / e.omega[1] );
+
+ ? e = ellinit("17a1"); p=3; \\ supersingular, a3 = 0
+ ? L = ellpadicL(e,p,4);
+ ? F = [0,-p;1,ellap(e,p)]; \\ Frobenius matrix in the basis (omega,F(omega))
+ ? (1-p^(-1)*F)^-2 * L / cxL(e)
+ %5 = [1 + O(3^5), O(3^5)]~ \\ [1,0]~
+
+ ? e = ellinit("116a1"); p=3; \\ supersingular, a3 != 0~
+ ? L = ellpadicL(e,p,4);
+ ? F = [0,-p; 1,ellap(e,p)];
+ ? (1-p^(-1)*F)^-2*L~ / cxL(e)
+ %9 = [1 + O(3^4), O(3^5)]~
+ @eprog
+
+ Good ordinary reduction:
+ \bprog
+ ? e = ellinit("17a1"); p=5; ap = ellap(e,p)
+ %1 = -2 \\ ordinary
+ ? L = ellpadicL(e,p,4)
+ %2 = 4 + 3*5 + 4*5^2 + 2*5^3 + O(5^4)
+ ? al = padicappr(x^2 - ap*x + p, ap + O(p^7))[1];
+ ? (1-al^(-1))^(-2) * L / cxL(e)
+ %4 = 1 + O(5^4)
+ @eprog
+
+ Twist and Teichm\"uller:
+ \bprog
+ ? e = ellinit("17a1"); p=5; \\ ordinary
+ \\ 2nd derivative at tau^1, twist by -7
+ ? ellpadicL(e, p, 4, [0,1], 2, -7)
+ %2 = 2*5^2 + 5^3 + O(5^4)
+ @eprog
+ We give an example of non split multiplicative reduction (see
+ \tet{ellpadicbsd} for more examples).
+ \bprog
+ ? e=ellinit("15a1"); p=3; n=5;
+ ? L = ellpadicL(e,p,n)
+ %2 = 2 + 3 + 3^2 + 3^3 + 3^4 + O(3^5)
+ ? (1 - ellap(e,p))^(-1) * L / cxL(e)
+ %3 = 1 + O(3^5)
+ @eprog
+
+ This function is a special case of \tet{mspadicL} and it also appears
+ as the first term of \tet{mspadicseries}:
+ \bprog
+ ? e = ellinit("17a1"); p=5;
+ ? L = ellpadicL(e,p,4)
+ %2 = 4 + 3*5 + 4*5^2 + 2*5^3 + O(5^4)
+ ? [M,phi] = msfromell(e, 1);
+ ? Mp = mspadicinit(M, p, 4);
+ ? mu = mspadicmoments(Mp, phi);
+ ? mspadicL(mu)
+ %6 = 4 + 3*5 + 4*5^2 + 2*5^3 + 2*5^4 + 5^5 + O(5^6)
+ ? mspadicseries(mu)
+ %7 = (4 + 3*5 + 4*5^2 + 2*5^3 + 2*5^4 + 5^5 + O(5^6))
+       + (3 + 3*5 + 5^2 + 5^3 + O(5^4))*x
+       + (2 + 3*5 + 5^2 + O(5^3))*x^2
+       + (3 + 4*5 + 4*5^2 + O(5^3))*x^3
+       + (3 + 2*5 + O(5^2))*x^4 + O(x^5)
+ @eprog\noindent These are more cumbersome than \kbd{ellpadicL} but allow to
+ compute at different characters, or successive derivatives, or to
+ twist by a quadratic character essentially for the cost of a single call to
+ \kbd{ellpadicL} due to precomputations.

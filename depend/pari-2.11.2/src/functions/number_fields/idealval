@@ -1,0 +1,12 @@
+Function: idealval
+Section: number_fields
+C-Name: gpidealval
+Prototype: GGG
+Help: idealval(nf,x,pr): valuation at pr given in idealprimedec format of the
+ ideal x in the number field nf.
+Doc: gives the valuation of the ideal $x$ at the prime ideal \var{pr} in the
+ number field $\var{nf}$, where \var{pr} is in \kbd{idealprimedec} format.
+ The valuation of the $0$ ideal is \kbd{+oo}.
+Variant: Also available is
+ \fun{long}{idealval}{GEN nf, GEN x, GEN pr}, which returns
+ \tet{LONG_MAX} if $x = 0$ and the valuation as a \kbd{long} integer.

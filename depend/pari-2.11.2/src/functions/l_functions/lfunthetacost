@@ -1,0 +1,38 @@
+Function: lfunthetacost
+Section: l_functions
+C-Name: lfunthetacost0
+Prototype: lGDGD0,L,b
+Help: lfunthetacost(L,{tdom},{m=0}): estimates the cost of running
+ lfunthetainit(L,tdom,m) at current bit precision. Returns the number of
+ coefficients an that would be computed. Subsequent evaluation of lfuntheta
+ computes that many values of gammamellininv.
+ If L is already an Linit, then tdom and m are ignored.
+Doc: This function estimates the cost of running
+ \kbd{lfunthetainit(L,tdom,m)} at current bit precision. Returns the number of
+ coefficients $a_n$ that would be computed. This also estimates the
+ cost of a subsequent evaluation \kbd{lfuntheta}, which must compute
+ that many values of \kbd{gammamellininv} at the current bit precision.
+ If $L$ is already an \kbd{Linit}, then \var{tdom} and $m$ are ignored
+ and are best left omitted: we get an estimate of the cost of using that
+ particular \kbd{Linit}.
+
+ \bprog
+ ? \pb 1000
+ ? L = lfuncreate(1); \\ Riemann zeta
+ ? lfunthetacost(L); \\ cost for theta(t), t real >= 1
+ %1 = 15
+ ? lfunthetacost(L, 1 + I); \\ cost for theta(1+I). Domain error !
+  ***   at top-level: lfunthetacost(1,1+I)
+  ***                 ^--------------------
+  *** lfunthetacost: domain error in lfunthetaneed: arg t > 0.785
+ ? lfunthetacost(L, 1 + I/2) \\ for theta(1+I/2).
+ %2 = 23
+ ? lfunthetacost(L, 1 + I/2, 10) \\ for theta^((10))(1+I/2).
+ %3 = 24
+ ? lfunthetacost(L, [2, 1/10]) \\ cost for theta(t), |t| >= 2, |arg(t)| < 1/10
+ %4 = 8
+
+ ? L = lfuncreate( ellinit([1,1]) );
+ ? lfunthetacost(L)  \\ for t >= 1
+ %6 = 2471
+ @eprog

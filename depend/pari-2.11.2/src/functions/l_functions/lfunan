@@ -1,0 +1,14 @@
+Function: lfunan
+Section: l_functions
+C-Name: lfunan
+Prototype: GLp
+Help: lfunan(L,n): compute the first n terms of the Dirichlet series
+  attached to the L-function given by L (Lmath, Ldata or Linit).
+Doc: Compute the first $n$ terms of the Dirichlet series attached to the
+  $L$-function given by \kbd{L} (\kbd{Lmath}, \kbd{Ldata} or \kbd{Linit}).
+  \bprog
+  ? lfunan(1, 10)  \\ Riemann zeta
+  %1 = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+  ? lfunan(5, 10)  \\ Dirichlet L-function for kronecker(5,.)
+  %2 = [1, -1, -1, 1, 0, 1, -1, -1, 1, 0]
+  @eprog

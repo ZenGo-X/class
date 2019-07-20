@@ -1,0 +1,240 @@
+znprimroot(2)
+znprimroot(4)
+p=9223372036854775837;
+znprimroot(p)
+znprimroot(p^2)
+znprimroot(2*p^2)
+znprimroot([2,1;p,2])
+znprimroot([2*p^2,[2,1;p,2]])
+znstar(0)
+znstar(1)
+znstar(10)
+znstar(14)
+znstar(247)
+znstar(-247)
+znstar(factor(-247))
+znstar(factor(0))
+Mod(10,148)^(2^64)
+do(n)= {
+  g = Mod(3,n); phi = eulerphi(n); G = g^(phi-1);
+  o = znorder(g, phi); fo = factor(o);
+  [znlog(G,g), znlog(G,g,o), znlog(G,g,fo), znlog(G,g,[o,fo])];
+}
+do(2^5*5^3*7)
+N = 2^3*5^2*nextprime(10^10)^2;
+do(N)
+G = znstar(N,1);
+G.clgp
+znlog(3, G)
+L=znlog(Mod(3,N), G)
+factorback(Mod(G.gen,N),L)
+znlog(Mod(3,N/2), G)
+znlog(G,3)
+
+znlog(7,Mod(3,8),znorder(Mod(3,8)))
+znlog(7,Mod(3,8))
+znlog(0,Mod(3,4))
+znlog(0,Mod(3,4),1)
+znlog(1,Mod(3,4))
+znlog(1,Mod(3,4),1)
+znlog(0,Mod(2,4))
+znlog(0,Mod(2,4),1)
+znlog(6,Mod(2,7),znorder(Mod(2,7)))
+znlog(3,Mod(3,8),znorder(Mod(3,8)))
+znlog(5,Mod(2,401))
+
+znlog(7,3+O(2^3))
+znlog(7,3+O(2^3), znorder(Mod(3,8)))
+znlog(7,3+O(7^3))
+znlog(2,3+O(7^3))
+
+{
+for (i = 1,10^4,
+  d = eulerphi(i);
+  if (!istotient(d, &n) || eulerphi(n) != d, error(i)))
+}
+Mod(1,2)-Mod(2,4)
+
+p=2^80+13; znlog(Mod(3,p),Mod(2,p))
+p=314138927;znlog(Mod(p\17,p),znprimroot(p))
+
+g=Mod(3,11);
+v=[I,-1,Mat(1),matid(2)/2,Mat([5,1])];
+a=Mod(-1,11); for(i=1,#v, print(iferr(znlog(a,g,v[i]),E,E)));
+
+bnr = bnrinit(bnfinit(x), [160,[1]], 1);
+g = bnr.gen;
+bnrchar(bnr, g, [1/2,0,0])
+bnrchar(bnr, [g[1],g[3]])
+bnrchar(bnr, [1,0,0;0,1,0;0,0,2])
+H=[4,1,0; 0,1,0; 0,0,2];
+bnrchar(bnr, H)
+bnrchar(bnr, H, [0,1/2,0])
+H=[8,4,2;0,2,1;0,0,1];
+bnrchar(bnr, H, [0,1/2,1/2])
+bnrchar(bnr, H, [0,0,1/2])
+
+G8=znstar(8,1);
+znconreychar(G8,1)
+znconreychar(G8,3)
+znconreychar(G8,5)
+znconreychar(G8,7)
+vector(4, i, zncharisodd(G8,2*i-1))
+forstep(i=1,8,2,if(znconreyexp(G8, znconreylog(G8, i)) != i, error(i)));
+z = [[1,-1],2];
+vector(4, i, chareval(G8, [1,0], 1+2*i, z))
+
+G=znstar(5,1);
+vector(4,i,znconreychar(G,i))
+
+G=znstar(75,1);
+for(i=1, G.mod,\
+  if (gcd(i,G.mod)==1 && 2*chareval(G,i,-1) != zncharisodd(G,i),error(i)))
+znconreychar(G,1)
+znconreychar(G,2)
+znconreychar(G,11)
+chi=znconreychar(G,71)
+charorder(G,chi)
+charorder(G,71)
+charorder(G,znconreylog(G,71))
+chareval(G,chi,1)
+chareval(G,chi,5)
+chareval(G,chi,1/3)
+chareval(G,chi,7/2)
+chareval(G,71,7/2)
+chareval(G,znconreylog(G,71),7/2)
+chareval(G,chi,2, 10)
+chareval(G,chi,2, 20)
+chareval(G,chi,2, [x,10])
+chareval(G,chi,2, [x,20])
+chareval(G,chi,2, [[0..9], 10])
+
+log11 = ideallog(, 11, G);
+znconreylog(G,log11)
+znconreylog(G,11)
+
+znconreyconductor(G, 1)
+znconreyconductor(G, 4)
+znconreyconductor(G, 2)
+znconreyconductor(G, 2, &chi)
+chi
+{
+for (i=1,75,
+  if (gcd(i,75)==1,
+    f = znconreyconductor(G,i,&chi0);
+     if (f != 75, print(i,":",f,":", chi0))))
+}
+test(G, chi)=
+{
+  N = znconreyconductor(G, chi);
+  N0 = znconreyconductor(G, chi, &chi0);
+  if (N != N0, error(chi));
+  print([N0, chi0]);
+  G0 = znstar(N0,1); L = znconreylog(G,chi);
+  if (zncharinduce(G0, chi0, G.mod) != L, error(chi));
+  if (zncharinduce(G0, chi0, G) != L, error(chi));
+}
+test(G8,1)
+test(G8,3)
+test(G8,5)
+test(G8,7)
+G = znstar(48,1);
+for(i=1,48,if(gcd(i,48)==1,test(G,i)))
+{
+for (i = 1, 48,
+  if (gcd(i,48)!=1,next);
+  chi = i;
+  chi2 = znchardecompose(G, chi, 2);
+  chi3 = znchardecompose(G, chi, 3);
+  print(chi2,", ",chi3);
+  if (znconreyexp(G, charmul(G,chi2,chi3)) != i, error(i)))
+}
+
+G = znstar(300,1);
+L = chargalois(G,2)
+G = znstar(96,1);
+chargalois(G)
+chargalois(G,4)
+chargalois(G,[1,4])
+chargalois([60,4], [12])
+chargalois([180,6], [30])
+
+G = znstar(126000,1);
+zncharconductor(G,11)
+zncharconductor(G,1)
+zncharconductor(G,1009)
+[G0,chi0]=znchartoprimitive(G,11);
+G0.mod
+chi0
+[G0,chi0]=znchartoprimitive(G,1);
+G0.mod
+chi0
+[G0,chi0]=znchartoprimitive(G,1009);
+G0.mod
+chi0
+test(G,1009)
+test(G,82127)
+
+znconreyexp(G, znconreylog(G, 1009))
+znconreyexp(G, znconreylog(G, 82127))
+chi=[100,1,0,1,0];
+l=znconreylog(G, chi)
+znconreychar(G,l) == chi
+znconreyexp(G,l)
+
+G6=znstar(6,1);
+G1=znstar(1,1);
+znconreychar(G1,1)
+znconreylog(G1,1)
+test(G1,1)
+chareval(G1,[]~,1)
+chareval(G1,[],1)
+chareval(G1,1,1)
+zncharinduce(G1,1,6)
+zncharinduce(G1,1,G6)
+
+G2=znstar(2,1);
+znconreychar(G2,1)
+znconreylog(G2,1)
+test(G2,1)
+chareval(G2,[]~,2)
+chareval(G2,[],2)
+chareval(G2,[],1)
+chareval(G2,1,2)
+chareval(G2,1,1)
+zncharinduce(G2,[]~,3)
+zncharinduce(G2,1,6)
+zncharinduce(G2,1,G6)
+
+G=znstar(30,1);
+znconreyconductor(G, 29)
+
+G=znstar(46,1);
+chi=znconreychar(G,45)
+znconreyexp(G,chi)
+
+default(realprecision,38);
+[G,chi]=znchar(-3);
+znchargauss(G,chi)
+[G,chi]=znchar(-4);
+znchargauss(G,chi,2)
+[G,chi]=znchar(5);
+znchargauss(G,chi)
+G=znstar(300,1);
+znchargauss(G,7)
+znchargauss(G,71)
+znchargauss(G,131)
+G=znstar(600,1);
+vector(30,a,znchargauss(G,7,a))
+znchargauss(G,491)
+znchargauss(G,11)
+G=znstar(12,1);
+znchargauss(G,[0,1]~,3)
+znchargauss(G,[1,0]~,3)
+
+\\ Errors, keep at end of file
+znprimroot(8)
+znstar(0,1)
+znconreychar(G8,2)
+znconreychar(znstar(8),2)
+znconreyexp(znstar(192,1), [2,8,1,1]~)

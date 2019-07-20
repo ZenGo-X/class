@@ -1,0 +1,58 @@
+Function: qfbclassno
+Section: number_theoretical
+C-Name: qfbclassno0
+Prototype: GD0,L,
+Help: qfbclassno(D,{flag=0}): class number of discriminant D using Shanks's
+ method by default. If (optional) flag is set to 1, use Euler products.
+Doc: ordinary class number of the quadratic order of discriminant $D$, for
+ ``small'' values of $D$.
+
+ \item if  $D > 0$ or $\fl = 1$, use a $O(|D|^{1/2})$
+ algorithm (compute $L(1,\chi_D)$ with the approximate functional equation).
+ This is slower than \tet{quadclassunit} as soon as $|D| \approx 10^2$ or
+ so and is not meant to be used for large $D$.
+
+ \item if $D < 0$ and $\fl = 0$ (or omitted), use a $O(|D|^{1/4})$
+ algorithm (Shanks's baby-step/giant-step method). It should
+ be faster than \tet{quadclassunit} for small values of $D$, say
+ $|D| < 10^{18}$.
+
+ \misctitle{Important warning} In the latter case, this function only
+ implements part of \idx{Shanks}'s method (which allows to speed it up
+ considerably). It gives unconditionnally correct results for
+ $|D| < 2\cdot 10^{10}$, but may give incorrect results for larger values
+ if the class
+ group has many cyclic factors. We thus recommend to double-check results
+ using the function \kbd{quadclassunit}, which is about 2 to 3 times slower in
+ the range $|D| \in [10^{10}, 10^{18}]$, assuming GRH. We currently have no
+ counter-examples but they should exist: we would appreciate a bug report if
+ you find one.
+
+ \misctitle{Warning} Contrary to what its name implies, this routine does not
+ compute the number of classes of binary primitive forms of discriminant $D$,
+ which is equal to the \emph{narrow} class number. The two notions are the same
+ when $D < 0$ or the fundamental unit $\varepsilon$ has negative norm; when $D
+ > 0$ and $N\varepsilon > 0$, the number of classes of forms is twice the
+ ordinary class number. This is a problem which we cannot fix for backward
+ compatibility reasons. Use the following routine if you are only interested
+ in the number of classes of forms:
+ \bprog
+ QFBclassno(D) =
+ qfbclassno(D) * if (D < 0 || norm(quadunit(D)) < 0, 1, 2)
+ @eprog\noindent
+ Here are a few examples:
+ \bprog
+ ? qfbclassno(400000028) \\ D > 0: slow
+ time = 3,140 ms.
+ %1 = 1
+ ? quadclassunit(400000028).no
+ time = 20 ms. \\@com{ much faster, assume GRH}
+ %2 = 1
+ ? qfbclassno(-400000028) \\ D < 0: fast enough
+ time = 0 ms.
+ %3 = 7253
+ ? quadclassunit(-400000028).no
+ time = 0 ms.
+ %4 = 7253
+ @eprog\noindent
+ See also \kbd{qfbhclassno}.

@@ -1,0 +1,23 @@
+Function: galoisgetname
+Section: number_fields
+C-Name: galoisgetname
+Prototype: LL
+Help: galoisgetname(a,b): query the galpol package for a string describing the
+ group of order a with index b in the GAP4 Small Group library.
+Doc: Query the \kbd{galpol} package for a string describing the group of order
+ $a$
+ with index $b$ in the GAP4 Small Group library, by Hans Ulrich Besche,
+ Bettina Eick and Eamonn O'Brien.
+ The strings were generated using the GAP4 function \kbd{StructureDescription}.
+ It is possible for different groups to have the same name.
+ The command below outputs the names of all abstract groups of order 12:
+ \bprog
+ ? N = galoisgetgroup(12); \\ # of abstract groups of order 12
+ ? for(i=1, N, print(i,". ",galoisgetname(12,i)))
+ 1. C3 : C4
+ 2. C12
+ 3. A4
+ 4. D12
+ 5. C6 x C2
+ @eprog\noindent
+ The current version of \kbd{galpol} supports groups of order $a\leq 143$.

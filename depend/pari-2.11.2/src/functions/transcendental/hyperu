@@ -1,0 +1,8 @@
+Function: hyperu
+Section: transcendental
+C-Name: hyperu
+Prototype: GGGp
+Help: hyperu(a,b,x): U-confluent hypergeometric function.
+Doc: $U$-confluent hypergeometric function with
+ parameters $a$ and $b$. The parameters $a$ and $b$ can be complex but
+ the present implementation requires $x$ to be positive.

@@ -1,0 +1,9 @@
+Function: _formatcode
+Class: gp2c_internal
+Description:
+ (#small):void                    $1
+ (small):small                    %ld
+ (small_int):small_int            %d
+ (#str):void                      $%1
+ (str):str                        %s
+ (gen):gen                        %Ps

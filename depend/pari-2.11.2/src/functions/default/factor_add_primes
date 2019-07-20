@@ -1,0 +1,17 @@
+Function: _def_factor_add_primes
+Class: default
+Section: default
+C-Name: sd_factor_add_primes
+Prototype:
+Help:
+Doc: this toggle is either 1 (on) or 0 (off). If on,
+ the integer factorization machinery calls \tet{addprimes} on prime
+ factors that were difficult to find (larger than $2^{24}$), so they are
+ automatically tried first in other factorizations. If a routine is performing
+ (or has performed) a factorization and is interrupted by an error or via
+ Control-C, this lets you recover the prime factors already found. The
+ downside is that a huge \kbd{addprimes} table unrelated to the current
+ computations will slow down arithmetic functions relying on integer
+ factorization; one should then empty the table using \tet{removeprimes}.
+
+ The default value is \kbd{0}.

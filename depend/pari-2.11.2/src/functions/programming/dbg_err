@@ -1,0 +1,19 @@
+Function: dbg_err
+Class: gp
+Section: programming/control
+C-Name: dbg_err
+Prototype:
+Help: dbg_err(): (break loop) return the error data of the current error, if any.
+Doc: In the break loop, return the error data of the current error, if any.
+ See \tet{iferr} for details about error data.  Compare:
+ \bprog
+ ? iferr(1/(Mod(2,12019)^(6!)-1),E,Vec(E))
+ %1 = ["e_INV", "Fp_inv", Mod(119, 12019)]
+ ? 1/(Mod(2,12019)^(6!)-1)
+   ***   at top-level: 1/(Mod(2,12019)^(6!)-
+   ***                  ^--------------------
+   *** _/_: impossible inverse in Fp_inv: Mod(119, 12019).
+   ***   Break loop: type 'break' to go back to GP prompt
+ break> Vec(dbg_err())
+ ["e_INV", "Fp_inv", Mod(119, 12019)]
+ @eprog

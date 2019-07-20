@@ -1,0 +1,295 @@
+x; y; t;
+
+ellhyperellipticpolynomials(E, x = 'x) =
+{ my (one = E.j^0);
+  x *= one;
+  return([x^3 + E.a2 * x^2 + E.a4 * x + E.a6, E.a1 * x + E.a3]);
+}
+
+elldefiningequation(E, x = 'x, y = 'y) =
+{ my (one = E.j^0);
+  x *= one;
+  y *= one;
+  my (eqns = ellhyperellipticpolynomials(E, x));
+  return(y^2 + eqns[2]*y - eqns[1]);
+}
+
+ellbasechar(E) = iferr(E.p, unused_param, 0);
+
+ffone(p, n = 1, v = 't) = ffgen(p^n, v)^0;
+
+num_isog(E, isog) =
+{ my([x,y,d] = isog);
+  my(d2 = d^2, d3 = d2*d, d4 = d2^2, d6 = d3^2);
+  ((x + E.a2*d2)*x + E.a4*d4)*x + E.a6*d6 - y*(y + E.a1*d*x + d3*E.a3);
+}
+
+isog_satisfies_eqns(E, F, isog) =
+{
+  if (Mod(num_isog(F,isog), elldefiningequation(E)) != 0,
+    error("Isogeny polynomials don't satisfy the curve equations"));
+}
+
+kernel_poly_from_generator(E, P, ord = 0, x = 'x, check = 1) =
+{
+  if (check && ! ellisoncurve(E, P),
+      error("Given point is not on given curve."));
+  if (!ord, ord = ellorder(E, P));
+
+  my (one = E.j^0, rP = P, res = Pol([one], x));
+  for (r = 1, ord \ 2,
+       res *= x - rP[1];
+       rP = elladd(E, rP, P));
+  res;
+}
+
+
+check_ker_pol_from_gen() =
+{
+  my (x = 'x, one = ffone(101));
+  my (data = [
+              [1, [1, 1], [0], 1, Pol([1], x)],
+              [one, [37, 42], [85, 0], 2, x + 16],
+              [one, [37, 42], [89, 71], 3, x + 12],
+              [one, [37, 42], [21, 9], 5, x^2 + 12*x + 14],
+              [one, [37, 42], [58, 59], 18, x^9 + 100*x^8 + 68*x^7 + 59*x^6 + 49*x^5 + 86*x^4 + 98*x^3 + 12*x^2 + 70*x + 56]
+             ]);
+  for (i = 1, #data,
+    my ([rg_one, ainvs, pt, ord, expected] = data[i],
+        E = ellinit(ainvs * rg_one));
+    pt *= rg_one;
+    my (res = kernel_poly_from_generator(E, pt, ord, x));
+    if (res != expected || Mod(elldivpol(E, ord, x), res) != 0,
+        error("kernel polynomial is incorrect")));
+}
+
+check_data(E, P, ord) = {
+  my (p = ellbasechar(E), M = [7, 13, 3, 4]);
+  if (p != 0,
+    my (n = (E.j).f);
+    t = ffgen(p^n, 't);
+    if (
+      p == 2,
+      M = [t, t+1, t, 1] * t^0,
+
+      p == 3,
+      M = [t, t+1, 2*t, t+2] * t^0));
+  E = ellchangecurve(E, M);
+  P = ellchangepoint(P, M);
+  if (!ellisoncurve(E, P) || ellorder(E, P) != ord,
+      error("Broken data: ", ord, "-torsion"));
+  my (F, G, FF, GG, ker);
+  F = ellisogeny(E, P);
+  FF = ellisogeny(E, P, 1);
+  if (F[1] != FF,
+      error("Got different curve when only computing image"));
+  ker = kernel_poly_from_generator(E, P, ord, 'x);
+  G = ellisogeny(E, ker);
+  GG = ellisogeny(E, ker, 1);
+  if (G[1] != GG,
+      error("Got different curve when only computing image"));
+  if (F[1][1..5] != G[1][1..5],
+      error("Different curves obtained for same kernel"));
+  if (F[2] != G[2],
+      error("Different isogenies obtained for same kernel"));
+  isog_satisfies_eqns(E, F[1], F[2]);
+}
+
+tatecrv(b, c, p = 0, n = 1) =
+{ my (one = if (p == 0, 1, ffone(p, n)));
+  ellinit([1 - c, -b, -b, 0, 0] * one);
+}
+
+do_tate(b, c, ord, p = 0, n = 1) =
+{ my (E, P = [0, 0], t, M = Vec([1,0,0,1]));
+  E = tatecrv(b, c, p, n);
+  check_data(E, P, ord);
+}
+
+check_apply(E, ker, P, fP) =
+{ my ([F, f] = ellisogeny(E, ker));
+  if (ellisogenyapply(f, P) != fP, error("Wrong image of point"));
+}
+
+check_compose() =
+{ my (one = ffone(101),
+      E = ellinit([6, 53, 85, 32, 34] * one),
+      P = [84, 71] * one, \\ order 5
+      [F, f] = ellisogeny(E, P),
+      Q = [89, 44] * one, \\ order 2
+      [G, g] = ellisogeny(ellinit(F), Q),
+      gof = ellisogenyapply(g, f));
+  isog_satisfies_eqns(E, ellinit(G), gof);
+}
+
+check_prio_err(E, ker, var1, var2, tst, msg) =
+{
+  my (got_err = 0);
+  iferr(ellisogeny(E, ker, 0, var1, var2),
+        err, got_err = 1,
+        errname(err) == "e_PRIORITY"
+          && variable(component(err, 2)) == tst);
+  if (! got_err, error(msg));
+}
+
+check_errs() =
+{ my (E = ellinit([8, 5]), P = [0, 0], got_err = 0);
+  \\ ellisoncurve(E, P) = 0
+  iferr(ellisogeny(E, P),
+        err, got_err = 1,
+        errname(err) == "e_DOMAIN"
+          && component(err, 4) == E && component(err, 5) == P);
+  if (! got_err, error("No error when P not on E"));
+
+  my (var1 = 'var1, var2 = 'var2);
+  check_prio_err(E, P, var2, var1, 'var2, "No error with bad variable order");
+
+  iferr(ellisogeny(E, "banana bread"),
+        err, got_err = 1,
+        errname(err) == "e_TYPE"
+          && component(err, 2) == "banana bread");
+  if (! got_err, error("No error with bad kernel type"));
+
+  check_prio_err(E, ['pvx, 0], 'x, 'g1, 'pvx,
+                 "No error with bad x-point base field variable order");
+  check_prio_err(E, [0, 'pvy], 'x, 'g2, 'pvy,
+                 "No error with bad y-point base field variable order");
+  check_prio_err(E, 'x * 'asdf, 'x, 'g3, 'asdf,
+                 "No error with bad kernel variable order");
+  check_prio_err(ellinit(['a4, 'a6]), [0], 'x, 'g4, 'a4,
+                 "No error with bad j-invariant variable order");
+
+  my (t = ffgen(2^2, 't),
+      one = t^0,
+      E = ellinit([t, t + 1, 0, t, t] * one),
+      div2 = elldivpol(E, 2));
+  div2 /= polcoeff(div2, poldegree(div2));
+  iferr(ellisogeny(E, div2),
+        err, got_err = 1,
+        errname(err) == "e_DOMAIN"
+          && component(err, 4) == E && component(err, 5) == div2);
+  if (! got_err,
+      error("No error when quotienting E by E[2] in char 2"));
+}
+
+check_ker_pol_from_gen();
+check_compose();
+check_errs();
+P = [0, 0];
+E = ellinit([0, 3, 0, 7, 0]);
+\\ Doing "1-torsion"
+check_data(E, [0], 1);
+check_apply(E, [0], P, P);
+check_apply(E, P, [0], [0]);
+
+\\ Doing 2-torsion
+check_data(E, P, 2);
+one = ffone(1009);
+E = ellinit([0, 3, 0, 7, 0] * one);
+check_data(E, [0], 1);
+check_apply(E, [0], P, P);
+check_data(E, P * one, 2);
+check_apply(E, P, P, [0]);
+in = [149, 125] * one; out = [833, 506] * one;
+check_apply(E, P, in, out);
+check_apply(E, P, [0], [0]);
+
+\\ Doing 3-torsion...
+E = ellinit([1, 0, 1, 0, 0]);
+check_data(E, P, 3);
+E = ellinit([1, 0, 1, 0, 0] * ffone(1009));
+check_data(E, P, 3);
+
+t = ffgen(2^4, 't); one = t^0;
+E = ellinit([t^3+t^2+1,t^3+t+1,t^3+t^2+t+1,t^3+t+1,t^3+t+1]*one);
+Q = [t^2+t+1,t^3+t^2+1]*one;
+check_data(E, Q, 3);
+Q = [t^2+t,t^3+t^2+1]*one;
+check_data(E, Q, 2);
+Q = [t^3+t,t^3+t^2];
+check_data(E, Q, 6);
+
+t = ffgen(2^5, 't);
+E = ellinit([t^3+t^2+1,t^4+t^3+t,t^4+1,t^3+1,t^2+t]);
+Q = [t^4+t^3+t^2,t^3+t^2];
+check_data(E, Q, 3);
+
+t = ffgen(3^2, 't);
+one = t^0;
+Q = [t, 1] * one;
+E = ellinit([2,2*t,t+2,2*t,2*t+1]*one);
+check_data(E, Q, 3);
+
+\\ Quotient by full 2-torsion.  Arbitrary E here; just need char(k) != 2.
+E = ellinit([0, 3, 0, 7, 0] * ffone(1009));
+ker = elldivpol(E, 2) * E.j^0;
+F = ellisogeny(E, ker);
+FF = ellisogeny(E, ker, 1);
+if (F[1] != FF, error("Got different curve when only computing image"));
+isog_satisfies_eqns(E, F[1], F[2]);
+
+\\ See Kubert 1976 for why all this works.  Data was selected randomly.
+\\ Doing 4-torsion...
+b = -128/7; c = 0;
+do_tate(b, c, 4);
+
+\\ Doing 5-torsion...
+b = 121/13; c = b;
+do_tate(b, c, 5);
+do_tate(b, c, 5, 2, 7);
+
+\\ Doing 6-torsion...
+c = -7/2; b = c + c^2;
+do_tate(b, c, 6);
+do_tate(b, c, 6, 3, 3);
+
+\\ Doing 7-torsion...
+d = 21/11; c = d^2 - d; b = d * c;
+do_tate(b, c, 7);
+t = ffgen(2^3, 't);
+d = t; c = d^2 - d; b = d * c;
+do_tate(b, c, 7, 2, 3);
+
+\\ We do these two over a finite field to (1) avoid stack overflow
+\\ and (2) to make them run a bit faster.
+
+\\ Doing 8-torsion...
+d = 11/7; b = (2 * d - 1) * (d - 1); c = b/d;
+do_tate(b, c, 8);
+do_tate(b, c, 8, 1009);
+t = ffgen(2^3, 't);
+d = t; b = (2 * d - 1) * (d - 1); c = b/d;
+do_tate(b, c, 8, 2, 3);
+
+\\ Doing 9-torsion...
+f = 1/7; d = f * (f - 1) + 1; c = f * (d - 1); b = c * d;
+do_tate(b, c, 9);
+do_tate(b, c, 9, 61, 2);
+t = ffgen(3^3, 't);
+f = t; d = f * (f - 1) + 1; c = f * (d - 1); b = c * d;
+do_tate(b, c, 9, 3, 3);
+
+\\ Francois Brunault's example
+E = ellinit([0, -1, 1, 0, 0]);
+z = Mod('t, polcyclo(11, 't));
+a = z + 1/z;
+xP = a*(a - 1)*(a + 2);
+\\ [25]P = 0 on E.
+P = [xP, a*xP];
+F = ellisogeny(E, P, 0, 'x, 'y);
+G = ellisogeny(E, kernel_poly_from_generator(E, P, 25, 'x), 0, 'x, 'y);
+if (F[1] != G[1], error("Different curves obtained for same kernel"));
+if (F[2] != G[2], error("Different isogenies obtained for same kernel"));
+isog_satisfies_eqns(E, F[1], F[2]);
+
+ellisogenyapply(x,x)
+ellisogenyapply([f,g,h],1)
+
+E = ellinit([-11/16,-445/32]);
+[e2,iso2] = ellisogeny(E,[5/2,0]);
+[e4,iso4] = ellisogeny(E,[27/4,17]);
+E2 = ellinit(e2);
+[e4p,iso2p] = ellisogeny(E2,[11, 0]);
+[e4,iso4] == [e4p,ellisogenyapply(iso2p,iso2)]
+
+E=ellinit([1,3]); ellisogeny(E,x-Mod(y,elldivpol(E,2,y)),1)

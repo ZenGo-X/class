@@ -1,0 +1,9 @@
+Function: listkill
+Section: programming/specific
+C-Name: listkill
+Prototype: vG
+Obsolete: 2007-08-10
+Help: listkill(L): obsolete, retained for backward compatibility.
+Doc: obsolete, retained for backward compatibility. Just use \kbd{L = List()}
+ instead of \kbd{listkill(L)}. In most cases, you won't even need that, e.g.
+ local variables are automatically cleared when a user function returns.

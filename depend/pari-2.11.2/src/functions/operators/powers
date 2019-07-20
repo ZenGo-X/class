@@ -1,0 +1,21 @@
+Function: powers
+Section: operators
+C-Name: gpowers0
+Prototype: GLDG
+Description:
+ (gen, small):vec  gpowers($1, $2)
+Help: powers(x,n,{x0}): return the vector [1,x,...,x^n] if x0 is omitted,
+ and [x0, x0*x, ..., x0*x^n] otherwise.
+Doc: for non-negative $n$, return the vector with $n+1$ components
+ $[1,x,\dots,x^n]$ if \kbd{x0} is omitted, and $[x_0, x_0*x, ..., x_0*x^n]$
+ otherwise.
+ \bprog
+ ? powers(Mod(3,17), 4)
+ %1 = [Mod(1, 17), Mod(3, 17), Mod(9, 17), Mod(10, 17), Mod(13, 17)]
+ ? powers(Mat([1,2;3,4]), 3)
+ %2 = [[1, 0; 0, 1], [1, 2; 3, 4], [7, 10; 15, 22], [37, 54; 81, 118]]
+ ? powers(3, 5, 2)
+ %3 = [2, 6, 18, 54, 162, 486]
+ @eprog\noindent When $n < 0$, the function returns the empty vector \kbd{[]}.
+Variant: Also available is
+ \fun{GEN}{gpowers}{GEN x, long n} when \kbd{x0} is \kbd{NULL}.

@@ -1,0 +1,13 @@
+Function: algdegree
+Section: algebras
+C-Name: algdegree
+Prototype: lG
+Help: algdegree(al): degree of the central simple algebra al.
+Doc: Given a central simple algebra \var{al} output by \tet{alginit}, returns
+ the degree of \var{al}.
+ \bprog
+ ? nf = nfinit(y^3-y+1);
+ ? A = alginit(nf, [-1,-1]);
+ ? algdegree(A)
+ %3 = 2
+ @eprog

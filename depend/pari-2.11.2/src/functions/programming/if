@@ -1,0 +1,72 @@
+Function: if
+Section: programming/control
+C-Name: ifpari
+Prototype: GDEDE
+Help: if(a,{seq1},{seq2}): if a is nonzero, seq1 is evaluated, otherwise seq2.
+ seq1 and seq2 are optional, and if seq2 is omitted, the preceding comma can
+ be omitted also.
+Doc: evaluates the expression sequence \var{seq1} if $a$ is non-zero, otherwise
+ the expression \var{seq2}. Of course, \var{seq1} or \var{seq2} may be empty:
+
+ \kbd{if ($a$,\var{seq})} evaluates \var{seq} if $a$ is not equal to zero
+ (you don't have to write the second comma), and does nothing otherwise,
+
+ \kbd{if ($a$,,\var{seq})} evaluates \var{seq} if $a$ is equal to zero, and
+ does nothing otherwise. You could get the same result using the \kbd{!}
+ (\kbd{not}) operator: \kbd{if (!$a$,\var{seq})}.
+
+ The value of an \kbd{if} statement is the value of the branch that gets
+ evaluated: for instance
+ \bprog
+ x = if(n % 4 == 1, y, z);
+ @eprog\noindent sets $x$ to $y$ if $n$ is $1$ modulo $4$, and to $z$
+ otherwise.
+
+ Successive 'else' blocks can be abbreviated in a single compound \kbd{if}
+ as follows:
+ \bprog
+ if (test1, seq1,
+     test2, seq2,
+     ...
+     testn, seqn,
+     seqdefault);
+ @eprog\noindent is equivalent to
+ \bprog
+ if (test1, seq1
+          , if (test2, seq2
+                     , ...
+                       if (testn, seqn, seqdefault)...));
+ @eprog For instance, this allows to write traditional switch / case
+ constructions:
+ \bprog
+ if (x == 0, do0(),
+     x == 1, do1(),
+     x == 2, do2(),
+     dodefault());
+ @eprog
+
+ \misctitle{Remark}
+ The boolean operators \kbd{\&\&} and \kbd{||} are evaluated
+ according to operator precedence as explained in \secref{se:operators}, but,
+ contrary to other operators, the evaluation of the arguments is stopped
+ as soon as the final truth value has been determined. For instance
+ \bprog
+ if (x != 0 && f(1/x), ...)
+ @eprog
+ \noindent is a perfectly safe statement.
+
+ \misctitle{Remark} Functions such as \kbd{break} and \kbd{next} operate on
+ \emph{loops}, such as \kbd{for$xxx$}, \kbd{while}, \kbd{until}. The \kbd{if}
+ statement is \emph{not} a loop. (Obviously!)
+
+Function: _void_if
+C-Name: ifpari_void
+Section: programming/internals
+Prototype: vGDIDI
+Help: internal variant of if() that does not return a value.
+
+Function: _multi_if
+C-Name: ifpari_multi
+Section: programming/internals
+Prototype: GE*
+Help: internal variant of if() that allows more than 3 arguments.

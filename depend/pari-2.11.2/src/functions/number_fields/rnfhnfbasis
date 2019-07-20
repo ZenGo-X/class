@@ -1,0 +1,11 @@
+Function: rnfhnfbasis
+Section: number_fields
+C-Name: rnfhnfbasis
+Prototype: GG
+Help: rnfhnfbasis(bnf,x): given an order x as output by rnfpseudobasis,
+ gives either a true HNF basis of the order if it exists, zero otherwise.
+Doc: given $\var{bnf}$ as output by
+ \kbd{bnfinit}, and either a polynomial $x$ with coefficients in $\var{bnf}$
+ defining a relative extension $L$ of $\var{bnf}$, or a pseudo-basis $x$ of
+ such an extension, gives either a true $\var{bnf}$-basis of $L$ in upper
+ triangular Hermite normal form, if it exists, and returns $0$ otherwise.

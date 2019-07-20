@@ -1,0 +1,17 @@
+Function: ffembed
+Section: number_theoretical
+C-Name: ffembed
+Prototype: GG
+Help: ffembed(a, b): given two elements a and b in finite fields, return a map
+ embedding the definition field of a to the definition field of b.
+Doc: given two finite fields elements $a$ and $b$, return a \var{map}
+ embedding the definition field of $a$ to the definition field of $b$.
+ Assume that the latter contains the former.
+ \bprog
+ ? a = ffgen([3,5],'a);
+ ? b = ffgen([3,10],'b);
+ ? m = ffembed(a, b);
+ ? A = ffmap(m, a);
+ ? minpoly(A) == minpoly(a)
+ %5 = 1
+ @eprog

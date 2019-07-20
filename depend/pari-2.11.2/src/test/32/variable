@@ -1,0 +1,24 @@
+0
+3
+x
+x
+y
+y
+y
+z
+0
+y
+[x, y, z]
+[y, x, y, z, y]
+[y, x, y, z, y]
+[y, y, x, y, z, y]
+[y, y, x, y, z, y]
+[y, y, x, y, z, y, y]
+[y, y, x, y, z, y, y, tt]
+  ***   at top-level: varhigher("zzz",y);1/0
+  ***                                     ^--
+  *** _/_: impossible inverse in gdiv: 0.
+[y, y, x, y, z, y, y, tt]
+[y, x, y, z, y]
+[y, y, x, y, z, y, y, tt]
+Total time spent: 0

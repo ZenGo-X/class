@@ -1,0 +1,15 @@
+Function: contfracinit
+Section: sums
+C-Name: contfracinit
+Prototype: GD-1,L,
+Help: contfracinit(M,{lim = -1}): given M representing the power
+ series S = sum_{n>=0} M[n+1]z^n, transform it into a continued fraction
+ suitable for evaluation.
+Doc: Given $M$ representing the power series $S=\sum_{n\ge0} M[n+1]z^n$,
+ transform it into a continued fraction; restrict to $n\leq \kbd{lim}$
+ if latter is non-negative. $M$ can be a vector, a power
+ series, a polynomial, or a rational function.
+ The result is a 2-component vector $[A,B]$ such that
+ $S = M[1] / (1+A[1]z+B[1]z^2/(1+A[2]z+B[2]z^2/(1+...1/(1+A[lim/2]z))))$.
+ Does not work if any coefficient of $M$ vanishes, nor for series for
+ which certain partial denominators vanish.

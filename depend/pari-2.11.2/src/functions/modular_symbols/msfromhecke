@@ -1,0 +1,41 @@
+Function: msfromhecke
+Section: modular_symbols
+C-Name: msfromhecke
+Prototype: GGDG
+Help: msfromhecke(M, v, {H}): given a msinit M and a vector v
+ of pairs [p, P] (where p is prime and P is a polynomial with integer
+ coefficients), return a basis of all modular symbols such that
+ P(Tp) * s = 0. If H is present, it must be a Hecke-stable subspace
+ and we restrict to s in H.
+Doc: given a msinit $M$ and a vector $v$ of pairs $[p, P]$ (where $p$ is prime
+ and $P$ is a polynomial with integer coefficients), return a basis of all
+ modular symbols such that $P(T_p)(s) = 0$. If $H$ is present, it must
+ be a Hecke-stable subspace and we restrict to $s \in H$. When $T_p$ has
+ a rational eigenvalue and $P(x) = x-a_p$ has degree $1$, we also accept the
+ integer $a_p$ instead of $P$.
+ \bprog
+ ? E = ellinit([0,-1,1,-10,-20]) \\11a1
+ ? ellap(E,2)
+ %2 = -2
+ ? ellap(E,3)
+ %3 = -1
+ ? M = msinit(11,2);
+ ? S = msfromhecke(M, [[2,-2],[3,-1]])
+ %5 =
+ [ 1  1]
+
+ [-5  0]
+
+ [ 0 -5]
+ ? mshecke(M, 2, S)
+ %6 =
+ [-2  0]
+
+ [ 0 -2]
+
+ ? M = msinit(23,4);
+ ? S = msfromhecke(M, [[5, x^4-14*x^3-244*x^2+4832*x-19904]]);
+ ? factor( charpoly(mshecke(M,5,S)) )
+ %9 =
+ [x^4 - 14*x^3 - 244*x^2 + 4832*x - 19904 2]
+ @eprog

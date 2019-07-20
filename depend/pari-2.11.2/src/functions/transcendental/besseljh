@@ -1,0 +1,10 @@
+Function: besseljh
+Section: transcendental
+C-Name: jbesselh
+Prototype: GGp
+Help: besseljh(n,x): J-bessel function of index n+1/2 and argument x, where
+ n is a non-negative integer.
+Doc: $J$-Bessel function of half integral index.
+ More precisely, $\kbd{besseljh}(n,x)$ computes $J_{n+1/2}(x)$ where $n$
+ must be of type integer, and $x$ is any element of $\C$. In the
+ present version \vers, this function is not very accurate when $x$ is small.

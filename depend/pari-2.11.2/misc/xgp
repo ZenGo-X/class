@@ -1,0 +1,20 @@
+#!/bin/sh
+#
+# A simple-minded script to launch gp in an xterm. The application name is
+# set to "gp". You can use it to have specific X resources for the xterm, or
+# tell your window manager specific preferences, etc.
+#
+# iconHint resource is in xterm post Oct 2012.  Earlier xterm should ignore.
+# xterm will seek pari-gp.xpm in current directory (not good but normally
+# harmless) and xterm's configured system location like /usr/share/pixmaps.
+# If GP is installed somewhere different than xterm then a full path could
+# be used.  If missing then xterm quietly uses its default icon.
+#
+# set correct paths if necessary
+xterm="xterm"
+gp="gp"
+
+$xterm -geometry 80x40 -sl 2000 -sb \
+       -name gp -title PARI/GP -rw \
+       -xrm XTerm.iconHint:pari-gp \
+       -e $gp &

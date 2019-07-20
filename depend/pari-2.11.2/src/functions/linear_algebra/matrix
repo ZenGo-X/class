@@ -1,0 +1,15 @@
+Function: matrix
+Section: linear_algebra
+C-Name: matrice
+Prototype: GDGDVDVDE
+Help: matrix(m,{n=m},{X},{Y},{expr=0}): m x n matrix of expression expr,
+ where the row variable X goes from 1 to m and the column variable Y goes from
+ 1 to n. By default, fill with 0s.
+Doc: creation of the
+ $m\times n$ matrix whose coefficients are given by the expression
+ \var{expr}. There are two formal parameters in \var{expr}, the first one
+ ($X$) corresponding to the rows, the second ($Y$) to the columns, and $X$
+ goes from 1 to $m$, $Y$ goes from 1 to $n$. If one of the last 3 parameters
+ is omitted, fill the matrix with zeroes. If $n$ is omitted, return a
+ square $m \times m$ matrix.
+ %\syn{NO}

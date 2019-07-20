@@ -1,0 +1,12 @@
+Function: mfbd
+Section: modular_forms
+C-Name: mfbd
+Prototype: GL
+Help: mfbd(F,d): F being a generalized modular form, return B(d)(F), where
+ B(d) is the expanding operator tau -> d tau.
+Doc: $F$ being a generalized modular form, return $B(d)(F)$, where $B(d)$ is
+ the expanding operator $\tau\mapsto d\tau$.
+ \bprog
+ ? D2=mfbd(mfDelta(),2); mfcoefs(D2, 6)
+ %1 = [0, 0, 1, 0, -24, 0, 252]
+ @eprog

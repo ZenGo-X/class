@@ -1,0 +1,26 @@
+/* Multivariable Laurent polynomial bug finding */
+/* 05 Jul 2007 Michael Somos */
+
+x;y;z;
+
+pol(N, v)=
+{
+  my(t = vector(N+1));
+  t[N+1] = 1;
+  for (i=1,#v,
+    my(n = v[i]);
+    if (n < 1, t[1] = 1
+             , t[(n-1) \ 2 + 1] = if (n%2,1/y,1/z)));
+  Polrev(t);
+}
+
+/* Attempt to multiply two polynomials in x */
+f(N,M,v,w)= iferr(pol(N,v)*pol(M,w); 0, E, 1);
+
+{doit(N,M)=
+  forvec(v=[[0,2*N],[0,2*N],[0,2*N]],
+    forvec(w=[[0,2*M],[0,2*M]],
+      if(f(N,M,v,w), print([N,M],v,w)),2),2);
+}
+
+doit(9,9);

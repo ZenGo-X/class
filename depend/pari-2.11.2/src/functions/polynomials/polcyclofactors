@@ -1,0 +1,28 @@
+Function: polcyclofactors
+Section: polynomials
+C-Name: polcyclofactors
+Prototype: G
+Help: polcyclofactors(f): returns a vector of polynomials, whose product is
+ the product of distinct cyclotomic polynomials dividing f.
+Doc: returns a vector of polynomials, whose product is the product of
+ distinct cyclotomic polynomials dividing $f$.
+ \bprog
+ ? f = x^10+5*x^8-x^7+8*x^6-4*x^5+8*x^4-3*x^3+7*x^2+3;
+ ? v = polcyclofactors(f)
+ %2 = [x^2 + 1, x^2 + x + 1, x^4 - x^3 + x^2 - x + 1]
+ ? apply(poliscycloprod, v)
+ %3 = [1, 1, 1]
+ ? apply(poliscyclo, v)
+ %4 = [4, 3, 10]
+ @eprog\noindent In general, the polynomials are products of cyclotomic
+ polynomials and not themselves irreducible:
+ \bprog
+ ? g = x^8+2*x^7+6*x^6+9*x^5+12*x^4+11*x^3+10*x^2+6*x+3;
+ ? polcyclofactors(g)
+ %2 = [x^6 + 2*x^5 + 3*x^4 + 3*x^3 + 3*x^2 + 2*x + 1]
+ ? factor(%[1])
+ %3 =
+ [            x^2 + x + 1 1]
+
+ [x^4 + x^3 + x^2 + x + 1 1]
+ @eprog

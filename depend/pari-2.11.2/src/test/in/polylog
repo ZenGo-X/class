@@ -1,0 +1,17 @@
+default(realprecision,38);
+polylog(3,0.9)
+polylog(2,3.9)
+polylog(3,3.9)
+polylog(2,Mod(x,x^2+1))
+polylog(2,[0.5,0.6])
+polylog(2,x+O(x^5))
+polylog(2,1/2+x+O(x^5))
+dilog(-4)
+polylog(2,1.1+I,1)
+polylog(1,2,3)
+localbitprec(320);bitprecision(dilog(2.0))
+
+\\errors
+polylog(3,2,5)
+polylog(2,Mod(1,2),0)
+polylog(3,"",0)

@@ -1,0 +1,45 @@
+Function: mffromlfun
+Section: modular_forms
+C-Name: mffromlfun
+Prototype: Gp
+Help: mffromlfun(L): L being an L-function representing a self-dual modular
+ form, return [NK,space,v] where mf=mfinit(NK,space) contains the form
+ and mftobasis(mf, v)
+ containing it and v is mftobasis(mf,f).
+Doc: Let $L$ being an $L$-function in any of the \kbd{lfun} formats representing
+ a self-dual modular form (for instance an eigenform). Return
+ \kbd{[NK,space,v]} when \kbd{mf = mfinit(NK,space)} is the modular
+ form space containing the form and \kbd{mftobasis(mf, v)} will represent it
+ on the space basis. If $L$ has rational coefficients, this will be enough
+ to recognize the modular form in \var{mf}:
+ \bprog
+ ? L = lfuncreate(x^2+1);
+ ? lfunan(L,10)
+ %2 = [1, 1, 0, 1, 2, 0, 0, 1, 1, 2]
+ ? [NK,space,v] = mffromlfun(L); NK
+ %4 = [4, 1, -4]
+ ? mf=mfinit(NK,space); w = mftobasis(mf,v)
+ %5 = [1.0000000000000000000000000000000000000]~
+ ? [f] = mfbasis(mf); mfcoefs(f,10)   \\ includes a_0 !
+ %6 = [1/4, 1, 1, 0, 1, 2, 0, 0, 1, 1, 2]
+ @eprog
+
+ If $L$ has inexact complex coefficients, one can for instance
+ compute an eigenbasis for \var{mf} and check whether one of the attached
+ $L$-function is reasonably close to $L$. In the example, we cheat by
+ producing the $L$ function from an eigenform in a known space, but the
+ function does not use this information:
+ \bprog
+ ? mf = mfinit([32,6,Mod(5,32)],0);
+ ? [poldegree(K) | K<-mffields(mf)]
+ %2 = [19] \\ one orbit, [Q(F) : Q(chi)] = 19
+ ? L = lfunmf(mf)[1][1]; \\ one of the 19 L-functions attached to F
+ ? lfunan(L,3)
+ %4 = [1, 5.654... - 0.1812...*I, -7.876... - 19.02...*I]
+ ? [NK,space,v] = mffromlfun(L); NK
+ %5 = [32, 6, Mod(5, 32)]
+ ? vL = concat(lfunmf(mf)); \\ L functions for all cuspidal eigenforms
+ ? an = lfunan(L,10);
+ ? for (i = 1, #vL, if (normlp(lfunan(vL[i],10) - an, oo) < 1e-10, print(i)));
+ 1
+ @eprog

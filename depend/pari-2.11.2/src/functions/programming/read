@@ -1,0 +1,25 @@
+Function: read
+Section: programming/specific
+C-Name: gp_read_file
+Prototype: D"",s,
+Help: read({filename}): read from the input file filename. If filename is
+ omitted, reread last input file, be it from read() or \r.
+Description:
+ (str):gen      gp_read_file($1)
+Doc: reads in the file
+ \var{filename} (subject to string expansion). If \var{filename} is
+ omitted, re-reads the last file that was fed into \kbd{gp}. The return
+ value is the result of the last expression evaluated.
+
+ If a GP \tet{binary file} is read using this command (see
+ \secref{se:writebin}), the file is loaded and the last object in the file
+ is returned.
+
+ In case the file you read in contains an \tet{allocatemem} statement (to be
+ generally avoided), you should leave \kbd{read} instructions by themselves,
+ and not part of larger instruction sequences.
+
+ \misctitle{Variants} \kbd{readvec} allows to read a whole file at once;
+ \kbd{fileopen} followed by either \kbd{fileread} (evaluated lines) or
+ \kbd{filereadstr} (lines as non-evaluated strings) allows to read a file
+ one line at a time.

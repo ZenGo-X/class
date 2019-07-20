@@ -1,0 +1,39 @@
+Function: rnfidealabstorel
+Section: number_fields
+C-Name: rnfidealabstorel
+Prototype: GG
+Help: rnfidealabstorel(rnf,x): transforms the ideal x from absolute to
+ relative representation.
+Doc: let $\var{rnf}$ be a relative
+ number field extension $L/K$ as output by \kbd{rnfinit} and let $x$ be an
+ ideal of the absolute extension $L/\Q$. Returns the relative pseudo-matrix in
+ HNF giving the ideal $x$ considered as an ideal of the relative extension
+ $L/K$, i.e.~as a $\Z_K$-module.
+
+ Let \kbd{Labs} be an (absolute) \kbd{nf} structure attached to $L$,
+ obtained via \kbd{Labs = nfinit(rnf))}. Then \kbd{rnf} ``knows'' about
+ \kbd{Labs} and $x$ may be given in any format
+ attached to \kbd{Labs}, e.g. a prime ideal or an ideal in HNF wrt.
+ \kbd{Labs.zk}:
+ \bprog
+ ? K = nfinit(y^2+1); rnf = rnfinit(K, x^2-y); Labs = nfinit(rnf);
+ ? m = idealhnf(Labs, 17, x^3+2); \\ some ideal in HNF wrt. Labs.zk
+ ? B = rnfidealabstorel(rnf, m)
+ %3 = [[1, 8; 0, 1], [[17, 4; 0, 1], 1]] \\ pseudo-basis for m as Z_K-module
+ ? A = rnfidealreltoabs(rnf, B)
+ %4 = [17, x^2 + 4, x + 8, x^3 + 8*x^2]  \\ Z-basis for m in Q[x]/(rnf.polabs)
+ ? mathnf(matalgtobasis(Labs, A)) == m
+ %5 = 1
+ @eprog\noindent If on the other hand, we do not have a \kbd{Labs} at hand,
+ because it would be too expensive to compute, but we nevertheless have
+ a $\Z$-basis for $x$, then we can use the function with this basis as
+ argument. The entries of $x$ may be given either modulo \kbd{rnf.polabs}
+ (absolute form, possibly lifted) or modulo \kbd{rnf.pol} (relative form as
+ \typ{POLMOD}s):
+ \bprog
+ ? K = nfinit(y^2+1); rnf = rnfinit(K, x^2-y);
+ ? rnfidealabstorel(rnf, [17, x^2 + 4, x + 8, x^3 + 8*x^2])
+ %2 = [[1, 8; 0, 1], [[17, 4; 0, 1], 1]]
+ ? rnfidealabstorel(rnf, Mod([17, y + 4, x + 8, y*x + 8*y], x^2-y))
+ %3 = [[1, 8; 0, 1], [[17, 4; 0, 1], 1]]
+ @eprog

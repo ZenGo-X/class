@@ -1,0 +1,21 @@
+Function: msdim
+Section: modular_symbols
+C-Name: msdim
+Prototype: lG
+Help: msdim(M): M being a modular symbol space or subspace,
+ return its dimension as a Q-vector space.
+Doc: $M$ being a full modular symbol space or subspace, for instance
+ as given by \kbd{msinit} or \kbd{mscuspidal}, return
+ its dimension as a $\Q$-vector space.
+ \bprog
+ ? M = msinit(11,4); msdim(M)
+ %1 = 6
+ ? M = msinit(11,4,1); msdim(M)
+ %2 = 4 \\ dimension of the '+' part
+ ? [S,E] = mscuspidal(M,1);
+ ? [msdim(S), msdim(E)]
+ %4 = [2, 2]
+ @eprog\noindent Note that \kbd{mfdim([N,k])} is going to be much faster if
+ you only need the dimension of the space and not really to work with it.
+ This function is only useful to quickly check the dimension of an existing
+ space.

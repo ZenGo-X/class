@@ -1,0 +1,26 @@
+Function: ramanujantau
+Section: number_theoretical
+C-Name: ramanujantau
+Prototype: G
+Help: ramanujantau(n): compute the value of Ramanujan's tau function at n,
+ assuming the GRH. Algorithm in O(n^{1/2+eps}).
+Doc: compute the value of Ramanujan's tau function at an individual $n$,
+ assuming the truth of the GRH (to compute quickly class numbers of imaginary
+ quadratic fields using \tet{quadclassunit}).
+ Algorithm in $\tilde{O}(n^{1/2})$ using $O(\log n)$ space. If all values up
+ to $N$ are required, then
+ $$\sum \tau(n)q^n = q \prod_{n\geq 1} (1-q^n)^{24}$$
+ will produce them in time $\tilde{O}(N)$, against $\tilde{O}(N^{3/2})$ for
+ individual calls to \kbd{ramanujantau}; of course the space complexity then
+ becomes $\tilde{O}(N)$.
+ \bprog
+ ? tauvec(N) = Vec(q*eta(q + O(q^N))^24);
+ ? N = 10^4; v = tauvec(N);
+ time = 26 ms.
+ ? ramanujantau(N)
+ %3 = -482606811957501440000
+ ? w = vector(N, n, ramanujantau(n)); \\ much slower !
+ time = 13,190 ms.
+ ? v == w
+ %4 = 1
+ @eprog

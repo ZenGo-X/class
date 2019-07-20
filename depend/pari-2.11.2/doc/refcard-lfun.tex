@@ -1,0 +1,118 @@
+% Copyright (c) 2007-2016 Karim Belabas.
+% Permission is granted to copy, distribute and/or modify this document
+% under the terms of the GNU General Public License
+
+% Reference Card for PARI-GP, Algebraic Number Theory.
+% Author:
+%  Karim Belabas
+%  Universite de Bordeaux, 351 avenue de la Liberation, F-33405 Talence
+%  email: Karim.Belabas@math.u-bordeaux.fr
+%
+% See refcard.tex for acknowledgements and thanks.
+\def\TITLE{L-functions}
+\input refmacro.tex
+
+\section{Characters}
+A character on the abelian group $G = \sum_{j \leq k} (\ZZ/d_j\ZZ) \cdot
+g_j$, e.g. from \kbd{znstar(q,1)} $\leftrightarrow (\ZZ/q\ZZ)^*$ or
+\kbd{bnrinit} $\leftrightarrow \text{Cl}_{\goth{f}}(K)$, is coded by $\chi = [c_1,\dots,c_k]$
+such that $\chi(g_j) = e(c_j/d_j)$. Our $L$-functions consider the
+attached \emph{primitive} character.
+
+Dirichlet characters $\chi_q(m,\cdot)$ in Conrey labelling system are
+alternatively concisely coded by \kbd{Mod(m,q)}. Finally, a quadratic
+character $(D/\cdot)$ can also be coded by the integer $D$.
+
+\section{L-function Constructors}
+An \kbd{Ldata} is a GP structure describing the functional equation
+for $L(s) = \sum_{n\geq 1} a_n n^{-s}$.
+
+\item Dirichlet coefficients given by closure $a: N \mapsto [a_1,\dots,a_N]$.
+
+\item Dirichlet coefficients $a^*(n)$ for dual $L$-function $L^*$.
+
+\item Euler factor $A = [a_1,\dots,a_d]$ for $\gamma_A(s) = \prod_i
+\Gamma_{\RR}(s + a_i)$,
+
+\item classical weight $k$ (values at $s$ and $k-s$ are related),
+
+\item conductor $N$, $\Lambda(s) = N^{s/2} \gamma_A(s)$,
+
+\item root number $\varepsilon$; $\Lambda(a,k-s) = \varepsilon \Lambda(a^*,s)$.
+
+\item polar part: list of $[\beta,P_\beta(x)]$.
+\medskip
+
+An \kbd{Linit} is a GP structure containing an \kbd{Ldata} $L$ and an
+evaluation \emph{domain} fixing a maximal order of derivation $m$ and bit
+accuracy (\kbd{realbitprecision}), together with complex ranges
+
+\item for $L$-function: $R=[c,w,h]$
+(coding $|\Re z - c| \leq w$, $|\Im z| \leq h$); or $R = [w,h]$ (for $c =
+k/2$); or $R = [h]$ (for $c = k/2$, $w = 0$).
+
+\item for $\theta$-function: $T=[\rho,\alpha]$ (for $|t|\geq
+\rho$, $|\arg t| \leq \alpha$); or $T = \rho$ (for $\alpha = 0$).
+
+\subsec{Ldata constructors}
+\li{Riemann $\zeta$}{lfuncreate$(1)$}
+\li{Dirichlet for quadratic char.~$(D/\cdot)$}{lfuncreate$(D)$}
+\li{Dirichlet series $L(\chi_q(m,\cdot),s)$}{lfuncreate(Mod(m,q))}
+\li{Dedekind $\zeta_K$, $K = \QQ[x]/(T)$}
+   {lfuncreate$(\var{bnf})${\rm, }lfuncreate$(T)$}
+\li{Hecke for $\chi$ mod $\goth{f}$}{lfuncreate$([\var{bnr},\chi])$}
+\li{Artin $L$-function}{lfunartin$(\var{nf},\var{gal},M,n)$}
+\li{Lattice $\Theta$-function}{lfunqf$(Q)$}
+\li{From eigenform $F$}{lfunmf$(F)$}
+\li{Quotients of Dedekind $\eta$: $\prod_i \eta(m_{i,1}\cdot\tau)^{m_{i,2}}$}
+   {lfunetaquo$(M)$}
+\li{$L(E,s)$, $E$ elliptic curve}{E = ellinit(\dots)}
+\li{$L(Sym^m E,s)$, $E$ elliptic curve}{lfunsympow(E, m)}
+\li{genus $2$ curve, $y^2+xQ = P$}{lfungenus2$([P,Q])$}
+\smallskip
+
+\li{$L_1 \cdot L_2$}{lfunmul$(L_1,L_2)$}
+\li{$L_1 / L_2$}{lfundiv$(L_1,L_2)$}
+\li{twist by Dirichlet character}{lfuntwist$(L,\chi)$}
+\smallskip
+
+\li{low-level constructor}
+   {lfuncreate$([a,a^*,A,k,N,\var{eps},\var{poles}])$}
+\li{check functional equation (at $t$)}{lfuncheckfeq$(L,\{t\})$}
+
+\subsec{Linit constructors}
+\li{initialize for $L$}{lfuninit$(L, R, \{m = 0\})$}
+\li{initialize for $\theta$}{lfunthetainit$(L, \{T = 1\}, \{m = 0\})$}
+\li{cost of \kbd{lfuninit}}{lfuncost$(L, R, \{m = 0\})$}
+\li{cost of \kbd{lfunthetainit}}{lfunthetacost$(L, T, \{m = 0\})$}
+
+\li{Dedekind $\zeta_L$, $L$ abelian over a subfield}{lfunabelianrelinit}
+
+\section{L-functions}
+$L$ is either an \kbd{Ldata} or an \kbd{Linit} (more efficient for many
+values).\hfil\break
+\subsec{Evaluate}
+\li{$L^{(k)}(s)$}{lfun$(L,s,\{k=0\})$}
+\li{$\Lambda^{(k)}(s)$}{lfunlambda$(L,s,\{k=0\})$}
+\li{$\theta^{(k)}(t)$}{lfuntheta$(L,t,\{k=0\})$}
+\li{generalized Hardy $Z$-function at $t$}{lfunhardy$(L,t)$}
+%lfunmfspec
+
+\subsec{Zeros}
+\li{order of zero at $s = k/2$}{lfunorderzero$(L,\{m=-1\})$}
+\li{zeros $s = k/2 + it$, $0 \leq t \leq T$}{lfunzeros$(L, T, \{h\})$}
+
+\subsec{Dirichlet series and functional equation}
+\li{$[a_n\colon 1\leq n\leq N]$}{lfunan$(L, N)$}
+\li{conductor $N$ of $L$}{lfunconductor$(L)$}
+\li{root number and residues}{lfunrootres$(L)$}
+
+\subsec{$G$-functions}
+Attached to inverse Mellin transform for $\gamma_A(s)$,
+$A = [a_1,\dots,a_d]$.\hfil\break
+\li{initialize for $G$ attached to $A$}{gammamellininvinit$(A)$}
+\li{$G^{(k)}(t)$}{gammamellininv$(G,t,\{k=0\})$}
+\li{asymp. expansion of $G^{(k)}(t)$}
+   {gammamellininvasymp$(A,n,\{k=0\})$}
+\copyrightnotice
+\bye

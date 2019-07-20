@@ -1,0 +1,84 @@
+o = [Mod(0,3),y,1/y, (y^2+1)/y, [1,2,3], Vecsmall([1,2,0]), Qfb(1,2,4), Qfb(1,2,-4), y+2*y^2+O(y^4)];
+{
+  for (i=1,#o,
+    my (v = o[i]);
+    printsep(" ", Pol(v,y), Pol(v,x), Polrev(v));
+    printsep(" ", Ser(v,y), Ser(v,x), Ser(v,,5));
+  )
+}
+o = [2*x+3*y, 2+x+y+O(x^2), 2+x+y+O(y^2)];
+{
+  for (i=1,#o,
+    my (v = o[i]);
+    printsep(" ",pollead(v), pollead(v,x), pollead(v,y))
+  )
+}
+polrecip(1)
+pollead(z,y)
+pollead(y,z)
+polgraeffe(x^2+x+1)
+polgraeffe(x^3+x+1)
+polsym(2*x^4+1,4)
+norm(I*x+1)
+trace(I*x+1)
+matcompanion(2*x^2+1)
+serlaplace(1+x+x^2)
+serlaplace(x^2+x^3)
+
+test()=
+{
+  my(P,a,V);
+  P=x^4+7*x^3+12*x+5;Q=7*y^3-y-1;Q1=y^3-y-1;
+  a=ffgen([11,5],'a);
+  b=ffgen([2,10],'b);
+  V=[P,
+   x^4+7/2*x^3+12/7*x+5/4,
+   P*Mod(1,11),
+   subst(P,x,x+a),
+   subst(P,x,x+b),
+   subst(P,x,x+y)*Mod(1,Q1),
+   subst(P,x,x+y)*Mod(1,Q),
+   subst(P,x,x+y/3)*Mod(1,Q1),
+   subst(P,x,x+y/3)*Mod(1,Q),
+   subst(P,x,x+y)*Mod(Mod(1,11),Q*Mod(1,11))
+  ];
+  for(i=1,#V,
+    my(R=V[i],R2=R^2);
+    if(R2!=R*(R+1)-R,error(R));
+    if((R+1)^2%R!=1,error(R));
+    if(R^2%R!=0,error(R));
+    if(Mod(R,R2+R-1)^-1*R!=1,error(R));
+    print(i,":" R2));
+  print("done");
+}
+test()
+
+check(A)=if(A^2+A!=A*(A+1),error(A));
+
+A=Mod(-6,y^2-2)*x+Mod(48*z+60,y^2-2);B=Mod(1,y^2-2)*x+Mod(10,y^2-2); A*B
+A=Mod(1,z^2-z-1)*y+(Mod(1/2*z+1/2,z^2-z-1)*x+Mod(1/2*z+1/2,z^2-z-1)); check(A)
+A=x^2+y*z*x+Mod(1,y^2+3); check(A)
+A=x^4+x*y^5+Mod(1,y^2+1); check(A)
+A=x^4+x*y^5+Mod(1,5*y^2+y+1); check(A)
+
+T=x^2+2;
+polrootsbound(T)
+polrootsbound(T, 1e-5)
+
+\\#1651
+f1=(x-1)/(x*x-x);
+type(subst(1/f1,x,1))
+
+\\#1690
+default(realprecision,38);
+P(x,y)=(x+1)*y^2+(x^2-x+1)*y+(x^2+x);
+T = P(exp(I*Pi),y);
+polroots(T)
+polrootsbound(T)
+polrootsbound('x)
+
+\\ Errors
+polrootsbound(Pol(0))
+polrootsbound(1)
+Pol("")
+(1/x) % x

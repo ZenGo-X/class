@@ -1,0 +1,85 @@
+Function: znlog
+Section: number_theoretical
+C-Name: znlog0
+Prototype: GGDG
+Help: znlog(x,g,{o}): return the discrete logarithm of x in
+ (Z/nZ)* in base g. If present, o represents the multiplicative
+ order of g. Return [] if no solution exist.
+Doc: This functions allows two distinct modes of operation depending
+ on $g$:
+
+ \item if $g$ is the output of \tet{znstar} (with initialization),
+ we compute the discrete logarithm of $x$ with respect to the generators
+ contained in the structure. See \tet{ideallog} for details.
+
+ \item else $g$ is an explicit element in $(\Z/N\Z)^*$, we compute the
+ discrete logarithm of $x$ in $(\Z/N\Z)^*$ in base $g$. The rest of this
+ entry describes the latter possibility.
+
+ The result is $[]$ when $x$ is not a power of $g$, though the function may
+ also enter an infinite loop in this case.
+
+ If present, $o$ represents the multiplicative order of $g$, see
+ \secref{se:DLfun}; the preferred format for this parameter is
+ \kbd{[ord, factor(ord)]}, where \kbd{ord} is the order of $g$.
+ This provides a definite speedup when the discrete log problem is simple:
+ \bprog
+ ? p = nextprime(10^4); g = znprimroot(p); o = [p-1, factor(p-1)];
+ ? for(i=1,10^4, znlog(i, g, o))
+ time = 163 ms.
+ ? for(i=1,10^4, znlog(i, g))
+ time = 200 ms. \\ a little slower
+ @eprog
+
+ The result is undefined if $g$ is not invertible mod $N$ or if the supplied
+ order is incorrect.
+
+ This function uses
+
+ \item a combination of generic discrete log algorithms (see below).
+
+ \item in $(\Z/N\Z)^*$ when $N$ is prime: a linear sieve index calculus
+ method, suitable for $N < 10^{50}$, say, is used for large prime divisors of
+ the order.
+
+ The generic discrete log algorithms are:
+
+ \item Pohlig-Hellman algorithm, to reduce to groups of prime order $q$,
+ where $q | p-1$ and $p$ is an odd prime divisor of $N$,
+
+ \item Shanks baby-step/giant-step ($q < 2^{32}$ is small),
+
+ \item Pollard rho method ($q > 2^{32}$).
+
+ The latter two algorithms require $O(\sqrt{q})$ operations in the group on
+ average, hence will not be able to treat cases where $q > 10^{30}$, say.
+ In addition, Pollard rho is not able to handle the case where there are no
+ solutions: it will enter an infinite loop.
+ \bprog
+ ? g = znprimroot(101)
+ %1 = Mod(2,101)
+ ? znlog(5, g)
+ %2 = 24
+ ? g^24
+ %3 = Mod(5, 101)
+
+ ? G = znprimroot(2 * 101^10)
+ %4 = Mod(110462212541120451003, 220924425082240902002)
+ ? znlog(5, G)
+ %5 = 76210072736547066624
+ ? G^% == 5
+ %6 = 1
+ ? N = 2^4*3^2*5^3*7^4*11; g = Mod(13, N); znlog(g^110, g)
+ %7 = 110
+ ? znlog(6, Mod(2,3))  \\ no solution
+ %8 = []
+ @eprog\noindent For convenience, $g$ is also allowed to be a $p$-adic number:
+ \bprog
+ ? g = 3+O(5^10); znlog(2, g)
+ %1 = 1015243
+ ? g^%
+ %2 = 2 + O(5^10)
+ @eprog
+Variant: The function
+ \fun{GEN}{znlog}{GEN x, GEN g, GEN o} is also available
+

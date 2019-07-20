@@ -1,0 +1,233 @@
+iferr(Mat([1]) + matrix(0,1),E,E)
+iferr(1/matrix(2,2,i,j,Mod(0, 2)),E,E)
+test(n)=
+{
+  until(matrank(M)==n,M=matrix(n,n,i,j,random(Mod(1,2))));
+  if(M^-1*M!=matid(n),error("F2m"));
+}
+test(200)
+test(2)
+
+matsize(matrix(0, 0) * matrix(0, 2))
+
+default(realprecision,38);
+h=mathilbert(40);
+[Q,R] = matqr(h); vecmax(abs(h-Q*R)) < 1e-37
+[q,R] = matqr(h,1); vecmax(abs(mathouseholder(q,h)-R)) < 1e-37
+matqr([;])
+matqr([;],1)
+mathouseholder(1,1)
+mathouseholder(q,1)
+mathouseholder(q, vectorv(40,i,1))
+Mat(List())
+Mat(List([1]))
+Mat([[1,2,3],[2,3,4]]~)
+Mat(Qfb(1,2,5))
+matdiagonal(matid(2))
+iferr(matdiagonal([1,2;3,4]),E,E)
+matpascal(4,1/2)
+A=[1,2,3;4,5,6];B=[4,6;10,12]
+matinverseimage(A,B)
+matinverseimage(A*Mod(1,2),B)
+matinverseimage(A*Mod(1,7),B)
+matinverseimage(A*Mod(1,2^64+13),B)
+matinverseimage(A*Mod(1,3037000507),B)
+B=[4,10]~;
+matinverseimage(A*Mod(1,2),B)
+matinverseimage(A*Mod(1,7),B)
+matinverseimage(A*Mod(1,2^64+13),B)
+matinverseimage(A*Mod(1,3037000507),B)
+
+test(f)=
+{
+  print(f,":");
+  print(f(A*Mod(1,2)));
+  print(f(A*Mod(1,7)));
+  print(f(A*Mod(1,3037000507)));
+  print(f(A*Mod(1,2^64+13)));
+  print(f(A*(1+O(101^3))));
+}
+testall()=
+{
+  test(matdet);
+  test(matrank);
+  test(matadjoint);
+  test(matimage);
+  test(matimagecompl);
+  test(matindexrank);
+  test(matker);
+  test(lindep);
+  test(x->matsolve(x,vectorv(#x,i,i)));
+  test(x->matsolve(x,matrix(#x,#x,i,j,i+j)));
+  test(x->x^(-1));
+  test(x->x^2);
+  test(x->A*x);
+}
+A = [1,2,4;2,12,7;2,9,11];
+testall();
+A = [;]
+testall();
+
+A=[0,1,0;1,0,1;2,0,3];
+matdet(A*Mod(1,3037000507))
+matdet(A*Mod(1,2^64+13))
+matsolve(A*Mod(1,2^64+13),[1,2,3]~)
+matsolve([1,0;0,0]*Mod(1,2),[1,1]~)
+matsolve([1,0;0,0]*Mod(1,3),[1,1]~)
+m=[1,0;0,0;0,1]; b=[1,2;0,0;3,4];
+matsolve(m,b)
+matsolve(m/2,b)
+matsolve(m*Mod(1,2),b)
+matsolve(m*Mod(1,3),b)
+matsolve(m*Mod(1,2^64+13),b)
+matsolve(m*ffgen(2^3)^0,b)
+
+matker([1.,I;I,-1.])
+matkerint(Mat([1,1]))
+
+trace(matid(3))
+trace([;])
+iferr(trace(Mat([1,2])),E,E)
+matrixqz([1/3,1/4;1/2,1/3])
+matrixqz(matrix(2,2),-1)
+m=[1,-4,6,1;-13,14,-8,-3;0,0,0,0;0,0,0,0;7,-9,3,2;-7,9,7,4;0,0,0,0;0,0,0,0;10,-2,-2,0;0,0,-4,-4;0,0,0,0;0,0,0,0;-7,9,-7,-4;-4,-3,7,3;0,0,0,0;0,0,0,0;-5,1,9,4;1,-4,-10,-5;0,0,0,0;0,0,0,0;-13,14,-8,-5;-3,-7,7,4;0,0,0,0;0,0,0,0;-18,15,5,3;8,6,-6,-2;0,0,0,0;0,0,0,0;0,0,0,0;4,3,3,1;0,0,0,0;0,0,0,0;11,-6,4,3;-7,9,7,2;0,0,0,0;0,0,0,0;-5,1,7,4;4,3,1,1;0,0,0,0;0,0,0,0;-6,5,-9,-7;-9,-2,10,7;0,0,0,0;0,0,0,0;-1,4,-4,-1;-20,4,6,4;0,0,0,0;0,0,0,0;0,0,-8,-4;9,2,6,3;0,0,0,0;0,0,0,0;0,0,0,0;0,0,0,0;3,7,1,0;6,-5,-7,-5;0,0,0,0;0,0,0,0;-11,6,8,5;0,0,-6,-4;0,0,0,0;0,0,0,0;-12,10,10,6;0,0,-8,-4;0,0,0,0;0,0,0,0;-5,1,3,2;-6,5,-7,-3;0,0,0,0;0,0,0,0;10,-2,-6,-4;-4,-3,3,1;0,0,0,0;0,0,0,0;0,0,0,0;0,0,0,0;0,0,0,0;0,0,0,0;-2,8,0,-2;2,-8,-4,-2;0,0,0,0;0,0,0,0];
+a=matrixqz(m,-2);matdet(a~*a)
+matrixqz([2,0;0,2;1,0;0,1],-2)
+
+A=[1,2,3;4,5,6;7,8,9];
+test(lindep)
+test(matsupplement)
+A=matrix(5,1);
+test(matsupplement)
+
+default(parisize,10^6); \\ need to exercise gerepile in matker+matimage
+p=2^64+13;
+A=matrix(70,70,i,j, i+j);
+Ap=Mod(A,p);
+#matker(Ap)
+#matimage(Ap)
+#matker(A)
+matker([3,0,2,2;1,3,3,3])
+vecsum([])
+vecsum([2])
+vecsum(primes(4))
+vecsum(1)
+vecprod([])
+vecprod([1,2,3])
+1~
+
+content([])
+content([;])
+content(matrix(0,2))
+
+vectorsmall(3)
+v=vectorsmall(3,i,3*i^2)
+content(v)
+content(vectorsmall(0))
+v=vectorsmall(5,i,(3-i)*i)
+content(v)
+vectorsmall(3,i,i^100)
+
+m=[1,0;0,0;0,1]; b=[1,2;0,0;3,4];
+liftint(Mod(m,2)^(-1))
+liftint(Mod(m,3)^(-1))
+liftint(Mod(m,2^64+13)^(-1))
+liftint(matsolve(Mod(m,2),b))
+liftint(matsolve(Mod(m,3),b))
+liftint(matsolve(Mod(m,2^64+13),b))
+(m*ffgen(2^2)^0)^(-1)
+(m*ffgen(3^2)^0)^(-1)
+(m*ffgen((2^64+13)^2)^0)^(-1)
+
+m=[1,2,3;4,5,6];
+m[1,]=[1,2]
+m[1,]=[1,2,3,4]
+m[1,]=[1,2,3]~
+m[2,]=[1,2,3]
+m
+m[1,]*=2
+m
+
+test(t) =
+{
+   N = [1, 2; -1, -2]*t^0;
+   print(matinverseimage(N, N^0));
+}
+test(Mod(1, 3));
+test(Mod(1, nextprime(2^64)));
+test(ffgen(2^17));
+test(ffgen(2017^3));
+test(ffgen(nextprime(2^64)^3));
+
+p = nextprime(2^63);
+q = nextprime(p + 1);
+{
+   forvec(v = vector(8, i, [0, 2]),
+          matker([p^v[1]*q^v[2], p^v[3]*q^v[4];
+                  p^v[5]*q^v[6], p^v[7]*q^v[8]], 1));
+}
+
+test(x,u=1) =
+{
+   n = 22; r = 12;
+   M = matrix(n, n, i, j, random(x)*u);
+   P = matrix(n, r, i, j, if(2*i >= 3*j + 8, random(x)*u, 0));
+   N = P*matrix(r, n, i, j, random(x)*u);
+   S = matsupplement(P);
+   Q = N[,1..r];
+   R = mattranspose(P);
+   X = matsolve(M, N);
+   K = matker(N);
+   J = matimage(N);
+   if (M*X != N, error("M*X == N"));
+   if (N*K != 0,error("N*K == 0"));
+   if (N*lindep(N) != 0, error("lindep(N)"));
+   if (R*lindep(R) != 0, error("lindep(R)"));
+   if (matimage(J) != J, error("matimage(J)"));
+   if (matdet(S) == 0, error("matsupplement(S)"));
+   if (matrank(J) != r, error("matrank(J)"));
+   if (matrank(K) != n - r, error("matrank(K)"));
+   if (matrank(N) != r, error("matrank(N)"));
+   if (J^-1 * J != matid(r), error("J^-1 * J"));
+   if (matdet(M^-1) != matdet(M)^-1, error("matdet"));
+   if (P*matinverseimage(P, Q) != Q, error("matinverseimage"));
+   if(#lindep(J), error("lindep(J)"));
+   if(#matker(K), error("matker(K)"));
+   if(#matker(M), error("matker(M)"));
+   if(#matinverseimage(N, M),error("matinverseimage(N, M)"));
+   if(#matinverseimage(P, M),error("matinverseimage(P, M)"));
+   iferr(N^-1, e,, errname(e) == "e_INV");
+   iferr(matsolve(N, M), e,, errname(e) == "e_INV");
+}
+p=nextprime(2^65);
+test(Mod(1, 8161));
+test(Mod(1, p));
+default(parisize,8*10^6);
+test(ffgen([2017,3]));
+test(ffgen([p,2]));
+test(x^3*Mod(1,17),Mod(1,ffinit(17,4)));
+test(x^2*Mod(1,p),Mod(1,ffinit(p,3)));
+
+test(x,u=1) =
+{
+  my(R = matrix(5, 5, i, j, random(x)*u));
+  if(R^2+R!=R*(R+1),error([x,u]));
+}
+test(10*x^3,Mod(1,x^4+7*x^3+12*x+5));
+test(10*x^3,Mod(1,(x^4+7*x^3+12*x+5)/7));
+test(10*x^3,Mod(1,5*x^4+7*x^3+12*x+5));
+test(10*x^3,Mod(1/11,x^4+7*x^3+12*x+5));
+test(10*x^3,Mod(1/11,(x^4+7*x^3+12*x+5)/7));
+test(10*x^3,Mod(1/11,5*x^4+7*x^3+12*x+5));
+
+[0,0;-1,0;1,1]^(-1)
+[1,2;3,4;5,6]^-1
+[1,2,3;4,5,6]^-1
+[1,2,3;4,5,6;7,8,9]^-1
+
+A=[0,0;-10,200;-4,80;0,0;-10,200;-4,80;-50,1000;-80,1600;-28,560];
+B=[0,1;0,0;0,0;-3,-2;20,10;25,-10;-8,-6;30,20;25,-15];
+matintersect(A,B)
+
+\\ Errors, keep at end of file
+1/Mat([0,0]~)

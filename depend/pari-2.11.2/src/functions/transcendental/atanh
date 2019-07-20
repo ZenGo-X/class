@@ -1,0 +1,8 @@
+Function: atanh
+Section: transcendental
+C-Name: gatanh
+Prototype: Gp
+Help: atanh(x): inverse hyperbolic tangent of x.
+Doc: principal branch of $\text{tanh}^{-1}(x) = \log ((1+x)/(1-x)) / 2$. In
+ particular the imaginary part of $\text{atanh}(x)$ belongs to
+ $[-\pi/2,\pi/2]$; if $x\in \R$ and $|x|>1$ then $\text{atanh}(x)$ is complex.

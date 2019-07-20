@@ -1,0 +1,51 @@
+Function: fileclose
+Section: programming/specific
+C-Name: gp_fileclose
+Prototype: vL
+Help: fileclose(n): close the file descriptor n.
+Doc: close the file descriptor $n$, created via \kbd{fileopen} or
+ \kbd{fileextern}. Finitely many files can be opened at a given time,
+ closing them recycles file descriptors and avoids running out of them:
+ \bprog
+ ? n = 0; while(n++, fileopen("/tmp/test", "w"))
+  ***   at top-level: n=0;while(n++,fileopen("/tmp/test","w"))
+  ***                               ^--------------------------
+  *** fileopen: error opening requested file: `/tmp/test'.
+  ***   Break loop: type 'break' to go back to GP prompt
+ break> n
+ 65533
+ @eprog\noindent This is a limitation of the operating system and does not
+ depend on PARI: if you open too many files in \kbd{gp} without closing them,
+ the operating system will also prevent unrelated applications from opening
+ files. Independently, your operating system (e.g. Windows) may prevent other
+ applications from accessing or deleting your file while it is opened by
+ \kbd{gp}. Quitting \kbd{gp} implicitly calls this function on all opened
+ file descriptors.
+
+ On files opened for writing, this function also forces a write of all
+ buffered data to the file system and completes all pending write operations.
+ This function is implicitly called for all open file descriptors when
+ exiting \kbd{gp} but it is cleaner and safer to call it explicitly, for
+ instance in case of a \kbd{gp} crash or general system failure, which could
+ cause data loss.
+ \bprog
+ ? n = fileopen("./here");
+ ? while(l = fileread(n), print(l));
+ ? fileclose(n);
+
+ ? n = fileopen("./there", "w");
+ ? for (i = 1, 100, filewrite(n, i^2+1))
+ ? fileclose(n)
+ @eprog Until a \kbd{fileclose}, there is no guarantee that the file on disk
+ contains all the expected data from previous \kbd{filewrite}s. (And even
+ then the operating system may delay the actual write to hardware.)
+
+ Closing a file twice raises an exception:
+ \bprog
+ ? n = fileopen("/tmp/test");
+ ? fileclose(n)
+ ? fileclose(n)
+  ***   at top-level: fileclose(n)
+  ***                 ^------------
+  *** fileclose: invalid file descriptor 0
+ @eprog

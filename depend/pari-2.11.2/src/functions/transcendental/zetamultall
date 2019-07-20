@@ -1,0 +1,20 @@
+Function: zetamultall
+Section: transcendental
+C-Name: zetamultall
+Prototype: Lp
+Help: zetamultall(n): list of all multiple zeta values for weight up to n.
+Doc: list of all multiple zeta values for weight $s_1 + \dots + s_k$ up to $n$.
+ The function returns a vector with $2^{n-1}-1$ components whose $i$-th entry
+ is the MZV of \kbd{index} $i$ (see \kbd{zetamult}).
+ \bprog
+ ? z = zetamultall(5);
+ ? z[10]
+ %2 = 0.22881039760335375976874614894168879193
+ ? zetamultconvert(10) \\ convert index 10 to avec
+ %3 = Vecsmall([3, 2])
+ ? zetamult(%)
+ %4 = 0.22881039760335375976874614894168879193
+ ? zetamult(10)
+ %5 = 0.22881039760335375976874614894168879193
+ @eprog\noindent If the bit precision is $B$, this function runs in time
+ $O(2^n n B^2)$ for an output of size $O(2^n B)$.

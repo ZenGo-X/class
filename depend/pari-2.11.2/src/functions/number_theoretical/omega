@@ -1,0 +1,18 @@
+Function: omega
+Section: number_theoretical
+C-Name: omega
+Prototype: lG
+Help: omega(x): number of distinct prime divisors of x.
+Doc: number of distinct prime divisors of $|x|$. $x$ must be of type integer.
+ \bprog
+ ? factor(392)
+ %1 =
+ [2 3]
+
+ [7 2]
+
+ ? omega(392)
+ %2 = 2;  \\ without multiplicity
+ ? bigomega(392)
+ %3 = 5;  \\ = 3+2, with multiplicity
+ @eprog

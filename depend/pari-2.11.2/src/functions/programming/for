@@ -1,0 +1,11 @@
+Function: for
+Section: programming/control
+C-Name: forpari
+Prototype: vV=GGI
+Help: for(X=a,b,seq): the sequence is evaluated, X going from a up to b.
+ If b is set to +oo, the loop will not stop.
+Doc: evaluates \var{seq}, where
+ the formal variable $X$ goes from $a$ to $b$. Nothing is done if $a>b$.
+ $a$ and $b$ must be in $\R$. If $b$ is set to \kbd{+oo}, the loop will not
+ stop; it is expected that the caller will break out of the loop itself at some
+ point, using \kbd{break} or \kbd{return}.

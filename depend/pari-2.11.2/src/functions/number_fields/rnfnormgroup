@@ -1,0 +1,23 @@
+Function: rnfnormgroup
+Section: number_fields
+C-Name: rnfnormgroup
+Prototype: GG
+Help: rnfnormgroup(bnr,pol): norm group (or Artin or Takagi group)
+ corresponding to the Abelian extension of bnr.bnf defined by pol, where
+ the module corresponding to bnr is assumed to be a multiple of the
+ conductor. The result is the HNF defining the norm group on the
+ generators in bnr.gen.
+Doc:
+ \var{bnr} being a big ray
+ class field as output by \kbd{bnrinit} and \var{pol} a relative polynomial
+ defining an \idx{Abelian extension}, computes the norm group (alias Artin
+ or Takagi group) corresponding to the Abelian extension of
+ $\var{bnf}=$\kbd{bnr.bnf}
+ defined by \var{pol}, where the module corresponding to \var{bnr} is assumed
+ to be a multiple of the conductor (i.e.~\var{pol} defines a subextension of
+ bnr). The result is the HNF defining the norm group on the given generators
+ of \kbd{bnr.gen}. Note that neither the fact that \var{pol} defines an
+ Abelian extension nor the fact that the module is a multiple of the conductor
+ is checked. The result is undefined if the assumption is not correct,
+ but the function will return the empty matrix \kbd{[;]} if it detects a
+ problem; it may also not detect the problem and return a wrong result.

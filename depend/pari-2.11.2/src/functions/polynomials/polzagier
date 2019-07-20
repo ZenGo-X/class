@@ -1,0 +1,26 @@
+Function: polzagier
+Section: polynomials
+C-Name: polzag
+Prototype: LL
+Help: polzagier(n,m): Zagier's polynomials of index n,m.
+Doc: creates Zagier's polynomial $P_n^{(m)}$ used in
+ the functions \kbd{sumalt} and \kbd{sumpos} (with $\fl=1$), see
+ ``Convergence acceleration of alternating series'', Cohen et al.,
+ \emph{Experiment.~Math.}, vol.~9, 2000, pp.~3--12.
+
+ If $m < 0$ or $m \ge n$, $P_n^{(m)} = 0$.
+ We have
+ $P_n := P_n^{(0)}$ is $T_n(2x-1)$, where $T_n$ is the Legendre polynomial of
+ the second kind. For $n > m > 0$, $P_n^{(m)}$ is the $m$-th difference with
+ step $2$ of the sequence $n^{m+1}P_n$; in this case, it satisfies
+ $$2 P_n^{(m)}(sin^2 t) = \dfrac{d^{m+1}}{dt^{m+1}}(\sin(2t)^m \sin(2(n-m)t)).$$
+
+ %@article {MR2001m:11222,
+ %    AUTHOR = {Cohen, Henri and Rodriguez Villegas, Fernando and Zagier, Don},
+ %     TITLE = {Convergence acceleration of alternating series},
+ %   JOURNAL = {Experiment. Math.},
+ %    VOLUME = {9},
+ %      YEAR = {2000},
+ %    NUMBER = {1},
+ %     PAGES = {3--12},
+ %}

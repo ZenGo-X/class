@@ -1,0 +1,10 @@
+  ***   at top-level: ellisogenyapply(x,x)
+  ***                 ^--------------------
+  *** ellisogenyapply: incorrect type in checkellisog (t_POL).
+  ***   at top-level: ellisogenyapply([f,g,h],1)
+  ***                 ^--------------------------
+  *** ellisogenyapply: incorrect type in checkellpt (t_INT).
+1
+[0, 0, 0, Mod(-15*y^2 - 4, 4*y^3 + 4*y + 12), Mod(14*y + 66, 4*y^3 + 4*y + 1
+2)]
+Total time spent: 84

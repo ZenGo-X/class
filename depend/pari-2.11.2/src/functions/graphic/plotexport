@@ -1,0 +1,21 @@
+Function: plotexport
+Section: graphic
+C-Name: plotexport
+Prototype: GGD0,L,
+Help: plotexport(fmt, list, {flag=0}): draw vector of rectwindows list as
+ in plotdraw, returning the resulting picture as a character string;
+ fmt is either "ps" or "svg".
+Doc: draw list of rectwindows as in \kbd{plotdraw(list,flag)}, returning
+ the resulting picture as a character string which can then be written to
+ a file. The format \kbd{fmt} is either \kbd{"ps"} (PostScript output)
+ or \kbd{"svg"} (Scalable Vector Graphics).
+
+ \bprog
+  ? plotinit(0, 100, 100);
+  ? plotbox(0, 50, 50);
+  ? plotcolor(0, 2);
+  ? plotbox(0, 30, 30);
+  ? plotdraw(0); \\ watch result on screen
+  ? s = plotexport("svg, 0);
+  ? write("graph.svg", s); \\ dump result to file
+ @eprog

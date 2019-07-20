@@ -1,0 +1,22 @@
+Function: ellformaldifferential
+Section: elliptic_curves
+C-Name: ellformaldifferential
+Prototype: GDPDn
+Help:ellformaldifferential(E, {n=seriesprecision}, {t = 'x}) : E elliptic curve,
+ n integer. Returns n terms of the power series [f, g] such that
+ omega = dx/(2y+a_1x+a_3) = f(t) dt and eta = x(t) * omega = g(t) dt in the
+ local parameter t=-x/y.
+Doc:Let $\omega := dx / (2y+a_1x+a_3)$ be the invariant differential form
+ attached to the model $E$ of some elliptic curve (\kbd{ellinit} form),
+ and $\eta := x(t)\omega$. Return $n$ terms (\tet{seriesprecision} by default)
+ of $f(t),g(t)$ two power series in the formal parameter $t=-x/y$ such that
+ $\omega = f(t) dt$, $\eta = g(t) dt$:
+  $$f(t) = 1+a_1 t + (a_1^2 + a_2) t^2 + \dots,\quad
+    g(t) = t^{-2} +\dots $$
+  \bprog
+  ? E = ellinit([-1,1/4]); [f,g] = ellformaldifferential(E,7,'t);
+  ? f
+  %2 = 1 - 2*t^4 + 3/4*t^6 + O(t^7)
+  ? g
+  %3 = t^-2 - t^2 + 1/2*t^4 + O(t^5)
+ @eprog

@@ -1,0 +1,12 @@
+Function: _def_help
+Class: default
+Section: default
+C-Name: sd_help
+Prototype:
+Help:
+Doc: name of the external help program to use from within \kbd{gp} when
+ extended help is invoked, usually through a \kbd{??} or \kbd{???} request
+ (see \secref{se:exthelp}), or \kbd{M-H} under readline (see
+ \secref{se:readline}).
+
+ The default value is the path to the \kbd{gphelp} script we install.

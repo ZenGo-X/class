@@ -1,0 +1,17 @@
+Function: ellformallog
+Section: elliptic_curves
+C-Name: ellformallog
+Prototype: GDPDn
+Help:ellformallog(E, {n = seriesprecision}, {v = 'x}): E elliptic curve,
+ returns n terms of the elliptic logarithm as a series of t =-x/y.
+Doc: The formal elliptic logarithm is a series $L$ in $t K[[t]]$
+ such that $d L = \omega = dx / (2y + a_1x + a_3)$, the canonical invariant
+ differential attached to the model $E$. It gives an isomorphism
+ from the formal group of $E$ to the additive formal group.
+ \bprog
+ ? E = ellinit([-1,1/4]); L = ellformallog(E, 9, 't)
+ %1 = t - 2/5*t^5 + 3/28*t^7 + 2/3*t^9 + O(t^10)
+ ? [f,g] = ellformaldifferential(E,8,'t);
+ ? L' - f
+ %3 = O(t^8)
+ @eprog

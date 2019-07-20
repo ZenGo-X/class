@@ -1,0 +1,11 @@
+Function: algtensor
+Section: algebras
+C-Name: algtensor
+Prototype: GGD1,L,
+Help: algtensor(al1,al2,{maxord=1}): tensor product of al1 and al2.
+Doc: Given two algebras \var{al1} and \var{al2}, computes their tensor
+ product. Computes a maximal order by default. Prevent this computation by
+ setting $\var{maxord}=0$.
+
+ Currently only implemented for cyclic algebras of coprime degree over the same
+ center~$K$, and the tensor product is over~$K$.

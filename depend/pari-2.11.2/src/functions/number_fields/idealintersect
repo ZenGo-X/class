@@ -1,0 +1,27 @@
+Function: idealintersect
+Section: number_fields
+C-Name: idealintersect
+Prototype: GGG
+Help: idealintersect(nf,A,B): intersection of two ideals A and B in the
+ number field defined by nf.
+Doc: intersection of the two ideals
+ $A$ and $B$ in the number field $\var{nf}$. The result is given in HNF.
+ \bprog
+ ? nf = nfinit(x^2+1);
+ ? idealintersect(nf, 2, x+1)
+ %2 =
+ [2 0]
+
+ [0 2]
+ @eprog
+
+ This function does not apply to general $\Z$-modules, e.g.~orders, since its
+ arguments are replaced by the ideals they generate. The following script
+ intersects $\Z$-modules $A$ and $B$ given by matrices of compatible
+ dimensions with integer coefficients:
+ \bprog
+ ZM_intersect(A,B) =
+ { my(Ker = matkerint(concat(A,B)));
+   mathnf( A * Ker[1..#A,] )
+ }
+ @eprog

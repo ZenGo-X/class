@@ -1,0 +1,47 @@
+Function: rnfisnorm
+Section: number_fields
+C-Name: rnfisnorm
+Prototype: GGD0,L,
+Help: rnfisnorm(T,a,{flag=0}): T is as output by rnfisnorminit applied to
+ L/K. Tries to tell whether a is a norm from L/K. Returns a vector [x,q]
+ where a=Norm(x)*q. Looks for a solution which is a S-integer, with S a list
+ of places in K containing the ramified primes, generators of the class group
+ of ext, as well as those primes dividing a. If L/K is Galois, omit flag,
+ otherwise it is used to add more places to S: all the places above the
+ primes p <= flag (resp. p | flag) if flag > 0 (resp. flag < 0). The answer
+ is guaranteed (i.e a is a norm iff q=1) if L/K is Galois or, under GRH, if S
+ contains all primes less than 12.log(disc(M))^2, where M is the normal
+ closure of L/K.
+Doc: similar to
+ \kbd{bnfisnorm} but in the relative case. $T$ is as output by
+ \tet{rnfisnorminit} applied to the extension $L/K$. This tries to decide
+ whether the element $a$ in $K$ is the norm of some $x$ in the extension
+ $L/K$.
+
+ The output is a vector $[x,q]$, where $a = \Norm(x)*q$. The
+ algorithm looks for a solution $x$ which is an $S$-integer, with $S$ a list
+ of places of $K$ containing at least the ramified primes, the generators of
+ the class group of $L$, as well as those primes dividing $a$. If $L/K$ is
+ Galois, then this is enough; otherwise, $\fl$ is used to add more primes to
+ $S$: all the places above the primes $p \leq \fl$ (resp.~$p|\fl$) if $\fl>0$
+ (resp.~$\fl<0$).
+
+ The answer is guaranteed (i.e.~$a$ is a norm iff $q = 1$) if the field is
+ Galois, or, under \idx{GRH}, if $S$ contains all primes less than
+ $12\log^2\left|\disc(M)\right|$, where $M$ is the normal
+ closure of $L/K$.
+
+ If \tet{rnfisnorminit} has determined (or was told) that $L/K$ is
+ \idx{Galois}, and $\fl \neq 0$, a Warning is issued (so that you can set
+ $\fl = 1$ to check whether $L/K$ is known to be Galois, according to $T$).
+ Example:
+
+ \bprog
+ bnf = bnfinit(y^3 + y^2 - 2*y - 1);
+ p = x^2 + Mod(y^2 + 2*y + 1, bnf.pol);
+ T = rnfisnorminit(bnf, p);
+ rnfisnorm(T, 17)
+ @eprog\noindent
+ checks whether $17$ is a norm in the Galois extension $\Q(\beta) /
+ \Q(\alpha)$, where $\alpha^3 + \alpha^2 - 2\alpha - 1 = 0$ and $\beta^2 +
+ \alpha^2 + 2\alpha + 1 = 0$ (it is).

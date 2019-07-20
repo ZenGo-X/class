@@ -1,0 +1,104 @@
+
+[1 2 5]
+
+[3 4 6]
+
+
+[1 2]
+
+[3 4]
+
+[7 8]
+
+
+[1 2 5]
+
+[3 4 6]
+
+[7 8 9]
+
+
+[1 2 4]
+
+[0 3 5]
+
+[0 0 6]
+
+
+[1 0 0]
+
+[2 3 0]
+
+[4 5 6]
+
+
+[5 0 7 8]
+
+[6 0 0 0]
+
+[1 2 9 0]
+
+[3 4 0 9]
+
+[;]
+"x2"
+
+[1]
+
+[;]
+  ***   at top-level: concat([;],[1])
+  ***                 ^---------------
+  *** concat: inconsistent concatenation t_MAT (0x0) , t_VEC (1 elts).
+
+[1]
+
+[;]
+  ***   at top-level: concat([1],[;])
+  ***                 ^---------------
+  *** concat: inconsistent concatenation t_VEC (1 elts) , t_MAT (0x0).
+[1, 2]
+[1, 2]
+
+[1 2]
+
+  ***   at top-level: concat(1,A)
+  ***                 ^-----------
+  *** concat: inconsistent concatenation t_INT , t_MAT (2x2).
+
+[2 1]
+
+  ***   at top-level: concat(A,1)
+  ***                 ^-----------
+  *** concat: inconsistent concatenation t_MAT (2x2) , t_INT.
+[1, 2]
+[1, 2, 1]
+  ***   at top-level: concat([1,2],[1,2]~)
+  ***                 ^--------------------
+  *** concat: inconsistent concatenation t_VEC (2 elts) , t_COL (2 elts).
+
+[2 3]
+
+[1 0]
+
+[0 1]
+
+[1, 2]
+[3, 1, 2]
+[2, 3]~
+[2, 3, 1]~
+  ***   at top-level: concat([2,3]~,[1,2])
+  ***                 ^--------------------
+  *** concat: inconsistent concatenation t_COL (2 elts) , t_VEC (2 elts).
+[;]
+
+[1 2]
+
+[3 4]
+
+[1 2]
+
+[1, 2]
+
+[1 2]
+
+Total time spent: 0

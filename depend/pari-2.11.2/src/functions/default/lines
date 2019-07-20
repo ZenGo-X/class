@@ -1,0 +1,14 @@
+Function: _def_lines
+Class: default
+Section: default
+C-Name: sd_lines
+Prototype:
+Help:
+Doc: if set to a positive value, \kbd{gp} prints at
+ most that many lines from each result, terminating the last line shown with
+ \kbd{[+++]} if further material has been suppressed. The various \kbd{print}
+ commands (see \secref{se:gp_program}) are unaffected, so you can always type
+ \kbd{print(\%)} or \b{a} to view the full result. If the actual screen width
+ cannot be determined, a ``line'' is assumed to be 80 characters long.
+
+ The default value is \kbd{0}.

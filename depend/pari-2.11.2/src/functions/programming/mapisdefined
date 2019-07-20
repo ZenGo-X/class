@@ -1,0 +1,33 @@
+Function: mapisdefined
+Section: programming/specific
+C-Name: mapisdefined
+Prototype: iGGD&
+Help: mapisdefined(M,x,{&z}): true (1) if x has an image by the map M,
+ false (0) otherwise.
+ If z is present, set it to the image of x, if it exists.
+Doc: Returns true ($1$) if \kbd{x} has an image by the map $M$, false ($0$)
+ otherwise. If \kbd{z} is present, set \kbd{z} to the image of $x$, if it exists.
+ \bprog
+ ? M1 = Map([1, 10; 2, 20]);
+ ? mapisdefined(M1,3)
+ %1 = 0
+ ? mapisdefined(M1, 1, &z)
+ %2 = 1
+ ? z
+ %3 = 10
+ @eprog
+
+ \bprog
+ ? M2 = Map(); N = 19;
+ ? for (a=0, N-1, mapput(M2, a^3%N, a));
+ ? {for (a=0, N-1,
+      if (mapisdefined(M2, a, &b),
+        printf("%d is the cube of %d mod %d\n",a,b,N)));}
+ 0 is the cube of 0 mod 19
+ 1 is the cube of 11 mod 19
+ 7 is the cube of 9 mod 19
+ 8 is the cube of 14 mod 19
+ 11 is the cube of 17 mod 19
+ 12 is the cube of 15 mod 19
+ 18 is the cube of 18 mod 19
+ @eprog

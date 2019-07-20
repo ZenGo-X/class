@@ -1,0 +1,43 @@
+Function: algtomatrix
+Section: algebras
+C-Name: algtomatrix
+Prototype: GGD0,L,
+Help: algtomatrix(al,x,{abs=1}): left multiplication table of x (table algebra
+ or abs=1) or image of x under a splitting of al (CSA and abs=0).
+Doc: Given an element \var{x} in \var{al}, returns the image of \var{x} under a
+ homomorphism to a matrix algebra. If \var{al} is a table algebra output by
+ \kbd{algtableinit} or if~$abs=1$, returns the left multiplication table on the
+ integral basis; if \var{al} is a central simple algebra and~$abs=0$,
+ returns~$\phi(x)$ where~$\phi : A\otimes_K L \to M_d(L)$ (where $d$ is the
+ degree of the algebra and $L$ is an extension of $L$ with~$[L:K]=d$) is an
+ isomorphism stored in~\var{al}. Also accepts a square matrix with coefficients
+ in~\var{al}.
+
+ \bprog
+ ? A = alginit(nfinit(y), [-1,-1]);
+ ? algtomatrix(A,[0,0,0,2]~)
+ %2 =
+ [Mod(x + 1, x^2 + 1) Mod(Mod(1, y)*x + Mod(-1, y), x^2 + 1)]
+
+ [Mod(x + 1, x^2 + 1)                   Mod(-x + 1, x^2 + 1)]
+ ? algtomatrix(A,[0,1,0,0]~,1)
+ %2 =
+ [0 -1  1  0]
+
+ [1  0  1  1]
+
+ [0  0  1  1]
+
+ [0  0 -2 -1]
+ ? algtomatrix(A,[0,x]~,1)
+ %3 =
+ [-1  0 0 -1]
+
+ [-1  0 1  0]
+
+ [-1 -1 0 -1]
+
+ [ 2  0 0  1]
+ @eprog
+
+ Also accepts matrices with coefficients in \var{al}.

@@ -1,0 +1,18 @@
+Function: substvec
+Section: polynomials
+C-Name: gsubstvec
+Prototype: GGG
+Help: substvec(x,v,w): in expression x, make a best effort to replace the
+ variables v1,...,vn by the expression w1,...,wn.
+Doc: $v$ being a vector of monomials of degree 1 (variables),
+ $w$ a vector of expressions of the same length, replace in the expression
+ $x$ all occurrences of $v_i$ by $w_i$. The substitutions are done
+ simultaneously; more precisely, the $v_i$ are first replaced by new
+ variables in $x$, then these are replaced by the $w_i$:
+
+ \bprog
+ ? substvec([x,y], [x,y], [y,x])
+ %1 = [y, x]
+ ? substvec([x,y], [x,y], [y,x+y])
+ %2 = [y, x + y]     \\ not [y, 2*y]
+ @eprog

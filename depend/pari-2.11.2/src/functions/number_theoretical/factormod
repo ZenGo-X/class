@@ -1,0 +1,70 @@
+Function: factormod
+Section: number_theoretical
+C-Name: factormod0
+Prototype: GDGD0,L,
+Help: factormod(f,{D},{flag=0}): factors the polynomial f over the finite
+ field defined by the domain D; flag is optional, and can be
+ 0: default or 1: only the degrees of the irreducible factors are given.
+Doc: factors the polynomial $f$ over the finite field defined by the domain
+ $D$ as follows:
+
+ \item $D = p$ a prime: factor over $\F_p$;
+
+ \item $D = [T,p]$ for a prime $p$ and $T$ an irreducible polynomial over
+ $\F_p$: factor over $\F_p[x]/(T)$;
+
+ \item $D$ a \typ{FFELT}: factor over the attached field;
+
+ \item $D$ omitted: factor over the field of definition of $f$, which
+ must be a finite field.
+
+ The coefficients of $f$ must be operation-compatible with the corresponding
+ finite field. The result is a two-column matrix, the first column being the
+ irreducible polynomials dividing $f$, and the second the exponents.
+ By convention, the $0$ polynomial factors as $0^1$; a non-zero constant
+ polynomial has empty factorization, a $0\times 2$ matrix. The irreducible
+ factors are ordered by increasing degree and the result is canonical: it will
+ not change across multiple calls or sessions.
+
+ \bprog
+ ? factormod(x^2 + 1, 3)  \\ over F_3
+ %1 =
+ [Mod(1, 3)*x^2 + Mod(1, 3) 1]
+ ? liftall( factormod(x^2 + 1, [3, t^2+1]) ) \\ over F_9
+ %2 =
+ [  x + t 1]
+
+ [x + 2*t 1]
+ ? t = ffgen(t^2+Mod(1,3)); factormod(x^2 + t^0) \\ same using t_FFELT
+ %3 =
+ [  x + t 1]
+
+ [x + 2*t 1]
+ ? factormod(x^2+Mod(1,3))
+ %4 =
+ [Mod(1, 3)*x^2 + Mod(1, 3) 1]
+ ? liftall( factormod(x^2 + Mod(Mod(1,3),y^2+1)) )
+ %5 =
+ [  x + y 1]
+
+ [x + 2*y 1]
+ @eprog
+
+ If $\fl$ is non-zero, outputs only the \emph{degrees} of the irreducible
+ polynomials (for example to compute an $L$-function). By convention, a
+ constant polynomial (including the $0$ polynomial) has empty factorization.
+ The degrees appear in increasing order but need not correspond to the
+ ordering with $\fl =0$ when multiplicities are present.
+ \bprog
+ ? f = x^3 + 2*x^2 + x + 2;
+ ? factormod(f, 5)  \\ (x+2)^2 * (x+3)
+ %1 =
+ [Mod(1, 5)*x + Mod(2, 5) 2]
+
+ [Mod(1, 5)*x + Mod(3, 5) 1]
+ ? factormod(f, 5, 1) \\ (deg 1) * (deg 1)^2
+ %2 =
+ [1 1]
+
+ [1 2]
+ @eprog

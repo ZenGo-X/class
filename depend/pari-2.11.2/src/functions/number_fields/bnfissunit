@@ -1,0 +1,29 @@
+Function: bnfissunit
+Section: number_fields
+C-Name: bnfissunit
+Prototype: GGG
+Help: bnfissunit(bnf,sfu,x): bnf being output by bnfinit (with flag<=2), sfu
+ by bnfsunit, gives the column vector of exponents of x on the fundamental
+ S-units and the roots of unity if x is an S-unit, the empty vector otherwise.
+Doc: $\var{bnf}$ being output by
+ \kbd{bnfinit}, \var{sfu} by \kbd{bnfsunit}, gives the column vector of
+ exponents of $x$ on the fundamental $S$-units and the roots of unity, in the
+ following order: the fundamental units~\var{bnf.fu}, the root of
+ unity~\var{bnf.tu}, and the $S$-units~\var{sfu[1]}.
+ If $x$ is not an $S$-unit, outputs an empty vector.
+
+ \bprog
+  ? bnf = bnfinit(x^4 - x^3 + 4*x^2 + 3*x + 9, 1);
+  ? bnf.sign
+  %2 = [0, 2]
+  ? S = idealprimedec(bnf,5); #S
+  %3 = 2
+  ? sfu = bnfsunit(bnf,S);
+  ? sfu[1]
+  %5 = [-5/6*x^3 + 4/3*x^2 - 4/3*x - 3/2, 5]
+  ? u = [10,-40,24,11]~;
+  ? bnfissunit(bnf,sfu,u)
+  %7 = [1, Mod(2, 6), 2, 0]~
+  ? bnfissunit(bnf,sfu,3)
+  %8 = []~
+ @eprog

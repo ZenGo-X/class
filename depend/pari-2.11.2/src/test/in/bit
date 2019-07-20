@@ -1,0 +1,32 @@
+hammingweight(15)
+hammingweight(x^100 + 2*x + 1)
+hammingweight([Mod(1,2), 2, Mod(0,3)])
+hammingweight(Vecsmall([0,1,2,3]))
+hammingweight(matid(100))
+hammingweight(I)
+N = 2^128+2^64+1;
+[bittest(N, i) | i<-[60..70]]
+{
+  args = [0, 3, -3, 2^65-1, N, -N, I];
+  funs = [bitand, bitnegimply, bitor, bitxor];
+  for (a=1,#funs,
+    my (f = funs[a]);
+    print("#", f);
+    for (i=1,#args,
+      for (j=i,#args,
+        my(u=args[i], v=args[j]);
+        print([u,v,iferr(f(u,v),E,E)])
+      )
+    )
+  );
+  print("#bitneg");
+  for (i=1, #args,
+    my (u=args[i]);
+    print(iferr([u, bitneg(u,65),bitneg(u)],E,E))
+  )
+}
+
+bittest(-1,10)
+bitneg(-2,64)
+bitneg(1,-2)
+bitneg(1,128)

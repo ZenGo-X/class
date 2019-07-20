@@ -1,0 +1,95 @@
+\\package:elldata
+default(realprecision,38);
+{
+members=[
+a1,
+a2,
+a3,
+a4,
+a6,
+b2,
+b4,
+b6,
+b8,
+c4,
+c6,
+area,
+bid,
+bnf,
+clgp,
+codiff,
+cyc,
+diff,
+disc,
+e,
+eta,
+f,
+fu,
+gen,
+group,
+index,
+j,
+mod,
+nf,
+no,
+omega,
+orders,
+p,
+pol,
+polabs,
+r1,
+r2,
+reg,
+roots,
+sign,
+t2,
+tate,
+tu,
+zk,
+zkst
+];}
+\\ tufu, futu omitted
+
+test(s)=
+{
+  for (i=1, #members,
+    my (m = members[i]);
+    iferr( print(".", m, ": ",  eval(Str("s.", m))),
+           E, n = errname(E);
+              if (n != "e_IMPL" && n != "e_TYPE" && n != "e_MISC", error(E))));
+}
+
+test(x)
+test(vector(5))
+test(vector(20))
+test([]~)
+print("NF"); test( NF = nfinit(y^2-1105) )
+print("NF chvar"); test( nfinit(2*y^2+1) )
+print("BNF");test( BNF = bnfinit(NF) )
+print("BNR");test( bnrinit(BNF, 4) )
+print("RNF");test( rnfinit(NF, x^2-y) )
+print("QUADCLASSUNIT"); test( quadclassunit(1105) )
+print("GAL"); test( galoisinit(x^2-2^129) )
+print("ELL");test( ellinit([1,2,3,4,5]) )
+print("ELLFp");test( ellinit([1,2,3,4,5], 13) )
+print("ELLFq");test( ellinit([1,2,3,4,5], ffgen(13^2)) )
+print("ELLQp");test( ellinit([1,2,3,4,5], O(11^2)) )
+print("FFELT");
+test( ffgen(2^3) )
+test( ffgen(3^3) )
+test( ffgen((2^64+13)^2) )
+print("INTMOD");test( Mod(1,3) )
+print("POLMOD");test( Mod(x,x^2+1) )
+print("QFB");test( Qfb(1,2,3) )
+print("QUAD"); test( quadgen(-4) )
+P=idealprimedec(NF,2)[1];
+print("PRID"); test(P)
+print("PADIC"); test(2 + O(3^2))
+print("MODPR"); test(nfmodprinit(NF,P))
+A=idealpow(NF,P,2);
+print("BID"); test(idealstar(NF,A,2))
+print("BID (nogen)"); test(idealstar(NF,idealpow(NF,A,1)))
+nfinit(y^3-2).codiff
+print("MF"); mf=mfinit([31, 2, Mod(25,31)], 0); [f]=mfeigenbasis(mf);
+test(mf)
+test(f)

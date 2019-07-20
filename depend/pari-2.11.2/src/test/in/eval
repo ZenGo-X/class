@@ -1,0 +1,3 @@
+eval(Vecsmall([1,2,3]))
+eval("\\")
+eval("=")

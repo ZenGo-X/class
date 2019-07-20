@@ -1,0 +1,6 @@
+pwd="$(pwd)"
+echo 'colors = "boldfg"' >> .gprc
+echo 'help = "'"$pwd"'/perl.exe '"$pwd"'/gphelp -cu 6"' >> .gprc
+echo 'prettyprinter = "'"$pwd"'/perl.exe tex2mail -TeX -noindent -ragged -by_par"' >> .gprc
+pwd=${pwd##*/}
+./ln -s ../${pwd}/sh.exe ../bin/sh

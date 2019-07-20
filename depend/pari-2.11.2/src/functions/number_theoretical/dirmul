@@ -1,0 +1,20 @@
+Function: dirmul
+Section: number_theoretical
+C-Name: dirmul
+Prototype: GG
+Help: dirmul(x,y): multiplication of the Dirichlet series x by the Dirichlet
+ series y.
+Doc: $x$ and $y$ being vectors of perhaps different lengths representing
+ the \idx{Dirichlet series} $\sum_n x_n n^{-s}$ and $\sum_n y_n n^{-s}$,
+ computes the product of $x$ by $y$, again as a vector.
+ \bprog
+ ? dirmul(vector(10,n,1), vector(10,n,moebius(n)))
+ %1 = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+ @eprog\noindent
+ The product
+ length is the minimum of $\kbd{\#}x\kbd{*}v(y)$ and $\kbd{\#}y\kbd{*}v(x)$,
+ where $v(x)$ is the index of the first non-zero coefficient.
+ \bprog
+ ? dirmul([0,1], [0,1]);
+ %2 = [0, 0, 0, 1]
+ @eprog

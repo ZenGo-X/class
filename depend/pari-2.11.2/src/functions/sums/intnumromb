@@ -1,0 +1,56 @@
+Function: intnumromb
+Section: sums
+C-Name: intnumromb0_bitprec
+Prototype: V=GGED0,L,b
+Help: intnumromb(X=a,b,expr,{flag=0}): numerical integration of expr (smooth in
+ ]a,b[) from a to b with respect to X. flag is optional and mean 0: default.
+ expr can be evaluated exactly on [a,b]; 1: general function; 2: a or b can be
+ plus or minus infinity (chosen suitably), but of same sign; 3: expr has only
+ limits at a or b.
+Wrapper: (,,G)
+Description:
+  (gen,gen,gen,?small):gen:prec intnumromb(${3 cookie}, ${3 wrapper}, $1, $2, $4, $bitprec)
+Doc: numerical integration of \var{expr} (smooth in $]a,b[$), with respect to
+ $X$. Suitable for low accuracy; if \var{expr} is very regular (e.g. analytic
+ in a large region) and high accuracy is desired, try \tet{intnum} first.
+
+ Set $\fl=0$ (or omit it altogether) when $a$ and $b$ are not too large, the
+ function is smooth, and can be evaluated exactly everywhere on the interval
+ $[a,b]$.
+
+ If $\fl=1$, uses a general driver routine for doing numerical integration,
+ making no particular assumption (slow).
+
+ $\fl=2$ is tailored for being used when $a$ or $b$ are infinite using the
+ change of variable $t = 1/X$. One \emph{must} have $ab>0$, and in fact if
+ for example $b=+\infty$, then it is preferable to have $a$ as large as
+ possible, at least $a\ge1$.
+
+ If $\fl=3$, the function is allowed to be undefined
+ at $a$ (but right continuous) or $b$ (left continuous),
+ for example the function $\sin(x)/x$ between $x=0$ and $1$.
+
+ The user should not require too much accuracy: \tet{realprecision} about
+ 30 decimal digits (\tet{realbitprecision} about 100 bits) is OK,
+ but not much more. In addition, analytical cleanup of the integral must have
+ been done: there must be no singularities in the interval or at the
+ boundaries. In practice this can be accomplished with a change of
+ variable. Furthermore, for improper integrals, where one or both of the
+ limits of integration are plus or minus infinity, the function must decrease
+ sufficiently rapidly at infinity, which can often be accomplished through
+ integration by parts. Finally, the function to be integrated should not be
+ very small (compared to the current precision) on the entire interval. This
+ can of course be accomplished by just multiplying by an appropriate constant.
+
+ Note that \idx{infinity} can be represented with essentially no loss of
+ accuracy by an appropriate huge number. However beware of real underflow
+ when dealing with rapidly decreasing functions. For example, in order to
+ compute the $\int_0^\infty e^{-x^2}\,dx$ to 28 decimal digits, then one can
+ set infinity equal to 10 for example, and certainly not to \kbd{1e1000}.
+
+ \synt{intnumromb_bitprec}{void *E, GEN (*eval)(void*,GEN), GEN a, GEN b, long flag, long bitprec},
+ where $\kbd{eval}(x, E)$ returns the value of the function at $x$.
+ You may store any additional information required by \kbd{eval} in $E$, or set
+ it to \kbd{NULL}. The historical variant
+ \synt{intnumromb}{\dots, long prec}, where \kbd{prec} is expressed in words,
+ not bits, is obsolete and should no longer be used.

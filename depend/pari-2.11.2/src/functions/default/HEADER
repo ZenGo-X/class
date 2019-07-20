@@ -1,0 +1,8 @@
+Function: _header_default
+Class: header
+Section: default
+Doc:
+ \section{GP defaults}
+ \label{se:gp_defaults} This section documents the GP defaults,
+ that can be set either by the GP function \tet{default} or in your GPRC.
+ Be sure to check out \tet{parisize} and \tet{parisizemax} !

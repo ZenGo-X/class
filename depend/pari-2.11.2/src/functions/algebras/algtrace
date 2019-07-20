@@ -1,0 +1,28 @@
+Function: algtrace
+Section: algebras
+C-Name: algtrace
+Prototype: GGD0,L,
+Help: algtrace(al,x,{abs=0}): (reduced) trace of x.
+Doc: Given an element \var{x} in \var{al}, computes its trace. If \var{al} is
+ a table algebra output by \tet{algtableinit} or if $abs=1$, returns the
+ absolute trace of \var{x}, which is an element of $\F_p$ or~$\Q$; if \var{al}
+ is the output of \tet{alginit} and $abs=0$ (default), returns the reduced trace
+ of \var{x}, which is an element of the center of \var{al}.
+ \bprog
+ ? A = alginit(nfinit(y), [-1,-1]);
+ ? algtrace(A,[5,0,0,1]~)
+ %2 = 11
+ ? algtrace(A,[5,0,0,1]~,1)
+ %3 = 22
+ ? nf = nfinit(y^2-5);
+ ? A = alginit(nf,[-1,y]);
+ ? a = [1+x+y,2*y]~*Mod(1,y^2-5)*Mod(1,x^2+1);
+ ? t = algtrace(A,a)
+ %7 = Mod(2*y + 2, y^2 - 5)
+ ? algtrace(A,a,1)
+ %8 = 8
+ ? algdegree(A)*nfelttrace(nf,t)
+ %9 = 8
+ @eprog
+
+ Also accepts a square matrix with coefficients in \var{al}.

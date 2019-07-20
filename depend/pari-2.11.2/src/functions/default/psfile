@@ -1,0 +1,9 @@
+Function: _def_psfile
+Class: default
+Section: default
+C-Name: sd_psfile
+Prototype:
+Obsolete: 2018-02-01
+Help:
+Doc: This default is obsolete, use one of plotexport, plothexport or
+ plothrawexport functions and write the result to file.

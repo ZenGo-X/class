@@ -1,0 +1,51 @@
+Function: ellmodulareqn
+Section: elliptic_curves
+C-Name: ellmodulareqn
+Prototype: LDnDn
+Help: ellmodulareqn(N,{x},{y}): given a prime N < 500, return a vector [P, t]
+ where P(x,y) is a modular equation of level N. This requires the package
+ seadata. The equation is either of canonical type (t=0) or of Atkin type (t=1).
+Doc: given a prime $N < 500$, return a vector $[P,t]$ where $P(x,y)$
+ is a modular equation of level $N$, i.e.~a bivariate polynomial with integer
+ coefficients; $t$ indicates the type of this equation: either
+ \emph{canonical} ($t = 0$) or \emph{Atkin} ($t = 1$). This function requires
+ the \kbd{seadata} package and its only use is to give access to the package
+ contents. See \tet{polmodular} for a more general and more flexible function.
+
+ Let $j$ be the $j$-invariant function. The polynomial $P$ satisfies
+ the functional equation,
+ $$ P(f,j) = P(f \mid W_N, j \mid W_N) = 0 $$
+ for some modular function $f = f_N$ (hand-picked for each fixed $N$ to
+ minimize its size, see below), where $W_N(\tau) = -1 / (N\*\tau)$ is the
+ Atkin-Lehner involution. These two equations allow to compute the values of
+ the classical modular polynomial $\Phi_N$, such that $\Phi_N(j(\tau),
+ j(N\tau)) = 0$, while being much smaller than the latter. More precisely, we
+ have $j(W_N(\tau)) = j(N\*\tau)$; the function $f$ is invariant under
+ $\Gamma_0(N)$ and also satisfies
+
+ \item for Atkin type: $f \mid W_N = f$;
+
+ \item for canonical type: let $s = 12/\gcd(12,N-1)$, then
+ $f \mid W_N = N^s / f$. In this case, $f$ has a simple definition:
+ $f(\tau) = N^s \* \big(\eta(N\*\tau) / \eta(\tau) \big)^{2\*s}$,
+ where $\eta$ is Dedekind's eta function.
+
+ The following GP function returns values of the classical modular polynomial
+ by eliminating $f_N(\tau)$ in the above functional equation,
+ for $N\leq 31$ or $N\in\{41,47,59,71\}$.
+
+ \bprog
+ classicaleqn(N, X='X, Y='Y)=
+ {
+   my([P,t] = ellmodulareqn(N), Q, d);
+   if (poldegree(P,'y) > 2, error("level unavailable in classicaleqn"));
+   if (t == 0, \\ Canonical
+     my(s = 12/gcd(12,N-1));
+     Q = 'x^(N+1) * substvec(P,['x,'y],[N^s/'x,Y]);
+     d = N^(s*(2*N+1)) * (-1)^(N+1);
+   , \\ Atkin
+     Q = subst(P,'y,Y);
+     d = (X-Y)^(N+1));
+   polresultant(subst(P,'y,X), Q) / d;
+ }
+ @eprog

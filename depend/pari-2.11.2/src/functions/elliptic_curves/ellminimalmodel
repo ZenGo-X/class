@@ -1,0 +1,48 @@
+Function: ellminimalmodel
+Section: elliptic_curves
+C-Name: ellminimalmodel
+Prototype: GD&
+Help: ellminimalmodel(E,{&v}): determines whether the elliptic curve E defined
+ over a number field admits a global minimal model. If so return it
+ and sets v to the corresponding change of variable. Else return the
+ (non-principal) Weierstrass class of E.
+Doc: Let $E$ be an \kbd{ell} structure over a number field $K$. This function
+ determines whether $E$ admits a global minimal integral model. If so, it
+ returns it and sets $v = [u,r,s,t]$ to the corresponding change of variable:
+ the return value is identical to that of \kbd{ellchangecurve(E, v)}.
+
+ Else return the (non-principal) Weierstrass class of $E$, i.e. the class of
+ $\prod \goth{p}^{(v_{\goth{p}}{\Delta} - \delta_{\goth{p}}) / 12}$ where
+ $\Delta = \kbd{E.disc}$ is the model's discriminant and
+ $\goth{p} ^ \delta_{\goth{p}}$ is the local minimal discriminant.
+ This function requires either that $E$ be defined
+ over the rational field $\Q$ (with domain $D = 1$ in \kbd{ellinit}),
+ in which case a global minimal model always exists, or over a number
+ field given by a \var{bnf} structure. The Weierstrass class is given in
+ \kbd{bnfisprincipal} format, i.e. in terms of the \kbd{K.gen} generators.
+
+ The resulting model has integral coefficients and is everywhere minimal, the
+ coefficients $a_1$ and $a_3$ are reduced modulo $2$ (in terms of the fixed
+ integral basis \kbd{K.zk}) and $a_2$ is reduced modulo $3$. Over $\Q$, we
+ further require that $a_1$ and $a_3$ be $0$ or $1$, that $a_2$ be $0$ or $\pm
+ 1$ and that $u > 0$ in the change of variable: both the model and the change
+ of variable $v$ are then unique.\sidx{minimal model}
+
+ \bprog
+ ? e = ellinit([6,6,12,55,233]);  \\ over Q
+ ? E = ellminimalmodel(e, &v);
+ ? E[1..5]
+ %3 = [0, 0, 0, 1, 1]
+ ? v
+ %4 = [2, -5, -3, 9]
+ @eprog
+
+ \bprog
+ ? K = bnfinit(a^2-65);  \\ over a non-principal number field
+ ? K.cyc
+ %2 = [2]
+ ? u = Mod(8+a, K.pol);
+ ? E = ellinit([1,40*u+1,0,25*u^2,0], K);
+ ? ellminimalmodel(E) \\ no global minimal model exists over Z_K
+ %6 = [1]~
+ @eprog

@@ -1,0 +1,16 @@
+Function: ffinit
+Section: number_theoretical
+C-Name: ffinit
+Prototype: GLDn
+Help: ffinit(p,n,{v='x}): monic irreducible polynomial of degree n over F_p[v].
+Description:
+ (int, small, ?var):pol        ffinit($1, $2, $3)
+Doc: computes a monic polynomial of degree $n$ which is irreducible over
+  $\F_p$, where $p$ is assumed to be prime. This function uses a fast variant
+  of Adleman and Lenstra's algorithm.
+
+ It is useful in conjunction with \tet{ffgen}; for instance if
+ \kbd{P = ffinit(3,2)}, you can represent elements in $\F_{3^2}$ in term of
+ \kbd{g = ffgen(P,'t)}. This can be abbreviated as
+ \kbd{g = ffgen(3\pow2, 't)}, where the defining polynomial $P$ can be later
+ recovered as \kbd{g.mod}.

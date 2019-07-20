@@ -1,0 +1,9 @@
+Function: _.p
+Help: _.p
+Section: member_functions
+C-Name: member_p
+Prototype: mG
+Description:
+ (gal):int:copy                 gal_get_p($1)
+ (prid):int:copy                pr_get_p($1)
+ (gen):int:copy                 member_p($1)

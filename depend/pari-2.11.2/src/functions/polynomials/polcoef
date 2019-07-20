@@ -1,0 +1,21 @@
+Function: polcoef
+Section: polynomials
+C-Name: polcoef
+Prototype: GLDn
+Help: polcoef(x,n,{v}): coefficient of degree n of x. With respect
+ to the main variable if v is omitted, with respect to the variable v
+ otherwise.
+Description:
+ (pol, 0):gen:copy       constant_coeff($1)
+ (pol, 0,):gen:copy      constant_coeff($1)
+ (pol, small):gen:copy   RgX_coeff($1, $2)
+ (pol, small,):gen:copy  RgX_coeff($1, $2)
+ (gen, small, ?var):gen polcoef0($1, $2, $3)
+Doc: coefficient of degree $n$ of the polynomial $x$, with respect to the
+ main variable if $v$ is omitted, with respect to $v$ otherwise.  If $n$
+ is greater than the degree, the result is zero.
+
+ Naturally applies to scalars (polynomial of degree $0$), as well as to
+ rational functions whose denominator is a monomial. It also applies to power
+ series: if $n$ is less than the valuation, the result is zero. If it is
+ greater than the largest significant degree, then an error message is issued.

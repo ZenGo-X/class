@@ -1,0 +1,103 @@
+Function: mspadicL
+Section: modular_symbols
+C-Name: mspadicL
+Prototype: GDGD0,L,
+Help: mspadicL(mu, {s = 0}, {r = 0}): given
+ mu from mspadicmoments (p-adic distributions attached to an
+ overconvergent symbol PHI) returns the value on a
+ character of Z_p^* represented by s of the derivative of order r of the
+ p-adic L-function attached to PHI.
+Doc: Returns the value (or $r$-th derivative)
+ on a character $\chi^s$ of $\Z_p^*$ of the $p$-adic $L$-function
+ attached to \kbd{mu}.
+
+ Let $\Phi$ be the $p$-adic distribution-valued overconvergent symbol
+ attached to a modular symbol $\phi$ for $\Gamma_0(N)$ (eigenvector for
+ $T_N(p)$ for the eigenvalue $a_p$). Then $L_p(\Phi,\chi^s)=L_p(\mu,s)$ is the
+ $p$-adic $L$ function defined by
+ $$L_p(\Phi,\chi^s)= \int_{\Z_p^*} \chi^s(z) d\mu(z)$$
+ where $\mu$ is the distribution on $\Z_p^*$ defined by the restriction of
+ $\Phi([\infty]-[0])$ to $\Z_p^*$. The $r$-th derivative is taken in
+ direction $\langle \chi\rangle$:
+ $$L_p^{(r)}(\Phi,\chi^s)= \int_{\Z_p^*} \chi^s(z) (\log z)^r d\mu(z).$$
+ In the argument list,
+
+ \item \kbd{mu} is as returned by \tet{mspadicmoments} (distributions
+ attached to $\Phi$ by restriction to discs $a + p^\nu\Z_p$, $(a,p)=1$).
+
+ \item $s=[s_1,s_2]$ with $s_1 \in \Z \subset \Z_p$ and $s_2 \bmod p-1$ or
+ $s_2 \bmod 2$ for $p=2$, encoding the $p$-adic character $\chi^s := \langle
+ \chi \rangle^{s_1} \tau^{s_2}$; here $\chi$ is the cyclotomic character from
+ $\text{Gal}(\Q_p(\mu_{p^\infty})/\Q_p)$ to $\Z_p^*$, and $\tau$ is the
+ Teichm\"uller character (for $p>2$ and the character of order 2 on
+ $(\Z/4\Z)^*$ if $p=2$); for convenience, the character $[s,s]$ can also be
+ represented by the integer $s$.
+
+ When $a_p$ is a $p$-adic unit, $L_p$ takes its values in $\Q_p$.
+ When $a_p$ is not a unit, it takes its values in the
+ two-dimensional $\Q_p$-vector space $D_{cris}(M(\phi))$ where $M(\phi)$ is
+ the ``motive'' attached to $\phi$, and we return the two $p$-adic components
+ with respect to some fixed $\Q_p$-basis.
+ \bprog
+ ? M = msinit(3,6,1); phi=[5, -3, -1]~;
+ ? msissymbol(M,phi)
+ %2 = 1
+ ? Mp = mspadicinit(M, 5, 4);
+ ? mu = mspadicmoments(Mp, phi); \\ no twist
+ \\ End of initializations
+
+ ? mspadicL(mu,0) \\ L_p(chi^0)
+ %5 = 5 + 2*5^2 + 2*5^3 + 2*5^4 + ...
+ ? mspadicL(mu,1) \\ L_p(chi), zero for parity reasons
+ %6 = [O(5^13)]~
+ ? mspadicL(mu,2) \\ L_p(chi^2)
+ %7 = 3 + 4*5 + 4*5^2 + 3*5^5 + ...
+ ? mspadicL(mu,[0,2]) \\ L_p(tau^2)
+ %8 = 3 + 5 + 2*5^2 + 2*5^3 + ...
+ ? mspadicL(mu, [1,0]) \\ L_p(<chi>)
+ %9 = 3*5 + 2*5^2 + 5^3 + 2*5^7 + 5^8 + 5^10 + 2*5^11 + O(5^13)
+ ? mspadicL(mu,0,1) \\ L_p'(chi^0)
+ %10 = 2*5 + 4*5^2 + 3*5^3 + ...
+ ? mspadicL(mu, 2, 1) \\ L_p'(chi^2)
+ %11 = 4*5 + 3*5^2 + 5^3 + 5^4 + ...
+ @eprog
+
+ Now several quadratic twists: \tet{mstooms} is indicated.
+ \bprog
+ ? PHI = mstooms(Mp,phi);
+ ? mu = mspadicmoments(Mp, PHI, 12); \\ twist by 12
+ ? mspadicL(mu)
+ %14 = 5 + 5^2 + 5^3 + 2*5^4 + ...
+ ? mu = mspadicmoments(Mp, PHI, 8); \\ twist by 8
+ ? mspadicL(mu)
+ %16 = 2 + 3*5 + 3*5^2 + 2*5^4 + ...
+ ? mu = mspadicmoments(Mp, PHI, -3); \\ twist by -3 < 0
+ ? mspadicL(mu)
+ %18 = O(5^13) \\ always 0, phi is in the + part and D < 0
+ @eprog
+
+ One can locate interesting symbols of level $N$ and weight $k$ with
+ \kbd{msnew} and \kbd{mssplit}. Note that instead of a symbol, one can
+ input a 1-dimensional Hecke-subspace from \kbd{mssplit}: the function will
+ automatically use the underlying basis vector.
+ \bprog
+ ? M=msinit(5,4,1); \\ M_4(Gamma_0(5))^+
+ ? L = mssplit(M, msnew(M)); \\ list of irreducible Hecke-subspaces
+ ? phi = L[1]; \\ one Galois orbit of newforms
+ ? #phi[1] \\... this one is rational
+ %4 = 1
+ ? Mp = mspadicinit(M, 3, 4);
+ ? mu = mspadicmoments(Mp, phi);
+ ? mspadicL(mu)
+ %7 = 1 + 3 + 3^3 + 3^4 + 2*3^5 + 3^6 + O(3^9)
+
+ ? M = msinit(11,8, 1); \\ M_8(Gamma_0(11))^+
+ ? Mp = mspadicinit(M, 3, 4);
+ ? L = mssplit(M, msnew(M));
+ ? phi = L[1]; #phi[1] \\ ... this one is two-dimensional
+ %11 = 2
+ ? mu = mspadicmoments(Mp, phi);
+  ***   at top-level: mu=mspadicmoments(Mp,ph
+  ***                    ^--------------------
+  *** mspadicmoments: incorrect type in mstooms [dim_Q (eigenspace) > 1]
+ @eprog

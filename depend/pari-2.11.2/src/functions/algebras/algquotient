@@ -1,0 +1,19 @@
+Function: algquotient
+Section: algebras
+C-Name: alg_quotient
+Prototype: GGD0,L,
+Help: algquotient(al,I,{maps=0}): quotient of the algebra al by the two-sided
+ ideal I.
+Doc: \var{al} being a table algebra output by \tet{algtableinit} and \var{I}
+ being a basis of a two-sided ideal of \var{al} represented by a matrix,
+ returns the quotient $\var{al}/\var{I}$. When $\var{maps}=1$, returns a
+ \typ{VEC} $[\var{al}/\var{I},\var{proj},\var{lift}]$ where \var{proj} and
+ \var{lift} are matrices respectively representing the projection map and a
+ section of it.
+ \bprog
+ ? mt = [matid(3), [0,0,0; 1,1,0; 0,0,0], [0,0,1; 0,0,0; 1,0,1]];
+ ? A = algtableinit(mt,2);
+ ? AQ = algquotient(A,[0;1;0]);
+ ? algdim(AQ)
+ %4 = 2
+ @eprog

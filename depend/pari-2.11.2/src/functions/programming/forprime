@@ -1,0 +1,70 @@
+Function: _diffptr
+Class: gp2c_internal
+Help: Table of difference of primes.
+Description:
+ ():bptr        diffptr
+
+Function: _forprime_next
+Class: gp2c_internal
+Help: Compute the next prime from the diffptr table.
+Description:
+ (*small,*bptr):void  NEXT_PRIME_VIADIFF($1, $2)
+
+Function: _forprime_init
+Class: gp2c_internal
+Help: Initialize forprime_t.
+Description:
+ (forprime,int,?int):void             forprime_init(&$1, $2, $3);
+
+Function: _forprime_next_
+Class: gp2c_internal
+Help: Compute the next prime.
+Description:
+ (forprime):int                       forprime_next(&$1)
+
+Function: _u_forprime_init
+Class: gp2c_internal
+Help: Initialize forprime_t (ulong version).
+Description:
+ (forprime,small,):void              u_forprime_init(&$1, $2, LONG_MAX);
+ (forprime,small,small):void         u_forprime_init(&$1, $2, $3);
+
+Function: _u_forprime_next
+Class: gp2c_internal
+Help: Compute the next prime (ulong version).
+Description:
+ (forprime):small                   u_forprime_next(&$1)
+
+Function: forprime
+Section: programming/control
+C-Name: forprime
+Prototype: vV=GDGI
+Help: forprime(p=a,{b},seq): the sequence is evaluated, p running over the
+ primes between a and b. Omitting b runs through primes >= a.
+Iterator:
+ (*notype,small,small) (forprime, _u_forprime_init, _u_forprime_next)
+ (*notype,gen,gen,gen) (forprime, _forprime_init, _forprime_next_)
+ (*small,gen,?gen)     (forprime, _u_forprime_init, _u_forprime_next)
+ (*int,gen,?gen)       (forprime, _forprime_init, _forprime_next_)
+ (gen,gen,?gen)        (forprime, _forprime_init, _forprime_next_)
+Doc: evaluates \var{seq},
+ where the formal variable $p$ ranges over the prime numbers between the real
+ numbers $a$ to $b$, including $a$ and $b$ if they are prime. More precisely,
+ the value of
+ $p$ is incremented to \kbd{nextprime($p$ + 1)}, the smallest prime strictly
+ larger than $p$, at the end of each iteration. Nothing is done if $a>b$.
+ \bprog
+ ? forprime(p = 4, 10, print(p))
+ 5
+ 7
+ @eprog\noindent Setting $b$ to \kbd{+oo} means we will run through all primes
+ $\geq a$, starting an infinite loop; it is expected that the caller will break
+ out of the loop itself at some point, using \kbd{break} or \kbd{return}.
+
+ Note that the value of $p$ cannot be modified within \var{seq}:
+ \bprog
+ ? forprime(p = 2, 10, p = [])
+  ***   at top-level: forprime(p=2,10,p=[])
+  ***                                   ^---
+  ***   prime index read-only: was changed to [].
+ @eprog

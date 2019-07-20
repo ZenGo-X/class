@@ -1,0 +1,17 @@
+[-1, -1, -1, 1, 1]
+-1
+[-1, -1, -1, 1]
+[1, 1, 1, 1]
+[-1, -1, -1, -1]
+0
+[-1, 1, 1, 1, 1]
+  ***   at top-level: nfeltsign(nf,a,3)
+  ***                 ^-----------------
+  *** nfeltsign: domain error in nfeltsign: index > 2
+  ***   at top-level: nfeltsign(nf,a,[-1..1])
+  ***                 ^-----------------------
+  *** nfeltsign: domain error in nfeltsign: index <= 0
+  ***   at top-level: nfeltsign(nf,a,[1..3])
+  ***                 ^----------------------
+  *** nfeltsign: domain error in nfeltsign: index > 2
+Total time spent: 4

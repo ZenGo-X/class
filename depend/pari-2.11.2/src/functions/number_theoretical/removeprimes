@@ -1,0 +1,10 @@
+Function: removeprimes
+Section: number_theoretical
+C-Name: removeprimes
+Prototype: DG
+Help: removeprimes({x=[]}): remove primes in the vector x from the prime table.
+ x can also be a single integer. List the current extra primes if x is omitted.
+Doc: removes the primes listed in $x$ from
+ the prime number table. In particular \kbd{removeprimes(addprimes())} empties
+ the extra prime table. $x$ can also be a single integer. List the current
+ extra primes if $x$ is omitted.

@@ -1,0 +1,10 @@
+Function: nfeltreduce
+Section: number_fields
+C-Name: nfreduce
+Prototype: GGG
+Help: nfeltreduce(nf,a,id): gives r such that a-r is in the ideal id and r
+ is small.
+Doc: given an ideal \var{id} in
+ Hermite normal form and an element $a$ of the number field $\var{nf}$,
+ finds an element $r$ in $\var{nf}$ such that $a-r$ belongs to the ideal
+ and $r$ is small.

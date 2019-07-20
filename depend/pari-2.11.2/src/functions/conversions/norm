@@ -1,0 +1,11 @@
+Function: norm
+Section: conversions
+C-Name: gnorm
+Prototype: G
+Help: norm(x): norm of x.
+Doc:
+ algebraic norm of $x$, i.e.~the product of $x$ with
+ its conjugate (no square roots are taken), or conjugates for polmods. For
+ vectors and matrices, the norm is taken componentwise and hence is not the
+ $L^2$-norm (see \kbd{norml2}). Note that the norm of an element of
+ $\R$ is its square, so as to be compatible with the complex norm.

@@ -1,0 +1,34 @@
+Function: mathnfmodid
+Section: linear_algebra
+C-Name: hnfmodid
+Prototype: GG
+Help: mathnfmodid(x,d): (upper triangular) Hermite normal form of x
+ concatenated with matdiagonal(d).
+Doc: outputs the (upper triangular)
+ \idx{Hermite normal form} of $x$ concatenated with the diagonal
+ matrix with diagonal $d$. Assumes that $x$ has integer entries.
+ Variant: if $d$ is an integer instead of a vector, concatenate $d$ times the
+ identity matrix.
+ \bprog
+ ? m=[0,7;-1,0;-1,-1]
+ %1 =
+ [ 0  7]
+
+ [-1  0]
+
+ [-1 -1]
+ ? mathnfmodid(m, [6,2,2])
+ %2 =
+ [2 1 1]
+
+ [0 1 0]
+
+ [0 0 1]
+ ? mathnfmodid(m, 10)
+ %3 =
+ [10 7 3]
+
+ [ 0 1 0]
+
+ [ 0 0 1]
+ @eprog

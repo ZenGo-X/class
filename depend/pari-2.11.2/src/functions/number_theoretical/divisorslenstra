@@ -1,0 +1,23 @@
+Function: divisorslenstra
+Section: number_theoretical
+C-Name: divisorslenstra
+Prototype: GGG
+Help: divisorslenstra(N, r, s): finds all divisors d of N such that d = r
+ (mod s). Assume that (r,s) = 1 and s^3 > N.
+Doc: Given three integers $N > s > r \geq 0$ such that $(r,s) = 1$
+ and $s^3 > N$, find all divisors $d$ of $N$ such that $d \equiv r \pmod{s}$.
+ There are at most $11$ such divisors (Lenstra).
+ \bprog
+ ? N = 245784; r = 19; s = 65 ;
+ ? divisorslenstra(N, r, s)
+ %2 = [19, 84, 539, 1254, 3724, 245784]
+ ? [ d | d <- divisors(N), d % s == r]
+ %3 = [19, 84, 539, 1254, 3724, 245784]
+ @eprog\noindent When the preconditions are not met, the result is undefined:
+ \bprog
+ ? N = 4484075232; r = 7; s = 1303; s^3 > N
+ %4 = 0
+ ? divisorslenstra(N, r, s)
+ ? [ d | d <- divisors(N), d % s == r ]
+ %6 = [7, 2613, 9128, 19552, 264516, 3407352, 344928864]
+ @eprog\noindent (Divisors were missing but $s^3 < N$.)

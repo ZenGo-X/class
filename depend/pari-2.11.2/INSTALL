@@ -1,0 +1,21 @@
+Assuming your system is a fairly standard Unix, you can quickly build/test
+GP in the following way:
+
+a) ./Configure  ( --prefix=/exotic/dir/name if desired. Default is /usr/local. )
+b) make all, make bench
+c) make install, if desired
+d) copy misc/gprc.dft to /etc/gprc [sitewide] or $HOME/.gprc [personal]
+
+Documentation can be found in directory doc.  Compile and read doc/INSTALL.tex
+(e.g cd doc; tex INSTALL; xdvi INSTALL) for detailed installation instructions.
+
+P.S: Useful optional packages can be downloaded separately
+
+  http://pari.math.u-bordeaux.fr/packages.html
+
+in particular
+
+  elldata: Cremona's Elliptic Curve Data, needed by ellsearch and ellidentify; 
+  galdata: needed by polgalois to compute Galois group in degrees 8 through 11; 
+  galpol: a database of Galois polynomials for galoisgetpol
+  seadata: allow ellcard(E) for large finite fields.

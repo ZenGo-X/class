@@ -1,0 +1,18 @@
+Function: msnew
+Section: modular_symbols
+C-Name: msnew
+Prototype: G
+Help: msnew(M): M being a full modular symbol space, as given by msinit,
+ return its new cuspidal subspace.
+Doc:
+ $M$ being a full modular symbol space, as given by \kbd{msinit},
+ return the \emph{new} part of its cuspidal subspace. A subspace is given by
+ a structure allowing quick projection and restriction of linear operators;
+ its first component is a matrix with integer coefficients whose columns form
+ a $\Q$-basis of the subspace.
+ \bprog
+ ? M = msinit(11,8, 1); \\ M_8(Gamma_0(11))^+
+ ? N = msnew(M);
+ ? #N[1]  \\ 6-dimensional
+ %3 = 6
+ @eprog

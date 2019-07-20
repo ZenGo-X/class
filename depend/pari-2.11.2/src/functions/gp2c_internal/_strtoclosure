@@ -1,0 +1,5 @@
+Function: _strtoclosure
+Class: gp2c_internal
+Description:
+ (str):closure               strtofunction($1)
+ (str,gen,...):closure       strtoclosure($1, ${nbarg 1 sub}, $3)

@@ -1,0 +1,20 @@
+Function: mfperiodpol
+Section: modular_forms
+C-Name: mfperiodpol
+Prototype: GGD0,L,b
+Help: mfperiodpol(mf,f,{flag=0}): period polynomial of the cuspidal part of
+ the form f, in other words integral from 0 to ioo of (X-tau)^(k-2)f(tau).
+ If flag=0, ordinary period polynomial, if flag=1 or -1, even or odd
+ part of that polynomial. f can also be the modular symbol output by
+ mfsymbol(mf,f).
+Doc: period polynomial of the cuspidal part of the form $f$, in other words
+ $\int_0^{i\infty}(X-\tau)^{k-2}f(\tau)\,d\tau$. If \kbd{flag} is $0$, ordinary
+ period polynomial. If it is $1$ or $-1$, even or odd part of that polynomial.
+ $f$ can also be the modular symbol output by \kbd{mfsymbol}(mf,f).
+ \bprog
+ ? D = mfDelta(); mf = mfinit(D,0);
+ ? PP = mfperiodpol(mf, D, -1); PP/=polcoeff(PP, 1); bestappr(PP)
+ %1 = x^9 - 25/4*x^7 + 21/2*x^5 - 25/4*x^3 + x
+ ? PM = mfperiodpol(mf, D, 1); PM/=polcoeff(PM, 0); bestappr(PM)
+ %2 = -x^10 + 691/36*x^8 - 691/12*x^6 + 691/12*x^4 - 691/36*x^2 + 1
+ @eprog

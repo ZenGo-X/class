@@ -1,0 +1,76 @@
+Function: _forpart_init
+Class: gp2c_internal
+Help: Initialize forpart_t
+Description:
+ (forpart,small,?gen,?gen):void      forpart_init(&$1, $2, $3, $4)
+
+Function: _forpart_next
+Class: gp2c_internal
+Help: Compute the next part
+Description:
+ (forpart):vecsmall                  forpart_next(&$1)
+
+Function: forpart
+Section: programming/control
+C-Name: forpart0
+Prototype: vV=GIDGDG
+Iterator:
+ (gen,small,?gen,?gen)         (forpart, _forpart_init, _forpart_next)
+Wrapper: (,vG,,)
+Description:
+ (small,closure,?gen,?gen):void forpart(${2 cookie}, ${2 wrapper}, $1, $3, $4)
+Help: forpart(X=k,seq,{a=k},{n=k}): evaluate seq where the Vecsmall X
+ goes over the partitions of k. Optional parameter n (n=nmax or n=[nmin,nmax])
+ restricts the length of the partition. Optional parameter a (a=amax or
+ a=[amin,amax]) restricts the range of the parts. Zeros are removed unless one
+ sets amin=0 to get X of fixed length nmax (=k by default).
+Doc: evaluate \var{seq} over the partitions $X=[x_1,\dots x_n]$ of the
+ integer $k$, i.e.~increasing sequences $x_1\leq x_2\dots \leq x_n$ of sum
+ $x_1+\dots + x_n=k$. By convention, $0$ admits only the empty partition and
+ negative numbers have no partitions. A partition is given by a
+ \typ{VECSMALL}, where parts are sorted in nondecreasing order. The
+ partitions are listed by increasing size and in lexicographic order when
+ sizes are equal:
+ \bprog
+ ? forpart(X=4, print(X))
+ Vecsmall([4])
+ Vecsmall([1, 3])
+ Vecsmall([2, 2])
+ Vecsmall([1, 1, 2])
+ Vecsmall([1, 1, 1, 1])
+ @eprog\noindent Optional parameters $n$ and $a$ are as follows:
+
+ \item $n=\var{nmax}$ (resp. $n=[\var{nmin},\var{nmax}]$) restricts
+ partitions to length less than $\var{nmax}$ (resp. length between
+ $\var{nmin}$ and $nmax$), where the \emph{length} is the number of nonzero
+ entries.
+
+ \item $a=\var{amax}$ (resp. $a=[\var{amin},\var{amax}]$) restricts the parts
+ to integers less than $\var{amax}$ (resp. between $\var{amin}$ and
+ $\var{amax}$).
+
+ By default, parts are positive and we remove zero entries unless $amin\leq0$,
+ in which case we fix the size $\#X = \var{nmax}$:
+ \bprog
+ \\ at most 3 non-zero parts, all <= 4
+ ? forpart(v=5,print(Vec(v)), 4, 3)
+ [1, 4]
+ [2, 3]
+ [1, 1, 3]
+ [1, 2, 2]
+
+ \\ between 2 and 4 parts less than 5, fill with zeros
+ ? forpart(v=5,print(Vec(v)),[0,5],[2,4])
+ [0, 0, 1, 4]
+ [0, 0, 2, 3]
+ [0, 1, 1, 3]
+ [0, 1, 2, 2]
+ [1, 1, 1, 2]
+
+ \\ no partitions of 1 with 2 to 4 non-zero parts
+ ? forpart(v=1,print(v),[0,5],[2,4])
+ ?
+ @eprog\noindent
+ The behavior is unspecified if $X$ is modified inside the loop.
+
+ \synt{forpart}{void *data, long (*call)(void*,GEN), long k, GEN a, GEN n}.

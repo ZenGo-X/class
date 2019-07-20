@@ -1,0 +1,40 @@
+Function: mshecke
+Section: modular_symbols
+C-Name: mshecke
+Prototype: GLDG
+Help: mshecke(M,p,{H}): M being a full modular symbol space, as given by msinit,
+ p being a prime number, and H being a Hecke-stable subspace (M if omitted),
+ return the matrix of T_p acting on H (U_p if p divides the level).
+Doc: $M$ being a full modular symbol space, as given by \kbd{msinit},
+ $p$ being a prime number, and $H$ being a Hecke-stable subspace ($M$ if
+ omitted) return the matrix of $T_p$ acting on $H$
+ ($U_p$ if $p$ divides $N$). Result is undefined if $H$ is not stable
+ by $T_p$ (resp.~$U_p$).
+ \bprog
+ ? M = msinit(11,2); \\ M_2(Gamma_0(11))
+ ? T2 = mshecke(M,2)
+ %2 =
+ [3  0  0]
+
+ [1 -2  0]
+
+ [1  0 -2]
+ ? M = msinit(11,2, 1); \\ M_2(Gamma_0(11))^+
+ ? T2 = mshecke(M,2)
+ %4 =
+ [ 3  0]
+
+ [-1 -2]
+
+ ? N = msnew(M)[1] \\ Q-basis of new cuspidal subspace
+ %5 =
+ [-2]
+
+ [-5]
+
+ ? p = 1009; mshecke(M, p, N) \\ action of T_1009 on N
+ %6 =
+ [-10]
+ ? ellap(ellinit("11a1"), p)
+ %7 = -10
+ @eprog

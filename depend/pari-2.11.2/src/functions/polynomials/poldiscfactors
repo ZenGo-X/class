@@ -1,0 +1,29 @@
+Function: poldiscfactors
+Section: polynomials
+C-Name: poldiscfactors
+Prototype: GD0,L,
+Help: poldiscfactors(T,{flag=0}): [D, faD], where D = discriminant of the
+ polynomial T, and faD is a cheap partial factorization of D
+ (entries are coprime but need not be primes); if flag is 1, finish the
+ factorization via factorint.
+Doc: given a polynomial $T$ with integer coefficients, return
+ $[D, \var{faD}]$ where $D$ is the discriminant of $T$ and
+ \var{faD} is a cheap partial factorization of $|D|$: entries in its first
+ column are coprime and not perfect powers but need not be primes.
+ The factors are obtained by a combination of trial division, testing for
+ perfect powers, factorizations in coprimes, and computing Euclidean
+ remainder sequences for $(T,T')$ modulo composite factors $d$ of $D$
+ (which is likely to produce $0$-divisors in $\Z/d\Z$).
+ If \fl\ is $1$, finish the factorization using \kbd{factorint}.
+ \bprog
+ ? T = x^3 - 6021021*x^2 + 12072210077769*x - 8092423140177664432;
+ ? [D,faD] = poldiscfactors(T); print(faD); D
+ [3, 3; 7, 2; 373, 2; 500009, 2; 24639061, 2]
+ %2 = -27937108625866859018515540967767467
+
+ ? T = x^3 + 9*x^2 + 27*x - 125014250689643346789780229390526092263790263725;
+ ? [D,faD] = poldiscfactors(T); print(faD)
+ [2, 6; 3, 3; 125007125141751093502187, 4]
+ ? [D,faD] = poldiscfactors(T, 1); print(faD)
+ [2, 6; 3, 3; 500009, 12; 1000003, 4]
+ @eprog

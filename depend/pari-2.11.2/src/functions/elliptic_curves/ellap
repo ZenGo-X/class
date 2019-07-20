@@ -1,0 +1,97 @@
+Function: ellap
+Section: elliptic_curves
+C-Name: ellap
+Prototype: GDG
+Help: ellap(E,{p}): given an elliptic curve E defined over
+ a finite field Fq, return the trace of Frobenius a_p = q+1-#E(Fq); for other
+ fields of definition K, p must define a finite residue field,
+ (p prime for K = Qp or Q; p a maximal ideal for K a number field),
+ return the order of the (non-singular) reduction of E.
+Doc:
+ Let \kbd{E} be an \kbd{ell} structure as output by \kbd{ellinit}, attached
+ to an elliptic curve $E/K$. If the field $K = \F_q$ is finite, return the
+ trace of Frobenius $t$, defined by the equation $\#E(\F_q) = q+1 - t$.
+
+ For other fields of definition and $p$ defining a finite residue field
+ $\F_q$, return the trace of Frobenius for the reduction of $E$: the argument
+ $p$ is best left omitted if $K = \Q_\ell$ (else we must have $p = \ell$) and
+ must be a prime number ($K = \Q$) or prime ideal ($K$ a general number field)
+ with residue field $\F_q$ otherwise. The equation need not be minimal
+ or even integral at $p$; of course, a minimal model will be more efficient.
+
+ For a number field $K$, the trace of Frobenius is the $a_p$
+ coefficient in the Euler product defining the curve $L$-series, whence
+ the function name:
+ $$L(E/K,s) = \prod_{\text{bad}\ p} (1-a_p (Np)^{-s})^{-1}
+              \prod_{\text{good}\ p} (1-a_p (Np)^{-s} + (Np)^{1-2s})^{-1}. $$
+
+ When the characteristic of the finite field is large, the availability of
+ the \kbd{seadata} package will speed up the computation.
+
+ \bprog
+ ? E = ellinit([0,1]);  \\ y^2 = x^3 + 0.x + 1, defined over Q
+ ? ellap(E, 7) \\ 7 necessary here
+ %2 = -4       \\ #E(F_7) = 7+1-(-4) = 12
+ ? ellcard(E, 7)
+ %3 = 12       \\ OK
+
+ ? E = ellinit([0,1], 11);  \\ defined over F_11
+ ? ellap(E)       \\ no need to repeat 11
+ %4 = 0
+ ? ellap(E, 11)   \\ ... but it also works
+ %5 = 0
+ ? ellgroup(E, 13) \\ ouch, inconsistent input!
+    ***   at top-level: ellap(E,13)
+    ***                 ^-----------
+    *** ellap: inconsistent moduli in Rg_to_Fp:
+      11
+      13
+ ? a = ffgen(ffinit(11,3), 'a); \\ defines F_q := F_{11^3}
+ ? E = ellinit([a+1,a]);  \\ y^2 = x^3 + (a+1)x + a, defined over F_q
+ ? ellap(E)
+ %8 = -3
+ @eprog
+
+ If the curve is defined over a more general number field than $\Q$,
+ the maximal ideal $p$ must be explicitly given in \kbd{idealprimedec}
+ format. There is no assumption of local minimality at $p$.
+ \bprog
+ ? K = nfinit(a^2+1); E = ellinit([1+a,0,1,0,0], K);
+ ? fa = idealfactor(K, E.disc)
+ %2 =
+ [  [5, [-2, 1]~, 1, 1, [2, -1; 1, 2]] 1]
+
+ [[13, [5, 1]~, 1, 1, [-5, -1; 1, -5]] 2]
+ ? ellap(E, fa[1,1])
+ %3 = -1 \\ non-split multiplicative reduction
+ ? ellap(E, fa[2,1])
+ %4 = 1  \\ split multiplicative reduction
+ ? P17 = idealprimedec(K,17)[1];
+ ? ellap(E, P17)
+ %6 = 6  \\ good reduction
+ ? E2 = ellchangecurve(E, [17,0,0,0]);
+ ? ellap(E2, P17)
+ %8 = 6  \\ same, starting from a non-miminal model
+
+ ? P3 = idealprimedec(K,3)[1];
+ ? ellap(E, P3)  \\ OK: E is minimal at P3
+ %10 = -2
+ ? E3 = ellchangecurve(E, [3,0,0,0]);
+ ? ellap(E3, P3) \\ not integral at P3
+  ***   at top-level: ellap(E3,P3)
+  ***                 ^------------
+  *** ellap: impossible inverse in Rg_to_ff: Mod(0, 3).
+ @eprog
+
+ \misctitle{Algorithms used} If $E/\F_q$ has CM by a principal imaginary
+ quadratic order we use a fast explicit formula (involving essentially
+ Kronecker symbols and Cornacchia's algorithm), in $O(\log q)^2$ bit
+ operations.
+ Otherwise, we use Shanks-Mestre's baby-step/giant-step method, which runs in
+ time $\tilde{O}(q^{1/4})$ using $\tilde{O}(q^{1/4})$ storage, hence becomes
+ unreasonable when $q$ has about 30~digits. Above this range, the \tet{SEA}
+ algorithm becomes available, heuristically in $\tilde{O}(\log q)^4$, and
+ primes of the order of 200~digits become feasible.  In small
+ characteristic we use Mestre's (p=2), Kohel's (p=3,5,7,13), Satoh-Harley
+ (all in $\tilde{O}(p^{2}\*n^2)$) or Kedlaya's (in $\tilde{O}(p\*n^3)$)
+ algorithms.

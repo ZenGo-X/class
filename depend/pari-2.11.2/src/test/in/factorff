@@ -1,0 +1,84 @@
+do(f,p,T)=centerlift(lift(polrootsmod(f,[p,T])));
+do(x^3+x^2+x-1,3,t^3+t^2+t-1)
+t = ffgen(3^3,'t); do((x^3+x^2+x-1)*t^0, t.p, t.mod)
+polrootsmod(x^4+1,[2,y^2+y+1])
+t = ffgen(('t^2+'t+1)*Mod(1,2));
+f=x^12+t*x^10+x^6+(t+1)*x^2+1;
+factormod(f)
+factormod(f,,1)
+
+\\ #1241
+polrootsmod(x^2 - x - ffgen(v^2+Mod(1,3)))
+\\ #1350
+polrootsmod(2*x+1,[2,y])
+a=ffgen(2^12,'a);factor(2*x^2+x+a)
+
+a=ffgen([3,3],'a);factormod((x^27-x)/(x-a))[,1]
+
+check(p)=
+{
+  print("check ",p);
+  a = ffgen([p,3],'a);
+  V = [0*x*'a,'a*x^0,x*'a-1,x^2-'a^2,x^2+x+'a,'a*x^2+1,'a*x^3+x+1];
+  for(i=1,#V,
+    print(factormod(V[i],a));
+    print(factormod(V[i],a,1));
+    print(liftall(factormod(V[i],[a.p,a.mod]))));
+}
+check(2)
+check(3)
+check(nextprime(2^100));
+
+t = ffgen(5^4,'t);
+factor(x^24-t^0)
+factormod(Pol(0),t)
+factormodSQF(Pol(0),t)
+factormod(Pol(1),t)
+factormod(Pol(1),t,1)
+factormodSQF(Pol(1),t)
+factormodDDF(Pol(1),t)
+factormod(x^4-t,t)
+factormod(x^4-t,t,1)
+factor(5*x^2+x+t)
+
+p = nextprime(2^96); a = ffgen(p^3,'a);
+factor(p*x^2+x+a)
+P=(x-1)*(x-a)*(x-a^2)*(x-a-1)*subst(ffinit(p,2),x,x+a)*ffinit(p,4);
+polrootsmod(P)
+factormod(P)
+factormod(P,,1)
+factormodDDF(P)
+factormodSQF(P)
+
+check(P)=my(V=polrootsmod(P));for(i=1,#V,if(subst(P,x,V[i])!=0,error(P)));#V;
+a=ffgen([3,2],'a);check((x^2+a*x)^3*(x+1))
+a=ffgen([2,2],'a);check((x^2+a*x)^2*(x+1))
+a=ffgen([3,107],'a);check(x^107+2*x^3+a^0)
+a=ffgen([3,37],'a);check(subst(x^37+x^3+x^2+2*x+2,x,x+a))
+{
+  my(s);
+  a=ffgen([2,2],'a);
+  forvec(v=vector(6,i,[0,3]),
+    P = x^7+Polrev([(x\2)*a+x|x<-v]);
+    s += check(P));
+  s
+}
+{
+  my(s);
+  a=ffgen([2,3],'a);
+  forvec(v=vector(4,i,[0,7]),
+    P = x^6+Polrev([(x\4)*a^2+(x\2)*a+x|x<-v])*x+1;
+    s += check(P));
+  s
+}
+{
+  my(s);
+  a=ffgen([3,2],'a);
+  forvec(v=vector(4,i,[0,8]),
+    P = x^6+Polrev([(x\3)*a+x|x<-v])*x+1;
+    s += check(P));
+  s
+}
+a=ffprimroot(ffgen([2,10],'a));check(factorback(vector(200,i,x-a^i)))
+a=ffprimroot(ffgen([3,7],'a)); check(factorback(vector(1000,i,x-a^i)))
+a=ffprimroot(ffgen([nextprime(2^100),2],'a));check(factorback(vector(200,i,x-a^i)))

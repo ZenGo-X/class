@@ -1,0 +1,23 @@
+Function: ellchangepoint
+Section: elliptic_curves
+C-Name: ellchangepoint
+Prototype: GG
+Help: ellchangepoint(x,v): change data on point or vector of points x on an
+ elliptic curve according to v=[u,r,s,t].
+Doc:
+ changes the coordinates of the point or
+ vector of points $x$ using the vector \kbd{v=[u,r,s,t]}, i.e.~if $x'$ and
+ $y'$ are the new coordinates, then $x=u^2x'+r$, $y=u^3y'+su^2x'+t$ (see also
+ \kbd{ellchangecurve}).
+ \bprog
+ ? E0 = ellinit([1,1]); P0 = [0,1]; v = [1,2,3,4];
+ ? E = ellchangecurve(E0, v);
+ ? P = ellchangepoint(P0,v)
+ %3 = [-2, 3]
+ ? ellisoncurve(E, P)
+ %4 = 1
+ ? ellchangepointinv(P,v)
+ %5 = [0, 1]
+ @eprog
+Variant: The reciprocal function \fun{GEN}{ellchangepointinv}{GEN x, GEN ch}
+ inverts the coordinate change.

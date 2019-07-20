@@ -1,0 +1,25 @@
+Function: lex
+Section: operators
+C-Name: lexcmp
+Prototype: iGG
+Help: lex(x,y): compare x and y lexicographically (1 if x>y, 0 if x=y, -1 if x<y).
+Doc: gives the result of a lexicographic comparison
+ between $x$ and $y$ (as $-1$, $0$ or $1$). This is to be interpreted in quite
+ a wide sense: It is admissible to compare objects of different types
+ (scalars, vectors, matrices), provided the scalars can be compared, as well
+ as vectors/matrices of different lengths. The comparison is recursive.
+
+ In case all components are equal up to the smallest length of the operands,
+ the more complex is considered to be larger. More precisely, the longest is
+ the largest; when lengths are equal, we have matrix $>$ vector $>$ scalar.
+ For example:
+ \bprog
+ ? lex([1,3], [1,2,5])
+ %1 = 1
+ ? lex([1,3], [1,3,-1])
+ %2 = -1
+ ? lex([1], [[1]])
+ %3 = -1
+ ? lex([1], [1]~)
+ %4 = 0
+ @eprog

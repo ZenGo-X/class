@@ -1,0 +1,22 @@
+Function: matqr
+Section: linear_algebra
+C-Name: matqr
+Prototype: GD0,L,p
+Help: matqr(M,{flag=0}): returns [Q,R], the QR-decomposition of the square
+ invertible matrix M. If flag=1, Q is given as a sequence of Householder
+ transforms (faster and stabler).
+Doc: returns $[Q,R]$, the \idx{QR-decomposition} of the square invertible
+ matrix $M$ with real entries: $Q$ is orthogonal and $R$ upper triangular. If
+ $\fl=1$, the orthogonal matrix is returned as a sequence of Householder
+ transforms: applying such a sequence is stabler and faster than
+ multiplication by the corresponding $Q$ matrix.\sidx{Householder transform}
+ More precisely, if
+ \bprog
+   [Q,R] = matqr(M);
+   [q,r] = matqr(M, 1);
+ @eprog\noindent then $r = R$ and \kbd{mathouseholder}$(q, M)$ is
+ (close to) $R$; furthermore
+ \bprog
+   mathouseholder(q, matid(#M)) == Q~
+ @eprog\noindent the inverse of $Q$. This function raises an error if the
+ precision is too low or $x$ is singular.

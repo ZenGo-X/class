@@ -1,0 +1,12 @@
+Function: mfpow
+Section: modular_forms
+C-Name: mfpow
+Prototype: GL
+Help: mfpow(F,n): compute F^n
+Doc: Compute $F^n$, where $n$ is an integer and $F$ is a generalized modular
+ form:
+ \bprog
+ ? G = mfpow(mfEk(4), 3);  \\ E4^3
+ ? mfcoefs(G, 4)
+ %2 = [1, 720, 179280, 16954560, 396974160]
+ @eprog

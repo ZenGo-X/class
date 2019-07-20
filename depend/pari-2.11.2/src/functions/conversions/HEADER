@@ -1,0 +1,34 @@
+Function: _header_conversions
+Class: header
+Section: conversions
+Doc:
+ \subsec{Comparison and Boolean operators}\sidx{Boolean operators} The six
+ standard \idx{comparison operators} \kbd{<=}, \kbd{<}, \kbd{>=}, \kbd{>},
+ \kbd{==}, \kbd{!=} are available in GP. The result is 1 if the comparison is
+ true, 0 if it is false. The operator \kbd{==} is quite liberal : for
+ instance, the integer 0, a 0 polynomial, and a vector with 0 entries are all
+ tested equal.
+
+ The extra operator \kbd{===} tests whether two objects are identical and is
+ much stricter than \kbd{==} : objects of different type or length are never
+ identical.
+
+ For the purpose of comparison, \typ{STR} objects are compared using
+ the standard lexicographic order, and comparing them to objects
+ of a different type raises an exception.
+
+ GP accepts \kbd{<>} as a synonym for \kbd{!=}. On the other hand, \kbd{=} is
+ definitely \emph{not} a synonym for \kbd{==}: it is the assignment statement.
+
+ The standard boolean operators \kbd{||} (\idx{inclusive or}), \kbd{\&\&}
+ (\idx{and})\sidx{or} and \kbd{!} (\idx{not}) are also available.
+
+ \section{Conversions and similar elementary functions or commands}
+ \label{se:conversion}
+
+ \noindent
+ Many of the conversion functions are rounding or truncating operations. In
+ this case, if the argument is a rational function, the result is the
+ Euclidean quotient of the numerator by the denominator, and if the argument
+ is a vector or a matrix, the operation is done componentwise. This will not
+ be restated for every function.

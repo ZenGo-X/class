@@ -1,0 +1,174 @@
+setrand(1)
+
+vec2mat(d,n,V) =
+{
+  my(M = matrix(d,d), x = 'x, c);
+  for(i=0,d^2*n-1,
+    c = V[i+1];
+    M[i\(n*d) + 1, (i\n)%d + 1] += c*x^(i%n)
+  );
+  c = polcoeff(M[1,1],0);
+  for(i=2,d,M[i,i]+=c);
+  M
+};
+
+mat2vec(d,n,M) =
+{
+  my(V = vector(d^2*n), c = polcoeff(M[1,1],0));
+  for(i=2,d,M[i,i]-=c);
+  for(i=1,d,
+    for(j=1,d,
+      for(k=0,n-1,
+        V[n*d*(i-1) + n*(j-1) + k + 1] = polcoeff(M[i,j],k);
+      )
+    )
+  );
+  V
+};
+
+matalg(d,n,p) =
+{
+  my(pol = ffinit(p,n), mtx, N=d^2*n, x, basis, mt=vector(N));
+  basis = vector(N,i,vec2mat(d,n,vector(N,k,k==i)));
+  basis = basis*Mod(1,p)*Mod(1,pol);
+  for(i=1,N,
+    x = basis[i];
+    mtx = matconcat(vector(N,j,mat2vec(d,n,liftall(x*basis[j]))~));
+    mt[i] = mtx;
+  );
+  algtableinit(mt,p)
+};
+
+smallchg(mt,p) =
+{
+  my(i,j,N=#mt,c);
+  if(N==1, return(mt));
+  if(p, c=random([1,p-1]), c=1);
+  i = random([2,N]);
+  j=i;
+  while(j==i,j=random([1,N]));
+  for(k=1,N,
+    mt[k][,i] += c*mt[k][,j];
+    mt[k][j,] -= c*mt[k][i,];
+  );
+  mt[i] += c*mt[j];
+  if(p,mt%p,mt)
+};
+
+chg(mt,nb=3*#mt,p=0) =
+{
+  for(c=1,nb,mt=smallchg(mt,p));
+  mt
+};
+
+test2(d,n,p,nb=1) =
+{
+  my(al,mt,mt2,res,map,x,y,Mx,My);
+  setrand(1);
+  al = matalg(d,n,p);
+  mt = algmultable(al);
+  mt2 = mt;
+  for(c=1,nb,
+    if(c>1, mt2 = chg(mt2,#mt\4 + 5,p));
+    al = algtableinit(mt2,p);
+    res = algsplit(al,'t);
+    map = res[1];
+    mapi = res[2];
+    x = algrandom(al,10);
+    y = algrandom(al,10);
+    Mx = map*x;
+    My = map*y;
+    if(Mx*My != map*algmul(al,x,y),  print("FAIL"); return(0));
+  );
+  [al,map,mapi]
+};
+
+print("M_2(F_4)");
+test2(2,2,2,200);
+
+print("M_2(F_9)");
+test2(2,2,3,100);
+
+q = 31;
+print("M_2(F_31^2)");
+test2(2,2,q,30);
+
+p = nextprime(10^20);
+print("M_2(F_p^2)");
+test2(2,2,p,30);
+
+print("M_d(F_31^n)");
+for(d=1,4,for(n=1,min(18\(d^2),10),print("d=",d," n=",n);if(!test2(d,n,q,10), break(2))));
+
+isblock(M,L) =
+{
+  my(d,mini,nxt);
+  d = #M[,1];
+  mini=L[1];
+  nxt=2;
+  for(j=1,d,
+    if(j>mini,
+      mini += L[nxt];
+      nxt += 1;
+    );
+    for(i=mini+1,d,
+      if(M[i,j]!=0,return(0));
+    );
+  );
+  1
+};
+matblock(L,n,p) =
+{
+  d = sum(i=1,#L,L[i]);
+  al0 = matalg(d,n,p);
+  basis = [b | b<-Vec(matid(d^2*n)), isblock(vec2mat(d,n,b),L)];
+  basis = Mat(basis);
+  algsubalg(al0,basis)[1];
+};
+
+print("examples from documentation");
+al0 = alginit(nfinit(y^2+7), [-1,-1]);
+al = algtableinit(algmultable(al0), 3); \\isomorphic to M_2(F_9)
+[map,mapi] = algsplit(al, 'a);
+x = [1,2,1,0,0,0,0,0]~; fx = map*x
+y = [0,0,0,0,1,0,0,1]~; fy = map*y
+map*algmul(al,x,y) == fx*fy
+map*mapi[,6]
+
+print("bad input");
+algsplit("toto");
+algsplit(alginit(nfinit('y),[-1,-1]));
+algsplit(algtableinit([matid(3),[0,0,0;1,1,0;0,0,1],[0,0,0;0,0,0;1,0,0]],2));
+algsplit(algtableinit([matid(2),[0,0;1,1]],2));
+algsplit(matblock([2,1,1,1],1,q));
+algsplit(matblock([1,2,3],1,q));
+{mt=[[1, 0, 0, 0, 0, 0, 0, 0, 0; 0, 1, 0, 0, 0, 0, 0, 0, 0; 0, 0, 1, 0, 0, 0, 0,
+0, 0; 0, 0, 0, 1, 0, 0, 0, 0, 0; 0, 0, 0, 0, 1, 0, 0, 0, 0; 0, 0, 0, 0, 0, 1, 0,
+0, 0; 0, 0, 0, 0, 0, 0, 1, 0, 0; 0, 0, 0, 0, 0, 0, 0, 1, 0; 0, 0, 0, 0, 0, 0, 0,
+0, 1], [0, 0, 0, 1, 0, 0, 0, 0, 0; 1, 0, 0, 0, 0, 0, 0, 0, 0; 0, 0, 0, 0, 0, 1,
+0, 0, 0; 0, 1, 0, 0, 0, 0, 0, 0, 0; 0, 0, 0, 1, 0, 0, 0, 0, 1; 0, 0, 0, 1, 0, 0,
+1, 0, 0; 0, 1, 1, 0, 0, 0, 0, 0, 0; 0, 0, 0, 0, 1, 0, 0, 0, 0; 0, 1, 0, 0, 0, 0,
+0, 1, 0], [0, 0, 0, 0, 0, 0, 1, 0, 1; 0, 0, 0, 0, 1, 1, 0, 0, 0; 1, 0, 0, 0, 1,
+0, 0, 0, 0; 0, 1, 0, 0, 0, 0, 0, 0, 0; 0, 0, 0, 0, 0, 0, 1, 0, 0; 0, 0, 0, 1, 0,
+0, 1, 0, 0; 0, 0, 0, 0, 0, 0, 0, 1, 0; 0, 0, 0, 0, 1, 0, 0, 0, 0; 0, 0, 1, 0, 0,
+0, 0, 0, 0], [0, 0, 1, 0, 0, 0, 0, 1, 0; 0, 0, 0, 0, 0, 0, 1, 0, 1; 0, 0, 0, 0,
+0, 0, 0, 0, 1; 1, 0, 0, 0, 0, 0, 0, 0, 0; 0, 1, 1, 0, 0, 0, 0, 0, 0; 0, 0, 1, 0,
+0, 0, 0, 0, 0; 0, 0, 0, 0, 1, 0, 0, 0, 0; 0, 0, 0, 1, 0, 0, 0, 0, 1; 0, 0, 0, 0,
+0, 1, 0, 0, 0], [0, 0, 0, 0, 1, 1, 0, 0, 0; 0, 0, 1, 0, 0, 0, 0, 1, 0; 0, 1, 0,
+0, 0, 0, 0, 1, 0; 0, 0, 0, 1, 0, 0, 0, 0, 0; 1, 0, 0, 0, 0, 1, 0, 0, 0; 0, 0, 0,
+0, 0, 1, 0, 0, 0; 0, 0, 0, 1, 0, 0, 0, 0, 1; 0, 0, 0, 0, 0, 0, 0, 1, 0; 0, 0, 0,
+1, 0, 0, 1, 0, 0], [0, 0, 0, 0, 1, 1, 0, 0, 0; 0, 1, 0, 0, 0, 0, 0, 0, 0; 0, 1,
+0, 0, 0, 0, 0, 1, 0; 0, 0, 0, 0, 0, 0, 1, 0, 1; 0, 0, 0, 0, 1, 0, 0, 0, 0; 1, 0,
+0, 0, 1, 0, 0, 0, 0; 0, 0, 0, 1, 0, 0, 0, 0, 1; 0, 1, 1, 0, 0, 0, 0, 0, 0; 0, 0,
+0, 0, 0, 0, 0, 0, 1], [0, 1, 0, 0, 0, 0, 0, 0, 0; 0, 0, 0, 0, 0, 0, 1, 0, 1; 0,
+0, 0, 1, 0, 0, 1, 0, 0; 0, 0, 0, 0, 1, 1, 0, 0, 0; 0, 1, 1, 0, 0, 0, 0, 0, 0; 0,
+1, 0, 0, 0, 0, 0, 1, 0; 1, 0, 0, 0, 0, 1, 0, 0, 0; 0, 0, 0, 0, 0, 0, 1, 0, 0; 0,
+0, 0, 0, 0, 1, 0, 0, 0], [0, 0, 0, 1, 0, 0, 0, 0, 0; 0, 0, 0, 0, 1, 1, 0, 0, 0;
+0, 0, 0, 0, 0, 1, 0, 0, 0; 0, 0, 1, 0, 0, 0, 0, 1, 0; 0, 0, 0, 0, 0, 0, 1, 0, 0;
+0, 0, 0, 0, 0, 0, 0, 0, 1; 0, 1, 1, 0, 0, 0, 0, 0, 0; 1, 0, 0, 0, 0, 1, 0, 0, 0;
+0, 0, 1, 0, 0, 0, 0, 0, 0], [0, 0, 1, 0, 0, 0, 0, 1, 0; 0, 0, 0, 1, 0, 0, 0, 0,
+0; 0, 0, 0, 0, 0, 0, 0, 0, 1; 0, 0, 0, 0, 1, 1, 0, 0, 0; 0, 0, 0, 0, 0, 0, 0, 1,
+0; 0, 1, 0, 0, 0, 0, 0, 1, 0; 0, 0, 0, 0, 1, 0, 0, 0, 0; 0, 0, 0, 0, 0, 0, 1, 0,
+0; 1, 0, 0, 0, 1, 0, 0, 0, 0]]};
+algsplit(algtableinit(mt,2));
+

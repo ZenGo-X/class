@@ -1,0 +1,45 @@
+Function: setsearch
+Section: linear_algebra
+C-Name: setsearch
+Prototype: lGGD0,L,
+Help: setsearch(S,x,{flag=0}): determines whether x belongs to the set (or
+ sorted list) S.
+ If flag is 0 or omitted, returns 0 if it does not, otherwise returns the index
+ j such that x==S[j]. If flag is non-zero, return 0 if x belongs to S,
+ otherwise the index j where it should be inserted.
+Doc: determines whether $x$ belongs to the set $S$ (see \kbd{setisset}).
+
+ We first describe the default behavior, when $\fl$ is zero or omitted. If $x$
+ belongs to the set $S$, returns the index $j$ such that $S[j]=x$, otherwise
+ returns 0.
+ \bprog
+ ? T = [7,2,3,5]; S = Set(T);
+ ? setsearch(S, 2)
+ %2 = 1
+ ? setsearch(S, 4)      \\ not found
+ %3 = 0
+ ? setsearch(T, 7)      \\ search in a randomly sorted vector
+ %4 = 0 \\ WRONG !
+ @eprog\noindent
+ If $S$ is not a set, we also allow sorted lists with
+ respect to the \tet{cmp} sorting function, without repeated entries,
+ as per \tet{listsort}$(L,1)$; otherwise the result is undefined.
+ \bprog
+ ? L = List([1,4,2,3,2]); setsearch(L, 4)
+ %1 = 0 \\ WRONG !
+ ? listsort(L, 1); L    \\ sort L first
+ %2 = List([1, 2, 3, 4])
+ ? setsearch(L, 4)
+ %3 = 4                 \\ now correct
+ @eprog\noindent
+ If $\fl$ is non-zero, this function returns the index $j$ where $x$ should be
+ inserted, and $0$ if it already belongs to $S$. This is meant to be used for
+ dynamically growing (sorted) lists, in conjunction with \kbd{listinsert}.
+ \bprog
+ ? L = List([1,5,2,3,2]); listsort(L,1); L
+ %1 = List([1,2,3,5])
+ ? j = setsearch(L, 4, 1)  \\ 4 should have been inserted at index j
+ %2 = 4
+ ? listinsert(L, 4, j); L
+ %3 = List([1, 2, 3, 4, 5])
+ @eprog

@@ -1,0 +1,20 @@
+Function: zncharconductor
+Section: number_theoretical
+C-Name: zncharconductor
+Prototype: GG
+Help: zncharconductor(G,chi): let G be znstar(q,1) and chi
+ be a Dirichlet character on (Z/qZ)*. Return
+ the conductor of chi.
+Doc: Let \var{G} be attached to $(\Z/q\Z)^*$ (as per
+ \kbd{G = znstar(q, 1)}) and \kbd{chi} be a Dirichlet character on
+ $(\Z/q\Z)^*$ (see \secref{se:dirichletchar} or \kbd{??character}).
+ Return the conductor of \kbd{chi}:
+ \bprog
+ ? G = znstar(126000, 1);
+ ? zncharconductor(G,11)   \\ primitive
+ %2 = 126000
+ ? zncharconductor(G,1)    \\ trivial character, not primitive!
+ %3 = 1
+ ? zncharconductor(G,1009) \\ character mod 5^3
+ %4 = 125
+ @eprog

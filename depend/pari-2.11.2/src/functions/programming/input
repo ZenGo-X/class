@@ -1,0 +1,14 @@
+Function: input
+Section: programming/specific
+C-Name: gp_input
+Prototype:
+Help: input(): read an expression from the input file or standard input.
+Doc: reads a string, interpreted as a GP expression,
+ from the input file, usually standard input (i.e.~the keyboard). If a
+ sequence of expressions is given, the result is the result of the last
+ expression of the sequence. When using this instruction, it is useful to
+ prompt for the string by using the \kbd{print1} function. Note that in the
+ present version 2.19 of \kbd{pari.el}, when using \kbd{gp} under GNU Emacs (see
+ \secref{se:emacs}) one \emph{must} prompt for the string, with a string
+ which ends with the same prompt as any of the previous ones (a \kbd{"? "}
+ will do for instance).

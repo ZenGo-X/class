@@ -1,0 +1,42 @@
+Function: nfeltval
+Section: number_fields
+C-Name: gpnfvalrem
+Prototype: GGGD&
+Help: nfeltval(nf,x,pr,{&y}): valuation of element x at the prime pr as output
+ by idealprimedec.
+Doc: given an element $x$ in
+ \var{nf} and a prime ideal \var{pr} in the format output by
+ \kbd{idealprimedec}, computes the valuation $v$ at \var{pr} of the
+ element $x$. The valuation of $0$ is \kbd{+oo}.
+ \bprog
+ ? nf = nfinit(x^2 + 1);
+ ? P = idealprimedec(nf, 2)[1];
+ ? nfeltval(nf, x+1, P)
+ %3 = 1
+ @eprog\noindent
+ This particular valuation can also be obtained using
+ \kbd{idealval(\var{nf},x,\var{pr})}, since $x$ is then converted to a
+ principal ideal.
+
+ If the $y$ argument is present, sets $y = x \tau^v$, where $\tau$ is a
+ fixed ``anti-uniformizer'' for \var{pr}: its valuation at \var{pr} is $-1$;
+ its valuation is $0$ at other prime ideals dividing \kbd{\var{pr}.p} and
+ nonnegative at all other primes. In other words $y$ is the part of $x$
+ coprime to \var{pr}. If $x$ is an algebraic integer, so is $y$.
+ \bprog
+ ? nfeltval(nf, x+1, P, &y); y
+ %4 = [0, 1]~
+ @eprog
+ For instance if $x = \prod_i x_i^{e_i}$ is known to be coprime to \var{pr},
+ where the $x_i$ are algebraic integers and $e_i\in\Z$ then,
+ if $v_i = \kbd{nfeltval}(\var{nf}, x_i, \var{pr}, \&y_i)$, we still
+ have $x = \prod_i y_i^{e_i}$, where the $y_i$ are still algebraic integers
+ but now all of them are coprime to \var{pr}. They can then be mapped to
+ the residue field of \var{pr} more efficiently than if the product had
+ been expanded beforehand: we can reduce mod \var{pr} after each ring
+ operation.
+Variant: Also available are
+ \fun{long}{nfvalrem}{GEN nf, GEN x, GEN pr, GEN *y = NULL}, which returns
+ \tet{LONG_MAX} if $x = 0$ and the valuation as a \kbd{long} integer,
+ and \fun{long}{nfval}{GEN nf, GEN x, GEN pr}, which only returns the
+ valuation ($y = \kbd{NULL}$).

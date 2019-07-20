@@ -1,0 +1,49 @@
+Function: charmul
+Section: number_theoretical
+C-Name: charmul0
+Prototype: GGG
+Help: charmul(cyc, a,b): given a finite abelian group (by its elementary
+ divisors cyc) and two characters a and b, return the product character
+ ab.
+Doc: let \var{cyc} represent a finite abelian group by its elementary
+ divisors, i.e. $(d_j)$ represents $\sum_{j \leq k} \Z/d_j\Z$ with $d_k
+ \mid \dots \mid d_1$; any object which has a \kbd{.cyc} method is also
+ allowed, e.g.~the output of \kbd{znstar} or \kbd{bnrinit}. A character
+ on this group is given by a row vector $a = [a_1,\ldots,a_n]$ such that
+ $\chi(\prod g_j^{n_j}) = \exp(2\pi i\sum a_j n_j / d_j)$, where $g_j$ denotes
+ the generator (of order $d_j$) of the $j$-th cyclic component.
+
+ Given two characters $a$ and $b$, return the product character $ab$.
+ \bprog
+ ? cyc = [15,5]; a = [1,1]; b =  [2,4];
+ ? charmul(cyc, a,b)
+ %2 = [3, 0]
+ ? bnf = bnfinit(x^2+23);
+ ? bnf.cyc
+ %4 = [3]
+ ? charmul(bnf, [1], [2])
+ %5 = [0]
+ @eprog\noindent For Dirichlet characters on  $(\Z/N\Z)^*$, additional
+ representations are available (Conrey labels, Conrey logarithm), see
+ \secref{se:dirichletchar} or \kbd{??character}. If the two characters are in
+ the same format, their
+ product is given in the same format, otherwise a Conrey logarithm is used.
+ \bprog
+ ? G = znstar(100, 1);
+ ? G.cyc
+ %2 = [20, 2]
+ ? a = [10, 1]; \\ usual representation for characters
+ ? b = 7; \\ Conrey label;
+ ? c = znconreylog(G, 11); \\ Conrey log
+ ? charmul(G, b,b)
+ %6 = 49   \\ Conrey label
+ ? charmul(G, a,b)
+ %7 = [0, 15]~  \\ Conrey log
+ ? charmul(G, a,c)
+ %7 = [0, 6]~   \\ Conrey log
+ @eprog
+
+Variant: Also available is
+ \fun{GEN}{charmul}{GEN cyc, GEN a, GEN b}, when \kbd{cyc} is known to
+ be a vector of elementary divisors and $a, b$ are compatible characters
+ (no checks).

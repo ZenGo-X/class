@@ -1,0 +1,48 @@
+test() = {
+  print(a*b);
+  print(a/b);
+  print(sqr(a));
+  print(a^-1);
+  print(a^3);
+  print(a^0);
+}
+
+T=2*x^2 + x + 1; a = Mod(x+1/2, T); b = Mod(x/3+1, T);
+test();
+
+T=2*x^3 + x + 1; a = Mod(x^2+x+1/2, T); b = Mod(x^2+x/3+1, T);
+test();
+
+modp(p) = {
+  t = T*Mod(1,p);
+  a = Mod((x^2+x+3) * Mod(1,p), t); b = Mod((3*x^2+2*x+5) * Mod(1,p), t);
+}
+modp(17); test();
+modp(18446744073709551629); test();
+(Mod(1/2, 't)*'x + Mod(1, 't)) ^ 2
+Mod(Mod(x,x^2+1),x)
+Mod(Mod(0,2),y^0)*x*x
+Mod(y,x)
+Mod(1/y,x)
+Mod(O(y),x)
+Mod(x,y)
+Mod(1/x,y)
+Mod(1+O(y),y)
+Mod(1+O(y),y+1)
+Mod(1,7*x^0)
+Mod(2,13)+Mod(0,7*x^0)
+
+modreverse(Mod(0,Pol(1)))
+modreverse(Mod(1,x+1))
+norm(Mod(2^65,3*x+1))
+norm(Mod('a,3*x+1))
+
+Mat(1/2*x) * Mat(Mod(1,x^2-2))
+(Mod(5,7)*x+Mod(y^0,7*y+1))*x
+
+\\#1743
+pi=Mod(z^7-1,z^24 +763670323290*z^16+335841304485*z^8+1);
+liftall(1/(pi*(1+O(2^20))))
+\\#1748
+pi=Mod(O(7^12)*z^8+z^7-1,z^24 +763670323290*z^16+335841304485*z^8+1);
+1/pi;

@@ -1,0 +1,20 @@
+Function: algisdivl
+Section: algebras
+C-Name: algisdivl
+Prototype: iGGGD&
+Help: algisdivl(al,x,y,{&z}): tests whether y is left divisible by x and sets z
+ to the left quotient x\y.
+Doc: Given two elements $x$ and $y$ in \var{al}, tests whether $y$ is left
+ divisible by $x$, that is whether there exists~$z$ in \var{al} such
+ that~$xz=y$, and sets $z$ to this element if it exists.
+ \bprog
+ ? A = alginit(nfinit(y), [-1,1]);
+ ? algisdivl(A,[x+2,-x-2]~,[x,1]~)
+ %2 = 0
+ ? algisdivl(A,[x+2,-x-2]~,[-x,x]~,&z)
+ %3 = 1
+ ? z
+ %4 = [Mod(-2/5*x - 1/5, x^2 + 1), 0]~
+ @eprog
+
+ Also accepts matrices with coefficients in \var{al}.

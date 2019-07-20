@@ -1,0 +1,25 @@
+Function: mfatkin
+Section: modular_forms
+C-Name: mfatkin
+Prototype: GG
+Help: mfatkin(mfatk,F): Given an mfatk output by mfatk = mfatkininit(mf,Q)
+ and a modular form F belonging to the space mf, returns the modular form
+ C*F|W_Q, which has polmod coefficients in Q(F), and where mfatk[3]=C,
+ mfatk[1]=mf2 (or 0 if mf2=mf) which is the space to which F|W_Q belongs.
+Doc: Given a \kbd{mfatk} output by \kbd{mfatk = mfatkininit(mf,Q)} and
+ a modular form $F$ belonging to the pace \kbd{mf}, returns the modular
+ form $C*F|W_Q$, which has \kbd{polmod} coefficients in $\Q(F)$;
+ \kbd{mfatk[3]} gives the constant $C$, and \kbd{mfatk[1]} gives
+ the modular form space to which $F|W_Q$ belongs (or is set to $0$ if
+ it is \kbd{mf}).
+ \bprog
+ ? mf = mfinit([35,2],0); vecF = mfbasis(mf); F = vecF[1];
+ ? mfcoefs(F, 4)
+ %2 = [0, 3, -1, 0, 3]
+ ? mfatk = mfatkininit(mf,7);
+ ? wF = mfatkin(mfatk, F); mfcoefs(wF, 4)
+ %4 = [0, 1, -1, -2, 7]
+ ? mfatk = mfatkininit(mf,35);
+ ? wF = mfatkin(mfatk, F); mfcoefs(wF, 4)
+ %6 = [0, -3, 1, 0, -3]
+ @eprog

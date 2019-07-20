@@ -1,0 +1,72 @@
+default(realprecision,38);
+f(t)=4*besselk(0,2*Pi*t);
+G = gammamellininvinit([0,0]);
+g(t)=gammamellininv(G,t);
+{
+  for(a=1,30,
+    for(b=-5,5,
+      my(z = a/12+I*b/6, eps = abs(f(z)-g(z)));
+      if(eps > 10^-30, error(z,":",eps))
+    )
+  )
+}
+
+GR(s)=Pi^-(s/2)*gamma(s/2);
+
+gmellininv(Vga)=
+{
+  my(c,A,B,T);
+  localprec(precision(1.)+19);
+  my(f(s) = prod(i=1,#Vga,GR(s+Vga[i])));
+  c = 1;
+  A = [-oo,Pi/2];
+  B = [+oo,Pi/2];
+  T = intfuncinit(t=A,B, f(c + I*t));
+  z->my(a=-log(z));intnum(t=A,B, exp(a*I*t), T)*exp(a*c) / (2*Pi);
+}
+
+chk(Vga,f,t) = abs(f(t)-gammamellininv(Vga,t));
+L=[[0],[1],[1/2],[3/2],[0,0],[0,1/2],[0,1],[0,2],[0,3],[0,0,0],[0,0,1/2],[0,0,1],[0,1,1],[0,1,2],[0,1,3/2],[0,0,0,0,0]];
+M=apply(gmellininv,L);
+S=[1/2,3/2,2,3,4];
+S2=concat(S,apply(x->I+x,S));
+{
+  for(i=1,#L,
+    my(G = gammamellininvinit(L[i]));
+    for(j=1,#S,
+      my(eps = chk(G,M[i],S2[j]));
+      if(eps > 10^-29, error([1,i,j],":",eps))
+    )
+  );
+}
+
+chkd(v0,v1,t) = abs(derivnum(s=t,gammamellininv(v0,s)) - gammamellininv(v1,t));
+
+{
+  for(i=1,#L,
+    my(v0); if(1, localprec(86); v0 = gammamellininvinit(L[i]));
+    my(v1= gammamellininvinit(L[i], 1));
+    for(j=1,#S2,
+      if(j<=#S || denominator(L[i])==1,
+        my(eps = chkd(v0,v1,S2[j]));
+        if(eps > 10^-29, error([2,i,j], ":", eps))
+      )
+    )
+  );
+}
+
+{
+  my(d = abs(gammamellininv([0,1/2,1,3/2],5)-2^(3/2)*exp(-4*Pi*sqrt(5))));
+  if (d > 1E-49, error([0,1/2,1,3/2],":",5,":",d));
+}
+
+gammamellininv([0],121.)
+
+G = gammamellininvinit([1], 2);
+a(z) = 4*Pi*z*exp(-Pi*z^2)*(2*Pi*z^2-3);
+f(z) = printf("%.3g\n", abs(a(z) - gammamellininv(G,z)));
+f(I)
+f(2+I)
+
+gammamellininvasymp([0],10)
+gammamellininvasymp([0,1/2],10)

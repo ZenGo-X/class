@@ -1,0 +1,79 @@
+Function: mspadicseries
+Section: modular_symbols
+C-Name: mspadicseries
+Prototype: GD0,L,
+Help: mspadicseries(mu, {i=0}): given mu from mspadicmoments,
+ returns the attached p-adic series with maximal p-adic precision, depending
+ on the precision of M (i-th Teichmueller component, if present).
+Doc: Let $\Phi$ be the $p$-adic distribution-valued overconvergent symbol
+ attached to a modular symbol $\phi$ for $\Gamma_0(N)$ (eigenvector for
+ $T_N(p)$ for the eigenvalue $a_p$).
+ If $\mu$ is the distribution on $\Z_p^*$ defined by the restriction of
+ $\Phi([\infty]-[0])$ to $\Z_p^*$, let
+ $$\hat{L}_p(\mu,\tau^{i})(x)
+   = \int_{\Z_p^*} \tau^i(t) (1+x)^{\log_p(t)/\log_p(u)}d\mu(t)$$
+ Here, $\tau$ is the Teichm\"uller character and $u$ is a specific
+ multiplicative generator of $1+2p\Z_p$. (Namely $1+p$ if $p>2$ or $5$
+ if $p=2$.) To explain
+ the formula, let $G_\infty := \text{Gal}(\Q(\mu_{p^{\infty}})/ \Q)$,
+ let $\chi:G_\infty\to \Z_p^*$ be the cyclotomic character (isomorphism)
+ and $\gamma$ the element of $G_\infty$ such that $\chi(\gamma)=u$;
+ then
+ $\chi(\gamma)^{\log_p(t)/\log_p(u)}= \langle t \rangle$.
+
+ The $p$-padic precision of individual terms is maximal given the precision of
+ the overconvergent symbol $\mu$.
+ \bprog
+ ? [M,phi] = msfromell(ellinit("17a1"),1);
+ ? Mp = mspadicinit(M, 5,7);
+ ? mu = mspadicmoments(Mp, phi,1); \\ overconvergent symbol
+ ? mspadicseries(mu)
+ %4 = (4 + 3*5 + 4*5^2 + 2*5^3 + 2*5^4 + 5^5 + 4*5^6 + 3*5^7 + O(5^9)) \
+  + (3 + 3*5 + 5^2 + 5^3 + 2*5^4 + 5^6 + O(5^7))*x \
+  + (2 + 3*5 + 5^2 + 4*5^3 + 2*5^4 + O(5^5))*x^2 \
+  + (3 + 4*5 + 4*5^2 + O(5^3))*x^3 \
+  + (3 + O(5))*x^4 + O(x^5)
+ @eprog\noindent
+ An example with non-zero Teichm\"uller:
+ \bprog
+ ? [M,phi] = msfromell(ellinit("11a1"),1);
+ ? Mp = mspadicinit(M, 3,10);
+ ? mu = mspadicmoments(Mp, phi,1);
+ ? mspadicseries(mu, 2)
+ %4 = (2 + 3 + 3^2 + 2*3^3 + 2*3^5 + 3^6 + 3^7 + 3^10 + 3^11 + O(3^12)) \
+  + (1 + 3 + 2*3^2 + 3^3 + 3^5 + 2*3^6 + 2*3^8 + O(3^9))*x \
+  + (1 + 2*3 + 3^4 + 2*3^5 + O(3^6))*x^2 \
+  + (3 + O(3^2))*x^3 + O(x^4)
+ @eprog\noindent
+ Supersingular example (not checked)
+ \bprog
+ ? E = ellinit("17a1"); ellap(E,3)
+ %1 = 0
+ ? [M,phi] = msfromell(E,1);
+ ? Mp = mspadicinit(M, 3,7);
+ ? mu = mspadicmoments(Mp, phi,1);
+ ? mspadicseries(mu)
+ %5 = [(2*3^-1 + 1 + 3 + 3^2 + 3^3 + 3^4 + 3^5 + 3^6 + O(3^7)) \
+  + (2 + 3^3 + O(3^5))*x \
+  + (1 + 2*3 + O(3^2))*x^2 + O(x^3),\
+  (3^-1 + 1 + 3 + 3^2 + 3^3 + 3^4 + 3^5 + 3^6 + O(3^7)) \
+  + (1 + 2*3 + 2*3^2 + 3^3 + 2*3^4 + O(3^5))*x \
+  + (3^-2 + 3^-1 + O(3^2))*x^2 + O(3^-2)*x^3 + O(x^4)]
+ @eprog\noindent
+ Example with a twist:
+ \bprog
+ ? E = ellinit("11a1");
+ ? [M,phi] = msfromell(E,1);
+ ? Mp = mspadicinit(M, 3,10);
+ ? mu = mspadicmoments(Mp, phi,5); \\ twist by 5
+ ? L = mspadicseries(mu)
+ %5 = (2*3^2 + 2*3^4 + 3^5 + 3^6 + 2*3^7 + 2*3^10 + O(3^12)) \
+  + (2*3^2 + 2*3^6 + 3^7 + 3^8 + O(3^9))*x \
+  + (3^3 + O(3^6))*x^2 + O(3^2)*x^3 + O(x^4)
+ ? mspadicL(mu)
+ %6 = [2*3^2 + 2*3^4 + 3^5 + 3^6 + 2*3^7 + 2*3^10 + O(3^12)]~
+ ? ellpadicL(E,3,10,,5)
+ %7 = 2 + 2*3^2 + 3^3 + 2*3^4 + 2*3^5 + 3^6 + 2*3^7 + O(3^10)
+ ? mspadicseries(mu,1) \\ must be 0
+ %8 = O(3^12) + O(3^9)*x + O(3^6)*x^2 + O(3^2)*x^3 + O(x^4)
+ @eprog

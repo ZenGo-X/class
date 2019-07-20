@@ -1,0 +1,20 @@
+Function: elltors
+Section: elliptic_curves
+C-Name: elltors
+Prototype: G
+Help: elltors(E): torsion subgroup of elliptic curve E: order, structure,
+ generators.
+Doc:
+ if $E$ is an elliptic curve defined over a number field or a finite field,
+ outputs the torsion subgroup of $E$ as a 3-component vector \kbd{[t,v1,v2]},
+ where \kbd{t} is the order of the torsion group, \kbd{v1} gives the structure
+ of the torsion group as a product of cyclic groups (sorted by decreasing
+ order), and \kbd{v2} gives generators for these cyclic groups. $E$ must be an
+ \kbd{ell} structure as output by \kbd{ellinit}.
+ \bprog
+ ?  E = ellinit([-1,0]);
+ ?  elltors(E)
+ %1 = [4, [2, 2], [[0, 0], [1, 0]]]
+ @eprog\noindent
+ Here, the torsion subgroup is isomorphic to $\Z/2\Z \times \Z/2\Z$, with
+ generators $[0,0]$ and $[1,0]$.

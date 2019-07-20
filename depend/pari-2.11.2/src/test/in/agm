@@ -1,0 +1,25 @@
+default(realprecision,38);
+gagm(a,b)=
+{
+  my(prec=10^(1-precision(a*1.)));
+  while(norm(a-b)>prec^2,
+    aa = (a+b)/2;
+    bb = sqrt(a*b);
+    if (norm(aa-bb)>norm(aa+bb), bb=-bb);
+    a=aa;b=bb);
+  a;
+}
+
+testagm(x)= {
+  my(e = norm(agm(x,1)-gagm(x,1)));
+  if(e > 1.E-75, printf("error %s: %s\n",x,e));
+}
+
+for(i=-6,6,for(j=-6,6,testagm(1/6+i/3+j*I/3)));
+agm(1,2+O(5))
+
+localbitprec(192); a = 1.0;
+s = agm(a, a*I + x + O(x^200));
+polcoeff(s, 0)
+polcoeff(s, 10)
+polcoeff(s, 100)

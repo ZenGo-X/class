@@ -1,0 +1,40 @@
+Function: ideallistarch
+Section: number_fields
+C-Name: ideallistarch
+Prototype: GGG
+Help: ideallistarch(nf,list,arch): list is a vector of vectors of bid's as
+ output by ideallist. Return a vector of vectors with the same number of
+ components as the original list. The leaves give information about
+ moduli whose finite part is as in original list, in the same order, and
+ Archimedean part is now arch. The information contained is of the same kind
+ as was present in the input.
+Doc:
+ \var{list} is a vector of vectors of bid's, as output by \tet{ideallist} with
+ flag $0$ to $3$. Return a vector of vectors with the same number of
+ components as the original \var{list}. The leaves give information about
+ moduli whose finite part is as in original list, in the same order, and
+ Archimedean part is now \var{arch} (it was originally trivial). The
+ information contained is of the same kind as was present in the input; see
+ \tet{ideallist}, in particular the meaning of \fl.
+
+ \bprog
+ ? bnf = bnfinit(x^2-2);
+ ? bnf.sign
+ %2 = [2, 0]                         \\@com two places at infinity
+ ? L = ideallist(bnf, 100, 0);
+ ? l = L[98]; vector(#l, i, l[i].clgp)
+ %4 = [[42, [42]], [36, [6, 6]], [42, [42]]]
+ ? La = ideallistarch(bnf, L, [1,1]); \\@com add them to the modulus
+ ? l = La[98]; vector(#l, i, l[i].clgp)
+ %6 = [[168, [42, 2, 2]], [144, [6, 6, 2, 2]], [168, [42, 2, 2]]]
+ @eprog
+ Of course, the results above are obvious: adding $t$ places at infinity will
+ add $t$ copies of $\Z/2\Z$ to $(\Z_K/f)^*$. The following application
+ is more typical:
+ \bprog
+ ? L = ideallist(bnf, 100, 2);        \\@com units are required now
+ ? La = ideallistarch(bnf, L, [1,1]);
+ ? H = bnrclassnolist(bnf, La);
+ ? H[98];
+ %4 = [2, 12, 2]
+ @eprog

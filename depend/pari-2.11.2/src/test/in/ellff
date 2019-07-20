@@ -1,0 +1,179 @@
+default(parisize,"20M");
+test(p,n=0,v='a,w=1)=
+{
+  my(a=if(n,ffgen(p^n,v),p));
+  my(E=ellinit([w,1,1-w,0,a+3],a));
+  my(G=ellgenerators(E));
+  if (#G==0,return);
+  [d1]=ellgroup(E);
+  my(P=random(E));
+  G=G[1];
+  if(ellorder(E,G)!=d1,error([p,n,0]));
+  if(ellmul(E,G,d1)!=[0],error([p,n,1]));
+  if(ellmul(E,P,d1)!=[0],error([p,n,2]));
+  if(d1%ellorder(E,P)!=0,error([p,n,3]));
+  if (d1<10^7,
+    P=ellmul(E,G,1023);
+    if(elllog(E,P,G)!=1023%d1,error([p,n,4]));
+  );
+}
+test(2);
+test(2,78);
+test(2,100);
+test(2,255);
+test(2,1,,0);
+test(2,2,,0);
+test(2,4,,0);
+test(2,6,,0);
+test(2,101,,0);
+test(3,,,0);
+test(3,50,,0);
+test(3,51,,1);
+test(5);
+test(5,3,,0);
+test(5,6,,0);
+test(5,50,,0);
+test(7,3);
+test(7,51);
+test(11,2);
+test(11,12);
+test(11,18);
+test(11,19,,5);
+test(13,41);
+test(17,2);
+test(1009,3);
+test(1013,7);
+test(1009,11,'x);
+test(17);
+test(41);
+test(1073741827);
+test(nextprime(2^65),2);
+
+p=18446744073709551557;
+e=ellinit([3,3],p);N=ellcard(e);
+setrand(1);
+g=ellgenerators(e)
+ellorder(e,g[1])
+
+a=ffgen(101^3,'a);
+E=ellinit([1,3],a); E.j
+E.disc
+P=random(E);Q=random(E);
+R=elladd(E,P,Q);
+elladd(E,ellsub(E,R,P),ellneg(E,Q))
+N=ellcard(E);ellmul(E,P,N)
+
+checkorder(E, N)=
+{
+  for(i=1,4,
+    P=random(E);
+    if(ellmul(E,P,N)!=[0],error(a)));
+}
+
+check(a)=
+{
+  my(E,Et,P,N);
+  E=ellinit(ellfromj(a),a);
+  Et=ellinit(elltwist(E));
+  if (ellap(Et)!=-ellap(E),error("twist:",a));
+  N=ellcard(E);
+  if ((N==1)!=(#random(E)==1),error(a));
+  checkorder(E, N);
+  ellgenerators(E);
+}
+{
+  for(a=1,8,
+    g = ffprimroot(ffgen(2^a,'t));
+    for(i=0,2^a-2, check(g^i)));
+  for(a=1,6,
+    g = ffprimroot(ffgen(3^a,'t));
+    for(i=0,3^a-2, check(g^i)));
+  for(a=1,4,
+    g = ffprimroot(ffgen(5^a,'t));
+    for(i=0,5^a-2, check(g^i)));
+}
+
+testss(n,N)=
+{
+  my(a);
+  a=ffprimroot(ffgen([2,n],'a));
+  for(i=1,N,
+    E=ellinit([0,0,random(a),random(a),random(a)]);
+    if(#E, checkorder(E,ellcard(E))));
+}
+
+for(i=1,8,testss(i,min(1000,2^(3*i))));
+
+checkt(p,n,f,B=100)=
+{
+  my(a=ffgen(p^n,'a));
+  for(i=1,B,
+    my(E,Et,N,b);
+    until(b,b=random(a));
+    E=ellinit(if(f==0,[0,b],f==1,[b,0],[b^2,b^3]));
+    if(#E==0,next);
+    Et=ellinit(elltwist(E));
+    if (ellap(Et)!=-ellap(E),error("twist:",[p,n,f]));
+    N=ellcard(E);
+    if(#ellmul(E,random(E),N)>1,error([p,n,f],b)));
+}
+checkt(3,5,0);
+checkt(3,6,0);
+checkt(3,5,1);
+checkt(3,6,1);
+checkt(3,5,2);
+checkt(3,6,2);
+checkt(7,5,0);
+checkt(7,6,0);
+checkt(11,5,0);
+checkt(11,6,0);
+checkt(7,5,1);
+checkt(7,6,1);
+checkt(13,5,1);
+checkt(13,6,1);
+checkt(11,6,2);
+checkt(13,5,2);
+checkt(18446744073709551667,2,0,10);
+checkt(18446744073709551667,3,0,10);
+checkt(18446744073709551667,2,1,10);
+checkt(18446744073709551667,3,1,10);
+checkt(18446744073709551667,2,2,10);
+checkt(18446744073709551667,3,2,10);
+checkt(18446744073709551629,2,0,10);
+checkt(18446744073709551629,3,0,10);
+checkt(18446744073709551629,2,1,10);
+checkt(18446744073709551629,3,1,10);
+checkt(18446744073709551629,2,2,10);
+checkt(18446744073709551629,3,2,10);
+
+E=ellinit([a1,a2,a3,a4,a6]*Mod(1,2));
+elldivpol(E,2)
+
+check(q)=
+{ my(g,E,x = 1,y);
+  g = ffprimroot(ffgen(q,'t));
+  E = ellinit(ellfromj(g));
+  for(i=1,10,
+    x *= g;
+    y = ellordinate(E,x);
+    for(i=1,#y, if (!ellisoncurve(E,[x,y[i]]), error([x,y])))
+  );
+}
+check(2^4)
+check(3^4)
+check((2^64+13)^4)
+
+checkext(p)=
+{
+  b=ffgen(p,'a);
+  E=ellinit([1,0,0,0,1],p);
+  a=ffgen(p^6,'b);
+  F=ellinit(E,a);
+  P=random(F);
+  if (!ellisoncurve(F,P),error(p));
+  if(!ellisoncurve(F,ellmul(F,P,2)),error(p));
+}
+checkext(5)
+checkext(3)
+checkext(2)
+

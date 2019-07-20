@@ -1,0 +1,14 @@
+Function: quadhilbert
+Section: number_theoretical
+C-Name: quadhilbert
+Prototype: Gp
+Help: quadhilbert(D): relative equation for the Hilbert class field
+ of the quadratic field of discriminant D (which can also be a bnf).
+Doc: relative equation defining the
+ \idx{Hilbert class field} of the quadratic field of discriminant $D$.
+
+ If $D < 0$, uses complex multiplication (\idx{Schertz}'s variant).
+
+ If $D > 0$ \idx{Stark units} are used and (in rare cases) a
+ vector of extensions may be returned whose compositum is the requested class
+ field. See \kbd{bnrstark} for details.

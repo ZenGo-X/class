@@ -1,0 +1,6 @@
+Function: global
+Section: programming/specific
+Obsolete: 2007-10-03
+Help: global(list of variables): obsolete. Scheduled for deletion.
+Doc: obsolete. Scheduled for deletion.
+ % \syn{NO}

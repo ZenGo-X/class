@@ -1,0 +1,17 @@
+Function: ispowerful
+Section: number_theoretical
+C-Name: ispowerful
+Prototype: lG
+Help: ispowerful(x): true(1) if x is a powerful integer (valuation at all
+ primes dividing x is greater than 1), false(0) if not.
+Doc: true (1) if $x$ is a powerful integer, false (0) if not;
+ an integer is powerful if and only if its valuation at all primes dividing
+ $x$ is greater than 1.
+ \bprog
+ ? ispowerful(50)
+ %1 = 0
+ ? ispowerful(100)
+ %2 = 1
+ ? ispowerful(5^3*(10^1000+1)^2)
+ %3 = 1
+ @eprog

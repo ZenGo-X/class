@@ -1,0 +1,22 @@
+Function: poliscycloprod
+Section: polynomials
+C-Name: poliscycloprod
+Prototype: lG
+Help: poliscycloprod(f): returns 1 if f is a product of cyclotomic
+ polynonials, and 0 otherwise.
+Doc: returns 1 if $f$ is a product of cyclotomic polynomial, and $0$
+ otherwise.
+ \bprog
+ ? f = x^6+x^5-x^3+x+1;
+ ? poliscycloprod(f)
+ %2 = 1
+ ? factor(f)
+ %3 =
+ [  x^2 + x + 1 1]
+
+ [x^4 - x^2 + 1 1]
+ ? [ poliscyclo(T) | T <- %[,1] ]
+ %4 = [3, 12]
+ ? polcyclo(3) * polcyclo(12)
+ %5 = x^6 + x^5 - x^3 + x + 1
+ @eprog

@@ -1,0 +1,12 @@
+Function: precprime
+Section: number_theoretical
+C-Name: precprime
+Prototype: G
+Help: precprime(x): largest pseudoprime <= x, 0 if x<=1.
+Description:
+ (gen):int        precprime($1)
+Doc: finds the largest pseudoprime (see
+ \tet{ispseudoprime}) less than or equal to $x$. $x$ can be of any real type.
+ Returns 0 if $x\le1$. Note that if $x$ is a prime, this function returns $x$
+ and not the largest prime strictly smaller than $x$. To rigorously prove that
+ the result is prime, use \kbd{isprime}.

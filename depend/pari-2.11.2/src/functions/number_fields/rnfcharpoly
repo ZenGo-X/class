@@ -1,0 +1,16 @@
+Function: rnfcharpoly
+Section: number_fields
+C-Name: rnfcharpoly
+Prototype: GGGDn
+Help: rnfcharpoly(nf,T,a,{var='x}): characteristic polynomial of a
+ over nf, where a belongs to the algebra defined by T over nf. Returns a
+ polynomial in variable var (x by default).
+Doc: characteristic polynomial of
+ $a$ over $\var{nf}$, where $a$ belongs to the algebra defined by $T$ over
+ $\var{nf}$, i.e.~$\var{nf}[X]/(T)$. Returns a polynomial in variable $v$
+ ($x$ by default).
+ \bprog
+ ? nf = nfinit(y^2+1);
+ ? rnfcharpoly(nf, x^2+y*x+1, x+y)
+ %2 = x^2 + Mod(-y, y^2 + 1)*x + 1
+ @eprog

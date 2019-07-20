@@ -1,0 +1,21 @@
+Function: binomial
+Section: combinatorics
+C-Name: binomial0
+Prototype: GDG
+Help: binomial(x,{k}): binomial coefficient x*(x-1)...*(x-k+1)/k! defined for
+ k in Z and any x. If k is omitted and x an integer, return the vector
+ [binomial(x,1),...,binomial(x,x)].
+Doc: \idx{binomial coefficient} $\binom{x}{k}$.
+ Here $k$ must be an integer, but $x$ can be any PARI object.
+ \bprog
+ ? binomial(4,2)
+ %1 = 6
+ ? n = 4; vector(n+1, k, binomial(n,k-1))
+ %2 = [1, 4, 6, 4, 1]
+ @eprog\noindent The argument $k$ may be omitted if $x = n$ is a
+ non-negative integer; in this case, return the vector with $n+1$
+ components whose $k+1$-th entry is \kbd{binomial}$(n,k)$
+ \bprog
+ ? binomial(4)
+ %3 = [1, 4, 6, 4, 1]
+ @eprog

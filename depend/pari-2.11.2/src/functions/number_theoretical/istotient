@@ -1,0 +1,21 @@
+Function: istotient
+Section: number_theoretical
+C-Name: istotient
+Prototype: lGD&
+Help: istotient(x,{&N}): true(1) if x = eulerphi(n) for some integer n,
+ false(0) if not. If N is given, set N = n as well.
+Doc: true (1) if $x = \phi(n)$ for some integer $n$, false (0)
+ if not.
+ \bprog
+ ? istotient(14)
+ %1 = 0
+ ? istotient(100)
+ %2 = 0
+ @eprog
+ If $N$ is given, set $N = n$ as well.
+ \bprog
+ ? istotient(4, &n)
+ %1 = 1
+ ? n
+ %2 = 10
+ @eprog

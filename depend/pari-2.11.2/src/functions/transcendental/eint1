@@ -1,0 +1,22 @@
+Function: eint1
+Section: transcendental
+C-Name: veceint1
+Prototype: GDGp
+Help: eint1(x,{n}): exponential integral E1(x). If n is present and x > 0,
+ computes the vector of the first n values of the exponential integral E1(n x).
+Doc: exponential integral $\int_x^\infty \dfrac{e^{-t}}{t}\,dt =
+ \kbd{incgam}(0, x)$, where the latter expression extends the function
+ definition from real $x > 0$ to all complex $x \neq 0$.
+
+ If $n$ is present, we must have $x > 0$; the function returns the
+ $n$-dimensional vector $[\kbd{eint1}(x),\dots,\kbd{eint1}(nx)]$. Contrary to
+ other transcendental functions, and to the default case ($n$ omitted), the
+ values are correct up to a bounded \emph{absolute}, rather than relative,
+ error $10^{-n}$, where $n$ is \kbd{precision}$(x)$ if $x$ is a \typ{REAL}
+ and defaults to \kbd{realprecision} otherwise. (In the most important
+ application, to the computation of $L$-functions via approximate functional
+ equations, those values appear as weights in long sums and small individual
+ relative errors are less useful than controlling the absolute error.) This is
+ faster than repeatedly calling \kbd{eint1($i$ * x)}, but less precise.
+
+Variant: Also available is \fun{GEN}{eint1}{GEN x, long prec}.

@@ -1,0 +1,23 @@
+Function: isfundamental
+Section: number_theoretical
+C-Name: isfundamental
+Prototype: lG
+Help: isfundamental(D): true(1) if D is a fundamental discriminant
+ (including 1), false(0) if not.
+Description:
+ (int):bool       Z_isfundamental($1)
+ (gen):bool       isfundamental($1)
+Doc: true (1) if $D$ is equal to 1 or to the discriminant of a quadratic
+ field, false (0) otherwise. $D$ can be input in factored form as for
+ arithmetic functions:
+ \bprog
+ ? isfundamental(factor(-8))
+ %1 = 1
+ \\ count fundamental discriminants up to 10^8
+ ? c = 0; forfactored(d = 1, 10^8, if (isfundamental(d), c++)); c
+ time = 40,840 ms.
+ %2 = 30396325
+ ? c = 0; for(d = 1, 10^8, if (isfundamental(d), c++)); c
+ time = 1min, 33,593 ms. \\ slower !
+ %3 = 30396325
+ @eprog

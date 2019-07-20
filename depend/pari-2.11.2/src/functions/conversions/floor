@@ -1,0 +1,16 @@
+Function: floor
+Section: conversions
+C-Name: gfloor
+Prototype: G
+Help: floor(x): floor of x = largest integer <= x.
+Description:
+ (small):small:parens   $1
+ (int):int:copy:parens  $1
+ (real):int             floorr($1)
+ (mp):int               mpfloor($1)
+ (gen):gen              gfloor($1)
+Doc:
+ floor of $x$. When $x$ is in $\R$, the result is the
+ largest integer smaller than or equal to $x$. Applied to a rational function,
+ $\kbd{floor}(x)$ returns the Euclidean quotient of the numerator by the
+ denominator.

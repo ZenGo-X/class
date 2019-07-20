@@ -1,0 +1,11 @@
+Function: break
+Section: programming/control
+C-Name: break0
+Prototype: D1,L,
+Help: break({n=1}): interrupt execution of current instruction sequence, and
+ exit from the n innermost enclosing loops.
+Doc: interrupts execution of current \var{seq}, and
+ immediately exits from the $n$ innermost enclosing loops, within the
+ current function call (or the top level loop); the integer $n$ must be
+ positive. If $n$ is greater than the number of enclosing loops, all
+ enclosing loops are exited.

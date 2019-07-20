@@ -1,0 +1,20 @@
+0
+1
+0
+0
+0
+1
+0
+1
+1
+1
+0
+0
+1
+  ***   at top-level: nfislocalpower(K,"",1,0)
+  ***                 ^------------------------
+  *** nfislocalpower: incorrect type in checkprid (t_STR).
+  ***   at top-level: nfislocalpower(K,"","",0)
+  ***                 ^-------------------------
+  *** nfislocalpower: incorrect type in checkprid (t_STR).
+Total time spent: 4

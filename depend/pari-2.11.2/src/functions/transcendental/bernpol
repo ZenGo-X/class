@@ -1,0 +1,12 @@
+Function: bernpol
+Section: transcendental
+C-Name: bernpol
+Prototype: LDn
+Help: bernpol(n, {v = 'x}): Bernoulli polynomial B_n, in variable v.
+Doc: \idx{Bernoulli polynomial} $B_n$ in variable $v$.
+ \bprog
+ ? bernpol(1)
+ %1 = x - 1/2
+ ? bernpol(3)
+ %2 = x^3 - 3/2*x^2 + 1/2*x
+ @eprog

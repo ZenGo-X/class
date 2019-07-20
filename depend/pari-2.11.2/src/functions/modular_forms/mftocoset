@@ -1,0 +1,16 @@
+Function: mftocoset
+Section: modular_forms
+C-Name: mftocoset
+Prototype: LGG
+Help: mftocoset(N,M,Lcosets): M being a matrix in SL_2(Z) and Lcosets being
+ mfcosets(N), find the right coset of G_0(N) to which M belongs. The output
+ is a pair [ga,i] such that M = ga * Lcosets[i], with ga in G_0(N).
+Doc: $M$ being a matrix in $SL_2(Z)$ and \kbd{Lcosets} being
+ \kbd{mfcosets(N)}, a list of right cosets of $\Gamma_0(N)$,
+ find the coset to which $M$ belongs. The output is a pair
+ $[\gamma,i]$ such that $M = \gamma \kbd{Lcosets}[i]$, $\gamma\in\Gamma_0(N)$.
+ \bprog
+ ? N = 4; L = mfcosets(N);
+ ? mftocoset(N, [1,1;2,3], L)
+ %2 = [[-1, 1; -4, 3], 5]
+ @eprog

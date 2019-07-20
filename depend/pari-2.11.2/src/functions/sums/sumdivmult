@@ -1,0 +1,11 @@
+Function: sumdivmult
+Section: sums
+C-Name: sumdivmultexpr
+Prototype: GVE
+Help: sumdivmult(n,d,expr): sum of multiplicative function expr,
+ d running over the divisors of n.
+Doc: sum of \emph{multiplicative} expression \var{expr} over the positive
+ divisors $d$ of $n$. Assume that \var{expr} evaluates to $f(d)$
+ where $f$ is multiplicative: $f(1) = 1$ and $f(ab) = f(a)f(b)$ for coprime
+ $a$ and $b$.
+ %\syn{NO}

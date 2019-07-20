@@ -1,0 +1,33 @@
+Function: nffactormod
+Section: number_fields
+C-Name: nffactormod
+Obsolete: 2016-09-18
+Prototype: GGG
+Help: nffactormod(nf,Q,pr): this routine is obsolete, use nfmodpr and
+ factormod. Factor polynomial Q modulo prime ideal pr
+ in number field nf.
+Doc: this routine is obsolete, use \kbd{nfmodpr} and \kbd{factormod}.
+
+ Factors the univariate polynomial $Q$ modulo the prime ideal \var{pr} in
+ the number field $\var{nf}$. The coefficients of $Q$ belong to the number
+ field (scalar, polmod, polynomial, even column vector) and the main variable
+ of $\var{nf}$ must be of lower priority than that of $Q$ (see
+ \secref{se:priority}). The prime ideal \var{pr} is either in
+ \tet{idealprimedec} or (preferred) \tet{modprinit} format. The coefficients
+ of the polynomial factors are lifted to elements of \var{nf}:
+ \bprog
+ ? K = nfinit(y^2+1);
+ ? P = idealprimedec(K, 3)[1];
+ ? nffactormod(K, x^2 + y*x + 18*y+1, P)
+ %3 =
+ [x + (2*y + 1) 1]
+
+ [x + (2*y + 2) 1]
+ ? P = nfmodprinit(K, P);  \\ convert to nfmodprinit format
+ ? nffactormod(K, x^2 + y*x + 18*y+1)
+ %5 =
+ [x + (2*y + 1) 1]
+
+ [x + (2*y + 2) 1]
+ @eprog\noindent Same result, of course, here about 10\% faster due to the
+ precomputation.

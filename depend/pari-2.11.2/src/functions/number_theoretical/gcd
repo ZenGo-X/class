@@ -1,0 +1,53 @@
+Function: gcd
+Section: number_theoretical
+C-Name: ggcd0
+Prototype: GDG
+Help: gcd(x,{y}): greatest common divisor of x and y.
+Description:
+ (small, small):small   cgcd($1, $2)
+ (int, int):int         gcdii($1, $2)
+ (gen):gen              content($1)
+ (gen, gen):gen         ggcd($1, $2)
+Doc: creates the greatest common divisor of $x$ and $y$.
+ If you also need the $u$ and $v$ such that $x*u + y*v = \gcd(x,y)$,
+ use the \tet{gcdext} function. $x$ and $y$ can have rather quite general
+ types, for instance both rational numbers. If $y$ is omitted and $x$ is a
+ vector, returns the $\text{gcd}$ of all components of $x$, i.e.~this is
+ equivalent to \kbd{content(x)}.
+
+ When $x$ and $y$ are both given and one of them is a vector/matrix type,
+ the GCD is again taken recursively on each component, but in a different way.
+ If $y$ is a vector, resp.~matrix, then the result has the same type as $y$,
+ and components equal to \kbd{gcd(x, y[i])}, resp.~\kbd{gcd(x, y[,i])}. Else
+ if $x$ is a vector/matrix the result has the same type as $x$ and an
+ analogous definition. Note that for these types, \kbd{gcd} is not
+ commutative.
+
+ The algorithm used is a naive \idx{Euclid} except for the following inputs:
+
+ \item integers: use modified right-shift binary (``plus-minus''
+ variant).
+
+ \item univariate polynomials with coefficients in the same number
+ field (in particular rational): use modular gcd algorithm.
+
+ \item general polynomials: use the \idx{subresultant algorithm} if
+ coefficient explosion is likely (non modular coefficients).
+
+ If $u$ and $v$ are polynomials in the same variable with \emph{inexact}
+ coefficients, their gcd is defined to be scalar, so that
+ \bprog
+ ? a = x + 0.0; gcd(a,a)
+ %1 = 1
+ ? b = y*x + O(y); gcd(b,b)
+ %2 = y
+ ? c = 4*x + O(2^3); gcd(c,c)
+ %3 = 4
+ @eprog\noindent A good quantitative check to decide whether such a
+ gcd ``should be'' non-trivial, is to use \tet{polresultant}: a value
+ close to $0$ means that a small deformation of the inputs has non-trivial gcd.
+ You may also use \tet{gcdext}, which does try to compute an approximate gcd
+ $d$ and provides $u$, $v$ to check whether $u x + v y$ is close to $d$.
+
+Variant: Also available are \fun{GEN}{ggcd}{GEN x, GEN y}, if \kbd{y} is not
+ \kbd{NULL}, and \fun{GEN}{content}{GEN x}, if $\kbd{y} = \kbd{NULL}$.

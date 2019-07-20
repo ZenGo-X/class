@@ -1,0 +1,12 @@
+Function: lfuntwist
+Section: l_functions
+C-Name: lfuntwist
+Prototype: GG
+Help: lfuntwist(L,chi): creates the Ldata structure (without
+ initialization) corresponding to the twist of L by the primitive character
+ attached to the Dirichlet L-function chi. This requires that the conductor
+ of the character is coprime to the conductor of the L-function L.
+Doc: creates the Ldata structure (without initialization) corresponding to the
+ twist of L by the primitive character attached to the Dirichlet character
+ \kbd{chi}.  The conductor of the character must be coprime to the conductor
+ of the L-function $L$.

@@ -1,0 +1,12 @@
+Function: plotrbox
+Section: graphic
+C-Name: plotrbox
+Prototype: vLGGD0,L,
+Help: plotrbox(w,dx,dy,{filled}): if the cursor is at (x1,y1), draw a box with
+ diagonal (x1,y1)-(x1+dx,y1+dy) in rectwindow w (cursor does not move).
+ If filled=1, fill the box.
+Doc: draw in the rectwindow $w$ the outline of the rectangle which is such
+ that the points $(x1,y1)$ and $(x1+dx,y1+dy)$ are opposite corners, where
+ $(x1,y1)$ is the current position of the cursor. Only the part of the
+ rectangle which is in $w$ is drawn. The virtual cursor does \emph{not} move.
+ If $\var{filled}=1$, fill the box.

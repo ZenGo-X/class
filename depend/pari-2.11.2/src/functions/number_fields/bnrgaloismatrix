@@ -1,0 +1,19 @@
+Function: bnrgaloismatrix
+Section: number_fields
+C-Name: bnrgaloismatrix
+Prototype: GG
+Help: bnrgaloismatrix(bnr,aut): return the matrix of the action of the
+ automorphism aut of the base field bnf.nf on the generators of the ray class
+ field bnr.gen. aut can be given as a polynomial, or a vector of automorphisms
+ or a galois group as output by galoisinit, in which case a vector of matrices
+ is returned (in the later case, only for the generators aut.gen).
+Doc: return the matrix of the action of the automorphism \var{aut} of the base
+ field \kbd{bnf.nf} on the generators of the ray class field \kbd{bnr.gen}.
+ \var{aut} can be given as a polynomial, an algebraic number, or a vector of
+ automorphisms or a Galois group as output by \kbd{galoisinit}, in which case a
+ vector of matrices is returned (in the later case, only for the generators
+ \kbd{aut.gen}).
+
+ See \kbd{bnrisgalois} for an example.
+Variant: When $aut$ is a polynomial or an algebraic number,
+ \fun{GEN}{bnrautmatrix}{GEN bnr, GEN aut} is available.

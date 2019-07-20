@@ -1,0 +1,16 @@
+Function: polsubcyclo
+Section: polynomials
+C-Name: polsubcyclo
+Prototype: LLDn
+Help: polsubcyclo(n,d,{v='x}): finds an equation (in variable v) for the d-th
+ degree subfields of Q(zeta_n). Output is a polynomial, or a vector of
+ polynomials if there are several such fields or none.
+Doc: gives polynomials (in variable $v$) defining the sub-Abelian extensions
+ of degree $d$ of the cyclotomic field $\Q(\zeta_n)$, where $d\mid \phi(n)$.
+
+ If there is exactly one such extension the output is a polynomial, else it is
+ a vector of polynomials, possibly empty. To get a vector in all cases,
+ use \kbd{concat([], polsubcyclo(n,d))}.
+
+ The function \tet{galoissubcyclo} allows to specify exactly which
+ sub-Abelian extension should be computed.

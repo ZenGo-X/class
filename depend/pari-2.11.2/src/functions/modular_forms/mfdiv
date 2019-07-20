@@ -1,0 +1,21 @@
+Function: mfdiv
+Section: modular_forms
+C-Name: mfdiv
+Prototype: GG
+Help: mfdiv(F,G): compute F/G for two modular forms F and G assuming
+ that the quotient will not have poles at infinity. If this is the
+ case, use mfshift before doing the division.
+Doc: Given two generalized modular forms $F$ and $G$, compute $F/G$ assuming
+ that the quotient will not have poles at infinity. If this is the
+ case, use \kbd{mfshift} before doing the division.
+ \bprog
+ ? D = mfDelta(); \\ Delta
+ ? H = mfpow(mfEk(4), 3);
+ ? J = mfdiv(H, D)
+  ***   at top-level: J=mfdiv(H,mfdeltac
+  ***                   ^--------------------
+  *** mfdiv: domain error in mfdiv: ord(G) > ord(F)
+ ? J = mfdiv(H, mfshift(D,1));
+ ? mfcoefs(J, 4)
+ %4 = [1, 744, 196884, 21493760, 864299970]
+ @eprog

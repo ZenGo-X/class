@@ -1,0 +1,40 @@
+Function: polsturm
+Section: polynomials
+C-Name: sturmpart
+Prototype: lGDGDG
+Help: polsturm(T,{ab}): number of distinct real roots of the polynomial
+ T (in the interval ab = [a,b] if present).
+Doc: number of distinct real roots of the real polynomial \var{T}. If
+ the argument \var{ab} is present, it must be a vector $[a,b]$ with
+ two real components (of type \typ{INT}, \typ{REAL}, \typ{FRAC}
+ or  \typ{INFINITY}) and we count roots belonging to that closed interval.
+
+ If possible, you should stick to exact inputs, that is avoid \typ{REAL}s in
+ $T$ and the bounds $a,b$: the result is then guaranteed and we use a fast
+ algorithm (Uspensky's method, relying on Descartes's rule of sign, see
+ \tet{polrootsreal}). Otherwise, the polynomial is rescaled and rounded first
+ and the result may be wrong due to that initial error. If only $a$ or $b$ is
+ inexact, on the other hand, the interval is first thickened using rational
+ endpoints and the result remains guaranteed unless there exist a root
+ \emph{very} close to a non-rational endpoint (which may be missed or unduly
+ included).
+ \bprog
+ ? T = (x-1)*(x-2)*(x-3);
+ ? polsturm(T)
+ %2 = 3
+ ? polsturm(T, [-oo,2])
+ %3 = 2
+ ? polsturm(T, [1/2,+oo])
+ %4 = 3
+ ? polsturm(T, [1, Pi])  \\ Pi inexact: not recommended !
+ %5 = 3
+ ? polsturm(T*1., [0, 4])  \\ T*1. inexact: not recommended !
+ %6 = 3
+ ? polsturm(T^2, [0, 4])  \\ not squarefree: roots are not repeated!
+ %7 = 3
+ @eprog
+ %\syn{NO}
+
+ The library syntax is \fun{long}{RgX_sturmpart}{GEN T, GEN ab} or
+ \fun{long}{sturm}{GEN T} (for the case \kbd{ab = NULL}). The function
+ \fun{long}{sturmpart}{GEN T, GEN a, GEN b} is obsolete and deprecated.

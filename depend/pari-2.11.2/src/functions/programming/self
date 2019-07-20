@@ -1,0 +1,12 @@
+Function: self
+Section: programming/specific
+C-Name: pari_self
+Prototype: m
+Help: self(): return the calling function or closure. Useful for defining
+ anonymous recursive functions.
+Doc: return the calling function or closure as a \typ{CLOSURE} object.
+ This is useful for defining anonymous recursive functions.
+ \bprog
+ ? (n->if(n==0,1,n*self()(n-1)))(5)
+ %1 = 120
+ @eprog

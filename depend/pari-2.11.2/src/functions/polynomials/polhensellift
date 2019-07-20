@@ -1,0 +1,24 @@
+Function: polhensellift
+Section: polynomials
+C-Name: polhensellift
+Prototype: GGGL
+Help: polhensellift(A, B, p, e): lift the factorization B of A modulo p to a
+ factorization modulo p^e using Hensel lift. The factors in B must be
+ pairwise relatively prime modulo p.
+Doc: given a prime $p$, an integral polynomial $A$ whose leading coefficient
+ is a $p$-unit, a vector $B$ of integral polynomials that are monic and
+ pairwise relatively prime modulo $p$, and whose product is congruent to
+ $A/\text{lc}(A)$ modulo $p$, lift the elements of $B$ to polynomials whose
+ product is congruent to $A$ modulo $p^e$.
+
+ More generally, if $T$ is an integral polynomial irreducible mod $p$, and
+ $B$ is a factorization of $A$ over the finite field $\F_p[t]/(T)$, you can
+ lift it to $\Z_p[t]/(T, p^e)$ by replacing the $p$ argument with $[p,T]$:
+ \bprog
+ ? { T = t^3 - 2; p = 7; A = x^2 + t + 1;
+     B = [x + (3*t^2 + t + 1), x + (4*t^2 + 6*t + 6)];
+     r = polhensellift(A, B, [p, T], 6) }
+ %1 = [x + (20191*t^2 + 50604*t + 75783), x + (97458*t^2 + 67045*t + 41866)]
+ ? liftall( r[1] * r[2] * Mod(Mod(1,p^6),T) )
+ %2 = x^2 + (t + 1)
+ @eprog

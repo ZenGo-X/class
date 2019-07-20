@@ -1,0 +1,7 @@
+Function: dilog
+Section: transcendental
+C-Name: dilog
+Prototype: Gp
+Help: dilog(x): dilogarithm of x.
+Doc: principal branch of the dilogarithm of $x$,
+ i.e.~analytic continuation of the power series $\log_2(x)=\sum_{n\ge1}x^n/n^2$.

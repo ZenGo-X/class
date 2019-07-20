@@ -1,0 +1,9 @@
+Function: nfdetint
+Section: number_fields
+C-Name: nfdetint
+Prototype: GG
+Help: nfdetint(nf,x): multiple of the ideal determinant of the pseudo
+ generating set x.
+Doc: given a pseudo-matrix $x$, computes a
+ non-zero ideal contained in (i.e.~multiple of) the determinant of $x$. This
+ is particularly useful in conjunction with \kbd{nfhnfmod}.

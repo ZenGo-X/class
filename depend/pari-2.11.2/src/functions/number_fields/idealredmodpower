@@ -1,0 +1,38 @@
+Function: idealredmodpower
+Section: number_fields
+C-Name: idealredmodpower
+Prototype: GGUD0,U,
+Help: idealredmodpower(nf,x,n,{B=primelimit}): return b such that x * b^n = v
+ is small.
+Doc: let \var{nf} be a number field, $x$ an ideal in \var{nf} and $n > 0$ be a
+ positive integer. Return a number field element $b$ such that $x b^n = v$
+ is small. If $x$ is integral, then $v$ is also integral.
+
+ More precisely, \kbd{idealnumden} reduces the problem to $x$ integral. Then,
+ factoring out the prime ideals dividing a rational prime $p \leq B$,
+ we rewrite $x = I J^n$ where the ideals $I$ and $J$ are both integral and
+ $I$ is $B$-smooth. Then we return a small element $b$ in $J^{-1}$.
+
+ The bound $B$ avoids a costly complete factorization of $x$; as soon as the
+ $n$-core of $x$ is $B$-smooth (i.e., as soon as $I$ is $n$-power free),
+ then $J$ is as large as possible and so is the expected reduction.
+ \bprog
+ ? T = x^6+108; nf = nfinit(T); a = Mod(x,T);
+ ? setrand(1); u = (2*a^2+a+3)*random(2^1000*x^6)^6;
+ ? sizebyte(u)
+ %3 = 4864
+ ? b = idealredmodpower(nf,u,2);
+ ? v2 = nfeltmul(nf,u, nfeltpow(nf,b,2))
+ %5 = [34, 47, 15, 35, 9, 3]~
+ ? b = idealredmodpower(nf,u,6);
+ ? v6 = nfeltmul(nf,u, nfeltpow(nf,b,6))
+ %7 = [3, 0, 2, 6, -7, 1]~
+ @eprog\noindent The last element \kbd{v6}, obtained by reducing
+ modulo $6$-th powers instead of squares, looks smaller than \kbd{v2}
+ but its norm is actually a little larger:
+ \bprog
+ ? idealnorm(nf,v2)
+ %8 = 81309
+ ? idealnorm(nf,v6)
+ %9 = 731781
+ @eprog

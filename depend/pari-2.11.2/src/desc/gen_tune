@@ -1,0 +1,114 @@
+#! /usr/bin/perl -w
+
+use strict;
+
+sub gendefine
+{
+  my($hash)=@_;
+  for (sort keys %{$hash})
+  {
+    printf TUNE "#define __%-30s %s\n",$_,$hash->{$_};
+  }
+}
+
+sub gendefinefile
+{
+  my($file,$hash32,$hash64)=@_;
+  open TUNE, ">$file";
+  print TUNE "#ifdef LONG_IS_64BIT\n";
+  gendefine $hash64;
+  print TUNE "#else\n";
+  gendefine $hash32;
+  print TUNE "#endif\n";
+  close TUNE;
+}
+
+sub gentune
+{
+  my (%none32, %none64, %gmp32, %gmp64, @list);
+  while(<>)
+  {
+    /^#/ and next;
+    my($tunable,$none32,$gmp32,$none64,$gmp64) = split(' ');
+    push @list,$tunable;
+    $none32{$tunable}=$none32;
+    $gmp32{$tunable}=$gmp32;
+    $none64{$tunable}=$none64;
+    $gmp64{$tunable}=$gmp64;
+  }
+  open TUNE, ">src/headers/paritune.h";
+  print TUNE <<EOF;
+#define PARI_TUNE
+
+#ifdef PARI_TUNE
+EOF
+  for (@list)
+  {
+    print TUNE "extern long $_;\n";
+  }
+  print TUNE "#else\n";
+  for (@list)
+  {
+    printf TUNE "#  define %-30s __%s\n",$_,$_;
+  }
+  print TUNE "#endif\n";
+  close TUNE;
+  
+  open TUNE, ">src/kernel/none/tune-gen.h";
+  print TUNE "#ifdef PARI_TUNE\n";
+  for (@list)
+  {
+    printf TUNE "long %-30s = __%s;\n",$_,$_;
+  }
+  print TUNE "#endif\n";
+  close TUNE;
+  gendefinefile "src/kernel/none/tune.h",\%none32,\%none64;
+  gendefinefile "src/kernel/gmp/tune.h",\%gmp32,\%gmp64;
+}
+sub gendesc
+{
+  my ($file,$hash32,$hash64)=@_;
+  open DESC, "<$file";
+  my $hash = $hash64;
+  while(<DESC>)
+  {
+    /^#else/ and $hash=$hash32;
+    /#define[ \t]+__([^ ]+)[ \t]+([0-9]+)/ and $hash->{$1}=$2;
+  }
+  close DESC;
+}
+sub cc
+{
+  my $v = $_[0];
+  return $v if (defined $v);
+  return -1;
+}
+sub gendescfile
+{
+  my (%none32, %none64, %gmp32, %gmp64);
+  gendesc "src/kernel/none/tune.h",\%none32,\%none64;
+  gendesc "src/kernel/gmp/tune.h",\%gmp32,\%gmp64;
+  my %hlist=map {$_=>1} (keys %none32, keys %none64, keys %gmp32, keys %gmp64);
+  my @list = sort keys %hlist;
+  printf "%-30s %7s %7s %7s %7s\n","#LIMIT","none32","gmp32","none64","gmp64";
+  
+  for $_ (@list)
+  {
+    printf "%-30s %7s %7s %7s %7s\n",$_,cc($none32{$_}),cc($gmp32{$_}),
+                                        cc($none64{$_}),cc($gmp64{$_});
+  }
+}
+
+my $arg = shift;
+
+if ($arg eq "--gendesc")
+{
+  &gendescfile;
+}
+elsif ($arg eq "--gentune")
+{
+  &gentune;
+} else
+{
+  die("Error: gentune --gendesc|--gentune\n");
+}

@@ -1,0 +1,25 @@
+Function: primecertisvalid
+Section: number_theoretical
+C-Name: primecertisvalid
+Prototype: lG
+Help: primecertisvalid(cert): Verifies if cert is a valid PARI ECPP Primality certificate.
+Doc:
+ Verifies if cert is a valid PARI ECPP Primality certificate, as described
+ in \kbd{??primecert}.
+ \bprog
+ ? cert = primecert(10^35 + 69)
+ %1 = [[100000000000000000000000000000000069, 5468679110354
+ 52074, 2963504668391148, 0, [60737979324046450274283740674
+ 208692, 24368673584839493121227731392450025]], [3374383076
+ 4501150277, -11610830419, 734208843, 0, [26740412374402652
+ 72 4, 6367191119818901665]], [45959444779, 299597, 2331, 0
+ , [18022351516, 9326882 51]]]
+ ? primecertisvalid(cert)
+ %2 = 1
+
+ ? cert[1][1]++; \\ random perturbation
+ ? primecertisvalid(cert)
+ %4 = 0  \\ no longer valid
+ ? primecertisvalid(primecert(6))
+ %5 = 0
+ @eprog

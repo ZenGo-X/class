@@ -1,0 +1,17 @@
+Function: rnfbasis
+Section: number_fields
+C-Name: rnfbasis
+Prototype: GG
+Help: rnfbasis(bnf,M): given a projective Z_K-module M as output by
+ rnfpseudobasis or rnfsteinitz, gives either a basis of M if it is free, or an
+ n+1-element generating set.
+Doc: let $K$ the field represented by
+ \var{bnf}, as output by \kbd{bnfinit}. $M$ is a projective $\Z_K$-module
+ of rank $n$ ($M\otimes K$ is an $n$-dimensional $K$-vector space), given by a
+ pseudo-basis of size $n$. The routine returns either a true $\Z_K$-basis of
+ $M$ (of size $n$) if it exists, or an $n+1$-element generating set of $M$ if
+ not.
+
+ It is allowed to use a monic irreducible polynomial $P$ in $K[X]$ instead of
+ $M$, in which case, $M$ is defined as the ring of integers of $K[X]/(P)$,
+ viewed as a $\Z_K$-module.

@@ -1,0 +1,68 @@
+Function: charpoly
+Section: linear_algebra
+C-Name: charpoly0
+Prototype: GDnD5,L,
+Help: charpoly(A,{v='x},{flag=5}): det(v*Id-A)=characteristic polynomial of
+ the matrix or polmod A. flag is optional and ignored unless A is a matrix;
+ it may be set to 0 (Le Verrier), 1 (Lagrange interpolation),
+ 2 (Hessenberg form), 3 (Berkowitz), 4 (modular) if A is integral,
+ or 5 (default, choose best method).
+ Algorithms 0 (Le Verrier) and 1 (Lagrange) assume that n! is invertible,
+ where n is the dimension of the matrix.
+Doc:
+ \idx{characteristic polynomial}
+ of $A$ with respect to the variable $v$, i.e.~determinant of $v*I-A$ if $A$
+ is a square matrix.
+ \bprog
+ ? charpoly([1,2;3,4]);
+ %1 = x^2 - 5*x - 2
+ ? charpoly([1,2;3,4],, 't)
+ %2 = t^2 - 5*t - 2
+ @eprog\noindent
+ If $A$ is not a square matrix, the function returns the characteristic
+ polynomial of the map ``multiplication by $A$'' if $A$ is a scalar:
+ \bprog
+ ? charpoly(Mod(x+2, x^3-2))
+ %1 = x^3 - 6*x^2 + 12*x - 10
+ ? charpoly(I)
+ %2 = x^2 + 1
+ ? charpoly(quadgen(5))
+ %3 = x^2 - x - 1
+ ? charpoly(ffgen(ffinit(2,4)))
+ %4 = Mod(1, 2)*x^4 + Mod(1, 2)*x^3 + Mod(1, 2)*x^2 + Mod(1, 2)*x + Mod(1, 2)
+ @eprog
+
+ The value of $\fl$ is only significant for matrices, and we advise to stick
+ to the default value. Let $n$ be the dimension of $A$.
+
+ If $\fl=0$, same method (Le Verrier's) as for computing the adjoint matrix,
+ i.e.~using the traces of the powers of $A$. Assumes that $n!$ is
+ invertible; uses $O(n^4)$ scalar operations.
+
+ If $\fl=1$, uses Lagrange interpolation which is usually the slowest method.
+ Assumes that $n!$ is invertible; uses $O(n^4)$ scalar operations.
+
+ If $\fl=2$, uses the Hessenberg form. Assumes that the base ring is a field.
+ Uses $O(n^3)$ scalar operations, but suffers from coefficient explosion
+ unless the base field is finite or $\R$.
+
+ If $\fl=3$, uses Berkowitz's division free algorithm, valid over any
+ ring (commutative, with unit). Uses $O(n^4)$ scalar operations.
+
+ If $\fl=4$, $x$ must be integral. Uses a modular algorithm: Hessenberg form
+ for various small primes, then Chinese remainders.
+
+ If $\fl=5$ (default), uses the ``best'' method given $x$.
+ This means we use Berkowitz unless the base ring is $\Z$ (use $\fl=4$)
+ or a field where coefficient explosion does not occur,
+ e.g.~a finite field or the reals (use $\fl=2$).
+
+Variant: Also available are
+ \fun{GEN}{charpoly}{GEN x, long v} ($\fl=5$),
+ \fun{GEN}{caract}{GEN A, long v} ($\fl=1$),
+ \fun{GEN}{carhess}{GEN A, long v} ($\fl=2$),
+ \fun{GEN}{carberkowitz}{GEN A, long v} ($\fl=3$) and
+ \fun{GEN}{caradj}{GEN A, long v, GEN *pt}. In this
+ last case, if \var{pt} is not \kbd{NULL}, \kbd{*pt} receives the address of
+ the adjoint matrix of $A$ (see \tet{matadjoint}), so both can be obtained at
+ once.

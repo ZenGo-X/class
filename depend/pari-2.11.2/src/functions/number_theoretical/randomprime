@@ -1,0 +1,10 @@
+Function: randomprime
+Section: number_theoretical
+C-Name: randomprime
+Prototype: DG
+Help: randomprime({N = 2^31}): returns a strong pseudo prime in [2, N-1].
+Doc: returns a strong pseudo prime (see \tet{ispseudoprime}) in $[2,N-1]$.
+ A \typ{VEC} $N = [a,b]$ is also allowed, with $a \leq b$ in which case a
+ pseudo prime $a \leq p \leq b$ is returned; if no prime exists in the
+ interval, the function will run into an infinite loop. If the upper bound
+ is less than $2^{64}$ the pseudo prime returned is a proven prime.

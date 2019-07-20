@@ -1,0 +1,13 @@
+Function: filereadstr
+Section: programming/specific
+C-Name: gp_filereadstr
+Prototype: L
+Help: filereadstr(n): read a raw line from the file attached to the
+ descriptor n, opened for reading with fileopen. Discard the terminating
+ newline.  Return 0 at end of file.
+Doc: read a raw line from the file attached to the descriptor $n$, opened
+ for reading with \kbd{fileopen}, discarding the terminating newline.
+ In other words the line is read exactly as input, up to the
+ next carriage return \kbd{\bs n}. By comparison, \kbd{fileread} would
+ read a logical line, as assembled by gp's preprocessor (skipping blanks
+ and comments for instance).

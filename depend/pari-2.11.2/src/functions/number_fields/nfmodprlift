@@ -1,0 +1,29 @@
+Function: nfmodprlift
+Section: number_fields
+C-Name: nfmodprlift
+Prototype: GGG
+Help: nfmodprlift(nf,x,pr): lift x from residue field mod pr to nf.
+Doc: lift the \typ{FFELT} $x$ (from \tet{nfmodpr}) in the residue field
+ modulo \var{pr} to the ring of integers. Vectors and matrices are also
+ supported. For polynomials, use \kbd{apply} and the present function.
+
+ The argument \var{pr} is either a maximal ideal in \kbd{idealprimedec}
+ format or, preferably, a \var{modpr} structure from \tet{nfmodprinit}.
+ There are no compatibility checks to try and decide whether $x$ is attached
+ the same residue field as defined by \var{pr}: the result is undefined
+ if not.
+
+ The function \tet{nfmodpr} allows to reduce to the residue field.
+ \bprog
+ ? K = nfinit(y^3-250);
+ ? P = idealprimedec(K, 5)[2];
+ ? modP = nfmodprinit(K,P);
+ ? K.zk
+ %4 = [1, 1/5*y, 1/25*y^2]
+ ? apply(t->nfmodpr(K,t,modP), K.zk)
+ %5 = [1, y, 2*y + 1]
+ ? nfmodprlift(K, %, modP)
+ %6 = [1, 1/5*y, 2/5*y + 1]
+ ? nfeltval(K, %[3] - K.zk[3], P)
+ %7 = 1
+ @eprog

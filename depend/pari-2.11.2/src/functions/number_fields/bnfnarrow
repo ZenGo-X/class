@@ -1,0 +1,16 @@
+Function: bnfnarrow
+Section: number_fields
+C-Name: bnfnarrow
+Prototype: G
+Help: bnfnarrow(bnf): given a big number field as output by bnfinit, gives
+ as a 3-component vector the structure of the narrow class group.
+Doc: \var{bnf} being as output by
+ \kbd{bnfinit}, computes the narrow class group of \var{bnf}. The output is
+ a 3-component row vector $v$ analogous to the corresponding class group
+ component \kbd{\var{bnf}.clgp}: the first component
+ is the narrow class number \kbd{$v$.no}, the second component is a vector
+ containing the SNF\sidx{Smith normal form} cyclic components \kbd{$v$.cyc} of
+ the narrow class group, and the third is a vector giving the generators of
+ the corresponding \kbd{$v$.gen} cyclic groups. Note that this function is a
+ special case of \kbd{bnrinit}; the \var{bnf} need not contain fundamental
+ units.

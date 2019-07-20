@@ -1,0 +1,24 @@
+Function: ellxn
+Section: elliptic_curves
+C-Name: ellxn
+Prototype: GLDn
+Help: ellxn(E,n,{v='x}): return the polynomials [phi_n, (psi_n)^2] in the
+ variable v, where x([n]P) = phi_n/(psi_n)^2.
+Doc: In standard notation, for any affine point $P = (v,w)$ on the
+ curve $E$, we have
+ $$[n]P = (\phi_n(P)\psi_n(P) : \omega_n(P) : \psi_n(P)^3)$$
+ for some polynomials $\phi_n,\omega_n,\psi_n$ in
+ $\Z[a_1,a_2,a_3,a_4,a_6][v,w]$. This function returns
+ $[\phi_n(P),\psi_n(P)^2]$, which give the numerator and denominator of
+ the abscissa of $[n]P$ and depend only on $v$.
+ \bprog
+ ? E = ellinit([17,42]);
+ ? T = ellxn(E, 2, 'X)
+ %2 = [X^4 - 34*X^2 - 336*X + 289, 4*X^3 + 68*X + 168]
+ ? P = [114,1218]; ellmul(E,P,2)
+ %3 = [200257/7056, 90637343/592704]
+ ? [x,y] = subst(T,'X,P[1]) \\ substitute P[1] in ellxn(E,2)
+ %4 = [168416137, 5934096] \\ numerator and denominator of 2*P
+ ? x/y                     \\ check we find ellmul(e,P,2)[1]
+ %5 = 200257/7056
+ @eprog

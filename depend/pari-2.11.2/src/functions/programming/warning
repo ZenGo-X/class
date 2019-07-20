@@ -1,0 +1,16 @@
+Function: warning
+Section: programming/specific
+C-Name: warning0
+Prototype: vs*
+Help: warning({str}*): display warning message str.
+Description:
+ (?gen,...):void  pari_warn(warnuser, "${2 format_string}"${2 format_args})
+Doc: outputs the message ``user warning''
+ and the argument list (each of them interpreted as a string).
+ If colors are enabled, this warning will be in a different color,
+ making it easy to distinguish.
+ \bprog
+ warning(n, " is very large, this might take a while.")
+ @eprog
+ % \syn{NO}
+

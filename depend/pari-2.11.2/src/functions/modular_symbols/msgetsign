@@ -1,0 +1,15 @@
+Function: msgetsign
+Section: modular_symbols
+C-Name: msgetsign
+Prototype: lG
+Help: msgetsign(M): M being a full modular symbol space, as given by msinit, return its sign.
+Doc: $M$ being a full modular symbol space, as given by \kbd{msinit}, return
+ its sign: $\pm1$ or 0 (unset).
+ \bprog
+ ? M = msinit(11,4, 1);
+ ? msgetsign(M)
+ %2 = 1
+ ? M = msinit(11,4);
+ ? msgetsign(M)
+ %4 = 0
+ @eprog

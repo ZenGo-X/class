@@ -1,0 +1,37 @@
+Function: factorpadic
+Section: polynomials
+C-Name: factorpadic
+Prototype: GGL
+Help: factorpadic(pol,p,r): p-adic factorization of the polynomial pol
+ to precision r.
+Doc: $p$-adic factorization
+ of the polynomial \var{pol} to precision $r$, the result being a
+ two-column matrix as in \kbd{factor}. Note that this is not the same
+ as a factorization over $\Z/p^r\Z$ (polynomials over that ring do not form a
+ unique factorization domain, anyway), but approximations in $\Q/p^r\Z$ of
+ the true factorization in $\Q_p[X]$.
+ \bprog
+ ? factorpadic(x^2 + 9, 3,5)
+ %1 =
+ [(1 + O(3^5))*x^2 + O(3^5)*x + (3^2 + O(3^5)) 1]
+ ? factorpadic(x^2 + 1, 5,3)
+ %2 =
+ [  (1 + O(5^3))*x + (2 + 5 + 2*5^2 + O(5^3)) 1]
+
+ [(1 + O(5^3))*x + (3 + 3*5 + 2*5^2 + O(5^3)) 1]
+ @eprog\noindent
+ The factors are normalized so that their leading coefficient is a power of
+ $p$. The method used is a modified version of the \idx{round 4} algorithm of
+ \idx{Zassenhaus}.
+
+ If \var{pol} has inexact \typ{PADIC} coefficients, this is not always
+ well-defined; in this case, the polynomial is first made integral by dividing
+ out the $p$-adic content,  then lifted to $\Z$ using \tet{truncate}
+ coefficientwise.
+ Hence we actually factor exactly a polynomial which is only $p$-adically
+ close to the input. To avoid pitfalls, we advise to only factor polynomials
+ with exact rational coefficients.
+
+ \synt{factorpadic}{GEN f,GEN p, long r} . The function \kbd{factorpadic0} is
+ deprecated, provided for backward compatibility.
+

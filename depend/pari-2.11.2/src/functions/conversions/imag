@@ -1,0 +1,7 @@
+Function: imag
+Section: conversions
+C-Name: gimag
+Prototype: G
+Help: imag(x): imaginary part of x.
+Doc: imaginary part of $x$. When $x$ is a quadratic number, this is the
+ coefficient of $\omega$ in the ``canonical'' integral basis $(1,\omega)$.

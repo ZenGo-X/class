@@ -1,0 +1,10 @@
+chinese(Mod(x,x^2+1),Mod(x,x^2+1))
+chinese(Mod(x,x^2+1),Mod(x,x^2-1))
+chinese(Mod(1,2)*x+Mod(1,2), Mod(2,3)*x^2+Mod(1,3)*x+Mod(1,3))
+chinese([Mod(1,2),Mod(1,3)], [Mod(1,4),Mod(1,2)])
+chinese(1)
+chinese([])
+chinese(Mod(1+x,x^2),Mod(0,1))
+chinese(Mod(1+x,x^2),Mod(1,2))
+chinese(Mod(0,1),Mod(1+x,x^2))
+

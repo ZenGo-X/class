@@ -1,0 +1,67 @@
+Function: parfor
+Section: programming/parallel
+C-Name: parfor0
+Prototype: vV=GDGJDVDI
+Description:
+ (gen,gen,closure):void parfor($1, $2, $3, NULL, NULL)
+Help: parfor(i=a,{b},expr1,{r},{expr2}):
+ evaluates the expression expr1 in parallel for all i between a and b
+ (if b is set to +oo, the loop will not stop), resulting in as many
+ values; if the formal variables r and expr2 are present, evaluate
+ sequentially expr2, in which r has been replaced by the different results
+ obtained for expr1 and i with the corresponding arguments.
+Doc: evaluates in parallel the expression \kbd{expr1} in the formal
+ argument $i$ running from $a$ to $b$.
+ If $b$ is set to \kbd{+oo}, the loop runs indefinitely.
+ If $r$ and \kbd{expr2} are present, the expression \kbd{expr2} in the
+ formal variables $r$ and $i$ is evaluated with $r$ running through all
+ the different results obtained for \kbd{expr1} and $i$ takes the
+ corresponding argument.
+
+ The computations of \kbd{expr1} are \emph{started} in increasing order
+ of $i$; otherwise said, the computation for $i=c$ is started after those
+ for $i=1, \ldots, c-1$ have been started, but before the computation for
+ $i=c+1$ is started. Notice that the order of \emph{completion}, that is,
+ the order in which the different $r$ become available, may be different;
+ \kbd{expr2} is evaluated sequentially on each $r$ as it appears.
+
+ The following example computes the sum of the squares of the integers
+ from $1$ to $10$ by computing the squares in parallel and is equivalent
+ to \kbd{parsum (i=1, 10, i\^{}2)}:
+ \bprog
+ ? s=0;
+ ? parfor (i=1, 10, i^2, r, s=s+r)
+ ? s
+ %3 = 385
+ @eprog
+ More precisely, apart from a potentially different order of evaluation
+ due to the parallelism, the line containing \kbd{parfor} is equivalent to
+ \bprog
+ ? my (r); for (i=1, 10, r=i^2; s=s+r)
+ @eprog
+ The sequentiality of the evaluation of \kbd{expr2} ensures that the
+ variable \kbd{s} is not modified concurrently by two different additions,
+ although the order in which the terms are added is non-deterministic.
+
+ It is allowed for \kbd{expr2} to exit the loop using
+ \kbd{break}/\kbd{next}/\kbd{return}. If that happens for $i=c$,
+ then the evaluation of \kbd{expr1} and \kbd{expr2} is continued
+ for all values $i<c$, and the return value is the one obtained for
+ the smallest $i$ causing an interruption in \kbd{expr2} (it may be
+ undefined if this is a \kbd{break}/\kbd{next}).
+ In that case, using side-effects
+ in \kbd{expr2} may lead to undefined behavior, as the exact
+ number of values of $i$ for which it is executed is non-deterministic.
+ The following example computes \kbd{nextprime(1000)} in parallel:
+ \bprog
+ ? parfor (i=1000, , isprime (i), r, if (r, return (i)))
+ %1 = 1009
+ @eprog
+
+ %\syn{NO}
+
+Function: _parfor_worker
+Section: programming/internals
+C-Name: parfor_worker
+Prototype: GG
+Help: _parfor_worker(i,C): evaluate the closure C on i and return [i,C(i)]

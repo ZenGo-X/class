@@ -1,0 +1,53 @@
+prd(b)=prod(n=1,#b,a[n]^b[n]);
+
+init(N) =
+{ k = 1;
+  v = vector(3^N);
+  w = vector(3^N);
+  forvec(u = vector(N,i,[-1,1]), v[k] = prd(u); w[k] = u; k++);
+}
+{doit(N)=
+  for (i=1,#v, A = v[i];
+    for (j=1,#v, B = v[j]; if ( A+B-A != B, error(A,"+",B))
+    )
+  );
+}
+{doit2(i)=
+  for (i=1,#v, A = v[i];
+    for (j=1,#v, B = v[j]; C = prd(w[i]-w[j]); if(A/B!=C, error(A,"/",B)))); }
+
+a=[a1,a2,a3,a4,a5,a6]; N = 4;
+init(N); doit(N); doit2(N);
+
+{doit3(i)=
+  for (i=1,#v, A = v[i];
+    for (j=1,#v, B = v[j]; D = A*C;
+      for (k=1,#v, C = v[k];  D - C))); }
+a=[x,1+x,y,1+y];
+init(N); doit3(N);
+
+\\ regression tests
+(y/x)/(x^0/y)
+
+x1=(8*b^2 + 8*b + 1)/(4*b + 1);
+x2=32*b^4/(32*b^3 + 40*b^2 + 12*b + 1);
+x1-x2 \\ simplified ?
+
+n=102;(1-x^n)*(1-x^(3*n))/(1+x^(5*n))
+n=497;x^n*(1-x^n)/(1+(x^3)^n)
+
+(1+x)/(2+x)*(1+O(3^5))
+
+M = [ 1, 1, 1; 'a, 'b, 'c; 'a^2, 'b^2, 'c^2 ];
+[A, B, C] = M^-1 * [ 'u, 'v, 'w ]~;
+X = A^2 + B^2 + C^2; Y = A*B + A*C + B*C; Z = 'u^2 - 2*Y;
+[X == Z,X - Z]
+
+poldegree(y/x)
+trace(I/x)
+default(realprecision,38);
+1./x-1/x
+type(1/x-1/x)
+
+type(Pol(0)/x)
+Pol(0)/(Mod(1,2)*x)

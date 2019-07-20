@@ -1,0 +1,56 @@
+Function: Mod
+Section: conversions
+C-Name: gmodulo
+Prototype: GG
+Help: Mod(a,b): creates 'a modulo b'.
+Description:
+ (small, small):gen         gmodulss($1, $2)
+ (small, gen):gen           gmodulsg($1, $2)
+ (gen, gen):gen             gmodulo($1, $2)
+Doc: in its basic form, creates an intmod or a polmod $(a \mod b)$; $b$ must
+ be an integer or a polynomial. We then obtain a \typ{INTMOD} and a
+ \typ{POLMOD} respectively:
+ \bprog
+ ? t = Mod(2,17); t^8
+ %1 = Mod(1, 17)
+ ? t = Mod(x,x^2+1); t^2
+ %2 = Mod(-1, x^2+1)
+ @eprog\noindent If $a \% b$ makes sense and yields a result of the
+ appropriate type (\typ{INT} or scalar/\typ{POL}), the operation succeeds as
+ well:
+ \bprog
+ ? Mod(1/2, 5)
+ %3 = Mod(3, 5)
+ ? Mod(7 + O(3^6), 3)
+ %4 = Mod(1, 3)
+ ? Mod(Mod(1,12), 9)
+ %5 = Mod(1, 3)
+ ? Mod(1/x, x^2+1)
+ %6 = Mod(-1, x^2+1)
+ ? Mod(exp(x), x^4)
+ %7 = Mod(1/6*x^3 + 1/2*x^2 + x + 1, x^4)
+ @eprog
+ If $a$ is a complex object, ``base change'' it to $\Z/b\Z$ or $K[x]/(b)$,
+ which is equivalent to, but faster than, multiplying it by \kbd{Mod(1,b)}:
+ \bprog
+ ? Mod([1,2;3,4], 2)
+ %8 =
+ [Mod(1, 2) Mod(0, 2)]
+
+ [Mod(1, 2) Mod(0, 2)]
+ ? Mod(3*x+5, 2)
+ %9 = Mod(1, 2)*x + Mod(1, 2)
+ ? Mod(x^2 + y*x + y^3, y^2+1)
+ %10 = Mod(1, y^2 + 1)*x^2 + Mod(y, y^2 + 1)*x + Mod(-y, y^2 + 1)
+ @eprog
+
+ This function is not the same as $x$ \kbd{\%} $y$, the result of which
+ has no knowledge of the intended modulus $y$. Compare
+ \bprog
+ ? x = 4 % 5; x + 1
+ %1 = 5
+ ? x = Mod(4,5); x + 1
+ %2 = Mod(0,5)
+ @eprog Note that such ``modular'' objects can be lifted via \tet{lift} or
+ \tet{centerlift}. The modulus of a \typ{INTMOD} or \typ{POLMOD} $z$ can
+ be recovered via \kbd{$z$.mod}.

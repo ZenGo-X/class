@@ -1,0 +1,10 @@
+Function: setminus
+Section: linear_algebra
+C-Name: setminus
+Prototype: GG
+Help: setminus(x,y): set of elements of x not belonging to y.
+Description:
+ (vec, vec):vec        setminus($1, $2)
+Doc: difference of the two sets $x$ and $y$ (see \kbd{setisset}),
+ i.e.~set of elements of $x$ which do not belong to $y$.
+ If $x$ or $y$ is not a set, the result is undefined.

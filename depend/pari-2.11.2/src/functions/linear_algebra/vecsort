@@ -1,0 +1,105 @@
+Function: vecsort
+Section: linear_algebra
+C-Name: vecsort0
+Prototype: GDGD0,L,
+Help: vecsort(x,{cmpf},{flag=0}): sorts the vector of vectors (or matrix) x in
+ ascending order, according to the comparison function cmpf, if not omitted.
+ (If cmpf is an integer k, sort according to the value of the k-th component
+ of each entry.) Binary digits of flag (if present) mean: 1: indirect sorting,
+ return the permutation instead of the permuted vector, 4: use descending
+ instead of ascending order, 8: remove duplicate entries.
+Description:
+ (vecsmall,?gen):vecsmall       vecsort0($1, $2, 0)
+ (vecsmall,?gen,small):vecsmall vecsort0($1, $2, $3)
+ (vec, , ?0):vec                sort($1)
+ (vec, , 1):vecsmall            indexsort($1)
+ (vec, , 2):vec                 lexsort($1)
+ (vec, gen):vec                 vecsort0($1, $2, 0)
+ (vec, ?gen, 1):vecsmall        vecsort0($1, $2, 1)
+ (vec, ?gen, 3):vecsmall        vecsort0($1, $2, 3)
+ (vec, ?gen, 5):vecsmall        vecsort0($1, $2, 5)
+ (vec, ?gen, 7):vecsmall        vecsort0($1, $2, 7)
+ (vec, ?gen, 9):vecsmall        vecsort0($1, $2, 9)
+ (vec, ?gen, 11):vecsmall       vecsort0($1, $2, 11)
+ (vec, ?gen, 13):vecsmall       vecsort0($1, $2, 13)
+ (vec, ?gen, 15):vecsmall       vecsort0($1, $2, 15)
+ (vec, ?gen, #small):vec        vecsort0($1, $2, $3)
+ (vec, ?gen, small):gen         vecsort0($1, $2, $3)
+Doc: sorts the vector $x$ in ascending order, using a mergesort method.
+ $x$ must be a list, vector or matrix (seen as a vector of its columns).
+ Note that mergesort is stable, hence the initial ordering of ``equal''
+ entries (with respect to the sorting criterion) is not changed.
+
+ If \kbd{cmpf} is omitted, we use the standard comparison function
+ \kbd{lex}, thereby restricting the possible types for the elements of $x$
+ (integers, fractions or reals and vectors of those). We also transparently
+ allow a \typ{VECSMALL} $x$ in this case, for the standard ordering on the
+ integers.
+
+ If \kbd{cmpf} is present, it is understood as a comparison function and we
+ sort according to it. The following possibilities exist:
+
+ \item an integer $k$: sort according to the value of the $k$-th
+ subcomponents of the components of~$x$.
+
+ \item a vector: sort lexicographically according to the components listed in
+ the vector. For example, if $\kbd{cmpf}=\kbd{[2,1,3]}$, sort with respect to
+ the second component, and when these are equal, with respect to the first,
+ and when these are equal, with respect to the third.
+
+ \item a comparison function: \typ{CLOSURE} with two arguments $x$ and $y$,
+ and returning a real number which is $<0$, $>0$ or $=0$ if $x<y$, $x>y$ or
+ $x=y$ respectively.
+
+ \item a key: \typ{CLOSURE} with one argument $x$ and returning
+ the value $f(x)$ with respect to which we sort.
+
+ \bprog
+ ? vecsort([3,0,2; 1,0,2]) \\ sort columns according to lex order
+ %1 =
+ [0 2 3]
+
+ [0 2 1]
+ ? vecsort(v, (x,y)->y-x)            \\@com reverse sort
+ ? vecsort(v, (x,y)->abs(x)-abs(y))  \\@com sort by increasing absolute value
+ ? vecsort(v, abs)  \\@com sort by increasing absolute value, using key
+ ? cmpf(x,y) = my(dx = poldisc(x), dy = poldisc(y)); abs(dx) - abs(dy);
+ ? v = [x^2+1, x^3-2, x^4+5*x+1] vecsort(v, cmpf) \\@com comparison function
+ ? vecsort(v, x->abs(poldisc(x)))  \\@com key
+ @eprog\noindent
+ The \kbd{abs} and \kbd{cmpf} examples show how to use a named function
+ instead of an anonymous function. It is preferable to use a \var{key}
+ whenever possible rather than include it in the comparison function as above
+ since the key is evaluated $O(n)$ times instead of $O(n\log n)$,
+ where $n$ is the number of entries.
+
+ A direct approach is also possible and equivalent to using a sorting key:
+ \bprog
+ ? T = [abs(poldisc(x)) | x<-v];
+ ? perm = vecsort(T,,1); \\@com indirect sort
+ ? vecextract(v, perm)
+ @eprog\noindent This also provides the vector $T$ of all keys, which is
+ interesting for instance in later \tet{vecsearch} calls: it is more
+ efficient to sort $T$ (\kbd{T = vecextract(T, perm)}) then search for a key
+ in $T$ rather than to search in $v$ using a comparison function or a key.
+ Note also that \tet{mapisdefined} is often easier to use and faster than
+ \kbd{vecsearch}.
+
+ \noindent The binary digits of \fl\ mean:
+
+ \item 1: indirect sorting of the vector $x$, i.e.~if $x$ is an
+ $n$-component vector, returns a permutation of $[1,2,\dots,n]$ which
+ applied to the components of $x$ sorts $x$ in increasing order.
+ For example, \kbd{vecextract(x, vecsort(x,,1))} is equivalent to
+ \kbd{vecsort(x)}.
+
+ \item 4: use descending instead of ascending order.
+
+ \item 8: remove ``duplicate'' entries with respect to the sorting function
+ (keep the first occurring entry).  For example:
+ \bprog
+   ? vecsort([Pi,Mod(1,2),z], (x,y)->0, 8)   \\@com make everything compare equal
+   %1 = [3.141592653589793238462643383]
+   ? vecsort([[2,3],[0,1],[0,3]], 2, 8)
+   %2 = [[0, 1], [2, 3]]
+ @eprog

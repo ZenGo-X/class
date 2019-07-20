@@ -1,0 +1,9 @@
+Function: setunion
+Section: linear_algebra
+C-Name: setunion
+Prototype: GG
+Help: setunion(x,y): union of the sets x and y.
+Description:
+ (vec, vec):vec        setunion($1, $2)
+Doc: union of the two sets $x$ and $y$ (see \kbd{setisset}).
+ If $x$ or $y$ is not a set, the result is undefined.

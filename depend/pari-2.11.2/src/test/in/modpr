@@ -1,0 +1,51 @@
+nfeltmulmodpr(nfinit(x),x,x,1);
+v=[0,1/3,y,z,[1,1/3]~, [1,1,1/3]~];
+test(P) =
+{ my(f, V = apply(t->iferr(nfmodpr(K,t,P),E,E),v));
+
+  print(V);
+  V = select(t->type(t)!="t_ERROR", V);
+  print(K.pol, ": ", P);
+  f=[(x,y)->x/y, (x,y)->x*y];
+  for (i=1,#V,
+    for (j=i,#V,
+      print("*",[i,j],":");
+      for (k=1, #f, print(iferr(f[k](V[i],V[j]), E,E)))
+    )
+  );
+  for(i=1,#v,
+    print("*",i,":");
+    print(iferr(nfeltreducemodpr(K,v[i],P), E,E));
+  );
+}
+K=nfinit(y^2+1);
+P = nfmodprinit(K,idealprimedec(K,2)[1]); test(P);
+P = nfmodprinit(K,idealprimedec(K,3)[1]); test(P);
+K=nfinit(y^3-9);
+P = nfmodprinit(K,idealprimedec(K,3)[1]); test(P);
+P = nfmodprinit(K,idealprimedec(K,2)[2]); test(P);
+K=nfinit(y^2-1105);
+P7=nfmodprinit(K,idealprimedec(K,7)[1]);
+nfmodprlift(K,nfmodpr(K,y,P7),P7)
+P = nfmodprinit(K,idealprimedec(K,2)[1]);
+nfeltreducemodpr(K,(-y+1)/2,P)
+nffactormod(K, x^3+y*x^2+y*x+1, P)
+nfmodprlift(K,1,P)
+
+PU(x)=apply(t->nfmodpr(K,t,P),x);
+LI(x)=nfmodprlift(K,x,P);
+
+m=PU([1,y;[1/2,1/2]~,1]); v = PU([1,y]~)
+LI(matker(m))
+LI(matsolve(m,v))
+
+m=PU([y,y^2;y^2,y^3])
+LI(matker(m))
+LI(matsolve(m,v))
+LI(matsolve(m,m))
+
+K=nfinit(charpoly(Mod(2*x+1,polcyclo(51))));
+P=idealprimedec(K,2)[1];
+nfeltreducemodpr(K,P.gen[2],nfmodprinit(K,P))
+
+nfmodpr(nfinit(x),[],[]~)

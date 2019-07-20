@@ -1,0 +1,21 @@
+Function: rnfislocalcyclo
+Section: number_fields
+C-Name: rnfislocalcyclo
+Prototype: lG
+Help: rnfislocalcyclo(rnf): true(1) if the l-extension attached to rnf
+ is locally cyclotomic (locally contained in the Z_l extension of K_v at
+ all places v | l), false(0) if not.
+Doc: Let \var{rnf} be a relative number field extension $L/K$ as output
+ by \kbd{rnfinit} whose degree $[L:K]$ is a power of a prime $\ell$.
+ Return $1$ if the $\ell$-extension is locally cyclotomic (locally contained in
+ the cyclotomic $\Z_\ell$-extension of $K_v$ at all places $v | \ell$), and
+ $0$ if not.
+ \bprog
+ ? K = nfinit(y^2 + y + 1);
+ ? L = rnfinit(K, x^3 - y); /* = K(zeta_9), globally cyclotomic */
+ ? rnfislocalcyclo(L)
+ %3 = 1
+ \\ we expect 3-adic continuity by Krasner's lemma
+ ? vector(5, i, rnfislocalcyclo(rnfinit(K, x^3 - y + 3^i)))
+ %5 = [0, 1, 1, 1, 1]
+ @eprog

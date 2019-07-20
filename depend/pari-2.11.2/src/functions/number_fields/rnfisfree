@@ -1,0 +1,12 @@
+Function: rnfisfree
+Section: number_fields
+C-Name: rnfisfree
+Prototype: lGG
+Help: rnfisfree(bnf,x): given an order x as output by rnfpseudobasis or
+ rnfsteinitz, outputs true (1) or false (0) according to whether the order is
+ free or not.
+Doc: given $\var{bnf}$ as output by
+ \kbd{bnfinit}, and either a polynomial $x$ with coefficients in $\var{bnf}$
+ defining a relative extension $L$ of $\var{bnf}$, or a pseudo-basis $x$ of
+ such an extension, returns true (1) if $L/\var{bnf}$ is free, false (0) if
+ not.

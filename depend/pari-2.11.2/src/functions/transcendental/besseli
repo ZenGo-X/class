@@ -1,0 +1,9 @@
+Function: besseli
+Section: transcendental
+C-Name: ibessel
+Prototype: GGp
+Help: besseli(nu,x): I-bessel function of index nu and argument x.
+Doc: $I$-Bessel function of index \var{nu} and
+ argument $x$. If $x$ converts to a power series, the initial factor
+ $(x/2)^\nu/\Gamma(\nu+1)$ is omitted (since it cannot be represented in PARI
+ when $\nu$ is not integral).

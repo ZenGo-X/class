@@ -1,0 +1,13 @@
+Function: listcreate
+Section: programming/specific
+C-Name: listcreate_gp
+Prototype: D0,L,
+Obsolete: 2007-08-10
+Help: listcreate({n}): this function is obsolete, use List().
+Description:
+ (?gen):list        mklist()
+Doc: This function is obsolete, use \kbd{List}.
+
+ Creates an empty list. This routine used to have a mandatory argument,
+ which is now ignored (for backward compatibility).
+ % \syn{NO}

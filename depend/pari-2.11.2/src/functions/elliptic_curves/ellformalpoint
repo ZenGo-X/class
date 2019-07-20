@@ -1,0 +1,23 @@
+Function: ellformalpoint
+Section: elliptic_curves
+C-Name: ellformalpoint
+Prototype: GDPDn
+Help: ellformalpoint(E, {n = seriesprecision}, {v = 'x}): E elliptic curve,
+ n integer; return the coordinates [x(t), y(t)] on the elliptic curve as a
+ formal expansion in the formal parameter t = -x/y.
+Doc: If $E$ is an elliptic curve, return the coordinates $x(t), y(t)$ in the
+ formal group of the elliptic curve $E$ in the formal parameter $t = -x/y$
+ at $\infty$:
+ $$ x = t^{-2} -a_1 t^{-1} - a_2 - a_3 t + \dots $$
+ $$ y = - t^{-3} -a_1 t^{-2} - a_2t^{-1} -a_3 + \dots $$
+ Return $n$ terms (\tet{seriesprecision} by default) of these two power
+ series, whose coefficients are in $\Z[a_1,a_2,a_3,a_4,a_6]$.
+ \bprog
+ ? E = ellinit([0,0,1,-1,0]); [x,y] = ellformalpoint(E,8,'t);
+ ? x
+ %2 = t^-2 - t + t^2 - t^4 + 2*t^5 + O(t^6)
+ ? y
+ %3 = -t^-3 + 1 - t + t^3 - 2*t^4 + O(t^5)
+ ? E = ellinit([0,1/2]); ellformalpoint(E,7)
+ %4 = [x^-2 - 1/2*x^4 + O(x^5), -x^-3 + 1/2*x^3 + O(x^4)]
+ @eprog

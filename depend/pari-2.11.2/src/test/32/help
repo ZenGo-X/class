@@ -1,0 +1,164 @@
+x: user defined variable
+
+sin(x): sine of x.
+
+f =
+  ()->1
+
+echo: default
+
+echo: default
+
+log: default
+
+new is aliased to:
+
+sin(x): sine of x.
+
+test1
+
+test2
+
+test3
+
+test4
+
+new is aliased to:
+
+test2
+
+does_not_exist: unknown identifier
+
+Help topics: for a list of relevant subtopics, type ?n for n in
+   0: user-defined functions (aliases, installed and user functions)
+   1: PROGRAMMING under GP
+   2: Standard monadic or dyadic OPERATORS
+   3: CONVERSIONS and similar elementary functions
+   4: functions related to COMBINATORICS
+   5: NUMBER THEORETICAL functions
+   6: POLYNOMIALS and power series
+   7: Vectors, matrices, LINEAR ALGEBRA and sets
+   8: TRANSCENDENTAL functions
+   9: SUMS, products, integrals and similar functions
+  10: General NUMBER FIELDS
+  11: Associative and central simple ALGEBRAS
+  12: ELLIPTIC CURVES
+  13: L-FUNCTIONS
+  14: MODULAR FORMS
+  15: MODULAR SYMBOLS
+  16: GRAPHIC functions
+  17: The PARI community
+Also:
+  ? functionname (short on-line help)
+  ?\             (keyboard shortcuts)
+  ?.             (member functions)
+Extended help (if available):
+  ??             (opens the full user's manual in a dvi previewer)
+  ??  tutorial / refcard / libpari (tutorial/reference card/libpari manual)
+  ??  refcard-ell (or -lfun/-mf/-nf: specialized reference card)
+  ??  keyword    (long help text about "keyword" from the user's manual)
+  ??? keyword    (a propos: list of related functions).
+Member functions, followed by relevant objects
+
+a1-a6, b2-b8, c4-c6 : coeff. of the curve.         ell
+area : area                                        ell
+bid  : big ideal                     bid,                     bnr
+bnf  : big number field                                   bnf,bnr
+clgp : class group                   bid,                 bnf,bnr
+cyc  : cyclic decomposition (SNF)    bid,     clgp,ell,   bnf,bnr
+diff, codiff: different and codifferent                nf,bnf,bnr
+disc : discriminant                                ell,nf,bnf,bnr,rnf
+e, f : inertia/residue  degree           prid
+fu   : fundamental units                                  bnf,bnr
+gen  : generators                    bid,prid,clgp,ell,   bnf,bnr,    gal
+group: group                                       ell,               gal
+index: index                                           nf,bnf,bnr
+j    : j-invariant                                 ell
+mod  : modulus                       bid,                     bnr,    gal
+nf   : number field                                    nf,bnf,bnr,rnf
+no   : number of elements            bid,     clgp,ell,   bnf,bnr
+omega, eta: [w1,w2] and [eta1, eta2]               ell
+orders: relative orders of generators                                 gal
+p    : rational prime                    prid,     ell,           rnf,gal
+pol  : defining polynomial                             nf,bnf,bnr,    gal
+polabs: defining polynomial over Q                                rnf
+reg  : regulator                                          bnf,bnr
+roots: roots                                       ell,nf,bnf,bnr,    gal
+sign,r1,r2 : signature                                 nf,bnf,bnr
+t2   : t2 matrix                                       nf,bnf,bnr
+tate : Tate's [u^2, u, q, [a,b], L, Ei]            ell
+tu   : torsion unit and its order                         bnf,bnr
+zk   : integral basis                                  nf,bnf,bnr,rnf
+zkst : structure of (Z_K/m)*         bid,                     bnr
+
+#       : enable/disable timer
+##      : print time for last result
+\\      : comment up to end of line
+\a {n}  : print result in raw format (readable by PARI)
+\B {n}  : print result in beautified format
+\c      : list all commands (same effect as ?*)
+\d      : print all defaults
+\e {n}  : enable/disable echo (set echo=n)
+\g {n}  : set debugging level
+\gf{n}  : set file debugging level
+\gm{n}  : set memory debugging level
+\h {m-n}: hashtable information
+\l {f}  : enable/disable logfile (set logfile=f)
+\m {n}  : print result in prettymatrix format
+\o {n}  : set output method (0=raw, 1=prettymatrix, 2=prettyprint, 3=2-dim)
+\p {n}  : change real precision
+\pb{n}  : change real bit precision
+\ps{n}  : change series precision
+\q      : quit completely this GP session
+\r {f}  : read in a file
+\s      : print stack information
+\t      : print the list of PARI types
+\u      : print the list of user-defined functions
+\um     : print the list of user-defined member functions
+\v      : print current version of GP
+\w {nf} : write to a file
+\x {n}  : print complete inner structure of result
+\y {n}  : disable/enable automatic simplification (set simplify=n)
+
+{f}=optional filename. {n}=optional integer
+
+
+cmp      divrem   lex      max      min      powers   shift    shiftmul
+sign     vecmax   vecmin   
+
+test6
+
+List of the PARI types:
+  t_INT    : long integers     [ cod1 ] [ cod2 ] [ man_1 ] ... [ man_k ]
+  t_REAL   : long real numbers [ cod1 ] [ cod2 ] [ man_1 ] ... [ man_k ]
+  t_INTMOD : integermods       [ code ] [ mod  ] [ integer ]
+  t_FRAC   : irred. rationals  [ code ] [ num. ] [ den. ]
+  t_FFELT  : finite field elt. [ code ] [ cod2 ] [ elt ] [ mod ] [ p ]
+  t_COMPLEX: complex numbers   [ code ] [ real ] [ imag ]
+  t_PADIC  : p-adic numbers    [ cod1 ] [ cod2 ] [ p ] [ p^r ] [ int ]
+  t_QUAD   : quadratic numbers [ cod1 ] [ mod  ] [ real ] [ imag ]
+  t_POLMOD : poly mod          [ code ] [ mod  ] [ polynomial ]
+  -------------------------------------------------------------
+  t_POL    : polynomials       [ cod1 ] [ cod2 ] [ man_1 ] ... [ man_k ]
+  t_SER    : power series      [ cod1 ] [ cod2 ] [ man_1 ] ... [ man_k ]
+  t_RFRAC  : irred. rat. func. [ code ] [ num. ] [ den. ]
+  t_QFR    : real qfb          [ code ] [ a ] [ b ] [ c ] [ del ]
+  t_QFI    : imaginary qfb     [ code ] [ a ] [ b ] [ c ]
+  t_VEC    : row vector        [ code ] [  x_1  ] ... [  x_k  ]
+  t_COL    : column vector     [ code ] [  x_1  ] ... [  x_k  ]
+  t_MAT    : matrix            [ code ] [ col_1 ] ... [ col_k ]
+  t_LIST   : list              [ cod1 ] [ cod2 ][ vec ]
+  t_STR    : string            [ code ] [ man_1 ] ... [ man_k ]
+  t_VECSMALL: vec. small ints  [ code ] [ x_1 ] ... [ x_k ]
+  t_CLOSURE: functions [ code ] [ arity ] [ code ] [ operand ] [ data ] [ te
+xt ]
+  t_ERROR  : error context     [ code ] [ errnum ] [ dat_1 ] ... [ dat_k ]
+  t_INFINITY: a*infinity       [ code ] [ a ]
+
+f =
+  ()->1
+
+g =
+  ()->0
+
+Total time spent: 0

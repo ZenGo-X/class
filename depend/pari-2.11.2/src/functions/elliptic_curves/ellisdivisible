@@ -1,0 +1,27 @@
+Function: ellisdivisible
+Section: elliptic_curves
+C-Name: ellisdivisible
+Prototype: lGGGD&
+Help: ellisdivisible(E,P,n,{&Q}): given E/K and P in E(K),
+ checks whether P = [n]R for some R in E(K) and sets Q to one such R if so;
+ the integer n >= 0 may be given as ellxn(E,n).
+Doc: given $E/K$ a number field and $P$ in $E(K)$
+ return $1$ if $P = [n]R$ for some $R$ in $E(K)$ and set $Q$ to one such $R$;
+ and return $0$ otherwise. The integer $n \geq 0$ may be given as
+ \kbd{ellxn(E,n)}, if many points need to be tested.
+ \bprog
+ ? K = nfinit(polcyclo(11,t));
+ ? E = ellinit([0,-1,1,0,0], K);
+ ? P = [0,0];
+ ? ellorder(E,P)
+ %4 = 5
+ ? ellisdivisible(E,P,5, &Q)
+ %5 = 1
+ ? lift(Q)
+ %6 = [-t^7-t^6-t^5-t^4+1, -t^9-2*t^8-2*t^7-3*t^6-3*t^5-2*t^4-2*t^3-t^2-1]
+ ? ellorder(E, Q)
+ %7 = 25
+ @eprog\noindent The algebraic complexity of the underlying algorithm is in
+ $O(n^4)$, so it is advisable to first factor $n$, then use a chain of checks
+ attached to the prime divisors of $n$: the function will do it itself unless
+ $n$ is given in \kbd{ellxn} form.

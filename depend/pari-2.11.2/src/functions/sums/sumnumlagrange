@@ -1,0 +1,52 @@
+Function: sumnumlagrange
+Section: sums
+C-Name: sumnumlagrange0
+Prototype: V=GEDGp
+Help: sumnumlagrange(n=a,f,{tab}): numerical summation of f(n) from
+ n = a to +infinity using Lagrange summation.
+ a must be an integer, and tab, if given, is the output of sumnumlagrangeinit.
+Wrapper: (,G)
+Description:
+  (gen,gen,?gen):gen:prec sumnumlagrange(${2 cookie}, ${2 wrapper}, $1, $3, $prec)
+Doc: Numerical summation of $f(n)$ from $n=a$ to $+\infty$ using Lagrange
+ summation; $a$ must be an integer, and the optional argument \kbd{tab} is
+ the output of \kbd{sumnumlagrangeinit}. By default, the program assumes that
+ the $N$th remainder has an asymptotic expansion in integral powers of $1/N$.
+ If not, initialize \kbd{tab} using \kbd{sumnumlagrangeinit(al)}, where
+ the asymptotic expansion of the remainder is integral powers of $1/N^{al}$;
+ $al$ can be equal to $1$ (default), $1/2$, $1/3$, or $1/4$, and also
+ equal to $2$, but in this latter case it is the $N$th remainder minus one
+ half of the last summand which has an asymptotic expansion in integral
+ powers of $1/N^2$.
+ \bprog
+ ? \p1000
+ ? z3 = zeta(3);
+ ? sumpos(n = 1, n^-3) - z3
+ time = 8,088 ms.
+ %2 = -2.08[...] E-1001
+ ? sumnumlagrange(n = 1, n^-3) - z3 \\ much faster than sumpos
+ time = 40 ms.
+ %3 = 0.E-1001
+ ? tab = sumnumlagrangeinit(2);
+ time = 20 ms.
+ ? sumnumlagrange(n = 1, n^-3, tab) - z3
+ time = 4 ms. /* even faster */
+ %5 = 0.E-1001
+
+ ? \p115
+ ? tab = sumnumlagrangeinit([1/3,1/3]);
+ time = 316 ms.
+ ? sumnumlagrange(n = 1, n^-(7/3), tab) - zeta(7/3)
+ time = 24 ms.
+ %7 = 0.E-115
+ ? sumnumlagrange(n = 1, n^(-2/3) - 3*(n^(1/3)-(n-1)^(1/3)), tab) - zeta(2/3)
+ time = 32 ms.
+ %8 = 1.0151767349262596893 E-115
+ @eprog
+
+ \misctitle{Complexity}
+ The function $f$ is evaluated at $O(D)$ integer arguments,
+ where $D \approx \kbd{realprecision} \cdot \log(10)$.
+
+ \synt{sumnumlagrange}{(void *E, GEN (*eval)(void*, GEN), GEN a, GEN tab, long prec)}
+ where an omitted \var{tab} is coded as \kbd{NULL}.

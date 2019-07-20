@@ -1,0 +1,16 @@
+Function: alghassei
+Section: algebras
+C-Name: alghassei
+Prototype: mG
+Help: alghassei(al): the hasse invariant of the central simple algebra al
+ at infinite places.
+Doc: Given a central simple algebra \var{al} output by \tet{alginit}, returns
+ a \typ{VECSMALL} $h_i$ of $r_1$ integers modulo the degree $d$ of \var{al},
+ where $r_1$ is the number of real places of the center: the local Hasse
+ invariants of \var{al} at infinite places.
+ \bprog
+ ? nf = nfinit(y^2-5);
+ ? A = alginit(nf, [-1,y]);
+ ? alghassei(A)
+ %3 = Vecsmall([1, 0])
+ @eprog

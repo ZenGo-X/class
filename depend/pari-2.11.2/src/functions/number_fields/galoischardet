@@ -1,0 +1,29 @@
+Function: galoischardet
+Section: number_fields
+C-Name: galoischardet
+Prototype: GGD1,L,
+Help: galoischardet(gal, chi, {o=1}): return the determinant character of the
+ character chi.
+Doc: Let $G$ be the group attached to the \kbd{galoisinit}
+ structure~\var{gal}, and
+ let $\chi$ be the character of some representation $\rho$ of the group $G$,
+ where a polynomial variable is to be interpreted as an $o$-th root of 1.
+ For instance, if \kbd{[T,o] = galoischartable(gal)} the characters
+ $\chi$ are input as the columns of \kbd{T}.
+
+ Return the degree-$1$ character $\det\rho$ as the list of $\det \rho(g)$,
+ where $g$ runs through representatives of the conjugacy classes
+ in \kbd{galoisconjclasses(gal)}, with the same ordering.
+ \bprog
+ ? P = x^5 - x^4 - 5*x^3 + 4*x^2 + 3*x - 1;
+ ? polgalois(P)
+ %2 = [10, 1, 1, "D(5) = 5:2"]
+ ? K = nfsplitting(P);
+ ? gal = galoisinit(K);  \\ dihedral of order 10
+ ? [T,o] = galoischartable(gal);
+ ? chi = T[,1]; \\ trivial character
+ ? galoischardet(gal, chi, o)
+ %7 = [1, 1, 1, 1]~
+ ? [galoischardet(gal, T[,i], o) | i <- [1..#T]] \\ all characters
+ %8 = [[1, 1, 1, 1]~, [1, 1, -1, 1]~, [1, 1, -1, 1]~, [1, 1, -1, 1]~]
+ @eprog

@@ -1,0 +1,18 @@
+Function: taylor
+Section: polynomials
+C-Name: tayl
+Prototype: GnDP
+Help: taylor(x,t,{d=seriesprecision}): taylor expansion of x with respect to
+ t, adding O(t^d) to all components of x.
+Doc: Taylor expansion around $0$ of $x$ with respect to
+ the simple variable $t$. $x$ can be of any reasonable type, for example a
+ rational function. Contrary to \tet{Ser}, which takes the valuation into
+ account, this function adds $O(t^d)$ to all components of $x$.
+ \bprog
+ ? taylor(x/(1+y), y, 5)
+ %1 = (y^4 - y^3 + y^2 - y + 1)*x + O(y^5)
+ ? Ser(x/(1+y), y, 5)
+  ***   at top-level: Ser(x/(1+y),y,5)
+  ***                 ^----------------
+  *** Ser: main variable must have higher priority in gtoser.
+ @eprog

@@ -1,0 +1,7 @@
+Function: getstack
+Section: programming/specific
+C-Name: getstack
+Prototype: l
+Help: getstack(): current value of stack pointer avma.
+Doc: returns the current value of $\kbd{top}-\kbd{avma}$, i.e.~the number of
+ bytes used up to now on the stack. Useful mainly for debugging purposes.

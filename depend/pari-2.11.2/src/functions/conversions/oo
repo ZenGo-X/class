@@ -1,0 +1,10 @@
+Function: oo
+Section: conversions
+C-Name: mkoo
+Prototype:
+Help: oo=oo(): infinity.
+Doc: returns an object meaning $+\infty$, for use in functions such as
+ \kbd{intnum}. It can be negated (\kbd{-oo} represents $-\infty$), and
+ compared to real numbers (\typ{INT}, \typ{FRAC}, \typ{REAL}), with the
+ expected meaning: $+\infty$ is greater than any real number and $-\infty$ is
+ smaller.

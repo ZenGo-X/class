@@ -1,0 +1,26 @@
+v=[1,O(3),x,O(x),Mod(y,y^2+1),1/y,[y,z],Mat(z),List(),List([y,z])];
+{
+for(i=1,#v,
+  print(iferr(variable(v[i]), E,E))
+)
+}
+variable()
+
+varhigher("y");
+tt=varlower("y");
+variable()
+zz=varhigher("y",x);
+variable()
+varhigher("y",zz);
+variable()
+varlower("y",zz);
+variable()
+varlower("y",tt);
+variable()
+varlower("tt",y);
+varhigher("y",y);
+variable()
+varhigher("zzz",y);1/0
+variable()
+variables([v,tt,zz])
+variables()

@@ -1,0 +1,34 @@
+Function: padicfields
+Section: polynomials
+C-Name: padicfields0
+Prototype: GGD0,L,
+Help: padicfields(p, N, {flag=0}): returns polynomials generating all
+ the extensions of degree N of the field of p-adic rational numbers; N is
+ allowed to be a 2-component vector [n,d], in which case, returns the
+ extensions of degree n and discriminant p^d. flag is optional,
+ and can be 0: default, 1: return also the ramification index, the residual
+ degree, the valuation of the discriminant and the number of conjugate fields,
+ or 2: return only the number of extensions in a fixed algebraic closure.
+
+Doc: returns a vector of polynomials generating all the extensions of degree
+ $N$ of the field $\Q_p$ of $p$-adic rational numbers; $N$ is
+ allowed to be a 2-component vector $[n,d]$, in which case we return the
+ extensions of degree $n$ and discriminant $p^d$.
+
+ The list is minimal in the sense that two different polynomials generate
+ non-isomorphic extensions; in particular, the number of polynomials is the
+ number of classes of non-isomorphic extensions. If $P$ is a polynomial in this
+ list, $\alpha$ is any root of $P$ and $K = \Q_p(\alpha)$, then $\alpha$
+ is the sum of a uniformizer and a (lift of a) generator of the residue field
+ of $K$; in particular, the powers of $\alpha$ generate the ring of $p$-adic
+ integers of $K$.
+
+ If $\fl = 1$, replace each polynomial $P$ by a vector $[P, e, f, d, c]$
+ where $e$ is the ramification index, $f$ the residual degree, $d$ the
+ valuation of the discriminant, and $c$ the number of conjugate fields.
+ If $\fl = 2$, only return the \emph{number} of extensions in a fixed
+ algebraic closure (Krasner's formula), which is much faster.
+
+Variant: Also available is
+ \fun{GEN}{padicfields}{GEN p, long n, long d, long flag}, which computes
+ extensions of $\Q_p$ of degree $n$ and discriminant $p^d$.

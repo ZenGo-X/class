@@ -1,0 +1,17 @@
+Function: ellan
+Section: elliptic_curves
+C-Name: ellan
+Prototype: GL
+Help: ellan(E,n): computes the first n Fourier coefficients of the
+ L-function of the elliptic curve E defined over a number field
+ (n<2^24 on a 32-bit machine).
+Doc: computes the vector of the first $n$ Fourier coefficients $a_k$
+ corresponding to the elliptic curve $E$ defined over a number field.
+ If $E$ is defined over $\Q$, the curve may be given by an
+ arbitrary model, not necessarily minimal,
+ although a minimal model will make the function faster. Over a more general
+ number field, the model must be locally minimal at all primes above $2$
+ and $3$.
+
+Variant: Also available is \fun{GEN}{ellanQ_zv}{GEN e, long n}, which
+ returns a \typ{VECSMALL} instead of a \typ{VEC}, saving on memory.

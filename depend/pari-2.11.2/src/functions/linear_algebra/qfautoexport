@@ -1,0 +1,19 @@
+Function: qfautoexport
+Section: linear_algebra
+C-Name: qfautoexport
+Prototype: GD0,L,
+Help: qfautoexport(qfa,{flag}): qfa being an automorphism group as output by
+ qfauto, output a string representing the underlying matrix group in
+ GAP notation (default) or Magma notation (flag = 1).
+Doc: \var{qfa} being an automorphism group as output by
+ \tet{qfauto}, export the underlying matrix group as a string suitable
+ for (no flags or $\fl=0$) GAP or ($\fl=1$) Magma. The following example
+ computes the size of the matrix group using GAP:
+ \bprog
+ ? G = qfauto([2,1;1,2])
+ %1 = [12, [[-1, 0; 0, -1], [0, -1; 1, 1], [1, 1; 0, -1]]]
+ ? s = qfautoexport(G)
+ %2 = "Group([[-1, 0], [0, -1]], [[0, -1], [1, 1]], [[1, 1], [0, -1]])"
+ ? extern("echo \"Order("s");\" | gap -q")
+ %3 = 12
+ @eprog

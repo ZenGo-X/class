@@ -1,0 +1,87 @@
+default(parisize,"20M")
+e=ellinit([1,-1,1,-1,-14]);
+E=ellinit([0,0,0,-e.c4/48,-e.c6/864]);
+P=[1,-1/4;0,1];
+{
+  forprime(p=3,40,if(p==17,next);
+  A=ellpadicfrobenius(e,p,10);
+  B=ellpadicfrobenius(E,p,10);
+  if(P*B!=A*P,error(p)));
+}
+Ep=ellinit(E,O(3^5));
+[ellintegralmodel(Ep,&v)[1..5],v]
+elllocalred(Ep)
+elllocalred(ellchangecurve(Ep,[3,0,0,0]))
+elllocalred(ellchangecurve(Ep,[1/3,0,0,0]))
+
+E=ellinit([1,-1,1,0,0]);P=[0,0];
+ellpadicheight(E,2,4, P)
+ellpadicheight(E,3,4, P)
+ellpadicheight(E,5,4, P)
+
+E=ellinit([0,-1,1,-10,-20]);P=[5,5];
+ellpadicheight(E,19,6, P)
+ellpadicheight(E,19,0, P)
+
+Ep=ellinit([0,-1,1,-10,-20], O(11^5));
+[ellap(Ep), ellap(Ep,11)]
+[ellcard(Ep), ellcard(Ep,11)]
+[ellgroup(Ep), ellgroup(Ep,11)]
+[ellissupersingular(Ep), ellissupersingular(Ep,11)]
+ellpadics2(Ep,11,5)
+E=ellinit([1,0,1,-6,4],O(5^5)); ellissupersingular(E)
+lift(ellpadicfrobenius(E,5,5))
+ellinit([1,1,1,1,1],O(2^2)).group
+ellinit([0,2],O(2^2)).group
+ellinit([1,1,2,1,1],O(2^2)).group
+ellinit([1,3,1,2,2],O(3^2)).group
+ellinit([1,2,2,2,3],O(3^2)).group
+ellinit([1,1,3,1,3],O(3^2)).group
+ellinit([3,4],O(5^2)).group
+ellinit([0,5],O(5^2)).group
+ellinit([2,2],O(5^2)).group
+
+E=ellinit([0,0,1,-4,2]);P=[-2,1];
+ellpadicheight(E,3,5, P)
+P2 = ellmul(E,P,2);
+ellpadiclog(E,3,5,P)
+ellpadiclog(E,3,5,P2)
+E=ellinit([0,0,1,-7,6]);
+P=[-2,3]; P2=ellmul(E,P,2);
+Q=[-1,3]; Q2=ellmul(E,Q,2);
+R=[0,2];
+ellpadicheight(E,2,5, P,Q2)
+ellpadicheight(E,2,5, P2,Q)
+M=ellpadicheightmatrix(E,5,5, [P,Q,R]); lift(M)
+ellpadicheight(E,3,5, P)*[1,2]~
+ellpadicheight(E,3,5, P,Q)*[1,2]~
+matdet(M[1])
+matdet(M[2])
+
+E=ellinit([-577/48,14689/864]);
+ellpadics2(E,43,6)
+E=ellinit([1,0,1,-460,-3830]);
+ellpadics2(E,5,6)
+E=ellinit([0,0,1,-1,0]); \\ 37a1
+ellpadics2(E,5,6)
+ellpadicbsd(E,7,10)
+ellpadicbsd(E,37,10)
+
+E=ellinit([0,1,1,-7,5]);
+ellpadicbsd(E,7,5)
+ellpadicregulator(E,7,5,[[-1,3]])
+ellpadicbsd(E,7,5,-4)
+
+E=ellinit([1, -1, 1, 0, 0]);
+ellpadicfrobenius(E,5,7)
+E=ellinit([0,0,1,-4,2]);
+ellpadicfrobenius(E,3,5)
+
+\\ ERRORS keep at end of file
+ellap(Ep,2)
+ellpadics2(Ep,2,5)
+ellcard(Ep,2)
+ellgroup(Ep,2)
+ellissupersingular(Ep,2)
+elllocalred(Ep,2)
+ellgroup(ellinit([5^6,5^6]),5,1)

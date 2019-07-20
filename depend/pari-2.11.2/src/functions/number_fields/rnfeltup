@@ -1,0 +1,27 @@
+Function: rnfeltup
+Section: number_fields
+C-Name: rnfeltup0
+Prototype: GGD0,L,
+Help: rnfeltup(rnf,x,{flag=0}): expresses x (belonging to the base field) on
+ the relative field. As a t_POLMOD if flag = 0 and as a t_COL on the absolute
+ field integer basis if flag = 1.
+Doc: $\var{rnf}$ being a relative number field extension $L/K$ as output by
+ \kbd{rnfinit} and $x$ being an element of $K$, computes $x$ as an element of
+ the absolute extension $L/\Q$. As a \typ{POLMOD} modulo \kbd{\var{rnf}.pol}
+ if $\fl = 0$ and as a \typ{COL} on the absolute field integer basis if
+ $\fl = 1$.
+ \bprog
+ ? K = nfinit(y^2+1); L = rnfinit(K, x^2-y);
+ ? L.pol
+ %2 = x^4 + 1
+ ? rnfeltup(L, Mod(y, K.pol))
+ %3 = Mod(x^2, x^4 + 1)
+ ? rnfeltup(L, y)
+ %4 = Mod(x^2, x^4 + 1)
+ ? rnfeltup(L, [1,2]~) \\ in terms of K.zk
+ %5 = Mod(2*x^2 + 1, x^4 + 1)
+ ? rnfeltup(L, y, 1) \\ in terms of nfinit(L).zk
+ %6 = [0, 1, 0, 0]~
+ ? rnfeltup(L, [1,2]~, 1)
+ %7 = [1, 2, 0, 0]~
+ @eprog

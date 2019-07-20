@@ -1,0 +1,19 @@
+Function: _def_simplify
+Class: default
+Section: default
+C-Name: sd_simplify
+Prototype:
+Help:
+Doc: this toggle is either 1 (on) or 0 (off). When the PARI library computes
+ something, the type of the
+ result is not always the simplest possible. The only type conversions which
+ the PARI library does automatically are rational numbers to integers (when
+ they are of type \typ{FRAC} and equal to integers), and similarly rational
+ functions to polynomials (when they are of type \typ{RFRAC} and equal to
+ polynomials). This feature is useful in many cases, and saves time, but can
+ be annoying at times. Hence you can disable this and, whenever you feel like
+ it, use the function \kbd{simplify} (see Chapter 3) which allows you to
+ simplify objects to the simplest possible types recursively (see~\b{y}).
+ \sidx{automatic simplification}
+
+ The default value is \kbd{1}.

@@ -1,0 +1,19 @@
+Function: mapget
+Section: programming/specific
+C-Name: mapget
+Prototype: GG
+Help: mapget(M,x): returns the image of x by the map M.
+Doc: Returns the image of $x$ by the map $M$.
+ \bprog
+ ? M=Map(["a",23;"b",43]);
+ ? mapget(M,"a")
+ %2 = 23
+ ? mapget(M,"b")
+ %3 = 43
+ @eprog\noindent Raises an exception when the key $x$ is not present in $M$.
+ \bprog
+ ? mapget(M,"c")
+   ***   at top-level: mapget(M,"c")
+   ***                 ^-------------
+   *** mapget: non-existent component in mapget: index not in map
+ @eprog

@@ -1,0 +1,11 @@
+Function: sumeulerrat
+Section: sums
+C-Name: sumeulerrat
+Prototype: GDGD2,L,p
+Help: sumeulerrat(F,{s=1},{a=2}): sum from primes p = a to infinity of F(p^s),
+ where F is a rational function.
+Doc: $\sum_{p\ge a, p prime}F(p^s)$, where $F$ is a rational function.
+ \bprog
+ ? sumeulerrat(1/q)
+ %1 = 0.45224742004106549850654336483224793418
+ @eprog

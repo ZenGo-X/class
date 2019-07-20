@@ -1,0 +1,21 @@
+Function: idealpow
+Section: number_fields
+C-Name: idealpow0
+Prototype: GGGD0,L,
+Help: idealpow(nf,x,k,{flag=0}): k-th power of the ideal x in HNF in the
+ number field nf. If (optional) flag is non-null, reduce the result.
+Doc: computes the $k$-th power of
+ the ideal $x$ in the number field $\var{nf}$; $k\in\Z$.
+ If $x$ is an extended
+ ideal\sidx{ideal (extended)}, its principal part is suitably
+ updated: i.e. raising $[I,t]$ to the $k$-th power, yields $[I^k, t^k]$.
+
+ If $\fl$ is non-zero, reduce the result using \kbd{idealred}, \emph{throughout
+ the (binary) powering process}; in particular, this is \emph{not} the same
+ as $\kbd{idealpow}(\var{nf},x,k)$ followed by reduction.
+
+Variant:
+ \noindent See also
+ \fun{GEN}{idealpow}{GEN nf, GEN x, GEN k} and
+ \fun{GEN}{idealpows}{GEN nf, GEN x, long k} ($\fl = 0$).
+ Corresponding to $\fl=1$ is \fun{GEN}{idealpowred}{GEN nf, GEN vp, GEN k}.

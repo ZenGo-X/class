@@ -1,0 +1,22 @@
+Function: alggroup
+Section: algebras
+C-Name: alggroup
+Prototype: GDG
+Help: alggroup(gal, {p=0}): constructs the group algebra of gal over Q (resp. Fp).
+Doc: initializes the group algebra~$K[G]$ over~$K=\Q$ ($p$ omitted) or~$\F_p$
+ where~$G$ is the underlying group of the \kbd{galoisinit} structure~\var{gal}.
+ The input~\var{gal} is also allowed to be a \typ{VEC} of permutations that is
+ closed under products.
+
+ Example:
+ \bprog
+ ? K = nfsplitting(x^3-x+1);
+ ? gal = galoisinit(K);
+ ? al = alggroup(gal);
+ ? algissemisimple(al)
+ %4 = 1
+ ? G = [Vecsmall([1,2,3]), Vecsmall([1,3,2])];
+ ? al2 = alggroup(G, 2);
+ ? algissemisimple(al2)
+ %8 = 0
+ @eprog

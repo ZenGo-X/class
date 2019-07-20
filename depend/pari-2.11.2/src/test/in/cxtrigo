@@ -1,0 +1,42 @@
+ASIN(z) = -I*log(I*z + sqrt(1 - z^2));
+ACOS(z) = -I*log(z + I*sqrt(1 - z^2));
+ATAN(z) = (log(1+I*z) - log(1-I*z))/(2*I);
+
+ASINH(z) = log(z + sqrt(1 + z^2));
+ACOSH(z) = 2*log(sqrt((z-1)/2) + sqrt((z+1)/2));
+ATANH(z) = (log(1+z) - log(1-z))/2;
+
+fun = [asin,acos,atan,asinh,acosh,atanh];
+FUN = [ASIN,ACOS,ATAN,ASINH,ACOSH,ATANH];
+
+test(f, F, N = 4) = {
+  my (h = 1./ N);
+  forstep (re = -N, N, h,
+    forstep (im = -N, N, h,
+      iferr(
+        my(mr, cr, dt);
+        mr = f(re+im*I);
+        cr = F(re+im*I); dt = mr - cr;
+        if (abs(dt) > 1e-10,
+          printf("%s(%.1f + I*%.1f):\t%.2g + I*%.2g\n",
+                 f, re, im, real(dt), imag(dt));
+        ),
+        ERR, printf ("%s: %.1f + I*%.1f is a pole ?\n", f, re, im))
+    )
+  );
+}
+for(k = 1, #fun, test(fun[k], FUN[k]));
+default(realprecision,1155);
+a=sqrt(2)/2;
+sin(asin(a)) - a
+cos(acos(a)) - a
+tan(atan(a)) - a
+sinh(asinh(a)) - a
+cosh(acosh(a)) - a
+tanh(atanh(a)) - a
+default(realprecision,38);
+a *= 1.;
+cotan(a)
+cotan(I)
+cotan(a+I)
+tanh(I)

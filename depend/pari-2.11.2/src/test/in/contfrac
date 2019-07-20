@@ -1,0 +1,33 @@
+contfrac(1,[],-1)
+contfracpnqn(Vecsmall([]))
+contfracpnqn([])
+contfracpnqn([],0)
+contfracpnqn([],1)
+contfracpnqn([2])
+contfracpnqn([2],0)
+contfracpnqn([2],1)
+v=[1,2,3];
+contfracpnqn(v)
+contfracpnqn(v,0)
+contfracpnqn(v,1)
+contfracpnqn(v,2)
+v=[1,2,3;4,5,6];
+contfracpnqn(v)
+contfracpnqn(v,0)
+contfracpnqn(v,1)
+contfracpnqn(v,2)
+
+s=exp(x);
+contfracinit(s,0)
+contfracinit(s,1)
+contfracinit(s,2)
+e=contfracinit([])
+contfraceval(e,1)
+e=contfracinit(s)
+contfraceval(e,1,10)
+contfraceval(e,1, 8)
+contfraceval(e,1, 6)
+contfraceval(e,1)
+contfracinit([1,2,3])
+contfracinit(Pol(0))
+contfracinit(1);

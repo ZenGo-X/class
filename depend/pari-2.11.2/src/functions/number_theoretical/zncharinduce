@@ -1,0 +1,56 @@
+Function: zncharinduce
+Section: number_theoretical
+C-Name: zncharinduce
+Prototype: GGG
+Help: zncharinduce(G, chi, N): let G be znstar(q,1), let chi
+ be a Dirichlet character mod q and let N be a multiple of q. Return
+ the character modulo N extending chi.
+Doc: Let $G$ be attached to $(\Z/q\Z)^*$ (as per \kbd{G = znstar(q,1)})
+ and let \kbd{chi} be a Dirichlet character on $(\Z/q\Z)^*$, given by
+
+ \item a \typ{VEC}: a standard character on \kbd{bid.gen},
+
+ \item a \typ{INT} or a \typ{COL}: a Conrey index in $(\Z/q\Z)^*$ or its
+ Conrey logarithm;
+ see \secref{se:dirichletchar} or \kbd{??character}.
+
+ Let $N$ be a multiple of $q$, return the character modulo $N$ extending
+ \kbd{chi}. As usual for arithmetic functions, the new modulus $N$ can be
+ given as a \typ{INT}, via a factorization matrix or a pair
+ \kbd{[N, factor(N)]}, or by \kbd{znstar(N,1)}.
+
+ \bprog
+ ? G = znstar(4, 1);
+ ? chi = znconreylog(G,1); \\ trivial character mod 4
+ ? zncharinduce(G, chi, 80)  \\ now mod 80
+ %3 = [0, 0, 0]~
+ ? zncharinduce(G, 1, 80)  \\ same using directly Conrey label
+ %4 = [0, 0, 0]~
+ ? G2 = znstar(80, 1);
+ ? zncharinduce(G, 1, G2)  \\ same
+ %4 = [0, 0, 0]~
+
+ ? chi = zncharinduce(G, 3, G2)  \\ extend the non-trivial character mod 4
+ %5 = [1, 0, 0]~
+ ? [G0,chi0] = znchartoprimitive(G2, chi);
+ ? G0.mod
+ %7 = 4
+ ? chi0
+ %8 = [1]~
+ @eprog\noindent Here is a larger example:
+ \bprog
+ ? G = znstar(126000, 1);
+ ? label = 1009;
+ ? chi = znconreylog(G, label)
+ %3 = [0, 0, 0, 14, 0]~
+ ? [G0,chi0] = znchartoprimitive(G, label); \\ works also with 'chi'
+ ? G0.mod
+ %5 = 125
+ ? chi0 \\ primitive character mod 5^3 attached to chi
+ %6 = [14]~
+ ? G0 = znstar(N0, 1);
+ ? zncharinduce(G0, chi0, G) \\ induce back
+ %8 = [0, 0, 0, 14, 0]~
+ ? znconreyexp(G, %)
+ %9 = 1009
+ @eprog

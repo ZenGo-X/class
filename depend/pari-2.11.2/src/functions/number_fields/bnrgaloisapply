@@ -1,0 +1,10 @@
+Function: bnrgaloisapply
+Section: number_fields
+C-Name: bnrgaloisapply
+Prototype: GGG
+Help: bnrgaloisapply(bnr, mat, H): apply the automorphism given by its matrix
+ mat to the congruence subgroup H given as a HNF matrix. The matrix mat can be
+ computed with bnrgaloismatrix.
+Doc: apply the automorphism given by its matrix \var{mat} to the congruence
+ subgroup $H$ given as a HNF matrix.
+ The matrix \var{mat} can be computed with \tet{bnrgaloismatrix}.

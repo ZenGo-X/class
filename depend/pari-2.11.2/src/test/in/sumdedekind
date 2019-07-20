@@ -1,0 +1,4 @@
+sumdedekind(-2,-3)
+sumdedekind(2, 4)
+sumdedekind(123186,28913191)
+sumdedekind(2^64+1, 2^65)

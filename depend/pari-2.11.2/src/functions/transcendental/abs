@@ -1,0 +1,26 @@
+Function: abs
+Section: transcendental
+C-Name: gabs
+Prototype: Gp
+Help: abs(x): absolute value (or modulus) of x.
+Description:
+ (small):small    labs($1)
+ (int):int        mpabs($1)
+ (real):real      mpabs($1)
+ (mp):mp          mpabs($1)
+ (gen):gen:prec        gabs($1, $prec)
+Doc: absolute value of $x$ (modulus if $x$ is complex).
+ Rational functions are not allowed. Contrary to most transcendental
+ functions, an exact argument is \emph{not} converted to a real number before
+ applying \kbd{abs} and an exact result is returned if possible.
+ \bprog
+ ? abs(-1)
+ %1 = 1
+ ? abs(3/7 + 4/7*I)
+ %2 = 5/7
+ ? abs(1 + I)
+ %3 = 1.414213562373095048801688724
+ @eprog\noindent
+ If $x$ is a polynomial, returns $-x$ if the leading coefficient is
+ real and negative else returns $x$. For a power series, the constant
+ coefficient is considered instead.

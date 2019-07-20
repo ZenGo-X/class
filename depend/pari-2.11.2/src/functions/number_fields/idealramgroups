@@ -1,0 +1,45 @@
+Function: idealramgroups
+Section: number_fields
+C-Name: idealramgroups
+Prototype: GGG
+Help: idealramgroups(nf,gal,pr): let pr be a prime ideal in prid format, and
+ gal the Galois group of the number field nf, return a vector g such that g[1]
+ is the decomposition group of pr, g[2] is the inertia group, g[i] is the
+ (i-2)th ramification group of pr, all trivial subgroups being omitted.
+Doc: Let $K$ be the number field defined by \var{nf} and assume that $K/\Q$ is
+ Galois with Galois group $G$ given by \kbd{gal=galoisinit(nf)}.
+ Let \var{pr} be the prime ideal $\goth{P}$ in prid format.
+ This function returns a vector $g$ of subgroups of \kbd{gal}
+ as follow:
+
+ \item \kbd{g[1]} is the decomposition group of $\goth{P}$,
+
+ \item \kbd{g[2]} is $G_0(\goth{P})$, the inertia group of $\goth{P}$,
+
+ and for $i\geq 2$,
+
+ \item \kbd{g[i]} is $G_{i-2}(\goth{P})$, the $i-2$-th
+ \idx{ramification group} of $\goth{P}$.
+
+ \noindent The length of $g$ is the number of non-trivial groups in the
+ sequence, thus is $0$ if $e=1$ and $f=1$, and $1$ if $f>1$ and $e=1$.
+ The following function computes the cardinality of a subgroup of $G$,
+ as given by the components of $g$:
+ \bprog
+ card(H) =my(o=H[2]); prod(i=1,#o,o[i]);
+ @eprog
+ \bprog
+ ? nf=nfinit(x^6+3); gal=galoisinit(nf); pr=idealprimedec(nf,3)[1];
+ ? g = idealramgroups(nf, gal, pr);
+ ? apply(card,g)
+ %3 = [6, 6, 3, 3, 3] \\ cardinalities of the G_i
+ @eprog
+
+ \bprog
+ ? nf=nfinit(x^6+108); gal=galoisinit(nf); pr=idealprimedec(nf,2)[1];
+ ? iso=idealramgroups(nf,gal,pr)[2]
+ %5 = [[Vecsmall([2, 3, 1, 5, 6, 4])], Vecsmall([3])]
+ ? nfdisc(galoisfixedfield(gal,iso,1))
+ %6 = -3
+ @eprog\noindent The field fixed by the inertia group of $2$ is not ramified at
+ $2$.

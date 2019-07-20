@@ -1,0 +1,23 @@
+Function: _/_
+Section: symbolic_operators
+C-Name: gdiv
+Prototype: GG
+Help: x/y: quotient of x and y.
+Description:
+ (0, mp):small                   ($2, 0)/*for side effect*/
+ (1, real):real                  invr($2)
+ (#small, real):real             divsr($1, $2)
+ (small, real):mp                divsr($1, $2)
+ (real, small):real              divrs($1, $2)
+ (real, real):real               divrr($1, $2)
+ (real, mp):real                 mpdiv($1, $2)
+ (mp, real):mp                   mpdiv($1, $2)
+ (1, gen):gen                    ginv($2)
+ (gen, small):gen                gdivgs($1, $2)
+ (small, gen):gen                gdivsg($1, $2)
+ (gen, gen):gen                  gdiv($1, $2)
+
+ (Fp, 2):Fp                       Fp_halve($1, p)
+ (Fp, Fp):Fp                     Fp_div($1, $2, p)
+ (Fq, 2):Fq                       Fq_halve($1, T, p)
+ (Fq, Fq):Fq                     Fq_div($1, $2, T, p)

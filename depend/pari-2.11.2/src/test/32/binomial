@@ -1,0 +1,13 @@
+1/2*x^2 - 1/2*x
+20
+[1, 6, 15, 20, 15, 6, 1]
+  ***   at top-level: binomial(1,2.)
+  ***                 ^--------------
+  *** binomial: incorrect type in binomial (t_REAL).
+  ***   at top-level: binomial(-1)
+  ***                 ^------------
+  *** binomial: incorrect type in binomial (t_INT).
+  ***   at top-level: binomial(1.)
+  ***                 ^------------
+  *** binomial: incorrect type in binomial (t_REAL).
+Total time spent: 0

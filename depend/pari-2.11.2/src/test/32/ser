@@ -1,0 +1,167 @@
+x + x^2 + O(x^5)
+x + x^2 - 1/3*x^3 - x^4 + O(x^5)
+O(x^5)
+[0.78539816339744830961566084581987572105 + O(x^16)]
+x + x^2 + 1/6*x^3 + 1/2*x^4 + O(x^5)
+O(x^5)
+[1.5707963267948966192313216916397514421 + O(x^8)]
+1.5707963267948966192313216916397514421 - x - x^2 - 1/6*x^3 - 1/2*x^4 + O(x^
+5)
+1.5707963267948966192313216916397514421 + O(x^5)
+[O(x^8)]
+1 + 1/2*x^2 + x^3 + 13/24*x^4 + O(x^5)
+1 + O(x^5)
+[1.5430806348152437784779056207570616826 + O(x^16)]
+x + x^2 + 1/6*x^3 + 1/2*x^4 + O(x^5)
+O(x^5)
+[1.1752011936438014568823818505956008152 + O(x^16)]
+x + x^2 - 1/3*x^3 - x^4 + O(x^5)
+O(x^5)
+[0.76159415595576488811945828260479359041 + O(x^16)]
+x^-1 - 1 + 4/3*x - 2/3*x^2 + O(x^3)
+O(x^5)
+[1.3130352854993313036361612469308478329 + O(x^16)]
+1.5707963267948966192313216916397514421*I - 1.000000000000000000000000000000
+0000000*I*x - 1.0000000000000000000000000000000000000*I*x^2 - 0.166666666666
+66666666666666666666666667*I*x^3 - 0.50000000000000000000000000000000000000*
+I*x^4 + O(x^5)
+1.5707963267948966192313216916397514421*I + O(x^5)
+[O(x^8)]
+x + x^2 - 1/6*x^3 - 1/2*x^4 + O(x^5)
+O(x^5)
+[0.88137358701954302523260932497979230903 + O(x^16)]
+x + x^2 + 1/3*x^3 + x^4 + O(x^5)
+O(x^5)
+  ***   at top-level: ...rint(f[i](O(x^5)));print(f[i]([Pol(1)]));)
+  ***                                             ^-----------------
+  ***   in function f: atanh
+  ***                  ^-----
+  *** atanh: impossible inverse in div_ser: O(x^16).
+O(x^-2)
+O(x^-2)
+2 + O(x^2)
+1 + O(x^2)
+1
+O(x^0)
+2*x + O(x^2)
+2*x - 8/3*x^3 + 32/5*x^5 - 128/7*x^7 + 512/9*x^9 - 2048/11*x^11 + 8192/13*x^
+13 - 32768/15*x^15 + O(x^17)
+error("domain error in sqrtn: valuation != Mod(0, 2)")
+((1 + O(y^4))*x + y^3)/(y^3*x)
+x + 2*x^2 + O(x^3)
+2*x^2 + O(x^3)
+O(x^100)
+x + O(x^2)
+Mod(0, 3)*x + O(x^2)
+Mod(0, 3)*x + O(x^2)
+1 + 2*x + 3*x^2 + O(x^3)
+1 + 2*x + 3*x^2 + O(x^6)
+1 + 2*x - 5*x^2 + O(x^3)
+1 + 2*y + O(y^2)
+1 + 2*y + 3*y^2 + O(y^5)
+1 + 2*y + 3*y^2 + O(y^5)
+O(x^3)
+1 + 2*y + 3*y^2 + O(y^5)
+x + O(x^4)
+O(x^3)
+x + x^2 + O(x^3)
+O(x^2)
+O(x^0)
+O(x^0)
+O(x^-1)
+O(x^0)
+y + x + O(x^2)
+(y + O(y^17)) + (1 + O(y^16))*x + O(x^2)
+Mod(0, 7)*x^15 + O(x^16)
+Mod(1, 7)*x^2 + Mod(1, 7)*x^4 + O(x^5)
+Mod(0, 7)*x^15 + O(x^16)
+Mod(1, 7) + O(x^16)
+Mod(1, 7)*x + O(x^16)
+Mod(0, 7)*x^14 + O(x^15)
+Mod(0, 7)*x^14 + O(x^15)
+Mod(0, 7)*x^15 + O(x^16)
+Mod(0, 7)*x^15 + O(x^16)
+Mod(0, 7)*x^15 + O(x^16)
+Mod(0, 7)*x^15 + O(x^16)
+O(x^16)
+Mod(0, 7)*x^15 + O(x^16)
+O(x^16)
+0
+Mod(0, 4)*x + O(x^2)
+(1 + O(y^2))*x^3
+(Mod(1, 3) + O(y^2))*x^3
+O(x)
+O(3) + O(x)
+O(3^2) + O(x)
+O(3^3) + O(x)
+1 + O(x)
+  *** _+_: Warning: normalizing a series with 0 leading term.
+x^-1 + O(x)
+[0, 1, 1]
+[0, 1, 1]
+[0, 1, 1]
+Mod(0, 9)*x + O(x^2)
+0.E-38*x^-1 + O(x^0)
+O(x^0)
+Mod(0, 2)*x^-1 + O(x^0)
+1 + O(y)
+1 + y^2 + O(y^4)
+1
+1
+0
+1 + O(x^200)
+1
+1 + x^3 + O(x^6)
+1 + x^2 + O(x^4)
+1 + x^3 + 4*x^4 + O(x^5)
+0
+Mod(0, 3)
+O(3^2)*x^2 + O(x^3)
+1
+Mod(1, 3)
+1 + O(3)*x + O(x^2)
+1 + z^2 + O(z^3)
+y^2 + (1 + z^2 + O(z^3))
+x^-1 - 1/6*x + 1/120*x^3 + O(x^4)
+t^-1 - 1/6*t + 1/120*t^3 + O(t^4)
+-1/2*x + 1/24*x^3 - 1/720*x^5 + 1/40320*x^7 - 1/3628800*x^9 + 1/479001600*x^
+11 - 1/87178291200*x^13 + 1/20922789888000*x^15 - 1/6402373705728000*x^17 + 
+O(x^18)
+  ***   at top-level: subst(x^-1+O(x),x,Mod(0,3))
+  ***                 ^---------------------------
+  *** subst: impossible inverse in gsubst: Mod(0, 3).
+  ***   at top-level: subst(O(x^-1),x,Mod(0,3))
+  ***                 ^-------------------------
+  *** subst: impossible inverse in gsubst: Mod(0, 3).
+  ***   at top-level: subst(x^-1+O(x),x,0*x)
+  ***                 ^----------------------
+  *** subst: impossible inverse in gsubst: 0.
+  ***   at top-level: subst(O(x^-1),x,0*x)
+  ***                 ^--------------------
+  *** subst: impossible inverse in gsubst: 0.
+  ***   at top-level: Ser(1/x,y)
+  ***                 ^----------
+  *** Ser: incorrect priority in Ser: variable x < y
+  ***   at top-level: Ser(x,y)
+  ***                 ^--------
+  *** Ser: incorrect priority in Ser: variable x < y
+  ***   at top-level: Ser([x],y)
+  ***                 ^----------
+  *** Ser: incorrect priority in Ser: variable x <= y
+  ***   at top-level: Ser(x,,-5)
+  ***                 ^----------
+  *** Ser: domain error in Ser: precision < 0
+  ***   at top-level: Ser("")
+  ***                 ^-------
+  *** Ser: incorrect type in Ser (t_STR).
+  *** _/_: Warning: normalizing a series with 0 leading term.
+  ***   at top-level: O(13^-5)/Mat(Mod(2,26)*y*x+(Mod(1,2)*y^-1+O(y^
+  ***                         ^--------------------------------------
+  *** _/_: impossible inverse in div_ser: O(13^0) + O(13^0)*y + O(13^0)*y^2 + O(13^0)*y^3 + O(y^4).
+  ***   at top-level: laurentseries(1)
+  ***                 ^----------------
+  *** laurentseries: incorrect type in laurentseries (t_INT).
+  ***   at top-level: laurentseries((x,y)->1)
+  ***                 ^-----------------------
+  *** laurentseries: incorrect type in laurentseries (t_CLOSURE).
+Total time spent: 16

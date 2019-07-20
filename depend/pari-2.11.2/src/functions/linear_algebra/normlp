@@ -1,0 +1,42 @@
+Function: normlp
+Section: linear_algebra
+C-Name: gnormlp
+Prototype: GDGp
+Help: normlp(x,{p=oo}): Lp-norm of x; sup norm if p is omitted.
+Description:
+  (gen):gen:prec           gsupnorm($1, $prec)
+  (gen,):gen:prec          gsupnorm($1, $prec)
+  (gen,1):gen:prec         gnorml1($1, $prec)
+Doc:
+ $L^p$-norm of $x$; sup norm if $p$ is omitted or \kbd{+oo}. More precisely,
+ if $x$ is a scalar, \kbd{normlp}$(x, p)$ is defined to be \kbd{abs}$(x)$.
+ If $x$ is a polynomial, a (row or column) vector or a matrix:
+
+ \item  if $p$ is omitted or \kbd{+oo}, then \kbd{normlp($x$)} is defined
+ recursively as $\max_i \kbd{normlp}(x_i))$, where $(x_i)$ run through the
+ components of~$x$. In particular, this yields the usual sup norm if $x$ is a
+ polynomial or vector with complex components.
+
+ \item otherwise, \kbd{normlp($x$, $p$)} is defined recursively as $(\sum_i
+ \kbd{normlp}^p(x_i,p))^{1/p}$. In particular, this yields the usual $(\sum
+ |x_i|^p)^{1/p}$ if $x$ is a polynomial or vector with complex components.
+
+ \bprog
+ ? v = [1,-2,3]; normlp(v)      \\ vector
+ %1 = 3
+ ? normlp(v, +oo)               \\ same, more explicit
+ %2 = 3
+ ? M = [1,-2;-3,4]; normlp(M)   \\ matrix
+ %3 = 4
+ ? T = (1+I) + I*x^2; normlp(T)
+ %4 = 1.4142135623730950488016887242096980786
+ ? normlp([[1,2], [3,4], 5, 6])   \\ recursively defined
+ %5 = 6
+
+ ? normlp(v, 1)
+ %6 = 6
+ ? normlp(M, 1)
+ %7 = 10
+ ? normlp(T, 1)
+ %8 = 2.4142135623730950488016887242096980786
+ @eprog

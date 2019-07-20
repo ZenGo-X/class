@@ -1,0 +1,8 @@
+Function: return
+Section: programming/control
+C-Name: return0
+Prototype: DG
+Help: return({x=0}): return from current subroutine with result x.
+Doc: returns from current subroutine, with
+ result $x$. If $x$ is omitted, return the \kbd{(void)} value (return no
+ result, like \kbd{print}).

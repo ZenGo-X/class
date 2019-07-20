@@ -1,0 +1,31 @@
+Function: mseisenstein
+Section: modular_symbols
+C-Name: mseisenstein
+Prototype: G
+Help: mseisenstein(M): M being a full modular symbol space, as given by msinit,
+ return its Eisenstein subspace.
+Doc:
+ $M$ being a full modular symbol space, as given by \kbd{msinit},
+ return its Eisenstein subspace.
+ A subspace is given by a structure allowing quick projection and
+ restriction of linear operators; its first component is
+ a matrix with integer coefficients whose columns form a $\Q$-basis of
+ the subspace.
+ This is the same basis as given by the second component of
+ \kbd{mscuspidal}$(M, 1)$.
+ \bprog
+ ? M = msinit(2,8, 1); \\ M_8(Gamma_0(2))^+
+ ? E = mseisenstein(M);
+ ? E[1]  \\ 2-dimensional
+ %3 =
+ [0 -10]
+
+ [0 -15]
+
+ [0  -3]
+
+ [1   0]
+
+ ? E == mscuspidal(M,1)[2]
+ %4 = 1
+ @eprog

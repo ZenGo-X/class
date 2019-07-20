@@ -1,0 +1,28 @@
+Function: ellmul
+Section: elliptic_curves
+C-Name: ellmul
+Prototype: GGG
+Help: ellmul(E,z,n): n times the point z on elliptic curve E (n in Z).
+Doc:
+ computes $[n]z$, where $z$ is a point on the elliptic curve $E$. The
+ exponent $n$ is in $\Z$, or may be a complex quadratic integer if the curve $E$
+ has complex multiplication by $n$ (if not, an error message is issued).
+ \bprog
+ ? Ei = ellinit([1,0]); z = [0,0];
+ ? ellmul(Ei, z, 10)
+ %2 = [0]     \\ unsurprising: z has order 2
+ ? ellmul(Ei, z, I)
+ %3 = [0, 0]  \\ Ei has complex multiplication by Z[i]
+ ? ellmul(Ei, z, quadgen(-4))
+ %4 = [0, 0]  \\ an alternative syntax for the same query
+ ? Ej  = ellinit([0,1]); z = [-1,0];
+ ? ellmul(Ej, z, I)
+   ***   at top-level: ellmul(Ej,z,I)
+   ***                 ^--------------
+   *** ellmul: not a complex multiplication in ellmul.
+ ? ellmul(Ej, z, 1+quadgen(-3))
+ %6 = [1 - w, 0]
+ @eprog
+ The simple-minded algorithm for the CM case assumes that we are in
+ characteristic $0$, and that the quadratic order to which $n$ belongs has
+ small discriminant.

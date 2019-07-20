@@ -1,0 +1,6 @@
+Function: nfeltnorm
+Section: number_fields
+C-Name: nfnorm
+Prototype: GG
+Help: nfeltnorm(nf,x): norm of x.
+Doc: returns the absolute norm of $x$.

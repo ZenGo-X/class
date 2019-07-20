@@ -1,0 +1,16 @@
+Function: pareval
+Section: programming/parallel
+C-Name: pareval
+Prototype: G
+Help: pareval(x): parallel evaluation of the elements of the vector of
+ closures x.
+Doc: parallel evaluation of the elements of \kbd{x}, where \kbd{x} is a
+ vector of closures. The closures must be of arity $0$, must not access
+ global variables or variables declared with \kbd{local} and must be
+ free of side effects.
+
+Function: _pareval_worker
+Section: programming/internals
+C-Name: pareval_worker
+Prototype: G
+Help: _pareval_worker(C): evaluate the closure C.

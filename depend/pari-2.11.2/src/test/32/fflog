@@ -1,0 +1,29 @@
+[1, [1, matrix(0,2)]]
+0
+[2, [2, Mat([2, 1])]]
+1
+[2, [4294967290, [2, 1; 5, 1; 19, 1; 22605091, 1]]]
+17
+[2, [18446744073709551628, [2, 2; 7, 1; 658812288346769701, 1]]]
+17
+3
+1234567891012345678
+1234567891012345678
+12345678910
+2739979050900541
+1234567891012345
+123456789101
+1
+1
+1
+1
+1
+1
+1
+error("incorrect type in generic discrete logarithm (order factorization) (t
+_COMPLEX).")
+error("incorrect type in generic discrete logarithm (order factorization) (t
+_INT).")
+error("incorrect type in factorback [not a factorization] (t_MAT).")
+error("incorrect type in factorback [not an exponent vector] (t_COL).")
+Total time spent: 2948

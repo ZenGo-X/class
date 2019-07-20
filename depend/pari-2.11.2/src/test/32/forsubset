@@ -1,0 +1,22 @@
+Vecsmall([])
+Vecsmall([1])
+Vecsmall([2])
+Vecsmall([3])
+Vecsmall([4])
+Vecsmall([1, 2])
+Vecsmall([1, 3])
+Vecsmall([1, 4])
+Vecsmall([2, 3])
+Vecsmall([2, 4])
+Vecsmall([3, 4])
+Vecsmall([1, 2, 3])
+Vecsmall([1, 2, 4])
+Vecsmall([1, 3, 4])
+Vecsmall([2, 3, 4])
+Vecsmall([1, 2, 3, 4])
+Vecsmall([])
+Vecsmall([])
+  ***   at top-level: forsubset('x,s,)
+  ***                 ^----------------
+  ***   incorrect type in forsubset (t_POL).
+Total time spent: 0

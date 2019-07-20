@@ -1,0 +1,62 @@
+M_2(F_4)
+M_2(F_9)
+M_2(F_31^2)
+M_2(F_p^2)
+M_d(F_31^n)
+d=1 n=1
+d=1 n=2
+d=1 n=3
+d=1 n=4
+d=1 n=5
+d=1 n=6
+d=1 n=7
+d=1 n=8
+d=1 n=9
+d=1 n=10
+d=2 n=1
+d=2 n=2
+d=2 n=3
+d=2 n=4
+d=3 n=1
+d=3 n=2
+d=4 n=1
+examples from documentation
+
+[2*a 0]
+
+[  0 2]
+
+
+[1   2*a]
+
+[2 a + 2]
+
+1
+
+[0 0]
+
+[a 0]
+
+bad input
+  ***   at top-level: algsplit("toto")
+  ***                 ^----------------
+  *** algsplit: incorrect type in checkalg [please apply alginit()] (t_STR).
+  ***   at top-level: algsplit(alginit(nfinit('y),[-1,-1]))
+  ***                 ^-------------------------------------
+  *** algsplit: sorry, splitting a characteristic 0 algebra over its center is not yet implemented.
+  ***   at top-level: algsplit(algtableinit([matid(3),[0,0,0;1,1,0;0
+  ***                 ^----------------------------------------------
+  *** algsplit: the algebra must be simple (alg_finite_csa_split 1).
+  ***   at top-level: algsplit(algtableinit([matid(2),[0,0;1,1]],2))
+  ***                 ^----------------------------------------------
+  *** algsplit: the algebra must be simple (alg_finite_csa_split 2).
+  ***   at top-level: algsplit(matblock([2,1,1,1],1,q))
+  ***                 ^---------------------------------
+  *** algsplit: the algebra must be simple (try_split 1).
+  ***   at top-level: algsplit(matblock([1,2,3],1,q))
+  ***                 ^-------------------------------
+  *** algsplit: the algebra must be simple (try_split 2).
+  ***   at top-level: algsplit(algtableinit(mt,2))
+  ***                 ^----------------------------
+  *** algsplit: the algebra must be simple (alg_finite_csa_split 3).
+Total time spent: 604

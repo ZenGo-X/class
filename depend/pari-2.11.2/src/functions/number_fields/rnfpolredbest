@@ -1,0 +1,57 @@
+Function: rnfpolredbest
+Section: number_fields
+C-Name: rnfpolredbest
+Prototype: GGD0,L,
+Help: rnfpolredbest(nf,pol,{flag=0}): given a pol with coefficients in nf,
+ finds a relative polynomial P defining the same field, hopefully simpler
+ than pol; flag
+ can be 0: default, 1: return [P,a], where a is a root of pol
+ 2: return an absolute polynomial Pabs, 3:
+ return [Pabs, a,b], where a is a root of nf.pol and b is a root of pol.
+Doc: relative version of \kbd{polredbest}. Given a monic polynomial \var{pol}
+ with coefficients in $\var{nf}$, finds a simpler relative polynomial $P$
+ defining the same field. As opposed to \tet{rnfpolredabs} this function does
+ not return a \emph{smallest} (canonical) polynomial with respect to some
+ measure, but it does run in polynomial time.
+
+ The binary digits of $\fl$ correspond to $1$: add information to convert
+ elements to the new representation, $2$: absolute polynomial, instead of
+ relative. More precisely:
+
+ 0: default, return $P$
+
+ 1: returns $[P,a]$ where $P$ is the default output and $a$,
+ a \typ{POLMOD} modulo $P$, is a root of \var{pol}.
+
+ 2: returns \var{Pabs}, an absolute, instead of a relative, polynomial.
+ Same as but faster than
+ \bprog
+   rnfequation(nf, rnfpolredbest(nf,pol))
+ @eprog
+
+ 3: returns $[\var{Pabs},a,b]$, where \var{Pabs} is an absolute polynomial
+ as above, $a$, $b$ are \typ{POLMOD} modulo \var{Pabs}, roots of \kbd{nf.pol}
+ and \var{pol} respectively.
+
+ \bprog
+ ? K = nfinit(y^3-2); pol = x^2 +x*y + y^2;
+ ? [P, a] = rnfpolredbest(K,pol,1);
+ ? P
+ %3 = x^2 - x + Mod(y - 1, y^3 - 2)
+ ? a
+ %4 = Mod(Mod(2*y^2+3*y+4,y^3-2)*x + Mod(-y^2-2*y-2,y^3-2),
+          x^2 - x + Mod(y-1,y^3-2))
+ ? subst(K.pol,y,a)
+ %5 = 0
+ ? [Pabs, a, b] = rnfpolredbest(K,pol,3);
+ ? Pabs
+ %7 = x^6 - 3*x^5 + 5*x^3 - 3*x + 1
+ ? a
+ %8 = Mod(-x^2+x+1, x^6-3*x^5+5*x^3-3*x+1)
+ ? b
+ %9 = Mod(2*x^5-5*x^4-3*x^3+10*x^2+5*x-5, x^6-3*x^5+5*x^3-3*x+1)
+ ? subst(K.pol,y,a)
+ %10 = 0
+ ? substvec(pol,[x,y],[a,b])
+ %11 = 0
+ @eprog

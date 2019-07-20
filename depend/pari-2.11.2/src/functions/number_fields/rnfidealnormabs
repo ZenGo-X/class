@@ -1,0 +1,14 @@
+Function: rnfidealnormabs
+Section: number_fields
+C-Name: rnfidealnormabs
+Prototype: GG
+Help: rnfidealnormabs(rnf,x): absolute norm of the ideal x.
+Doc: let $\var{rnf}$ be a relative
+ number field extension $L/K$ as output by \kbd{rnfinit} and let $x$ be a
+ relative ideal (which can be, as in the absolute case, of many different
+ types, including of course elements). This function computes the norm of the
+ $x$ considered as an ideal of the absolute extension $L/\Q$. This is
+ identical to
+ \bprog
+    idealnorm(rnf, rnfidealnormrel(rnf,x))
+ @eprog\noindent but faster.

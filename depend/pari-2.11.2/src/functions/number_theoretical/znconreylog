@@ -1,0 +1,85 @@
+Function: znconreylog
+Section: number_theoretical
+C-Name: znconreylog
+Prototype: GG
+Help: znconreylog(G,m): Conrey logarithm attached to m in (Z/qZ)*,
+ where G is znstar(q,1).
+Doc: Given a \var{znstar} attached to $(\Z/q\Z)^*$ (as per
+ \kbd{G = znstar(q,1)}), this function returns the Conrey logarithm of
+ $m \in (\Z/q\Z)^*$.
+
+ Let $q = \prod_p p^{e_p}$ be the factorization of $q$ into distinct primes,
+ where we assume $e_2 = 0$ or $e_2 \geq 2$. (If $e_2 = 1$, we can ignore $2$
+ from the factorization, as if we replaced $q$ by $q/2$, since $(\Z/q\Z)^*
+ \sim (\Z/(q/2)\Z)^*$.)
+
+ For all odd  $p$ with $e_p > 0$, let $g_p$ be the element in $(\Z/q\Z)^*$
+ which is
+
+ \item congruent to $1$ mod $q/p^{e_p}$,
+
+ \item congruent mod $p^{e_p}$ to the smallest positive integer that generates
+ $(\Z/p^2\Z)^*$.
+
+ For $p = 2$, we let $g_4$ (if $2^{e_2} \geq 4$) and $g_8$ (if furthermore
+ ($2^{e_2} \geq 8$) be the elements in $(\Z/q\Z)^*$ which are
+
+ \item congruent to $1$ mod $q/2^{e_2}$,
+
+ \item $g_4 = -1 \mod 2^{e_2}$,
+
+ \item $g_8 = 5 \mod 2^{e_2}$.
+
+ Then the $g_p$ (and the extra $g_4$ and $g_8$ if $2^{e_2}\geq 2$) are
+ independent generators of $\Z/q\Z^*$, i.e. every $m$ in $(\Z/q\Z)^*$ can be
+ written uniquely as $\prod_p g_p^{m_p}$, where $m_p$ is defined modulo the
+ order $o_p$ of $g_p$ and $p \in S_q$, the set of prime divisors of $q$
+ together with $4$ if $4 \mid q$ and $8$ if $8 \mid q$. Note that the $g_p$
+ are in general \emph{not} SNF generators as produced by \kbd{znstar} whenever
+ $\omega(q) \geq 2$, although their number is the same. They however allow
+ to handle the finite abelian group $(\Z/q\Z)^*$ in a fast and elegant way.
+ (Which unfortunately does not generalize to ray class groups or Hecke
+ characters.)
+
+ The Conrey logarithm of $m$ is the vector $(m_p)_{p\in S_q}$. The inverse
+ function \tet{znconreyexp} recovers the Conrey label $m$ from a character.
+
+ \bprog
+ ? G = znstar(126000, 1);
+ ? znconreylog(G,1)
+ %2 = [0, 0, 0, 0, 0]~
+ ? znconreyexp(G, %)
+ %3 = 1
+ ? znconreylog(G,2)  \\ 2 is not coprime to modulus !!!
+   ***   at top-level: znconreylog(G,2)
+   ***                 ^-----------------
+   *** znconreylog: elements not coprime in Zideallog:
+     2
+     126000
+   ***   Break loop: type 'break' to go back to GP prompt
+ break>
+ ? znconreylog(G,11) \\ wrt. Conrey generators
+ %4 = [0, 3, 1, 76, 4]~
+ ? log11 = ideallog(,11,G)   \\ wrt. SNF generators
+ %5 = [178, 3, -75, 1, 0]~
+ @eprog\noindent
+
+ For convenience, we allow to input the ordinary discrete log of $m$,
+ $\kbd{ideallog(,m,bid)}$, which allows to convert discrete logs
+ from \kbd{bid.gen} generators to Conrey generators.
+ \bprog
+ ? znconreylog(G, log11)
+ %7 = [0, 3, 1, 76, 4]~
+ @eprog\noindent We also allow a character (\typ{VEC}) on \kbd{bid.gen} and
+ return its representation on the Conrey generators.
+ \bprog
+ ? G.cyc
+ %8 = [300, 12, 2, 2, 2]
+ ? chi = [10,1,0,1,1];
+ ? znconreylog(G, chi)
+ %10 = [1, 3, 3, 10, 2]~
+ ? n = znconreyexp(G, chi)
+ %11 = 84149
+ ? znconreychar(G, n)
+ %12 = [10, 1, 0, 1, 1]
+ @eprog

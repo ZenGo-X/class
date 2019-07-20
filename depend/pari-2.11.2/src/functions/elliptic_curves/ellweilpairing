@@ -1,0 +1,8 @@
+Function: ellweilpairing
+Section: elliptic_curves
+C-Name: ellweilpairing
+Prototype: GGGG
+Help: ellweilpairing(E, P, Q, m): computes the Weil pairing of the two points
+ of m-torsion P and Q on the elliptic curve E.
+Doc: Computes the Weil pairing of the two points of $m$-torsion $P$ and $Q$
+ on the elliptic curve $E$.

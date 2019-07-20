@@ -1,0 +1,13 @@
+Function: vecprod
+Section: linear_algebra
+C-Name: vecprod
+Prototype: G
+Help: vecprod(v): return the product of the components of the vector v.
+Doc: return the product of the components of the vector $v$. Return $1$ on an
+ empty vector.
+ \bprog
+ ? vecprod([1,2,3])
+ %1 = 6
+ ? vecprod([])
+ %2 = 1
+ @eprog

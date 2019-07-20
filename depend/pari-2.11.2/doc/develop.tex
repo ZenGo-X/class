@@ -1,0 +1,815 @@
+\def\TITLE{Developer's Guide to the PARI library}
+\input parimacro.tex
+
+% START TYPESET
+\begintitle
+\vskip 2.5truecm
+\centerline{\mine Developer's Guide}
+\vskip 1.truecm
+\centerline{\mine to}
+\vskip 1.truecm
+\centerline{\mine the PARI library}
+\vskip 1.truecm
+\centerline{\sectiontitlebf (version \vers)}
+\vskip 1.truecm
+\authors
+\endtitle
+
+\copyrightpage
+\tableofcontents
+\openin\std=develop.aux
+\ifeof\std
+\else
+  \input develop.aux
+\fi
+\chapno=0
+
+\chapter{Work in progress}
+
+This draft documents private internal functions and structures for hard-core
+PARI developers. Anything in here is liable to change on short notice. Don't
+use anything in the present document, unless you are implementing new
+features for the PARI library. Try to fix the interfaces before using them,
+or document them in a better way.
+If you find an undocumented hack somewhere, add it here.
+
+Hopefully, this will eventually document everything that we buried in
+\kbd{paripriv.h} or even more private header files like \kbd{anal.h}.
+Possibly, even implementation choices! Way to go.
+
+\section{The type \typ{CLOSURE}}\kbdsidx{t_CLOSURE}\sidx{closure}
+This type holds closures and functions in compiled form, so is deeply
+linked to the internals of the GP compiler and evaluator.
+The length of this type can be $6$, $7$ or $8$ depending whether the
+object is an ``inline closure'', a ``function'' or a ``true closure''.
+
+A function is a regular GP function. The GP input line is treated as a
+function of arity $0$.
+
+A true closure is a GP function defined in a non-empty lexical context.
+
+An inline closure is a closure that appears in the code without
+the preceding \kbd{->} token. They are generally attached to the prototype
+code 'E' and 'I'. Inline closures can only exist as data of other closures,
+see below.
+
+In the following example,
+\bprog
+f(a=Euler)=x->sin(x+a);
+g=f(Pi/2);
+plot(x=0,2*Pi,g(x))
+@eprog\noindent
+\kbd{f} is a function, \kbd{g} is a true closure and both \kbd{Euler} and
+\kbd{g(x)} are inline closures.
+
+This type has a second codeword \kbd{z[1]}, which is the arity of the
+function or closure. This is zero for inline closures. To access it, use
+
+\fun{long}{closure_arity}{GEN C}
+
+\item \kbd{z[2]} points to a \typ{STR} which holds the opcodes. To access it, use
+
+\fun{GEN}{closure_get_code}{GEN C}.
+
+\fun{const char *}{closure_codestr}{GEN C} returns as an array of \kbd{char}
+starting at $1$.
+
+\item \kbd{z[3]} points to a \typ{VECSMALL} which holds the operands of the opcodes.
+To access it, use
+
+\fun{GEN}{closure_get_oper}{GEN C}
+
+\item \kbd{z[4]} points to a \typ{VEC} which hold the data referenced by the
+\kbd{pushgen} opcodes, which can be \typ{CLOSURE}, and in particular
+inline closures. To access it, use
+
+\fun{GEN}{closure_get_data}{GEN C}
+
+\item \kbd{z[5]} points to a \typ{VEC} which hold extra data needed for
+error-reporting and debugging. See \secref{se:dbgclosure} for details.
+To access it, use
+
+\fun{GEN}{closure_get_dbg}{GEN C}
+
+Additionally, for functions and true closures,
+
+\item \kbd{z[6]} usually points to a \typ{VEC} with two components which are \typ{STR}.
+The first one displays the list of arguments of the closure without the
+enclosing parentheses, the second one the GP code of the function at the
+right of the \kbd{->} token. They are used to display the closure, either in
+implicit or explicit form. However for closures that were not generated from GP
+code, \kbd{z[6]} can point to a \typ{STR} instead. To access it, use
+
+\fun{GEN}{closure_get_text}{GEN C}
+
+Additionally, for true closure,
+
+\item \kbd{z[7]} points to a \typ{VEC} which holds the values of all lexical
+variables defined in the scope the closure was defined. To access it, use
+
+\fun{GEN}{closure_get_frame}{GEN C}
+
+\subsec{Debugging information in closure}\label{se:dbgclosure}
+
+Every \typ{CLOSURE} object \kbd{z} has a component \kbd{dbg=z[5]}
+which hold extra data needed for error-reporting and debugging.
+The object \kbd{dbg} is a \typ{VEC} with $3$ components:
+
+\kbd{dbg[1]} is a \typ{VECSMALL} of the same length than \kbd{z[3]}. For each
+opcode, it holds the position of the corresponding GP source code in the
+strings stored in \kbd{z[6]} for function or true closures, positive indices
+referring to the second strings, and negative indices referring to the first
+strings, the last element being indexed as $-1$. For inline closures, the
+string of the parent function or true closure is used instead.
+
+\kbd{dbg[2]} is a \typ{VECSMALL} that lists opcodes index where new lexical
+local variables are created. The value $0$ denotes the position before the
+first offset and variables created by the prototype code 'V'.
+
+\kbd{dbg[3]} is a \typ{VEC} of \typ{VECSMALL}s that give the list of
+\kbd{entree*} of the lexical local variables created at a given index in
+\kbd{dbg[2]}.
+
+\section{The type \typ{LIST}}\kbdsidx{t_LIST}\sidx{list} This type needs to go
+through various hoops to support GP's inconvenient memory model. Don't
+use \typ{LIST}s in pure library mode, reimplement ordinary lists! This
+dynamic type is implemented by a \kbd{GEN} of length 3: two codewords and a
+vector containing the actual entries. In a normal setup (a finished list,
+ready to be used),
+
+\item the vector is malloc'ed, so that it can be realloc'ated without moving
+the parent \kbd{GEN}.
+
+\item all the entries are clones, possibly with cloned subcomponents; they
+must be deleted with \tet{gunclone_deep}, not \tet{gunclone}.
+
+The following macros are proper lvalues and access the components
+
+\fun{long}{list_nmax}{GEN L}: current maximal number of elements. This grows
+as needed.
+
+\fun{GEN}{list_data}{GEN L}: the elements. If \kbd{v = list\_data(L)}, then
+either \kbd{v} is \kbd{NULL} (empty list) or \kbd{l = lg(v)} is defined, and
+the elements are \kbd{v[1]}, \dots, \kbd{v[l-1]}.
+
+In most \kbd{gerepile} scenarios, the list components are not inspected
+and a shallow copy of the malloc'ed vector is made. The functions
+\kbd{gclone}, \kbd{copy\_bin\_canon} are exceptions, and make a full copy of
+the list.
+
+The main problem with lists is to avoid memory leaks; in the above setup,
+a statement like \kbd{a = List(1)} would already leak memory, since
+\kbd{List(1)} allocates memory, which is cloned (second allocation) when
+assigned to \kbd{a}; and the original list is lost. The solution we
+implemented is
+
+\item to create anonymous lists (from \kbd{List}, \kbd{gtolist},
+\kbd{concat} or \kbd{vecsort}) entirely on the stack, \emph{not} as described
+above, and to set \kbd{list\_nmax} to $0$. Such a list is not yet proper and
+trying to append elements to it fails:
+\bprog
+? listput(List(),1)
+  ***   variable name expected: listput(List(),1)
+  ***                                   ^----------------
+@eprog\noindent
+If we had been malloc'ing memory for the
+\kbd{List([1,2,3])}, it would have leaked already.
+
+\item as soon as a list is assigned to a variable (or a component thereof)
+by the GP evaluator, the assigned list is converted to the proper format
+(with \kbd{list\_nmax} set) previously described.
+
+\fun{GEN}{listcopy}{GEN L} return a full copy of the \typ{LIST}~\kbd{L},
+allocated on the \emph{stack} (hence \kbd{list\_nmax} is $0$). Shortcut for
+\kbd{gcopy}.
+
+\fun{GEN}{mklistcopy}{GEN x} returns a list with a single element $x$,
+allocated on the stack. Used to implement most cases of \kbd{gtolist}
+(except vectors and lists).
+
+A typical low-level construct:
+\bprog
+  long l;
+  /* assume L is a t_LIST */
+  L = list_data(L); /* discard t_LIST wrapper */
+  l = L? lg(L): 1;
+  for (i = 1; i < l; i++) output( gel(L, i) );
+  for (i = 1; i < l; i++) gel(L, i) = gclone( ... );
+@eprog
+
+\subsec{Maps as Lists}
+
+GP's maps are implemented on top of \typ{LIST}s so as to benefit from
+their peculiar memory models. Lists thus come in two subtypes: \typ{LIST\_RAW}
+(actual lists) and \typ{LIST\_MAP} (a map).
+
+\fun{GEN}{mklist_typ}{long t} create a list of subtype $t$.
+\fun{GEN}{mklist}{void} is an alias for
+\bprog
+  mklist_typ(t_LIST_RAW);
+@eprog
+and
+\fun{GEN}{mkmap}{void} is an alias for
+\bprog
+  mklist_typ(t_LIST_MAP);
+@eprog
+
+\fun{long}{list_typ}{GEN L} return the list subtype, either \typ{LIST\_RAW} or
+\typ{LIST\_MAP}.
+
+\fun{void}{listpop}{GEN L, long index} as \kbd{listpop0},
+assuming that $L$ is a \typ{LIST\_RAW}.
+
+\fun{GEN}{listput}{GEN list, GEN object, long index} as \kbd{listput0},
+assuming that $L$ is a \typ{LIST\_RAW}.
+
+\fun{GEN}{mapdomain}{GEN T} vector of keys of the map $T$.
+
+\fun{GEN}{mapdomain_shallow}{GEN T} shallow version of \kbd{mapdomain}.
+
+\fun{GEN}{maptomat}{GEN T} convert a map to a factorization matrix.
+
+\fun{GEN}{maptomat_shallow}{GEN T} shallow version of \kbd{maptomat}.
+
+\section{Protection of non-interruptible code}
+
+GP allows the user to interrupt a computation by issuing SIGINT
+(usually by entering control-C) or SIGALRM (usually using alarm()).
+To avoid such interruption to occurs in section of code which are not
+reentrant (in particular \kbd{malloc} and \kbd{free})
+the following mechanism is provided:
+
+\fun{}{BLOCK_SIGINT_START}{}
+  Start a non-interruptible block code. Block both \kbd{SIGINT} and \kbd{SIGARLM}.
+
+\fun{}{BLOCK_SIGALRM_START}{}
+  Start a non-interruptible block code. Block only \kbd{SIGARLM}.
+This is used in the \kbd{SIGINT} handler itself to delay an eventual pending
+alarm.
+
+\fun{}{BLOCK_SIGINT_END}{}
+  End a non-interruptible block code
+
+The above macros make use of the following global variables:
+
+\tet{PARI_SIGINT_block}: set to $1$ (resp. $2$) by \kbd{BLOCK\_SIGINT\_START}
+(resp. \kbd{BLOCK\_SIGALRM\_START}).
+
+\tet{PARI_SIGINT_pending}: Either $0$ (no signal was blocked), \kbd{SIGINT}
+(\kbd{SIGINT} was blocked) or \kbd{SIGALRM} (\kbd{SIGALRM} was blocked).
+This need to be set by the signal handler.
+
+Within a block, an automatic variable \kbd{int block} is defined which
+records the value of \kbd{PARI\_SIGINT\_block} when entering the block.
+
+\subsec{Multithread interruptions}
+
+To support multithreaded programs, \kbd{BLOCK\_SIGINT\_START} and
+\kbd{BLOCK\_SIGALRM\_START} call \kbd{MT\_SIGINT\_BLOCK(block)}, and
+\kbd{BLOCK\_SIGINT\_END} calls \kbd{MT\_SIGINT\_UNBLOCK(block)}.
+
+\tet{MT_SIGINT_BLOCK} and \tet{MT_SIGINT_UNBLOCK} are defined by the
+multithread engine. They can calls the following public functions defined by
+the multithread engine.
+
+\fun{void}{mt_sigint_block}{void}
+
+\fun{void}{mt_sigint_unblock}{void}
+
+In practice this mechanism is used by the POSIX thread engine to protect against
+asychronous cancellation.
+
+\section{$\F_{l^2}$ field for small primes $l$}
+Let $l>2$ be a prime \kbd{ulong}.  A \kbd{Fl2} is an element of the finite
+field $\F_{l^2}$ represented (currently) by a \kbd{Flx} of degree at most $1$
+modulo a polynomial of the form $x^2-D$ for some non square $0\leq D<p$.
+Below \kbd{pi} denotes the pseudo inverse of \kbd{p}, see \kbd{Fl\_mul\_pre}
+
+\fun{int}{Fl2_equal1}{GEN x} return $1$ if $x=1$, else return $0$.
+
+\fun{GEN}{Fl2_mul_pre}{GEN x, GEN y, ulong D, ulong p, ulong pi} return $x\*y$.
+
+\fun{GEN}{Fl2_sqr_pre}{GEN x, ulong D, ulong p, ulong pi} return $x^2$.
+
+\fun{GEN}{Fl2_inv_pre}{GEN x, ulong D, ulong p, ulong pi} return $x^{-1}$.
+
+\fun{GEN}{Fl2_pow_pre}{GEN x, GEN n, ulong D, ulong p, ulong pi} return
+$x^n$.
+
+\fun{GEN}{Fl2_sqrtn_pre}{GEN a, GEN n, ulong D, ulong p, ulong pi, GEN *zeta}
+$n$-th root, as \kbd{Flxq\_sqrtn}.
+
+\fun{GEN}{Fl2_norm_pre}{GEN x, GEN n, ulong D, ulong p, ulong pi} return the
+norm of $x$.
+
+\fun{GEN}{Flx_Fl2_eval_pre}{GEN P, GEN x, ulong D, ulong p, ulong pi}
+return $P(x)$.
+
+\section{Public functions useless outside of GP context}
+
+These functions implement GP functionality for which the C language or
+other libpari routines provide a better equivalent; or which are so tied
+to the \kbd{gp} interpreter as to be virtually useless in \kbd{libpari}. Some
+may be generated by \kbd{gp2c}. We document them here for completeness.
+
+\subsec{Conversions}
+
+\fun{GEN}{toser_i}{GEN x} internal shallow function, used to implement
+automatic conversions to power series in GP (as in \kbd{cos(x)}).
+Converts a \typ{POL} or a \typ{RFRAC} to a \typ{SER} in the same variable and
+precision \kbd{precdl} (the global variable corresponding to
+\kbd{seriesprecision}). Returns $x$ itself for a \typ{SER}, and \kbd{NULL}
+for other argument types. The fact that it uses a global variable makes it
+awkward whenever you're not implementing a new transcendental function in GP.
+Use \tet{RgX_to_ser} or \tet{rfrac_to_ser} for a fast clean alternative to
+\kbd{gtoser}.
+
+\fun{GEN}{listinit}{GEN x} a \typ{LIST} (from \kbd{List} or \kbd{Map}) may
+exist in two different forms due to GP memory model:
+
+\item an ordinary \emph{read-only} copy on the pari stack (as produced by
+\kbd{gtolist} or \kbd{gtomap}) to which one may not assign elements
+(\kbd{listput} will fail) unless the list is empty.
+
+\item a feature-complete GP list using (malloc'ed) \kbd{block}s to
+allow dynamic insertions. An empty list is automaticaly promoted to this
+status on first insertion.
+
+The \kbd{listinit} function creates a copy of existing \typ{SER} $x$ and
+makes sure it is of the second kind. Variants of this are automatically
+called by \kbd{gp} when assigning a \typ{LIST} to a GP variable; the
+mecanism avoid memory leaks when creating a constant list, e.g.
+\kbd{List([1,2,3])} (read-only), without assigning it to a variable. Whereas
+after \kbd{L = List([1,2,3])} (GP list), we keep a pointer to the object and
+may delete it when $L$ goes out of scope.
+
+This \kbd{libpari} function allows \kbd{gp2c} to simulate this process by
+generating \kbd{listinit} calls at appropriate places.
+
+\subsec{Output}
+
+\fun{void}{print0}{GEN g, long flag} internal function underlying the
+\kbd{print} GP function. Prints the entries of the \typ{VEC} $g$, one by one,
+without any separator; entries of type \typ{STR} are printed without enclosing
+quotes. \fl is one of \tet{f_RAW}, \tet{f_PRETTYMAT} or \tet{f_TEX}, using the
+current default output context.
+
+\fun{void}{out_print0}{PariOUT *out, const char *sep, GEN g, long flag} as
+\tet{print0}, using output context \kbd{out} and separator \kbd{sep} between
+successive entries (no separator if \kbd{NULL}).
+
+\fun{void}{printsep}{const char *s, GEN g, long flag} \tet{out_print0} on
+\tet{pariOut} followed by a newline.
+
+\fun{void}{printsep1}{const char *s, GEN g, long flag} \tet{out_print0} on
+\tet{pariOut}.
+
+\fun{char*}{pari_sprint0}{const char *s, GEN g, long flag} displays $s$,
+then \kbd{print0(g, flag)}.
+
+\fun{void}{print}{GEN g} equivalent to \kbd{print0(g, f\_RAW)}, followed
+by a \kbd{\bs n} then an \kbd{fflush}.
+
+\fun{void}{printp}{GEN g} equivalent to \kbd{print0(g, f\_PRETTYMAT)},
+followed by a \kbd{\bs n} then an \kbd{fflush}.
+
+\fun{void}{print1}{GEN g} as above, without the \kbd{\bs n}. Use
+\tet{pari_printf} or \tet{output} instead.
+
+\fun{void}{printtex}{GEN g} equivalent to \kbd{print0(g, t\_TEX)}, followed
+by a \kbd{\bs n} then an \kbd{fflush}. Use \tet{GENtoTeXstr} and
+\tet{pari_printf} instead.
+
+\fun{void}{write0}{const char *s, GEN g}
+
+\fun{void}{write1}{const char *s, GEN g} use \kbd{fprintf}
+
+\fun{void}{writetex}{const char *s, GEN g} use \tet{GENtoTeXstr} and
+\kbd{fprintf}.
+
+\fun{void}{printf0}{GEN fmt, GEN args} use \tet{pari_printf}.
+
+\fun{GEN}{Strprintf}{GEN fmt, GEN args} use \tet{pari_sprintf}.
+
+\subsec{Input}
+
+\kbd{gp}'s input is read from the stream \tet{pari_infile}, which is changed
+using
+
+\fun{FILE*}{switchin}{const char *name}
+
+Note that this function is quite complicated, maintaining stacks of files
+to allow smooth error recovery and \kbd{gp} interaction. You will be better
+off using \tet{gp_read_file}.
+
+\subsec{Control flow statements}
+
+\fun{GEN}{break0}{long n}. Use the C control statement \kbd{break}. Since
+\kbd{break(2)} is invalid in C, either rework your code or use \kbd{goto}.
+
+\fun{GEN}{next0}{long n}. Use the C control statement \kbd{continue}. Since
+\kbd{continue(2)} is invalid in C, either rework your code or use \kbd{goto}.
+
+\fun{GEN}{return0}{GEN x}. Use \kbd{return}!
+
+\fun{void}{error0}{GEN g}. Use \kbd{pari\_err(e\_USER,)}
+
+\fun{void}{warning0}{GEN g}. Use \kbd{pari\_warn(e\_USER,)}
+
+\subsec{Accessors}
+
+\fun{GEN}{vecslice0}{GEN A, long a, long b} implements $A[a..b]$.
+
+\fun{GEN}{matslice0}{GEN A, long a, long b, long c, long d}
+implements $A[a..b, c..d]$.
+
+\subsec{Iterators}
+
+\fun{GEN}{apply0}{GEN f, GEN A} gp wrapper calling \tet{genapply}, where $f$
+is a \typ{CLOSURE}, applied to $A$. Use \kbd{genapply} or a standard C loop.
+
+\fun{GEN}{select0}{GEN f, GEN A} gp wrapper calling \tet{genselect}, where $f$
+is a \typ{CLOSURE} selecting from $A$. Use \kbd{genselect} or a standard C loop.
+
+\fun{GEN}{vecapply}{void *E, GEN (*f)(void* E, GEN x), GEN x} implements
+\kbd{[a(x)|x<-b]}.
+
+\fun{GEN}{veccatapply}{void *E, GEN (*f)(void* E, GEN x), GEN x} implements
+\kbd{concat([a(x)|x<-b])} which used to implement \kbd{[a0(x,y)|x<-b;y<-c(b)]}
+which is equal to \kbd{concat([[a0(x,y)|y<-c(b)]|x<-b])}.
+
+\fun{GEN}{vecselect}{void *E, long (*f)(void* E, GEN x), GEN A}
+implements \kbd{[x<-b,c(x)]}.
+
+\fun{GEN}{vecselapply}{void *Epred, long (*pred)(void* E, GEN x), void *Efun, GEN (*fun)(void* E, GEN x), GEN A}
+implements \kbd{[a(x)|x<-b,c(x)]}.
+
+\subsec{Local precision}
+
+These functions allow to change \kbd{realprecision} locally when
+calling the GP interpretor.
+
+\fun{void}{push_localprec}{long p} set the local precision to $p$.
+
+\fun{void}{push_localbitprec}{long b} set the local precision to $b$ bits.
+
+\fun{void}{pop_localprec}{void} reset the local precision to the previous
+value.
+
+\fun{long}{get_localprec}{void} returns the current local precision.
+
+\fun{long}{get_localbitprec}{void} returns the current local precision in bits.
+
+\fun{void}{localprec}{long p} trivial wrapper around \kbd{push\_localprec}
+(sanity checks and convert from decimal digits to a number of codewords).
+Use \kbd{push\_localprec}.
+
+\fun{void}{localbitprec}{long p}
+ trivial wrapper around \kbd{push\_localbitprec}
+(sanity checks). Use \kbd{push\_localbitprec}.
+
+\subsec{Functions related to the GP evaluator}
+
+The prototype code \kbd{C} instructs the GP compiler to save the current
+lexical context (pairs made of a lexical variable name and its value)
+in a \kbd{GEN}, called \kbd{pack} in the sequel. This \kbd{pack} can be used
+to evaluate expressions in the corresponding lexical context, providing it is
+current.
+
+\fun{GEN}{localvars_read_str}{const char *s, GEN pack} evaluate the string $s$
+in the lexical context given by \kbd{pack}.  Used by \tet{geval_gp} in GP
+to implement the behavior below:
+\bprog
+? my(z=3);eval("z=z^2");z
+%1 = 9
+@eprog
+
+\fun{long}{localvars_find}{GEN pack, entree *ep} does \kbd{pack} contain
+a pair whose variable corresponds to \kbd{ep}? If so, where is the
+corresponding value? (returns an offset on the value stack).
+
+\subsec{Miscellaneous}
+
+\fun{char*}{os_getenv}{const char *s} either calls \kbd{getenv}, or directly
+return \kbd{NULL} if the \kbd{libc} does not provide it. Use \tet{getenv}.
+
+\fun{sighandler_t}{os_signal}{int sig, pari_sighandler_t fun} after a
+\bprog
+  typedef void (*pari_sighandler_t)(int);
+@eprog\noindent
+(private type, not exported). Installs signal handler \kbd{fun} for
+signal \kbd{sig}, using \tet{sigaction} with flag \tet{SA_NODEFER}. If
+\kbd{sigaction} is not available use \tet{signal}. If even the latter is not
+available, just return \tet{SIG_IGN}. Use \tet{sigaction}.
+
+\section{Embedded GP interpretor}
+These function provide a simplified interface to embed a GP
+interpretor in a program.
+
+\fun{void}{gp_embedded_init}{long rsize, long vsize}
+Initialize the GP interpretor (like \kbd{pari\_init} does) with
+\kbd{parisize=rsize} \kbd{rsize} and \kbd{parisizemax=vsize}.
+
+\fun{char *}{gp_embedded}{const char *s}
+Evaluate the string \kbd{s} with GP and return the result as a string,
+in a format similar to what GP displays (with the history index).
+The resulting string is allocated on the PARI stack, so subsequent call
+to \kbd{gp\_embedded} will destroy it.
+
+\section{Readline interface}
+
+Code which wants to use libpari readline (such as the Jupyter notebook)
+needs to do the following:
+\bprog
+#include <readline.h>
+#include <paripriv.h>
+pari_rl_interface S;
+...
+pari_use_readline(S);
+@eprog\noindent The variable $S$, as initialized above, encapsulates
+the libpari readline interface. (And allow us to move gp's readline code
+to libpari without introducing a mandatory dependency on readline in
+libpari.) The following functions then become available:
+
+\fun{char**}{pari_completion_matches}{pari_rl_interface *pS, const char *s,
+long pos, long *wordpos} given a command string $s$, where the cursor
+is at index \kbd{pos}, return an array of completion matches.
+
+If \kbd{wordpos} is not \kbd{NULL}, set \kbd{*wordpos} to the index for the
+start of the expression we complete.
+
+\fun{char**}{pari_completion}{pari_rl_interface *pS, char *text, int start,
+int end} the low-level completer called by \tet{pari_completion_matches}.
+The following wrapper
+\bprog
+char**
+gp_completion(char *text, int START, int END)
+{ return pari_completion(&S, text, START, END);)
+@eprog\noindent is a valid value for
+\tet{rl_attempted_completion_function}.
+
+\section{Constructors called by \kbd{pari\_init} functions}
+
+\fun{void}{pari_init_buffers}{}
+
+\fun{void}{pari_init_compiler}{}
+
+\fun{void}{pari_init_defaults}{}
+
+\fun{void}{pari_init_evaluator}{}
+
+\fun{void}{pari_init_files}{}
+
+\fun{void}{pari_init_floats}{}
+
+\fun{void}{pari_init_graphics}{}
+
+\fun{void}{pari_init_homedir}{}
+
+\fun{void}{pari_init_parser}{}
+
+\fun{void}{pari_init_paths}{}
+
+\fun{void}{pari_init_primetab}{}
+
+\fun{void}{pari_init_rand}{}
+
+\fun{void}{pari_init_seadata}{}
+
+\section{Destructors called by \kbd{pari\_close}}
+
+\fun{void}{pari_close_compiler}{}
+
+\fun{void}{pari_close_evaluator}{}
+
+\fun{void}{pari_close_files}{}
+
+\fun{void}{pari_close_floats}{}
+
+\fun{void}{pari_close_homedir}{}
+
+\fun{void}{pari_close_mf}{}
+
+\fun{void}{pari_close_parser}{}
+
+\fun{void}{pari_close_paths}{}
+
+\fun{void}{pari_close_primes}{}
+
+\section{Constructors and destructors used by the \kbd{pthreads} interface}
+
+\item Called by \tet{pari_thread_sync}
+
+\fun{void}{pari_pthread_init_primetab}{}
+
+\fun{void}{pari_pthread_init_seadata}{}
+
+\fun{void}{pari_pthread_init_varstate}{}
+
+
+\item Called by \tet{pari_thread_start}
+
+\fun{void}{pari_thread_init_primetab}{}
+
+\fun{void}{pari_thread_init_seadata}{}
+
+\fun{void}{pari_thread_init_varstate}{}
+
+
+\item Called by \tet{pari_thread_close}
+
+\fun{void}{pari_thread_close_files}{}
+
+\newpage
+
+\chapter{Regression tests, benches}
+
+This chapter documents how to write an automated test module, say \kbd{fun},
+so that \kbd{make test-fun} executes the statements in the \kbd{fun} module
+and times them, compares the output to a template, and prints an error
+message if they do not match.
+
+\item Pick a \emph{new} name for your test, say \kbd{fun}, and write down a
+GP script named \kbd{fun}. Make sure it produces some useful output and tests
+adequately a set of routines.
+
+\item The script should not be too long: one minute runs should be enough.
+Try to break your script into independent easily reproducible tests, this way
+regressions are easier to debug; e.g. include \kbd{setrand(1)} statement before
+a randomized computation. The expected output may be different on 32-bit and
+64-bit machines but should otherwise be platform-independent. If possible, the
+output shouldn't even depend on \kbd{sizeof(long)}; using a \kbd{realprecision}
+that exists on both 32-bit and 64-bit architectures, e.g. \kbd{\bs p 38} is a
+good first step. You can use \kbd{sizebyte(0)==16} to detect a 64-bit
+architecture and \kbd{sizebyte(0)==8} for 32-bit.
+
+\item Dump your script into \kbd{src/test/in/} and run \kbd{Configure}.
+
+\item \kbd{make test-fun} now runs the new test, producing a \kbd{[BUG]} error
+message and a \kbd{.dif} file in the relevant object directory \kbd{Oxxx}.
+In fact, we compared the output to a non-existing template, so this must fail.
+
+\item Now
+\bprog
+  patch -p1 < Oxxx/fun.dif
+@eprog\noindent
+generates a template output in the right place \kbd{src/test/32/fun}, for
+instance on a 32-bit machine.
+
+\item If different output is expected on 32-bit and 64-bit machines, run the
+test on a 64-bit machine and patch again, thereby
+producing \kbd{src/test/64/fun}. If, on the contrary, the output must be the
+same (preferred behavior!), make sure the output template land in the
+\kbd{src/test/32/} directory which provides a default template when the
+64-bit output file is missing; in particular move the file from
+\kbd{src/test/64/} to \kbd{src/test/32/} if the test was run on a 64-bit
+machine.
+
+\item You can now re-run the test to check for regressions: no \kbd{[BUG]}
+is expected this time! Of course you can at any time add some checks, and
+iterate the test / patch phases. In particular, each time a bug in the
+\kbd{fun} module is fixed, it is a good idea to add a minimal test case to
+the test suite.
+
+\item By default, your new test is now included in \kbd{make test-all}. If
+it is particularly annoying, e.g. opens tons of graphical windows as
+\kbd{make test-ploth} or just much longer than the recommended minute, you
+may edit \kbd{config/get\_tests} and add the \kbd{fun} test to the list of
+excluded tests, in the \kbd{test\_extra\_out} variable.
+
+\item You can run a subset of existing tests by using the following idiom:
+\bprog
+  cd Oxxx     # call from relevant build directory
+  make TESTS="lfuntype lfun gamma" test-all
+@eprog\noindent will run the \kbd{lfuntype}, \kbd{lfun} and \kbd{gamma} tests.
+This produces a combined output whereas the alternative
+\bprog
+  make test-lfuntype test-lfun test-gamma
+@eprog\noindent would not.
+
+\item By default, the test is run on both the \kbd{gp-sta} and \kbd{gp-dyn}
+binaries, making it twice as slow. If the test is somewhat long, it can
+be annoying; you can restrict to one binary only using the \kbd{statest-all}
+or \kbd{dyntest-all} targets. Both accept the \kbd{TESTS} argument seen above.
+
+\bprog
+  make test-lfuntype test-lfun gamma
+@eprog\noindent would not.
+
+\item Finally, the \kbd{get\_tests} script also defines the recipe for
+\kbd{make bench} timings, via the variable \kbd{test\_basic}. A test is
+included as \kbd{fun} or \kbd{fun\_$n$}, where $n$ is an integer $\leq 1000$;
+the latter means that the timing is weighted by a factor $n/1000$. (This was
+introduced a long time ago, when the \kbd{nfields} bench was so much slower
+than the others that it hid slowdowns elsewhere.)
+
+\section{Functions for GP2C}
+
+\subsec{Functions for safe access to components}
+
+These functions return the address of the requested component after checking
+it is actually valid. This is used by GP2C -C.
+
+\fun{GEN*}{safegel}{GEN x, long l}, safe version of \kbd{gel(x,l)} for \typ{VEC},
+\typ{COL} and \typ{MAT}.
+
+\fun{long*}{safeel}{GEN x, long l}, safe version of \kbd{x[l]} for \typ{VECSMALL}.
+
+\fun{GEN*}{safelistel}{GEN x, long l} safe access to \typ{LIST} component.
+
+\fun{GEN*}{safegcoeff}{GEN x, long a, long b} safe version of
+\kbd{gcoeff(x,a, b)} for \typ{MAT}.
+
+\newpage
+\chapter{Parallelism}
+
+\section{The PARI MT interface}
+
+PARI provides an abstraction for doing parallel computations.
+
+\fun{void}{mt_queue_start}{struct pari_mt *pt, GEN worker} Let \kbd{worker}
+be a \typ{CLOSURE} object of arity $1$.  Initialize the structure \kbd{pt}
+to evaluate \kbd{worker} in parallel.
+
+\fun{void}{mt_queue_start_lim}{struct pari_mt *pt, GEN worker, long lim}
+as \kbd{mt\_queue\_start}, where \kbd{lim} is an upper bound on the number
+of \kbd{tasks} to perform. Concretly the number of
+threads will be \kbd{min(lim,nbthreads}. The values $0$ and $1$ of \kbd{lim}
+are special:
+
+\item $0$: no limit, equivalent to \kbd{mt\_queue\_start}.
+
+\item $1$: no parallelism. Evaluate the tasks sequentially.
+
+\fun{void}{mt_queue_submit}{struct pari_mt *pt, long taskid, GEN task} Submit
+\kbd{task} to be evaluated by \kbd{worker}, or \kbd{NULL} if no further task
+is left to be submitted. The value \kbd{taskid} is user-specified and allows
+to later match up results and submitted tasks.
+
+\fun{GEN}{mt_queue_get}{struct pari_mt *pt, long *taskid, long *pending}
+Return the result of the evaluation by \kbd{worker} of one of the previously
+submitted tasks. Set \kbd{pending} to the number of remaining pending tasks.
+Set \kbd{taskid} to the value associate to this task by
+\kbd{mt\_queue\_submit}.  Returns \kbd{NULL} if more tasks need to be
+submitted.
+
+\fun{void}{mt_queue_end}{struct pari_mt *pt} End the parallel execution.
+
+Calls to \tet{mt_queue_submit} and \tet{mt_queue_get} must alternate: each
+call to \tet{mt_queue_submit} must be followed by a call to
+\tet{mt_queue_get} before any other call to \tet{mt_queue_submit},
+and conversely.
+
+The first call to \tet{mt_queue_get} will return \kbd{NULL} until a
+sufficient number of tasks have been submitted. If no more tasks are left
+to be submitted, use
+\bprog
+  mt_queue_submit(handle, id, NULL)
+@eprog\noindent
+to allow further calls to \tet{mt_queue_get}.  If \tet{mt_queue_get} sets
+\kbd{pending} to $0$, then no more tasks are pending and it is safe to call
+\tet{mt_queue_end}.
+
+The parameter \kbd{taskid} can be chosen arbitrarily. It is attached to a
+task but is not available to \kbd{worker}.  It provides an efficient way to
+match a tasks and results. It is ignored when the parameter \kbd{task} is
+\kbd{NULL}.
+
+\subsec{Miscellaneous}
+
+\fun{void}{mt_broadcast}{GEN code}: do nothing unless the MPI threading engine
+is in use. In that case, it evaluates the closure  \kbd{code} on all secondary
+nodes. This can be sued to change the states of the MPI child nodes.
+This is used by \tet{install}.
+
+\section{Initialization}
+
+This section is technical.
+
+\fun{void}{pari_mt_init}{void} \label{pari_mt_init}
+When using MPI, it is sometimes necessary to run initialization code on the
+child nodes after PARI is initialized. This can be done as follow:
+
+\item call \tet{pari_init_opts} with the flag \tet{INIT_noIMTm}.
+This initializes PARI, but not the MT engine.
+
+\item call the required initialization code.
+
+\item call \tet{pari_mt_init} to initialize the MT engine.
+Note that under MPI, this function only returns on the master node. On the
+child nodes, it enters slave mode. Thus it is no longer possible to run
+initialization code on the child nodes.
+
+See the file \kbd{examples/pari-mt.c} for an example.
+
+\fun{void}{pari_mt_close}{void} \label{pari_mt_close}
+When using MPI, calling \tet{pari_close} will terminate the MPI execution
+environment. If this is undesirable, you should call \tet{pari_close_opts} with
+the flag \tet{INIT_noIMTm}.  This closes PARI without terminating the MPI
+execution environment It is allowed to call \kbd{pari\_mt\_close} later to
+terminate it.  Note that the once MPI is terminated it cannot be restarted, and
+that it is considered an error for a program to end without having terminated
+the MPI execution environment.
+
+\vfill\eject
+\input index\end

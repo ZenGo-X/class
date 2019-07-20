@@ -1,0 +1,44 @@
+default(realprecision,38);
+v=[3,4,3.1,1/2,x^2+1, Mod(x,x^2+1),ffgen(3^5,'t),quadgen(5),2+O(3^3),Mod(2,3), 2^64 + 1];
+{
+for (i=1,#v,
+  for(j=1,#v,
+    print("* ",[i,j]);
+    print(iferr(v[i]/v[j],E,E));
+    print(iferr(v[i]\v[j],E,E));
+    print(iferr(v[i]%v[j],E,E));
+    print(iferr(v[i]\/v[j],E,E));
+    print(iferr(divrem(v[i],v[j]),E,E));
+  )
+)
+}
+w=[x + O(x^2),[2,3],Mat(2)];
+{
+for (i=1,#w,
+  for(j=1,#v,
+    print("* ",[i,j]);
+    print(iferr(w[i]/v[j],E,E));
+    print(iferr(w[i]\v[j],E,E));
+    print(iferr(w[i]%v[j],E,E));
+    print(iferr(w[i]\/v[j],E,E));
+  )
+)
+}
+for (i=2,#w, print(w[i]%2))
+for (i=2,#w, print(w[i]\2))
+divrem(x+y^2,y+x,y)
+divrem([3,5],2)
+divrem(1,x)
+divrem(1,Pol(1))
+divrem(1,"a")
+
+(5/3) \/ 1
+
+floor((x^2+1)/x)
+
+[]/0
+[]~/0
+[;]/0
+[1]/0
+
+m=Mod(1,ffinit(3,3,a));P=(x^8+a*x^2+x+a)*m;Q=(x^5+4*x^3+a*x+(a^2+1))*m;P%Q

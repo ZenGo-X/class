@@ -1,0 +1,15 @@
+Function: qfbredsl2
+Section: number_theoretical
+C-Name: qfbredsl2
+Prototype: GDG
+Help: qfbredsl2(x,{data}): reduction of the binary quadratic form x, return
+ [y,g] where y is reduced and g in Sl(2,Z) is such that g.x = y; data, if
+ present, must be equal to [D, sqrtint(D)], where D > 0 is the discriminant
+ of x.
+Doc:
+ reduction of the (real or imaginary) binary quadratic form $x$, return
+ $[y,g]$ where $y$ is reduced and $g$ in $\text{SL}(2,\Z)$ is such that
+  $g \cdot x = y$; \var{data}, if
+ present, must be equal to $[D, \kbd{sqrtint}(D)]$, where $D > 0$ is the
+ discriminant of $x$. In case $x$ is a \typ{QFR}, the distance component is
+ unaffected.

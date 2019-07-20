@@ -1,0 +1,19 @@
+Function: plothsizes
+Section: graphic
+C-Name: plothsizes
+Prototype: D0,L,
+Help: plothsizes({flag=0}): returns array of 8 elements: terminal width and
+ height, sizes for ticks in horizontal and vertical directions, width and
+ height of characters, width and height of display (if applicable). If flag=0,
+ sizes of ticks and characters are in pixels, otherwise are fractions of the
+ terminal size.
+Doc: return data corresponding to the output window
+ in the form of a 8-component vector: window width and height, sizes for ticks
+ in horizontal and vertical directions (this is intended for the \kbd{gnuplot}
+ interface and is currently not significant), width and height of characters,
+ width and height of display, if applicable. If display has no sense, e.g.
+ for svg plots or postscript plots, then width and height of display are set
+ to 0.
+
+ If $\fl = 0$, sizes of ticks and characters are in
+ pixels, otherwise are fractions of the screen size

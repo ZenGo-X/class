@@ -1,0 +1,149 @@
+#!/bin/sh
+
+trap exit 2
+bitlen=$1; shift
+exe_suff=$1; shift
+testlist=$@
+
+if (tail -n 1 $0 >/dev/null 2>&1); then
+  tail='tail -n'
+else
+  tail='tail -'
+fi
+if (head -n 1 $0 >/dev/null 2>&1); then
+  head='head -n'
+else
+  head='head -'
+fi
+if (printf %-22s foo >/dev/null 2>&1); then
+  printf=OK
+else
+  printf=
+fi
+
+wrln () { echo "$1"; echo "$1" >&3; }
+wr () { echo $n "$1$c"; echo $n "$1$c" >&3; }
+wrtab () {
+  if test -n "$printf"; then
+    printf %$1s "$2"
+    printf %$1s "$2" >&3
+  else
+    echo $n "$2	$c"
+    echo $n "$2	$c" >&3
+  fi;
+}
+
+confdir=../config
+testdir=../src/test
+execdir=.
+
+case `$confdir/arch-osname` in
+   *-cygwin*|*-mingw*|*-msys*) crlf=OK ;;
+   *) crlf= ;;
+esac
+
+if test -f /bin/rm ; then RM=/bin/rm; else RM=rm ; fi
+(echo "hi there\c" ; echo " ") > echotmp
+if grep c echotmp >/dev/null 2>&1 ; then n=-n; c=; else n=; c='\c'; fi
+$RM -f echotmp
+
+. $confdir/version
+exec 3>> Bench-$VersionMajor.$VersionMinor.$patch
+
+dotestSUF=${dotestSUF:-"sta dyn"}
+for arg in $dotestSUF; do
+  if test -s $execdir/gp-$arg$exe_suff; then
+    SUF="$SUF $arg"
+    datadir=`echo 'print(default(datadir))' | $RUNTEST $execdir/gp-$arg -q -f`
+  fi
+done
+file_test=gp.out
+for suf in $SUF; do eval time$suf=0 files$suf=; done
+for testdata in $testlist; do
+  O=$IFS;IFS=_;set $testdata;IFS=$O;testname=$1;testmul=$2
+  pkgs=`${head}1 $testdir/in/$testname | grep package: | cut -f2 -d:`
+  skip=""
+  for pkg in $pkgs; do
+    if test ! -x "$datadir/$pkg"; then
+      wrln "! Skipping $testname: optional package $pkg not installed."
+      skip="true";
+    fi
+  done
+  if test "$skip" = "true"; then
+    untested="$untested $testname"
+  else
+    file_in=$testdir/in/$testname
+    file_out=$testdir/$bitlen/$testname
+    if test ! -r $file_out; then file_out=$testdir/32/$testname; fi
+    if test ! -r $file_out; then touch $file_out; fi
+    if test ! -r $file_in; then
+      wrln "Error! Missing file, can't test $testname"
+      exit 1
+    fi
+
+    testmul=${testmul:-1000}
+    wrtab -27 "* Testing $testname "
+    for suf in $SUF; do
+      file_diff=$testname-$suf.dif
+      gp=$execdir/gp-$suf$exe_suff
+      (echo 'gettime();0;'; cat $file_in; \
+       echo 'print("Total time spent: ",gettime);') \
+       | $RUNTEST $gp -q --test  > $file_test 2>&1
+      if test -n "$crlf"; then
+        # when building on windows, remove extra cr so diff's will match
+        cat $file_test | tr -d '\r' | diff -c $file_out - > $file_diff
+      else
+        diff -c $file_out $file_test > $file_diff
+      fi
+      pat=`grep "^[-+!] " $file_diff | grep -v "Total time"`
+      time=`${tail}1 $file_test | sed -n 's,.*Total time spent: \(.*\),\1,p'`
+      if test -n "$time"; then
+        eval t='$'time$suf
+        if test -n "$exprbug"; then
+          t=`expr $time \'\*\' $testmul / 1000 + $t`
+        else
+          t=`expr $time '*' $testmul / 1000 + $t`
+        fi
+        eval time$suf=$t
+      fi
+      pre=
+      if test -z "$pat"; then
+        wr "gp-$suf..TIME="
+        wrtab 8 "$time   ";
+      else
+        eval BUG$suf=BUG
+        eval files$suf=\"'$'files$suf $file_diff\"
+        wrtab -21 "gp-$suf..BUG [${time:-0}]"
+      fi
+    done
+    wrln
+  fi
+done
+$RM -f $file_test
+BUG=
+for suf in $SUF; do
+  B=`eval echo '$'BUG$suf`; BUG="$BUG$B"
+  t=`eval echo '$'time$suf`
+  if test -n "$B"; then B=' [BUG]'; fi
+  wrln "+++$B Total bench for gp-$suf is $t"
+done
+if test -n "$untested"; then
+  wrln "The following tests were skipped:$untested"
+fi
+if test -z "$BUG"; then exit 0; fi
+
+pwd=`pwd`
+wrln
+wrln "PROBLEMS WERE NOTED. The following files list them in diff format: "
+wrln "Directory: $pwd"
+for suf in $SUF; do
+  B=`eval echo '$'BUG$suf`; BUG="$BUG$B"
+  if test -n "$B"; then
+    flist=`eval echo '$'files$suf`
+    for f in $flist; do
+      wrln "	$f"
+      if test "$dump_dif" = 1; then cat $f; fi
+    done
+  fi
+done
+exit 1

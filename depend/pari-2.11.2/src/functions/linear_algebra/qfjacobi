@@ -1,0 +1,34 @@
+Function: qfjacobi
+Section: linear_algebra
+C-Name: jacobi
+Prototype: Gp
+Help: qfjacobi(A): eigenvalues and orthogonal matrix of eigenvectors of the
+ real symmetric matrix A.
+Doc: apply Jacobi's eigenvalue algorithm to the real symmetric matrix $A$.
+ This returns $[L, V]$, where
+
+ \item $L$ is the vector of (real) eigenvalues of $A$, sorted in increasing
+ order,
+
+ \item $V$ is the corresponding orthogonal matrix of eigenvectors of $A$.
+
+ \bprog
+ ? \p19
+ ? A = [1,2;2,1]; mateigen(A)
+ %1 =
+ [-1 1]
+
+ [ 1 1]
+ ? [L, H] = qfjacobi(A);
+ ? L
+ %3 = [-1.000000000000000000, 3.000000000000000000]~
+ ? H
+ %4 =
+ [ 0.7071067811865475245 0.7071067811865475244]
+
+ [-0.7071067811865475244 0.7071067811865475245]
+ ? norml2( (A-L[1])*H[,1] )       \\ approximate eigenvector
+ %5 = 9.403954806578300064 E-38
+ ? norml2(H*H~ - 1)
+ %6 = 2.350988701644575016 E-38   \\ close to orthogonal
+ @eprog

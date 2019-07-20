@@ -1,0 +1,31 @@
+Function: divisors
+Section: number_theoretical
+C-Name: divisors0
+Prototype: GD0,L,
+Help: divisors(x,{flag=0}): gives a vector formed by the divisors of x in
+ increasing order. If flag = 1, return pairs [d, factor(d)].
+Description:
+ (gen,?0):vec     divisors($1)
+ (gen,1):vec      divisors_factored($1)
+Doc: creates a row vector whose components are the
+ divisors of $x$. The factorization of $x$ (as output by \tet{factor}) can
+ be used instead. If $\fl = 1$, return pairs $[d, \kbd{factor}(d)]$.
+
+ By definition, these divisors are the products of the irreducible
+ factors of $n$, as produced by \kbd{factor(n)}, raised to appropriate
+ powers (no negative exponent may occur in the factorization). If $n$ is
+ an integer, they are the positive divisors, in increasing order.
+
+ \bprog
+ ? divisors(12)
+ %1 = [1, 2, 3, 4, 6, 12]
+ ? divisors(12, 1) \\ include their factorization
+ %2 = [[1, matrix(0,2)], [2, Mat([2, 1])], [3, Mat([3, 1])],
+       [4, Mat([2, 2])], [6, [2, 1; 3, 1]], [12, [2, 2; 3, 1]]]
+
+ ? divisors(x^4 + 2*x^3 + x^2) \\ also works for polynomials
+ %3 = [1, x, x^2, x + 1, x^2 + x, x^3 + x^2, x^2 + 2*x + 1,
+       x^3 + 2*x^2 + x, x^4 + 2*x^3 + x^2]
+ @eprog
+Variant: The functions \fun{GEN}{divisors}{GEN N} ($\fl = 0$) and
+ \fun{GEN}{divisors_factored}{GEN N} ($\fl = 1$) are also available.

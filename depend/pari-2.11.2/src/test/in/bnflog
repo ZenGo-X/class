@@ -1,0 +1,55 @@
+default(parisize,"20M");
+K=bnfinit(y^2+1);
+P2 = idealprimedec(K,2)[1]; bnflogef(K, P2)
+P3 = idealprimedec(K,3)[1]; bnflogef(K, P3)
+P5 = idealprimedec(K,5)[1]; bnflogef(K, P5)
+bnflogdegree(K, 6, 2)
+bnflogdegree(K, 6, 3)
+bnflogdegree(K, 6*idealmul(K,P2,P5), 5)
+
+K = bnfinit(polcompositum(y^2+y+1,y^3-2, 2));
+bnflogef(K, idealprimedec(K,2)[1])
+bnflogef(K, idealprimedec(K,3)[1])
+bnflogef(K, idealprimedec(K,5)[1])
+
+K = bnfinit(y^2+521951); K.cyc
+bnflog(K, 2)
+T0 = polcompositum(y^2+1,y^2-11,2);
+K = bnfinit(T0); K.cyc
+bnflog(K, 5)
+K = bnfinit(polcompositum(y^2+1,y^2-78,2)); K.cyc
+bnflog(K, 2)
+K = bnfinit(polcompositum(y^2+1,y^2-455,2)); K.cyc
+bnflog(K, 2)
+K = bnfinit(polcompositum(y^2+1,y^2-1173,2)); K.cyc
+bnflog(K, 2)
+K = bnfinit(polcompositum(y^2+1,y^2-1227,2)); K.cyc
+bnflog(K, 613)
+K = bnfinit(y^4+13*y^2-12*y+52); K.cyc
+bnflog(K, 2)
+bnflog(K, 3)
+bnflog(K, 7)
+K = bnfinit(polcompositum(y^2+3,y^2-1234577,2), 1); K.cyc
+bnflog(K, 2)
+bnflog(K, 3)
+bnflog(K, 13)
+K = bnfinit(polcompositum(y^2+y+1,y^2-303,2)); K.cyc
+bnflog(K, 2)
+bnflog(K, 3)
+bnflog(K, 5)
+K = bnfinit(y^5+2*y^4+18*y^3+34*y^2+17*y+3^10, 1); K.cyc
+bnflog(K, 2)
+bnflog(K, 3)
+K = bnfinit(polcompositum(polcyclo(5,y),y^2-5029,2)); K.cyc
+bnflog(K, 2)
+bnflog(K, 3)
+bnflog(K, 5)
+K = bnfinit(polcompositum(T0,y^2+499,2)); K.cyc
+bnflog(K, 5)
+K = bnfinit(polcompositum(T0,y^3+3*y^2+2*y+125,2), 1); K.cyc
+bnflog(K, 2)
+bnflog(K, 3)
+bnflog(K, 5)
+
+F=bnfinit(x^2-4565649,1);
+bnflog(F,2)

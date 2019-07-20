@@ -1,0 +1,21 @@
+Function: ellratpoints
+Section: elliptic_curves
+C-Name: ellratpoints
+Prototype: GGD0,L,
+Help: ellratpoints(E,h,{flag=0}): E being an integral model of an
+ elliptic curve, return a vector containing the affine rational points on the curve
+ of naive height less than h.
+ If fl=1, stop as soon as a point is found.
+Doc: $E$ being an integral model of elliptic curve , return a vector
+ containing the affine rational points on the curve of naive height less than
+ $h$. If $\fl=1$, stop as soon as a point is found; return either an empty
+ vector or a vector containing a single point.
+ See \kbd{hyperellratpoints} for how $h$ can be specified.
+ \bprog
+ ? E=ellinit([-25,1]);
+ ? ellratpoints(E,10)
+ %2 = [[-5,1],[-5,-1],[-3,7],[-3,-7],[-1,5],[-1,-5],
+       [0,1],[0,-1],[5,1],[5,-1],[7,13],[7,-13]]
+ ? ellratpoints(E,10,1)
+ %3 = [[-5,1]]
+ @eprog

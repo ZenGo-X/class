@@ -1,0 +1,15 @@
+Function: Colrev
+Section: conversions
+C-Name: gtocolrev0
+Prototype: GD0,L,
+Help: Colrev(x, {n}): transforms the object x into a column vector of
+ dimension n in reverse order with respect to Col(x, {n}). Empty vector if x
+ is omitted.
+Description:
+ (gen):vec     gtocolrev($1)
+Doc:
+ as $\kbd{Col}(x, -n)$, then reverse the result. In particular,
+ \kbd{Colrev} is the reciprocal function of \kbd{Polrev}: the
+ coefficients of the vector start with the constant coefficient of the
+ polynomial and the others follow by increasing degree.
+Variant: \fun{GEN}{gtocolrev}{GEN x} is also available.

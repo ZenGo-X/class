@@ -1,0 +1,12 @@
+Function: thetanullk
+Section: transcendental
+C-Name: thetanullk
+Prototype: GLp
+Help: thetanullk(q,k): k-th derivative at z=0 of theta(q,z).
+Doc: $k$-th derivative at $z=0$ of $\kbd{theta}(q,z)$.
+Variant:
+ \fun{GEN}{vecthetanullk}{GEN q, long k, long prec} returns the vector
+ of all $\dfrac{d^i\theta}{dz^i}(q,0)$ for all odd $i = 1, 3, \dots, 2k-1$.
+ \fun{GEN}{vecthetanullk_tau}{GEN tau, long k, long prec} returns
+ \kbd{vecthetanullk\_tau} at $q = \exp(2i\pi \kbd{tau})$.
+

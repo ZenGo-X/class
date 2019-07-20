@@ -1,0 +1,27 @@
+Function: zncharisodd
+Section: number_theoretical
+C-Name: zncharisodd
+Prototype: lGG
+Help: zncharisodd(G, chi): let G be znstar(N,1), let chi
+ be a Dirichlet character mod N, return 1 if and only if chi(-1) = -1
+ and 0 otherwise.
+Doc: Let $G$ be attached to $(\Z/N\Z)^*$ (as per \kbd{G = znstar(N,1)})
+ and let \kbd{chi} be a Dirichlet character on $(\Z/N\Z)^*$, given by
+
+ \item a \typ{VEC}: a standard character on \kbd{G.gen},
+
+ \item a \typ{INT} or a \typ{COL}: a Conrey index in $(\Z/q\Z)^*$ or its
+ Conrey logarithm;
+ see \secref{se:dirichletchar} or \kbd{??character}.
+
+ Return $1$ if and only if \kbd{chi}$(-1) = -1$ and $0$ otherwise.
+
+ \bprog
+ ? G = znstar(8, 1);
+ ? zncharisodd(G, 1)  \\ trivial character
+ %2 = 0
+ ? zncharisodd(G, 3)
+ %3 = 1
+ ? chareval(G, 3, -1)
+ %4 = 1/2
+ @eprog

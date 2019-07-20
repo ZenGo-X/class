@@ -1,0 +1,10 @@
+Function: _def_linewrap
+Class: default
+Section: default
+C-Name: sd_linewrap
+Prototype:
+Help:
+Doc: if set to a positive value, \kbd{gp} wraps every single line after
+ printing that many characters.
+
+ The default value is \kbd{0} (unset).

@@ -1,0 +1,28 @@
+Function: algissimple
+Section: algebras
+C-Name: algissimple
+Prototype: iGD0,L,
+Help: algissimple(al, {ss = 0}): test whether the algebra al is simple.
+Doc: \var{al} being a table algebra output by \tet{algtableinit} or a central
+ simple algebra output by \tet{alginit}, tests whether the algebra \var{al} is
+ simple. If $\var{ss}=1$, assumes that the algebra~\var{al} is semisimple
+ without testing it.
+ \bprog
+ ? mt = [matid(3),[0,0,0;1,0,1;0,0,0],[0,0,0;0,0,0;1,0,1]];
+ ? A = algtableinit(mt); \\ matrices [*,*; 0,*]
+ ? algissimple(A)
+ %3 = 0
+ ? algissimple(A,1) \\ incorrectly assume that A is semisimple
+ %4 = 1
+ ? m_i=[0,-1,0,0;1,0,0,0;0,0,0,-1;0,0,1,0];
+ ? m_j=[0,0,-1,0;0,0,0,1;1,0,0,0;0,-1,0,0];
+ ? m_k=[0,0,0,-1;0,0,b,0;0,1,0,0;1,0,0,0];
+ ? mt = [matid(4), m_i, m_j, m_k];
+ ? A = algtableinit(mt); \\ quaternion algebra (-1,-1)
+ ? algissimple(A)
+ %10 = 1
+ ? mt = [matid(3), [0,0,0; 1,1,0; 0,0,0], [0,0,1; 0,0,0; 1,0,1]];
+ ? A = algtableinit(mt,2); \\ direct product F_4 x F_2
+ ? algissimple(A)
+ %13 = 0
+ @eprog

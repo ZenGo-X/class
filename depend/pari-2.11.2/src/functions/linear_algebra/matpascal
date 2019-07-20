@@ -1,0 +1,12 @@
+Function: matpascal
+Section: linear_algebra
+C-Name: matqpascal
+Prototype: LDG
+Help: matpascal(n,{q}): Pascal triangle of order n if q is omitted. q-Pascal
+ triangle otherwise.
+Doc: creates as a matrix the lower triangular
+ \idx{Pascal triangle} of order $x+1$ (i.e.~with binomial coefficients
+ up to $x$). If $q$ is given, compute the $q$-Pascal triangle (i.e.~using
+ $q$-binomial coefficients).
+
+Variant: Also available is \fun{GEN}{matpascal}{GEN x}.

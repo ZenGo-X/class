@@ -1,0 +1,7 @@
+Function: ellneg
+Section: elliptic_curves
+C-Name: ellneg
+Prototype: GG
+Help: ellneg(E,z): opposite of the point z on elliptic curve E.
+Doc:
+ Opposite of the point $z$ on elliptic curve $E$.

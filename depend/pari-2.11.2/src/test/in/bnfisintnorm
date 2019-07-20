@@ -1,0 +1,16 @@
+do(i)=
+{ my(t = bnfisintnorm(bnf,i));
+  for (k=1,#t, if (nfeltnorm(bnf,t[k])!=i, error([i,k])));
+  if (#t, print(i,":",#t));
+}
+default(realprecision,38);
+\e
+setrand(1); bnf=bnfinit(x^2+105);
+for(i=1,1000, do(i))
+setrand(1); bnf=bnfinit(x^2-65);
+for(i=1,1000, do(i-500))
+setrand(1); bnf=bnfinit(x^5-37);
+for(i=1,1000, do(i-500))
+/* regression tests: */
+bnfisintnorm(bnfinit(x^3+5), 5)
+bnfisintnorm(bnfinit('y^2+93),54647)

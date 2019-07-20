@@ -1,0 +1,10 @@
+Function: shiftmul
+Section: operators
+C-Name: gmul2n
+Prototype: GL
+Help: shiftmul(x,n): multiply x by 2^n (n>=0 or n<0).
+Doc: multiplies $x$ by $2^n$. The difference with
+ \kbd{shift} is that when $n<0$, ordinary division takes place, hence for
+ example if $x$ is an integer the result may be a fraction, while for shifts
+ Euclidean division takes place when $n<0$ hence if $x$ is an integer the result
+ is still an integer.

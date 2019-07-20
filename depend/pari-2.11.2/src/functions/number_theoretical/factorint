@@ -1,0 +1,37 @@
+Function: factorint
+Section: number_theoretical
+C-Name: factorint
+Prototype: GD0,L,
+Help: factorint(x,{flag=0}): factor the integer x. flag is optional, whose
+ binary digits mean 1: avoid MPQS, 2: avoid first-stage ECM (may fall back on
+ it later), 4: avoid Pollard-Brent Rho and Shanks SQUFOF, 8: skip final ECM
+ (huge composites will be declared prime).
+Doc: factors the integer $n$ into a product of
+ pseudoprimes (see \kbd{ispseudoprime}), using a combination of the
+ \idx{Shanks SQUFOF} and \idx{Pollard Rho} method (with modifications due to
+ Brent), \idx{Lenstra}'s \idx{ECM} (with modifications by Montgomery), and
+ \idx{MPQS} (the latter adapted from the \idx{LiDIA} code with the kind
+ permission of the LiDIA maintainers), as well as a search for pure powers.
+ The output is a two-column matrix as for \kbd{factor}: the first column
+ contains the ``prime'' divisors of $n$, the second one contains the
+ (positive) exponents.
+
+ By convention $0$ is factored as $0^1$, and $1$ as the empty factorization;
+ also the divisors are by default not proven primes if they are larger than
+ $2^{64}$, they only failed the BPSW compositeness test (see
+ \tet{ispseudoprime}). Use \kbd{isprime} on the result if you want to
+ guarantee primality or set the \tet{factor_proven} default to $1$.
+ Entries of the private prime tables (see \tet{addprimes}) are also included
+ as is.
+
+ This gives direct access to the integer factoring engine called by most
+ arithmetical functions. \fl\ is optional; its binary digits mean 1: avoid
+ MPQS, 2: skip first stage ECM (we may still fall back to it later), 4: avoid
+ Rho and SQUFOF, 8: don't run final ECM (as a result, a huge composite may be
+ declared to be prime). Note that a (strong) probabilistic primality test is
+ used; thus composites might not be detected, although no example is known.
+
+ You are invited to play with the flag settings and watch the internals at
+ work by using \kbd{gp}'s \tet{debug} default parameter (level 3 shows
+ just the outline, 4 turns on time keeping, 5 and above show an increasing
+ amount of internal details).

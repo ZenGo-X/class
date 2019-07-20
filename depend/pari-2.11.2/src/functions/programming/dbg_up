@@ -1,0 +1,8 @@
+Function: dbg_up
+Class: gp
+Section: programming/control
+C-Name: dbg_up
+Prototype: vD1,L,
+Help: dbg_up({n=1}): (break loop) go up n frames. Allow to inspect data of the parent function.
+Doc: (In the break loop) go up n frames. This allows to inspect data of the
+ parent function. To cancel a \tet{dbg_up} call, use \tet{dbg_down}

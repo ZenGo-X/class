@@ -1,0 +1,80 @@
+Function: sumnummonieninit
+Section: sums
+C-Name: sumnummonieninit
+Prototype: DGDGDGp
+Help: sumnummonieninit({asymp},{w},{n0 = 1}): initialize tables for Monien summation of a series with positive terms.
+Doc: initialize tables for Monien summation of a series $\sum_{n\geq n_0}
+ f(n)$ where $f(1/z)$ has a complex analytic continuation in a (complex)
+ neighbourhood of the segment $[0,1]$.
+
+ By default, assume that $f(n) = O(n^{-2})$ and has a non-zero asymptotic
+ expansion
+ $$f(n) = \sum_{i\geq 2} a_i / n^i$$
+ at infinity. Note that the sum starts at $i = 2$! The argument \kbd{asymp}
+ allows to specify different expansions:
+
+ \item a real number $\beta > 0$ means
+  $$f(n) = \sum_{i\geq 1} a_i / n^{i + \beta}$$
+ (Now the summation starts at $1$.)
+
+ \item a vector $[\alpha,\beta]$ of reals, where we must have $\alpha > 0$
+ and $\alpha + \beta > 1$ to ensure convergence, means that
+  $$f(n) = \sum_{i\geq 1} a_i / n^{\alpha i + \beta}$$
+ Note that $\kbd{asymp} = [1, \beta]$ is equivalent to
+ $\kbd{asymp}=\beta$.
+
+ \bprog
+ ? \p57
+ ? s = sumnum(n = 1, sin(1/sqrt(n)) / n); \\ reference point
+
+ ? \p38
+ ? sumnummonien(n = 1, sin(1/sqrt(n)) / n) - s
+ %2 = -0.001[...] \\ completely wrong
+
+ ? t = sumnummonieninit(1/2);  \\ f(n) = sum_i 1 / n^(i+1/2)
+ ? sumnummonien(n = 1, sin(1/sqrt(n)) / n, t) - s
+ %3 = 0.E-37 \\ now correct
+ @eprog\noindent (As a matter of fact, in the above summation, the
+ result given by \kbd{sumnum} at \kbd{\bs p38} is slighly incorrect,
+ so we had to increase the accuracy to \kbd{\bs p57}.)
+
+ The argument $w$ is used to sum expressions of the form
+ $$ \sum_{n\geq n_0} f(n) w(n),$$
+ for varying $f$ \emph{as above}, and fixed weight function $w$, where we
+ further assume that the auxiliary sums
+ $$g_w(m) = \sum_{n\geq n_0} w(n) / n^{\alpha m + \beta} $$
+ converge for all $m\geq 1$. Note that for non-negative integers $k$,
+ and weight $w(n) = (\log n)^k$, the function $g_w(m) = \zeta^{(k)}(\alpha m +
+ \beta)$ has a simple expression; for general weights, $g_w$ is
+ computed using \kbd{sumnum}. The following variants are available
+
+ \item an integer $k \geq 0$, to code $w(n) = (\log n)^k$;
+
+ \item a \typ{CLOSURE} computing the values $w(n)$, where we
+ assume that $w(n) = O(n^\epsilon)$ for all $\epsilon > 0$;
+
+ \item a vector $[w, \kbd{fast}]$, where $w$ is a closure as above
+ and \kbd{fast} is a scalar;
+ we assume that $w(n) = O(n^{\kbd{fast}+\epsilon})$; note that
+ $\kbd{w} = [w, 0]$ is equivalent to $\kbd{w} = w$. Note that if
+ $w$ decreases exponentially, \kbd{suminf} should be used instead.
+
+ The subsequent calls to \kbd{sumnummonien} \emph{must} use the same value
+ of $n_0$ as was used here.
+ \bprog
+ ? \p300
+ ? sumnummonien(n = 1, n^-2*log(n)) + zeta'(2)
+ time = 328 ms.
+ %1 = -1.323[...]E-6 \\ completely wrong, f does not satisfy hypotheses !
+ ? tab = sumnummonieninit(, 1); \\ codes w(n) = log(n)
+ time = 3,993 ms.
+ ? sumnummonien(n = 1, n^-2, tab) + zeta'(2)
+ time = 41 ms.
+ %3 = -5.562684646268003458 E-309  \\ now perfect
+
+ ? tab = sumnummonieninit(, n->log(n)); \\ generic, slower
+ time = 9,808 ms.
+ ? sumnummonien(n = 1, n^-2, tab) + zeta'(2)
+ time = 40 ms.
+ %5 = -5.562684646268003458 E-309  \\ identical result
+ @eprog

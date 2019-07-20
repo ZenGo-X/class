@@ -1,0 +1,16 @@
+Function: fileextern
+Section: programming/specific
+C-Name: gp_fileextern
+Prototype: ls
+Help: fileextern(str): execute shell command str and returns a file
+ descriptor attached to the command output as if it were read from a file.
+Doc: the string \var{str} is the name of an external command, i.e.~one you
+ would type from your UNIX shell prompt. This command is immediately run and
+ the function returns a file descriptor attached to the command output as if
+ it were read from a file.
+ \bprog
+ ? n = fileextern("ls -l");
+ ? while(l = filereadstr(n), print(l))
+ ? fileclose(n)
+ @eprog\noindent If the \kbd{secure} default is set, this function will raise
+ en exception.

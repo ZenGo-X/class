@@ -1,0 +1,22 @@
+Function: coredisc
+Section: number_theoretical
+C-Name: coredisc0
+Prototype: GD0,L,
+Help: coredisc(n,{flag=0}): discriminant of the quadratic field Q(sqrt(n)).
+ If (optional) flag is non-null, output a two-component row vector [d,f],
+ where d is the discriminant of the quadratic field Q(sqrt(n)) and n=df^2. f
+ may be a half integer.
+Doc: a \emph{fundamental discriminant} is an integer of the form $t\equiv 1
+ \mod 4$ or $4t \equiv 8,12 \mod 16$, with $t$ squarefree (i.e.~$1$ or the
+ discriminant of a quadratic number field). Given a non-zero integer
+ $n$, this routine returns the (unique) fundamental discriminant $d$
+ such that $n=df^2$, $f$ a positive rational number. If $\fl$ is non-zero,
+ returns the two-element row vector $[d,f]$. If $n$ is congruent to
+ 0 or 1 modulo 4, $f$ is an integer, and a half-integer otherwise.
+
+ By convention, \kbd{coredisc(0, 1))} returns $[0,1]$.
+
+ Note that \tet{quaddisc}$(n)$ returns the same value as \kbd{coredisc}$(n)$,
+ and also works with rational inputs $n\in\Q^*$.
+Variant: Also available are \fun{GEN}{coredisc}{GEN n} ($\fl = 0$) and
+ \fun{GEN}{coredisc2}{GEN n} ($\fl = 1$)

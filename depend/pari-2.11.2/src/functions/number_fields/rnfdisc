@@ -1,0 +1,20 @@
+Function: rnfdisc
+Section: number_fields
+C-Name: rnfdiscf
+Prototype: GG
+Help: rnfdisc(nf,T): given a polynomial T with coefficients in nf, gives a
+ 2-component vector [D,d], where D is the relative ideal discriminant, and d
+ is the relative discriminant in nf^*/nf*^2.
+Doc: given an \var{nf} structure attached to a number field $K$, as output
+ by \kbd{nfinit}, and a monic irreducible polynomial $T\in K[x]$ defining a
+ relative extension $L = K[x]/(T)$, compute the relative discriminant of $L$.
+ This is a vector $[D,d]$, where $D$ is the relative ideal discriminant and
+ $d$ is the relative discriminant considered as an element of $K^*/{K^*}^2$.
+ The main variable of $\var{nf}$ \emph{must} be of lower priority than that of
+ $T$, see \secref{se:priority}.
+
+ \misctitle{Huge discriminants, helping rnfdisc} the format $[T,B]$ is
+ also accepted instead of $T$ and computes an order which is maximal at all
+ $p < B$, see \kbd{??rnfinit}: the valuation of $D$ is then correct at all
+ prime ideals $\goth{p}$ above a rational prime $p < B$ but may be incorrect
+ at other primes.

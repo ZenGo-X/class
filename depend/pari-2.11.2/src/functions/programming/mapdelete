@@ -1,0 +1,14 @@
+Function: mapdelete
+Section: programming/specific
+C-Name: mapdelete
+Prototype: vGG
+Help: mapdelete(M,x): removes x from the domain of the map M.
+Doc: removes $x$ from the domain of the map $M$.
+ \bprog
+ ? M = Map(["a",1; "b",3; "c",7]);
+ ? mapdelete(M,"b");
+ ? Mat(M)
+ ["a" 1]
+
+ ["c" 7]
+ @eprog

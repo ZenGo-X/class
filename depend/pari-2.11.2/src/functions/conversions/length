@@ -1,0 +1,39 @@
+Function: length
+Section: conversions
+C-Name: glength
+Prototype: lG
+Help: length(x): number of non code words in x, number of characters for a
+ string.
+Description:
+ (vecsmall):lg      lg($1)
+ (vec):lg           lg($1)
+ (pol):small        lgpol($1)
+ (gen):small        glength($1)
+Doc: length of $x$; \kbd{\#}$x$ is a shortcut for \kbd{length}$(x)$.
+ This is mostly useful for
+
+ \item vectors: dimension (0 for empty vectors),
+
+ \item lists: number of entries (0 for empty lists),
+
+ \item matrices: number of columns,
+
+ \item character strings: number of actual characters (without
+ trailing \kbd{\bs 0}, should you expect it from $C$ \kbd{char*}).
+ \bprog
+  ? #"a string"
+  %1 = 8
+  ? #[3,2,1]
+  %2 = 3
+  ? #[]
+  %3 = 0
+  ? #matrix(2,5)
+  %4 = 5
+  ? L = List([1,2,3,4]); #L
+  %5 = 4
+ @eprog
+
+ The routine is in fact defined for arbitrary GP types, but is awkward and
+ useless in other cases: it returns the number of non-code words in $x$, e.g.
+ the effective length minus 2 for integers since the \typ{INT} type has two code
+ words.

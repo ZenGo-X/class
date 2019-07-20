@@ -1,0 +1,31 @@
+Function: forell
+Section: programming/control
+C-Name: forell0
+Prototype: vVLLID0,L,
+Help: forell(E,a,b,seq,{flag=0}): execute seq for each elliptic curves E of
+ conductor between a and b in the elldata database. If flag is non-zero, select
+ only the first curve in each isogeny class.
+Wrapper: (,,,vG,)
+Description:
+ (,small,small,closure,?small):void forell(${4 cookie}, ${4 wrapper}, $2, $3, $5)
+Doc: evaluates \var{seq}, where the formal variable $E = [\var{name}, M, G]$
+ ranges through all elliptic curves of conductors from $a$ to $b$. In this
+ notation \var{name} is the curve name in Cremona's elliptic  curve  database,
+ $M$ is the minimal model, $G$ is a $\Z$-basis of the free part of the
+ Mordell-Weil group $E(\Q)$. If flag is non-zero, select
+ only the first curve in each isogeny class.
+ \bprog
+ ? forell(E, 1, 500, my([name,M,G] = E); \
+     if (#G > 1, print(name)))
+ 389a1
+ 433a1
+ 446d1
+ ? c = 0; forell(E, 1, 500, c++); c   \\ number of curves
+ %2 = 2214
+ ? c = 0; forell(E, 1, 500, c++, 1); c \\ number of isogeny classes
+ %3 = 971
+ @eprog\noindent
+ The \tet{elldata} database must be installed and contain data for the
+ specified conductors.
+
+ \synt{forell}{void *data, long (*f)(void*,GEN), long a, long b, long flag}.

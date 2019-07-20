@@ -1,0 +1,96 @@
+We use the GIT open-source revision control system. For us developers, it
+provides network-transparent source control. For ordinary users it provides a
+convenient way to obtain patched versions in between releases, or follow
+development branches. GIT clients are available for all major platforms:
+Unix, MacOS, Windows, see
+
+  http://git-scm.com/download
+
+In particular, the git command-line client is readily available in all Linux
+distributions.
+
+Note: We worked happily for many years with CVS, then Subversion, and
+provided anonymous read-only CVS / Subversion servers. The transition period
+is over: fetching PARI using this method is no longer possible; please
+upgrade to GIT.
+
+This file documents access to the PARI GIT server, which is intended for PARI
+lovers who want the very latest bleeding edge release and development
+branches. These sources may contain severe bugs, they may not even compile,
+benches may fail and so on. Stable releases are made available on a regular
+basis using the customary method: a message to pari-announce.
+
+Note that in order to use the sources fetched via GIT, you will need a
+working bison and perl installation, as well as the regular build toolchain.
+
+1) First connection to the GIT repository:
+==========================================
+To get a working copy, type the following command from the shell
+
+    git clone http://pari.math.u-bordeaux.fr/git/pari.git
+
+This creates a local copy of the distribution from the distant repository in
+local directory pari, which you may move or rename as you wish. From now on,
+you can cd to this pari directory and use any git command directly, as long as
+you remain there, or in a subdirectory.
+
+2) What can I do now ?
+======================
+
+* You can build pari in the usual way (see INSTALL) as if this 'pari' directory
+had been created by fetching, then extracting, an archive on an FTP server.
+
+* You can update your local copy at any time using git pull, which puts you in
+synch with the repository.
+
+* You can list all available development branches using git branch -a. 
+To checkout a specific branch, type git checkout branchname. The two main
+branches are master (testing branch) and pari-2-5 (updates to old stable
+branch). Other branches are customarily named after the developer who sent 
+the initial patch and the proposed feature, and eventually merged into master.
+
+* You can create your own private branches: for instance, the following creates
+a local branch my-branch, starting from a copy of some-branch you found on our
+server.
+
+    git checkout origin/some-branch -b my-branch
+
+Of course, you can modify files in your copy and commit changes to your local
+branches. You can send the output of the relevant git diff command, to the
+pari-dev mailing list with a short description of what you have done. (No need
+to subscribe to the mailing list to post, but it will allow you to follow the
+discussion!)
+
+* On the other hand, you will not be able to commit your changes to our GIT
+repository using anonymous access. For this, you will need read-write access,
+which requires an account on our development machine.
+
+3) Version tags and branches:
+=============================
+
+Official releases (starting from version 2.0.17) are 'tagged' so that all files
+pertaining to a given release can be simultaneously accessed without tracking
+version numbers. Tag names are pari-version with dots replaced by dashes, 
+e.g. pari-2-0-20 for 2.0.20.
+
+To fetch a specific version of pari (2.0.17 or more recent), type for instance
+
+    git checkout pari-2-0-20
+
+The branch pari-2-5 denotes the stable branch 2.5.* as a whole, and can be
+used to checkout up to date sources from that branch in between releases.
+For instance:
+
+    git checkout pari-2-5
+
+produces the latest stable distribution with all relevant patches (the ones not affecting stability) backported.
+
+Tips and Caveats:
+
+* git diff gives you the difference between your local copy and the sources
+they were based on, not with the current state of the testing branch on the
+PARI repository. Use 'git diff master' for that.
+
+* To see the log message associated to the last commit leading to the current
+state of your local repository, type 'git show'. You may add a file or directory
+name to get the log message for the last commit which modified it.

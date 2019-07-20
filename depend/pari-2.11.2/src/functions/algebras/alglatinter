@@ -1,0 +1,19 @@
+Function: alglatinter
+Section: algebras
+C-Name: alglatinter
+Prototype: GGGD&
+Help: alglatinter(al,lat1,lat2,{&ptsum}): the intersection of the lattices lat1
+ and lat2. If ptsum is present, sets it to the sum of the lattices.
+Doc: Given an algebra \var{al} and two lattices \var{lat1} and \var{lat2}
+ in~\var{al}, computes the intersection~$lat1\cap lat2$. If \var{ptsum} is
+ present, sets it to the sum~$lat1 + lat2$.
+ \bprog
+ ? al = alginit(nfinit(y^2+7), [-1,-1]);
+ ? lat1 = alglathnf(al,[1,1,0,0,0,0,0,0]~);
+ ? lat2 = alglathnf(al,[1,0,1,0,0,0,0,0]~);
+ ? latinter = alglatinter(al,lat1,lat2,&latsum);
+ ? matdet(latsum[1])
+ %5 = 4
+ ? matdet(latinter[1])
+ %6 = 64
+ @eprog

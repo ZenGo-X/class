@@ -1,0 +1,18 @@
+Function: znorder
+Section: number_theoretical
+C-Name: znorder
+Prototype: GDG
+Help: znorder(x,{o}): order of the integermod x in (Z/nZ)*.
+ Optional o represents a multiple of the order of the element.
+Description:
+ (gen):int             order($1)
+ (gen,):int            order($1)
+ (gen,int):int         znorder($1, $2)
+Doc: $x$ must be an integer mod $n$, and the
+ result is the order of $x$ in the multiplicative group $(\Z/n\Z)^*$. Returns
+ an error if $x$ is not invertible.
+ The parameter o, if present, represents a non-zero
+ multiple of the order of $x$, see \secref{se:DLfun}; the preferred format for
+ this parameter is \kbd{[ord, factor(ord)]}, where \kbd{ord = eulerphi(n)}
+ is the cardinality of the group.
+Variant: Also available is \fun{GEN}{order}{GEN x}.
