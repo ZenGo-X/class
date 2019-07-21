@@ -46,6 +46,17 @@ pub struct Matrix22 {
     pub a22: BigInt,
 }
 
+impl Matrix22 {
+    pub fn mul(&self, another: Self) -> Self {
+        Matrix22 {
+            a11: self.a11 * &another.a11 + self.a12 * &another.a21,
+            a12: self.a11 * &another.a12 + self.a12 * &another.a22,
+            a21: self.a21 * &another.a11 + self.a22 * &another.a21,
+            a22: self.a21 * &another.a12 + self.a22 * &another.a22,
+        }
+    }
+}
+
 impl BinaryQF {
     pub fn binary_quadratic_form_disc(abdelta_triple: &ABDeltaTriple) -> Self {
         let a = abdelta_triple.a.clone();
@@ -175,13 +186,7 @@ impl BinaryQF {
         M = M_new;
         while !h.is_reduced() {
             let (h_new, M_new) = h.rho();
-            // M * M_new \\TODO: move to separate function
-            M = Matrix22 {
-                a11: &M.a11 * &M_new.a11 + &M.a12 * &M_new.a21,
-                a12: &M.a11 * &M_new.a12 + &M.a12 * &M_new.a22,
-                a21: &M.a21 * &M_new.a11 + &M.a22 * &M_new.a21,
-                a22: &M.a21 * &M_new.a12 + &M.a22 * &M_new.a22,
-            };
+            M = M.mul(M_new);
             h = h_new;
         }
         (h, M)
