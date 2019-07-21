@@ -10,7 +10,7 @@ fn main() {
         .expect("failed to execute process");
 
     Command::new("make")
-        .arg("all")
+        .arg("install")
         .current_dir("depend/pari-2.11.2")
         .output()
         .expect("failed to make");

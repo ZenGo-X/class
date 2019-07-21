@@ -6,14 +6,12 @@ include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 
 extern crate libc;
 extern crate paillier;
-use libc::c_long;
 extern crate curv;
 use crate::curv::arithmetic::traits::Converter;
 use curv::BigInt;
 use libc::c_char;
 use std::ffi::CStr;
 use std::ops::Neg;
-use std::ptr;
 use std::str;
 
 pub mod primitives;
@@ -125,7 +123,7 @@ impl BinaryQF {
 
         let bqf = BinaryQF::pari_qf_to_qf(pf);
 
-        let (bqf_norm, matrix) = bqf.normalize();
+        let (bqf_norm, _) = bqf.normalize();
         bqf_norm
     }
 
@@ -285,7 +283,7 @@ pub fn bn_to_gen(bn: &BigInt) -> GEN {
     let two_bn = BigInt::from(2);
     let all_ones_32bits = two_bn.pow(32) - BigInt::one();
     let mut array = [0u8; 4];
-    let mut ints_vec = (0..num_ints)
+    let ints_vec = (0..num_ints)
         .map(|i| {
             let masked_valued_bn =
                 (bn.clone() & all_ones_32bits.clone() << (i * size_int)) >> (i * size_int);
@@ -381,14 +379,6 @@ pub fn decimal_string_to_bn(dec_string: String) -> BigInt {
         res
     });
     bn * BigInt::from(negative_flag)
-}
-
-#[link(name = "pari")]
-extern "C" {
-    fn stoi(s: i64) -> GEN;
-    fn addii(x: GEN, y: GEN) -> GEN;
-    fn vecslice(A: GEN, j1: i64, j2: i64) -> GEN;
-    fn mpcmp(x: GEN, y: GEN) -> GEN;
 }
 
 #[cfg(test)]

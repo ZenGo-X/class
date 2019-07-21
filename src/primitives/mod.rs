@@ -1,5 +1,4 @@
-use super::{ABDeltaTriple, BinaryQF};
-use crate::gmul;
+use super::BinaryQF;
 use crate::pari_init;
 use curv::arithmetic::traits::Samplable;
 use curv::BigInt;
@@ -180,23 +179,21 @@ fn reciprocity(num: &BigInt, den: &BigInt) -> (i8) {
 
 //TODO: improve approximation
 fn numerical_log(x: &BigInt) -> BigInt {
-    let mut ai: BigInt;
-    let mut bi: BigInt;
     let mut aip1: BigInt;
     let mut bip1: BigInt;
     let two = BigInt::from(2);
-    let mut ai = (BigInt::one() + x).div_floor(&two);
-    let mut bi = x.sqrt();
+    let mut _ai = (BigInt::one() + x).div_floor(&two);
+    let mut _bi = x.sqrt();
     let mut k = 0;
     while k < 1000 {
         k = k + 1;
-        aip1 = (&ai + &bi).div_floor(&two);
-        bip1 = (ai * bi).sqrt();
-        ai = aip1;
-        bi = bip1;
+        aip1 = (&_ai + &_bi).div_floor(&two);
+        bip1 = (_ai * _bi).sqrt();
+        _ai = aip1;
+        _bi = bip1;
     }
 
-    let log = two * (x - &BigInt::one()).div_floor(&(ai + bi));
+    let log = two * (x - &BigInt::one()).div_floor(&(_ai + _bi));
     log
 }
 
