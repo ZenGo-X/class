@@ -1,22 +1,17 @@
 extern crate bindgen;
 
 use std::env;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::process::Command;
+
 fn main() {
-    let output = Command::new("./Configure")
+    let _ = Command::new("./Configure")
         .current_dir("depend/pari-2.11.2")
         .output()
         .expect("failed to execute process");
 
     Command::new("make")
-        .arg("install")
-        .current_dir("depend/pari-2.11.2")
-        .output()
-        .expect("failed to make");
-
-    Command::new("make")
-        .arg("install-lib-sta")
+        .arg("install-nodata")
         .current_dir("depend/pari-2.11.2")
         .output()
         .expect("failed to make");

@@ -10,7 +10,7 @@ The library will evantually support multiple cryptographic primitves. Currently 
 
 Build
 -------------------
-Running `Cargo build` will also install PARI on the machine. Follow the `test_encryption` test for usage. 
+Running `cargo build` will also install PARI on the machine. Follow the `test_encryption` test for usage. 
 
 Contact
 -------------------
