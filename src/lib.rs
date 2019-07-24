@@ -39,7 +39,6 @@ pub struct ABDeltaTriple {
     pub delta: BigInt,
 }
 
-#[derive(Copy, Clone)]
 pub struct Matrix22 {
     pub a11: BigInt,
     pub a12: BigInt,
@@ -48,7 +47,7 @@ pub struct Matrix22 {
 }
 
 impl Matrix22 {
-    pub fn mul(&self, another: Self) -> Self {
+    pub fn mul(&self, another: &Self) -> Self {
         Matrix22 {
             a11: self.a11 * another.a11 + self.a12 * another.a21,
             a12: self.a11 * another.a12 + self.a12 * another.a22,
@@ -187,7 +186,7 @@ impl BinaryQF {
         M = M_new;
         while !h.is_reduced() {
             let (h_new, M_new) = h.rho();
-            M = M.mul(M_new);
+            M = M.mul(&M_new);
             h = h_new;
         }
         (h, M)
