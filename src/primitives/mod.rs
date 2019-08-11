@@ -205,7 +205,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_encryption() {
+    fn test_encryption_p256() {
         let q = str::parse(
             "115792089210356248762697446949407573529996955224135760342422259061068512044369",
         )
@@ -217,6 +217,22 @@ mod tests {
 
         assert_eq!(m, m_tag);
     }
+
+    #[test]
+    fn test_encryption_secp256k1() {
+        // Taken from https://safecurves.cr.yp.to/base.html
+        let q = str::parse(
+            "115792089237316195423570985008687907852837564279074904382605163141518161494337",
+        )
+        .unwrap();
+        let hsmcl = HSMCL::keygen(&q, &516);
+        let m = BigInt::from(1000);
+        let ciphertext = HSMCL::encrypt(&hsmcl.pk, &m);
+        let m_tag = hsmcl.decrypt(&ciphertext);
+
+        assert_eq!(m, m_tag);
+    }
+
 
     #[test]
     fn test_log_dlog() {
