@@ -265,9 +265,10 @@ impl BinaryQF {
         let b_string = pari_qf_comp_to_decimal_string(pari_qf, 2);
         let c_string = pari_qf_comp_to_decimal_string(pari_qf, 3);
 
-        let a = decimal_string_to_bn(a_string);
-        let b = decimal_string_to_bn(b_string);
-        let c = decimal_string_to_bn(c_string);
+
+        let a: BigInt = str::parse(&a_string).unwrap();
+        let b: BigInt = str::parse(&b_string).unwrap();
+        let c: BigInt = str::parse(&c_string).unwrap();
 
         BinaryQF { a, b, c }
     }
@@ -363,29 +364,6 @@ pub fn pari_qf_comp_to_decimal_string(pari_qf: GEN, index: usize) -> String {
     let c_str: &CStr = unsafe { CStr::from_ptr(c_buf) };
     let comp_str_slice: &str = c_str.to_str().unwrap();
     comp_str_slice.to_string()
-}
-
-//TODO: use str::parse
-pub fn decimal_string_to_bn(dec_string: String) -> BigInt {
-    let mut char_iter = dec_string.chars();
-    let mut negative_flag = 1;
-    let ten = BigInt::from(10);
-    match char_iter.position(|minus| &minus.to_string() == "-") {
-        Some(x) => {
-            if x == 0 {
-                negative_flag = -1;
-            }
-        }
-        None => {
-            char_iter = dec_string.chars();
-        }
-    }
-
-    let bn = char_iter.fold(BigInt::zero(), |acc, x| {
-        let res = acc * &ten + BigInt::from(x.to_digit(10).unwrap());
-        res
-    });
-    bn * BigInt::from(negative_flag)
 }
 
 #[link(name = "pari")]
