@@ -28,7 +28,7 @@ pub struct Ciphertext {
 
 #[derive(Clone)]
 pub struct HSMCL {
-    sk: BigInt,
+    pub sk: BigInt,
     pub pk: PK,
 }
 
