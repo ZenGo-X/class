@@ -18,7 +18,7 @@ pub struct PK {
     pub delta_q: BigInt,
     pub gq: BinaryQF,
     pub h: BinaryQF,
-    stilde: BigInt,
+    pub stilde: BigInt,
 }
 
 pub struct Ciphertext {
