@@ -4,7 +4,12 @@
 
 include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 
+
 extern crate libc;
+#[macro_use]
+extern crate serde_derive;
+extern crate serde;
+extern crate serde_json;
 extern crate paillier;
 extern crate rayon;
 use libc::c_long;
@@ -26,7 +31,7 @@ extern {
     fn snappy_max_compressed_length(source_length: size_t) -> size_t;
 }
 */
-#[derive(PartialEq, Eq, Clone, Debug)]
+#[derive(PartialEq, Eq, Clone, Debug, Serialize, Deserialize)]
 pub struct BinaryQF {
     pub a: BigInt,
     pub b: BigInt,

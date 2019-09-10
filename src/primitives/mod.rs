@@ -11,7 +11,7 @@ use curv::{FE, GE};
 use paillier::keygen;
 const SECURITY_PARAMETER: usize = 128;
 
-#[derive(Clone)]
+#[derive(Clone,Debug,Serialize, Deserialize)]
 pub struct PK {
     pub q: BigInt,
     pub delta_k: BigInt,
@@ -21,17 +21,19 @@ pub struct PK {
     pub stilde: BigInt,
 }
 
+#[derive(Clone,Debug,Serialize, Deserialize)]
 pub struct Ciphertext {
     c1: BinaryQF,
     c2: BinaryQF,
 }
 
-#[derive(Clone)]
+#[derive(Clone,Debug,Serialize, Deserialize)]
 pub struct HSMCL {
     pub sk: BigInt,
     pub pk: PK,
 }
 
+#[derive(Clone,Debug,Serialize, Deserialize)]
 pub struct CLDLProof {
     pub pk: PK,
     pub ciphertext: Ciphertext,
@@ -45,18 +47,15 @@ pub struct Witness {
     x: BigInt,
 }
 
-pub struct EncryptedPairs {
-    pub u1: Vec<BigInt>,
-    pub u2: Vec<BigInt>,
-}
 
-#[derive(Clone)]
+#[derive(Clone, Debug ,Serialize, Deserialize)]
 pub struct TTriplets {
     pub t1: BinaryQF,
     pub t2: GE,
     pub t3: BinaryQF,
 }
 
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct U1U2 {
     pub u1: BigInt,
     pub u2: BigInt,
