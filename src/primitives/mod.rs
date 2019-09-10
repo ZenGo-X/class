@@ -43,8 +43,8 @@ pub struct CLDLProof {
 }
 
 pub struct Witness {
-    r: BigInt,
-    x: BigInt,
+    pub r: BigInt,
+    pub x: BigInt,
 }
 
 
