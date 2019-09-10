@@ -34,7 +34,7 @@ pub struct HSMCL {
 
 pub struct CLDLProof {
     pub pk: PK,
-    ciphertext: Ciphertext,
+    pub ciphertext: Ciphertext,
     q: GE,
     t_vec: Vec<TTriplets>,
     u_vec: Vec<U1U2>,
