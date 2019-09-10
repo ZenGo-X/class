@@ -6,6 +6,7 @@ include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 
 extern crate libc;
 extern crate paillier;
+extern crate rayon;
 use libc::c_long;
 extern crate curv;
 use crate::curv::arithmetic::traits::Converter;
@@ -265,12 +266,20 @@ impl BinaryQF {
         let b_string = pari_qf_comp_to_decimal_string(pari_qf, 2);
         let c_string = pari_qf_comp_to_decimal_string(pari_qf, 3);
 
-
         let a: BigInt = str::parse(&a_string).unwrap();
         let b: BigInt = str::parse(&b_string).unwrap();
         let c: BigInt = str::parse(&c_string).unwrap();
 
         BinaryQF { a, b, c }
+    }
+
+    pub fn to_bytes(&self) -> Vec<u8> {
+        let mut a_vec = BigInt::to_vec(&self.a);
+        let mut b_vec = BigInt::to_vec(&self.b);
+        let mut c_vec = BigInt::to_vec(&self.c);
+        a_vec.extend_from_slice(&b_vec[..]);
+        a_vec.extend_from_slice(&c_vec[..]);
+        a_vec
     }
 }
 // helper functions:

@@ -12,7 +12,9 @@ bindgen = "0.50"
 [dependencies]
 libc = "0.2.0"
 paillier = { git = "https://github.com/KZen-networks/rust-paillier"}
-
+rayon = "1.1"
 [dependencies.curv]
 git = "https://github.com/KZen-networks/curv"
+features =  ["ec_secp256k1"]
+tag = "v0.2.0"
 
