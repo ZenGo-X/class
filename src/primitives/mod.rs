@@ -23,8 +23,8 @@ pub struct PK {
 
 #[derive(Clone,Debug,Serialize, Deserialize)]
 pub struct Ciphertext {
-    c1: BinaryQF,
-    c2: BinaryQF,
+    pub c1: BinaryQF,
+    pub c2: BinaryQF,
 }
 
 #[derive(Clone,Debug,Serialize, Deserialize)]
