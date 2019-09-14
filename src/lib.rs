@@ -4,14 +4,13 @@
 
 include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 
-
 extern crate libc;
 #[macro_use]
 extern crate serde_derive;
-extern crate serde;
-extern crate serde_json;
 extern crate paillier;
 extern crate rayon;
+extern crate serde;
+extern crate serde_json;
 use libc::c_long;
 extern crate curv;
 use crate::curv::arithmetic::traits::Converter;

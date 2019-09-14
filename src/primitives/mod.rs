@@ -11,7 +11,7 @@ use curv::{FE, GE};
 use paillier::keygen;
 const SECURITY_PARAMETER: usize = 128;
 
-#[derive(Clone,Debug,Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct PK {
     pub q: BigInt,
     pub delta_k: BigInt,
@@ -21,19 +21,19 @@ pub struct PK {
     pub stilde: BigInt,
 }
 
-#[derive(Clone,Debug,Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Ciphertext {
     pub c1: BinaryQF,
     pub c2: BinaryQF,
 }
 
-#[derive(Clone,Debug,Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct HSMCL {
     pub sk: BigInt,
     pub pk: PK,
 }
 
-#[derive(Clone,Debug,Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct CLDLProof {
     pub pk: PK,
     pub ciphertext: Ciphertext,
@@ -47,8 +47,7 @@ pub struct Witness {
     pub x: BigInt,
 }
 
-
-#[derive(Clone, Debug ,Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct TTriplets {
     pub t1: BinaryQF,
     pub t2: GE,
@@ -159,6 +158,26 @@ impl HSMCL {
         let c1_x_inv = c1_x.inverse();
         let tmp = c.c2.compose(&c1_x_inv).reduce().0;
         BinaryQF::discrete_log_f(&self.pk.q, &self.pk.delta_q, &tmp)
+    }
+
+    //TODO: add unit test
+    pub fn eval_scal(c: &Ciphertext, val: &BigInt) -> Ciphertext {
+        unsafe { pari_init(10000000, 2) };
+        let c_new = Ciphertext {
+            c1: c.c1.exp(&val),
+            c2: c.c2.exp(&val),
+        };
+        c_new
+    }
+
+    //TODO: add unit test
+    pub fn eval_sum(c1: &Ciphertext, c2: &Ciphertext) -> Ciphertext {
+        unsafe { pari_init(10000000, 2) };
+        let c_new = Ciphertext {
+            c1: c1.c1.compose(&c2.c1).reduce().0,
+            c2: c1.c2.compose(&c2.c2).reduce().0,
+        };
+        c_new
     }
 }
 
