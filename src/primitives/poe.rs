@@ -1,15 +1,15 @@
 use super::ProofError;
+use crate::curv::cryptographic_primitives::hashing::traits::Hash;
 use crate::pari_init;
 use crate::BinaryQF;
+use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
 use curv::BigInt;
 use paillier::keygen;
-
 /// This is a proof of exponentiation as given in https://eprint.iacr.org/2019/1229.pdf section 3.4
 /// The prover can efficiently convince a verifier that a large exponentiation
 /// in a group of unknown order was done correctly.
 /// statement is (x,u,w), verifier accept if w = u^x.
 ///
-const SECURITY_PARAM: usize = 256;
 #[derive(Clone, PartialEq, Debug, Serialize, Deserialize)]
 pub struct PoEProof {
     pub x: BigInt,
@@ -21,10 +21,7 @@ pub struct PoEProof {
 
 impl PoEProof {
     pub fn prove(x: &BigInt, u: &BinaryQF, w: &BinaryQF) -> PoEProof {
-        unsafe {
-            pari_init(10000000, 2);
-        }
-        let l = keygen::PrimeSampable::sample_prime(256);
+        let l = hash_to_prime(u, w);
         let r = x.mod_floor(&l);
         let q = (x - r).div_floor(&l);
         let Q = u.exp(&q);
@@ -38,9 +35,7 @@ impl PoEProof {
     }
 
     pub fn verify(&self) -> Result<(), ProofError> {
-        unsafe {
-            pari_init(10000000, 2);
-        }
+        let l = hash_to_prime(&self.u, &self.w);
         let r = self.x.mod_floor(&self.l);
         let Ql = self.Q.exp(&self.l);
         let ur = self.u.exp(&r);
@@ -51,6 +46,15 @@ impl PoEProof {
             Err(ProofError)
         }
     }
+}
+
+pub fn hash_to_prime(u: &BinaryQF, w: &BinaryQF) -> BigInt {
+    let mut candidate = HSha256::create_hash(&[&u.a, &u.b, &u.c, &w.a, &w.b, &w.c]);
+
+    while !keygen::is_prime(&candidate) {
+        candidate = candidate + BigInt::from(1);
+    }
+    candidate
 }
 
 #[cfg(test)]

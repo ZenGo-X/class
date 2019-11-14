@@ -182,9 +182,10 @@ impl HSMCL {
 }
 
 pub fn next_probable_prime(r: &BigInt) -> BigInt {
-    let mut qtilde = r + 1;
+    let one = BigInt::from(1);
+    let mut qtilde = r + &one;
     while !keygen::is_prime(&qtilde) {
-        qtilde = qtilde + 1;
+        qtilde = qtilde + &one;
     }
     qtilde
 }
