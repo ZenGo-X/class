@@ -1,6 +1,6 @@
 [package]
 name = "class_group"
-version = "0.1.7"
+version = "0.1.8"
 authors = ["omershlo <omer.shlomovits@gmail.com>"]
 edition = "2018"
 links = "libpari"

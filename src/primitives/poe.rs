@@ -62,7 +62,7 @@ mod tests {
     use super::PoEProof;
     use crate::curv::arithmetic::traits::Samplable;
     use crate::pari_init;
-    use crate::primitives::hsmcl::HSMCL;
+    use crate::primitives::dl_cl::HSMCL;
     use crate::ABDeltaTriple;
     use crate::BinaryQF;
     use curv::BigInt;
