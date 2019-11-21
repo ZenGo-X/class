@@ -9,6 +9,8 @@ use curv::elliptic::curves::traits::{ECPoint, ECScalar};
 use curv::BigInt;
 use curv::{FE, GE};
 use paillier::keygen;
+use crate::primitives::numerical_log;
+
 const SECURITY_PARAMETER: usize = 128;
 const C: usize = 10;
 
@@ -98,6 +100,7 @@ impl HSMCL {
         let log_delta_k_abs = numerical_log(&delta_k_abs);
         let delta_k_abs_sqrt = delta_k_abs.sqrt();
         let stilde = log_delta_k_abs * delta_k_abs_sqrt;
+
 
         let mut r = BigInt::from(3);
         while jacobi(&delta_k, &r).unwrap() != 1 {
@@ -201,7 +204,7 @@ impl CLDLProof {
         let repeat = SECURITY_PARAMETER / C + 1;
         let triplets_and_fs_and_r_vec = (0..repeat)
             .map(|_| {
-                let r1 = BigInt::sample_below(&(&pk.stilde * BigInt::from(2).pow(40)));
+                let r1 = BigInt::sample_below(&(&pk.stilde * BigInt::from(2).pow(40) * BigInt::from(C as u32) * BigInt::from(2).pow(40)));
                 let r2_fe: FE = FE::new_random();
                 let r2 = r2_fe.to_big_int();
                 let fr2 = BinaryQF::expo_f(&pk.q, &pk.delta_q, &r2);
@@ -268,27 +271,23 @@ impl CLDLProof {
         let mut flag = true;
         let k = HSha256::create_hash(&fs_t_vec[..]);
         let ten = BigInt::from(C as u32);
-        //let sample_size = &self.pk.stilde * BigInt::from(2).pow(42);
+        // TODO:: make sure the bound is correct
+        let sample_size = &self.pk.stilde *( BigInt::from(2).pow(40))* BigInt::from(C as u32) * (BigInt::from(2).pow(40) + BigInt::one());
         for i in 0..repeat {
             let k_slice_i = (k.clone() >> (i * C)) & ten.clone();
             //length test u1:
-            if &self.u_vec[i].u1 < &BigInt::zero() {
-                //TODO: figure out the bounds of u1 better.
-                //  if &self.u_vec[i].u1 > &sample_size || &self.u_vec[i].u1 < &BigInt::zero(){
+            if &self.u_vec[i].u1 > &sample_size || &self.u_vec[i].u1 < &BigInt::zero(){
                 flag = false;
-                println!("TEST1");
             }
             // length test u2:
             if &self.u_vec[i].u2 > &FE::q() || &self.u_vec[i].u2 < &BigInt::zero() {
                 flag = false;
-                println!("TEST2");
             }
             let c1k = self.ciphertext.c1.exp(&k_slice_i);
             let t1c1k = self.t_vec[i].t1.compose(&c1k).reduce().0;
             let gqu1 = self.pk.gq.exp(&&self.u_vec[i].u1);
             if t1c1k != gqu1 {
                 flag = false;
-                println!("TEST3");
             };
 
             let k_slice_i_bias_fe: FE = ECScalar::from(&(k_slice_i.clone() + BigInt::one()));
@@ -298,7 +297,6 @@ impl CLDLProof {
             let u2p = &g * &ECScalar::from(&self.u_vec[i].u2);
             if t2kq != u2p {
                 flag = false;
-                println!("TEST4");
             }
 
             let pku1 = self.pk.h.exp(&self.u_vec[i].u1);
@@ -308,7 +306,6 @@ impl CLDLProof {
             let pku1fu2 = pku1.compose(&fu2).reduce().0;
             if t2c2k != pku1fu2 {
                 flag = false;
-                println!("TEST5");
             }
         }
         match flag {
@@ -380,31 +377,11 @@ fn reciprocity(num: &BigInt, den: &BigInt) -> (i8) {
     }
 }
 
-//TODO: improve approximation
-fn numerical_log(x: &BigInt) -> BigInt {
-    let mut ai: BigInt;
-    let mut bi: BigInt;
-    let mut aip1: BigInt;
-    let mut bip1: BigInt;
-    let two = BigInt::from(2);
-    let mut ai = (BigInt::one() + x).div_floor(&two);
-    let mut bi = x.sqrt();
-    let mut k = 0;
-    while k < 1000 {
-        k = k + 1;
-        aip1 = (&ai + &bi).div_floor(&two);
-        bip1 = (ai * bi).sqrt();
-        ai = aip1;
-        bi = bip1;
-    }
-
-    let log = two * (x - &BigInt::one()).div_floor(&(ai + bi));
-    log
-}
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::primitives::numerical_log;
 
     #[test]
     fn test_encryption_p256() {
@@ -433,6 +410,28 @@ mod tests {
         let m_tag = hsmcl.decrypt(&ciphertext);
 
         assert_eq!(m, m_tag);
+    }
+
+    #[test]
+    fn test_encryption_secp256k1_lcm() {
+        // Taken from https://safecurves.cr.yp.to/base.html
+        let q : BigInt = str::parse(
+            "115792089237316195423570985008687907852837564279074904382605163141518161494337",
+        )
+            .unwrap();
+
+        let y_lcm_2_10 : BigInt =   str::parse(
+            "151618061813668907047555375196284282212828385012571422508243606396982990507765713824896817788256843814293140588909051016870220247446068005325317649527345823892013937528324863830431690594759494544180632484280566467236943419529914086373866776312054008314550085541437547949941261674011371522223796764922474715156912857025368346468053819956502062293544",
+        ).unwrap();
+        println!("TEST :{:?}", y_lcm_2_10.to_str_radix(2).len());
+       // let y_lcm_2_10 = (&q + BigInt::from(1)) * (&BigInt::from(2));
+        let hsmcl = HSMCL::keygen(&q, &516);
+        let m = BigInt::from(1000);
+        let ciphertext = HSMCL::encrypt(&hsmcl.pk, &m);
+        let c_y = HSMCL::eval_scal(&ciphertext, &y_lcm_2_10);
+        let m_tag = hsmcl.decrypt(&c_y);
+        let m_y = BigInt::mod_mul(&m, &y_lcm_2_10, &q);
+        assert_eq!(m_y, m_tag);
     }
 
     #[test]
@@ -511,4 +510,5 @@ mod tests {
     fn test_log() {
         println!("TEST: {:?}", numerical_log(&BigInt::from(10)));
     }
+
 }

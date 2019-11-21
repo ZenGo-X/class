@@ -9,6 +9,8 @@ use curv::elliptic::curves::traits::{ECPoint, ECScalar};
 use curv::BigInt;
 use curv::{FE, GE};
 use paillier::keygen;
+use crate::primitives::numerical_log;
+
 const SECURITY_PARAMETER: usize = 128;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -365,31 +367,12 @@ fn reciprocity(num: &BigInt, den: &BigInt) -> (i8) {
     }
 }
 
-//TODO: improve approximation
-fn numerical_log(x: &BigInt) -> BigInt {
-    let mut ai: BigInt;
-    let mut bi: BigInt;
-    let mut aip1: BigInt;
-    let mut bip1: BigInt;
-    let two = BigInt::from(2);
-    let mut ai = (BigInt::one() + x).div_floor(&two);
-    let mut bi = x.sqrt();
-    let mut k = 0;
-    while k < 1000 {
-        k = k + 1;
-        aip1 = (&ai + &bi).div_floor(&two);
-        bip1 = (ai * bi).sqrt();
-        ai = aip1;
-        bi = bip1;
-    }
 
-    let log = two * (x - &BigInt::one()).div_floor(&(ai + bi));
-    log
-}
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::primitives::numerical_log;
 
     #[test]
     fn test_encryption_p256() {
@@ -492,8 +475,5 @@ mod tests {
         assert_eq!(m.clone(), m_tag);
     }
 
-    #[test]
-    fn test_log() {
-        println!("TEST: {:?}", numerical_log(&BigInt::from(10)));
-    }
+
 }
