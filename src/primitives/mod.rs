@@ -22,6 +22,13 @@ impl Error for ProofError {
     }
 }
 
+#[derive(Copy, PartialEq, Eq, Clone, Debug)]
+pub enum ErrorReason {
+    OpenCommError,
+    EvalError,
+
+}
+
 //TODO: improve approximation
 fn numerical_log(x: &BigInt) -> BigInt {
     let mut ai: BigInt;

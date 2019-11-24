@@ -20,6 +20,7 @@ pub struct PoEProof {
 }
 
 impl PoEProof {
+    // u^x = w
     pub fn prove(x: &BigInt, u: &BinaryQF, w: &BinaryQF) -> PoEProof {
         let l = hash_to_prime(u, w);
         let r = x.mod_floor(&l);
@@ -39,7 +40,19 @@ impl PoEProof {
         let r = self.x.mod_floor(&self.l);
         let Ql = self.Q.exp(&self.l);
         let ur = self.u.exp(&r);
-        let left_side = Ql.compose(&ur).reduce().0;
+        let mut left_side = Ql.compose(&ur);
+        if left_side.a == left_side.b && left_side.a == BigInt::one(){ //principal form
+            // do nothing
+        }
+        else{
+            left_side = left_side.reduce().0;
+        }
+        println!("LEFT {:?}", left_side.clone());
+        println!("RIGHT {:?}", self.w.clone());
+        println!("is reduced {:?}", left_side.is_normal());
+       // if left_side.is_reduced() == false{
+      //      left_side = left_side.reduce().0;
+     //   }
         if left_side == self.w {
             Ok(())
         } else {
@@ -80,6 +93,8 @@ mod tests {
         let u = hsmcl.pk.gq;
         let x = BigInt::sample(512);
         let w = u.exp(&x);
+
+
         let proof = PoEProof::prove(&x, &u, &w);
         assert!(proof.verify().is_ok());
     }
