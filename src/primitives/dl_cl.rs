@@ -1,7 +1,7 @@
 use crate::curv::arithmetic::traits::Modulo;
 use crate::curv::cryptographic_primitives::hashing::traits::Hash;
 use crate::pari_init;
-use crate::rayon::prelude::*;
+use crate::primitives::numerical_log;
 use crate::BinaryQF;
 use curv::arithmetic::traits::Samplable;
 use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
@@ -9,10 +9,16 @@ use curv::elliptic::curves::traits::{ECPoint, ECScalar};
 use curv::BigInt;
 use curv::{FE, GE};
 use paillier::keygen;
-use crate::primitives::numerical_log;
 
 const SECURITY_PARAMETER: usize = 128;
 
+/// Linearly homomorphic encryption scheme and a zkpok that a ciphertext encrypts a scalar x given
+/// public Q = x G. interface includes:
+/// keygen, encrypt, decrypt, prove, verify.
+///
+/// The encryption scheme is taken from https://eprint.iacr.org/2018/791.pdf Theorem 2
+/// The zero knowledge proof is a non interactive version of the proof
+/// given in  https://eprint.iacr.org/2019/503.pdf figure 8
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct PK {
     pub q: BigInt,
@@ -65,7 +71,6 @@ pub struct U1U2 {
 #[derive(Debug)]
 pub struct ProofError;
 
-// based on https://eprint.iacr.org/2019/503.pdf figures 6 and 7
 impl HSMCL {
     pub fn keygen(q: &BigInt, lam: &usize) -> Self {
         unsafe { pari_init(10000000, 2) };
@@ -271,7 +276,6 @@ impl CLDLProof {
         for i in 0..SECURITY_PARAMETER {
             let bit = (k.clone() >> i) & one.clone();
 
-            let t1 = self.t_vec[i].t1.clone();
             let c2k = self.ciphertext.c2.exp(&bit);
             let t1c2k = self.t_vec[i].t1.compose(&c2k).reduce().0;
             let pku1 = self.pk.h.exp(&self.u_vec[i].u1);
@@ -347,7 +351,7 @@ pub fn jacobi(a: &BigInt, n: &BigInt) -> Option<i8> {
     }
 }
 
-fn two_over(n: &BigInt) -> (i8) {
+fn two_over(n: &BigInt) -> i8 {
     if n.mod_floor(&BigInt::from(8)) == BigInt::one()
         || n.mod_floor(&BigInt::from(8)) == BigInt::from(7)
     {
@@ -357,7 +361,7 @@ fn two_over(n: &BigInt) -> (i8) {
     }
 }
 
-fn reciprocity(num: &BigInt, den: &BigInt) -> (i8) {
+fn reciprocity(num: &BigInt, den: &BigInt) -> i8 {
     if num.mod_floor(&BigInt::from(4)) == BigInt::from(3)
         && den.mod_floor(&BigInt::from(4)) == BigInt::from(3)
     {
@@ -367,12 +371,9 @@ fn reciprocity(num: &BigInt, den: &BigInt) -> (i8) {
     }
 }
 
-
-
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::primitives::numerical_log;
 
     #[test]
     fn test_encryption_p256() {
@@ -474,6 +475,4 @@ mod tests {
         let m_tag = BinaryQF::discrete_log_f(&hsmcl.pk.q, &hsmcl.pk.delta_q, &exp_f);
         assert_eq!(m.clone(), m_tag);
     }
-
-
 }

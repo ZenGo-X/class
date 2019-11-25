@@ -2,16 +2,17 @@ use std::collections::HashSet;
 extern crate bindgen;
 
 use std::env;
-use std::path::{Path, PathBuf};
+use std::fs;
+use std::path::PathBuf;
 use std::process::Command;
 fn main() {
-    let output = Command::new("./Configure")
-        .current_dir("depend/pari-2.11.2")
+    let path = fs::canonicalize("./depend/pari-2.11.2/Configure").unwrap();
+    Command::new(path.to_str().unwrap())
         .output()
         .expect("failed to execute process");
 
     Command::new("make")
-        .arg("all")
+        .arg("install-nodata")
         .current_dir("depend/pari-2.11.2")
         .output()
         .expect("failed to make");
@@ -39,6 +40,16 @@ fn main() {
         // The input header we would like to generate
         // bindings for.
         .header("wrapper.h")
+        .whitelist_type("GEN")
+        .whitelist_function("mkintn")
+        .whitelist_function("GENtostr")
+        .whitelist_function("compo")
+        .whitelist_function("qfi")
+        .whitelist_function("nupow")
+        .whitelist_function("qfbcompraw")
+        .whitelist_function("primeform")
+        .whitelist_function("pari_init")
+        .whitelist_function("gneg")
         .parse_callbacks(Box::new(ignored_macros))
         // Finish the builder and generate the bindings.
         .generate()

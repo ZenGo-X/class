@@ -1,6 +1,5 @@
 use super::ProofError;
 use crate::curv::cryptographic_primitives::hashing::traits::Hash;
-use crate::pari_init;
 use crate::BinaryQF;
 use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
 use curv::BigInt;
@@ -16,7 +15,6 @@ pub struct PoEProof {
     pub u: BinaryQF,
     pub w: BinaryQF,
     pub Q: BinaryQF,
-    pub l: BigInt,
 }
 
 impl PoEProof {
@@ -31,20 +29,18 @@ impl PoEProof {
             u: u.clone(),
             w: w.clone(),
             Q,
-            l,
         }
     }
 
     pub fn verify(&self) -> Result<(), ProofError> {
         let l = hash_to_prime(&self.u, &self.w);
-        let r = self.x.mod_floor(&self.l);
-        let Ql = self.Q.exp(&self.l);
+        let r = self.x.mod_floor(&l);
+        let Ql = self.Q.exp(&l);
         let ur = self.u.exp(&r);
         let mut left_side = Ql.compose(&ur);
-        if left_side.a == left_side.b && left_side.a == BigInt::one(){ //principal form
-            // do nothing
-        }
-        else{
+        if left_side.a == left_side.b && left_side.a == BigInt::one() { //principal form
+             // do nothing
+        } else {
             left_side = left_side.reduce().0;
         }
 
@@ -71,8 +67,6 @@ mod tests {
     use crate::curv::arithmetic::traits::Samplable;
     use crate::pari_init;
     use crate::primitives::dl_cl::HSMCL;
-    use crate::ABDeltaTriple;
-    use crate::BinaryQF;
     use curv::BigInt;
 
     #[test]
@@ -88,7 +82,6 @@ mod tests {
         let u = hsmcl.pk.gq;
         let x = BigInt::sample(512);
         let w = u.exp(&x);
-
 
         let proof = PoEProof::prove(&x, &u, &w);
         assert!(proof.verify().is_ok());

@@ -1,35 +1,26 @@
 #![allow(non_upper_case_globals)]
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
+#![allow(dead_code)]
 
 include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 
 extern crate libc;
 #[macro_use]
 extern crate serde_derive;
+extern crate curv;
 extern crate paillier;
-extern crate rayon;
 extern crate serde;
 extern crate serde_json;
-use libc::c_long;
-extern crate curv;
 use crate::curv::arithmetic::traits::Converter;
 use curv::BigInt;
 use libc::c_char;
 use std::ffi::CStr;
 use std::ops::Neg;
-use std::ptr;
 use std::str;
 
 pub mod primitives;
-/*
-#[link(name = "pari")]
-extern {
 
-    fn primeform(x: GEN, p: GEN, prec: long ) -> GEN;
-    fn snappy_max_compressed_length(source_length: size_t) -> size_t;
-}
-*/
 #[derive(PartialEq, Eq, Clone, Debug, Serialize, Deserialize)]
 pub struct BinaryQF {
     pub a: BigInt,
@@ -141,7 +132,7 @@ impl BinaryQF {
 
         let bqf = BinaryQF::pari_qf_to_qf(pf);
 
-        let (bqf_norm, matrix) = bqf.normalize();
+        let (bqf_norm, _matrix) = bqf.normalize();
         bqf_norm
     }
 
@@ -201,7 +192,7 @@ impl BinaryQF {
         let pari_qf = self.qf_to_pari_qf();
         let pari_n = bn_to_gen(n);
 
-        let mut v = unsafe { std::mem::uninitialized() };
+        let mut v = unsafe { std::mem::MaybeUninit::uninit().assume_init() };
         let pari_qf_exp = unsafe { nupow(pari_qf, pari_n, &mut v) };
         let qf_exp = BinaryQF::pari_qf_to_qf(pari_qf_exp);
         qf_exp
@@ -279,8 +270,8 @@ impl BinaryQF {
 
     pub fn to_bytes(&self) -> Vec<u8> {
         let mut a_vec = BigInt::to_vec(&self.a);
-        let mut b_vec = BigInt::to_vec(&self.b);
-        let mut c_vec = BigInt::to_vec(&self.c);
+        let b_vec = BigInt::to_vec(&self.b);
+        let c_vec = BigInt::to_vec(&self.c);
         a_vec.extend_from_slice(&b_vec[..]);
         a_vec.extend_from_slice(&c_vec[..]);
         a_vec
@@ -304,7 +295,7 @@ pub fn bn_to_gen(bn: &BigInt) -> GEN {
     let two_bn = BigInt::from(2);
     let all_ones_32bits = two_bn.pow(32) - BigInt::one();
     let mut array = [0u8; 4];
-    let mut ints_vec = (0..num_ints)
+    let ints_vec = (0..num_ints)
         .map(|i| {
             let masked_valued_bn =
                 (bn.clone() & all_ones_32bits.clone() << (i * size_int)) >> (i * size_int);
@@ -390,12 +381,7 @@ extern "C" {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::mem;
-    use std::ptr;
-    use std::ptr::null;
     extern crate libc;
-    use libc::c_char;
-    use std::ffi::CStr;
     use std::str;
 
     #[test]

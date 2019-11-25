@@ -3,9 +3,9 @@ pub mod dl_cl;
 pub mod poe;
 pub mod polynomial_comm;
 
+use curv::BigInt;
 use std::error::Error;
 use std::fmt;
-use curv::BigInt;
 
 #[derive(Debug, Clone, Copy)]
 pub struct ProofError;
@@ -26,13 +26,10 @@ impl Error for ProofError {
 pub enum ErrorReason {
     OpenCommError,
     EvalError,
-
 }
 
 //TODO: improve approximation
 fn numerical_log(x: &BigInt) -> BigInt {
-    let mut ai: BigInt;
-    let mut bi: BigInt;
     let mut aip1: BigInt;
     let mut bip1: BigInt;
     let two = BigInt::from(2);
