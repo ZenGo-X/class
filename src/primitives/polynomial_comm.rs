@@ -138,11 +138,6 @@ impl PolyComm {
         let z = tail.fold(head.clone(), |acc, x| {
             x +  acc * q
         });
-
-     //   coef_vec_int.reverse();
-     //   let z = coef_vec_int.iter().fold(BigInt::zero(), |acc, x| {
-     //       x + acc * q
-     //   });
         z
     }
 
@@ -192,7 +187,7 @@ impl PolyComm {
                 case = case + 1000;
             }
             let mut f_k: BigInt = (s_k - s_k_minus_1).div_floor(&q_k);
-            //      f_k = f_k.mod_floor(p);
+
             match case {
                 101 => f_k = -&f_k + &p_half,
                 1001 => f_k = &f_k + &p_half + &one,
