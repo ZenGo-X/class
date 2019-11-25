@@ -62,7 +62,7 @@ impl PolyComm {
         // not safe
         let bound_u32 = u32::from_str_radix(&bound.to_str_radix(16), 16).unwrap();
 
-        let p = BigInt::from(2).pow(256);
+        let p = FE::q();
         let q = p.pow(bound_u32);
         PP {
             group,
@@ -210,7 +210,7 @@ impl PolyComm {
 
 
     pub fn eval_prove(&self, pp: &PP, z: &FE, y: &FE, coef_vec: &[FE]) -> NiEvalProof{
-        let d = coef_vec.len(); //TODO: make bigint
+        let d = coef_vec.len()-1; //TODO: make bigint, check d >=0
         //step 2:
         let two = BigInt::from(2);
         let p_minus1_half = (&pp.p - &BigInt::one()).div_floor(&two);
@@ -232,8 +232,7 @@ impl PolyComm {
         let mut y_r_vec: Vec<BigInt> = Vec::new();
         let mut poe_proof_vec: Vec<PoEProof> = Vec::new();
 
-        if d == 1{
-            println!("TEST1");
+        if d == 0{
             let proof = NiEvalProof{
                 c_l_vec,
                 c_r_vec,
@@ -247,18 +246,17 @@ impl PolyComm {
             };
             return proof;
         }
-        println!("TEST2");
 
             if  (d + 1) % 2  == 1 {
                 let d_prime = d + 1;
                 let c_prime = c.exp(&pp.q);
                 let y_prime = y.mul(&z.get_element());
                 let b_prime = &b * BigInt::from(d as u32);
-                coef_vec.reverse();
-                coef_vec.to_vec().push(BigInt::zero());
-                coef_vec.reverse();
 
-                println!("TEST3");
+                let mut coef_vec = coef_vec.to_vec();
+                coef_vec.reverse();
+                coef_vec.push(BigInt::zero());
+                coef_vec.reverse();
 
                 let eval_proof = Self::eval_bounded_prove(&c_prime, &pp, z, &y_prime, d_prime, b_prime, & mut coef_vec[..] );
                 y_l_vec.extend_from_slice(&eval_proof.y_l_vec[..]);
@@ -267,7 +265,6 @@ impl PolyComm {
                 c_r_vec.extend_from_slice(&eval_proof.c_r_vec[..]);
                 poe_proof_vec.extend_from_slice(&eval_proof.poe_proof_vec[..]);
 
-                println!("TEST4");
 
                 let proof = NiEvalProof{
                     y_l_vec,
@@ -287,8 +284,8 @@ impl PolyComm {
             //step 12
             let d_prime = (d + 1) / 2 - 1;
             //step 13
-            let mut f_l_coef = &mut coef_vec[0..d_prime].to_vec().clone();
-            let mut f_r_coef = &mut coef_vec[d_prime..].to_vec().clone();
+            let mut f_l_coef = &mut coef_vec[0..d_prime+1].to_vec().clone();
+            let mut f_r_coef = &mut coef_vec[d_prime+1..].to_vec().clone();
             //step 14
 
 
@@ -323,8 +320,6 @@ impl PolyComm {
             x +  &acc * &pp.q
         });
 
-        println!("TEST5");
-
 
         let c_l = pp.g.exp(&f_l_q);
         let c_r = pp.g.exp(&f_r_q);
@@ -347,8 +342,6 @@ impl PolyComm {
             if alpha > (&pp.p - BigInt::one()).div_floor(&BigInt::from(2)){
                 alpha = alpha - &pp.p;
             }
-        println!("TEST6");
-
 
             //step 20
             let y_prime: BigInt = &alpha * &y_l + &y_r;
@@ -359,8 +352,6 @@ impl PolyComm {
             let mut coef_vec_int_prime = (0..f_l_coef.len()).map(|i| {
                 &f_l_coef[i] * &alpha + &f_r_coef[i]
             }).collect::<Vec<BigInt>>();
-
-        println!("TEST7");
 
             y_l_vec.push(y_l);
             y_r_vec.push(y_r);
@@ -376,8 +367,6 @@ impl PolyComm {
             c_l_vec.extend_from_slice(&eval_proof.c_l_vec[..]);
             c_r_vec.extend_from_slice(&eval_proof.c_r_vec[..]);
             poe_proof_vec.extend_from_slice(&eval_proof.poe_proof_vec[..]);
-
-        println!("TEST8");
 
             let proof = NiEvalProof{
                 y_l_vec,
@@ -400,7 +389,7 @@ impl NiEvalProof{
 
     pub fn eval_verify(mut self, c: BinaryQF, pp: &PP, z: &FE, y: &FE,) ->  Result<(),(ErrorReason)>{
         let mut flag = true;
-        if self.d == 1{
+        if self.d == 0{
             //step3
             let bound =  numerical_log(&(&BigInt::from(self.d.clone() as u32) + BigInt::one()));
             //unsafe
@@ -408,7 +397,6 @@ impl NiEvalProof{
             let sig_p_d = pp.p.pow(bound_u32);
             if &(sig_p_d  * &self.b) > &pp.q{
                 flag = false;
-                println!("TEST1");
             }
             //step 4:
             if &self.f_const.abs() > &self.b{
@@ -416,20 +404,14 @@ impl NiEvalProof{
 
             }
             // step 5:
-            /*
-            if y != &ECScalar::from(&self.f_const){
-                flag = false;
-                println!("TEST3");
-                let test: FE= ECScalar::from(&self.f_const);
-                println!("ECScalar::from(&self.f_const) = {:?}", test);
-                println!("y = {:?}", y.clone());
 
+            if y != &ECScalar::from(&self.f_const.mod_floor(&pp.p)){
+                flag = false;
             }
-            */
+
             // step 6
             if pp.g.exp(&self.f_const) != c{
                 flag = false;
-                println!("TEST4");
 
             }
 
@@ -464,13 +446,12 @@ impl NiEvalProof{
         let y_l = self.y_l_vec.remove(0);
         let y_r = self.y_r_vec.remove(0);
 
-        //step 16
-        let z_pow_d_prime_p1 =  BigInt::mod_pow(&z.to_big_int(), &BigInt::from((d_prime.clone() + 1) as u32), &FE::q());
-        let y_r_z_pow_d_prime_p1 = BigInt::mod_mul(&z_pow_d_prime_p1, &y_r, &FE::q());
-        let y_l_y_r_z_pow_d_prime_p1 = BigInt::mod_add(&y_r_z_pow_d_prime_p1, &y_l, &FE::q());
-        if &y.to_big_int() == &y_l_y_r_z_pow_d_prime_p1{
+        //step 17
+        let z_pow_d_prime_p1 =  BigInt::mod_pow(&z.to_big_int(), &BigInt::from((d_prime.clone() + 1) as u32), &pp.p);
+        let y_r_z_pow_d_prime_p1 = BigInt::mod_mul(&z_pow_d_prime_p1, &y_r, &pp.p);
+        let y_l_y_r_z_pow_d_prime_p1 = BigInt::mod_add(&y_r_z_pow_d_prime_p1, &y_l, &pp.p);
+        if &y.to_big_int() != &y_l_y_r_z_pow_d_prime_p1{
             flag = false;
-            println!("TESTA");
 
         }
 
@@ -486,15 +467,6 @@ impl NiEvalProof{
         let result = poe_proof.verify();
 
         if result.is_err() || c_over_c_l != poe_proof.w || c_r != poe_proof.u || q_pow_d_prime_plus1 != poe_proof.x{
-       //     println!("TEST9 {:?}", result.is_ok());
-       //     let left = c_over_c_l;
-       //     let right = c_r.exp(&q_pow_d_prime_plus1);
-       //     println!("LEFT: {:?}", left);
-       //     println!("RIGHT: {:?}", right);
-
-          //  assert_eq!(left, right);
-            println!("TEST B");
-
             flag = false;
         }
 
@@ -540,11 +512,10 @@ mod tests {
 
     #[test]
     fn test_commit_open() {
-        let p = FE::q();
         // sample coef vector
         let mut coef_vec: Vec<FE>  = Vec::new();
         let mut i = 0;
-        while i<9{ // TODO: check that i < d_max
+        while i<3{ // TODO: check that i < d_max
             coef_vec.push(FE::new_random());
             i = i + 1;
         }
@@ -558,7 +529,6 @@ mod tests {
     #[test]
     fn test_encode_decode() {
 
-        let p = FE::q();
         // sample coef vector
         let mut coef_vec: Vec<FE>  = Vec::new();
         let mut i = 0;
@@ -568,9 +538,9 @@ mod tests {
         }
         let d_max = BigInt::from(11);
         let pp = PolyComm::setup(&d_max);
-        let z = PolyComm::encode(&p, &pp.q, &coef_vec[..]);
+        let z = PolyComm::encode(&pp.p, &pp.q, &coef_vec[..]);
 
-        let coef_vec_dec = PolyComm::decode(&p, &pp.q, &z );
+        let coef_vec_dec = PolyComm::decode(&pp.p, &pp.q, &z );
 
         assert_eq!(coef_vec_dec, coef_vec);
 
@@ -609,18 +579,16 @@ mod tests {
     fn test_eval() {
 
         // create commitment:
-        let p = FE::q();
         // sample coef vector
         let mut coef_vec: Vec<FE>  = Vec::new();
         let mut i = 0;
-        while i<9{ // TODO: check that i < d_max
+        while i<10{ // TODO: check that i < d_max
             coef_vec.push(FE::new_random());
             i = i + 1;
         }
         let d_max = BigInt::from(11);
         let pp = PolyComm::setup(&d_max);
         let (c, f_q) = PolyComm::commit(&pp, &coef_vec);
-
         // generate y,z
         let z = FE::new_random();
 
@@ -632,6 +600,8 @@ mod tests {
         let y: FE = tail.fold(head.clone(), |acc, x| {
             x.add(&(acc * &z).get_element())
         });
+
+
         //create proof:
         let proof = c.eval_prove(&pp, &z, &y, &coef_vec[..]);
         let result = proof.eval_verify(c.c,&pp, &z, &y);
@@ -639,12 +609,12 @@ mod tests {
 
     }
 
+
     #[test]
     #[should_panic]
     fn test_eval_wrong_eval() {
         // here y != f(z)
         // create commitment:
-        let p = FE::q();
         // sample coef vector
         let mut coef_vec: Vec<FE>  = Vec::new();
         let mut i = 0;

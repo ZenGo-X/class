@@ -47,12 +47,7 @@ impl PoEProof {
         else{
             left_side = left_side.reduce().0;
         }
-        println!("LEFT {:?}", left_side.clone());
-        println!("RIGHT {:?}", self.w.clone());
-        println!("is reduced {:?}", left_side.is_normal());
-       // if left_side.is_reduced() == false{
-      //      left_side = left_side.reduce().0;
-     //   }
+
         if left_side == self.w {
             Ok(())
         } else {
