@@ -1,4 +1,4 @@
-# Class Groups
+# Clas
 Rust library for building cryptography based on class groups (CG) of imaginary quadratic fields. 
 
 Background
