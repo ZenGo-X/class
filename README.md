@@ -1,9 +1,9 @@
 # Clas
-Rust library for building cryptography based on class groups (CG) of imaginary quadratic fields. 
+Rust library for building cryptography based on class groups (Cl) of imaginary quadratic fields. 
 
 Background
 -------------------
-CGs are easy to generate. Their most interesting and useful property is that finding the group order is considered hard. In recent years we see more and more cryptographic primitives instantiated using CGs. We recommend [4,5,6] to learn more about CG in practice.
+Cls are easy to generate. Their most interesting and useful property is that finding the group order is considered hard. In recent years we see more and more cryptographic primitives instantiated using Cls. We recommend [4,5,6] to learn more about Cls in practice.
 
 
 
