@@ -35,6 +35,7 @@ Use `Cargo build`.
 
 The library uses bindings to PARI c library. Running `Cargo build` for the first time will take PARI from the _depend_ folder and install it on the machine. It was tested on MacOS and Linux. If you encounter a problem with installation of PARI, please open an issue and try to install it [manually](https://pari.math.u-bordeaux.fr/download.html). Bindings are generated automatically on the fly which might slow down the build procces by a few seconds.
 
+
 Test
 -------------------
 Tests in rust are multi-thearded if possible. However, PARI configuration supports a single thread. Therefore to make sure all tests run with defined behaviour please use `cargo test  -- --test-threads=1`. 
@@ -42,6 +43,10 @@ Tests in rust are multi-thearded if possible. However, PARI configuration suppor
 **Usage**
 
 We use tests to demonstrate correctness of each primitive: At the end of each primitive `.rs` file there is a test to show the correct usage of the primitive. There is usually one test or more to show soundness of the implementation, i.e. not knowing a witness will fail a PoK. 
+
+Security
+-------------------
+Security assumptions can differ between primitives and are discussed in the relevant papers. They should be understood well before using any primitive. The code is not audited and we did not attempted to make it constant time. Do not use this library in production system.
 
 Contact
 -------------------
