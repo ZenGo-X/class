@@ -1,16 +1,16 @@
 # Class
-Rust library for building cryptography based on class groups (Cl) of imaginary quadratic fields. 
+Rust library for building IQC: cryptography based on class groups (Cl) of imaginary quadratic orders. 
 
 Background
 -------------------
-Cls are easy to generate. Their most interesting and useful property is that finding the group order is considered hard. In recent years we see more and more cryptographic primitives instantiated using Cls. We recommend [4,5,6] to learn more about Cls in practice.
+Cls are easy to generate. Their most interesting and useful property is that finding the group order is considered hard. In recent years we see more and more cryptographic primitives instantiated using Cls. We recommend [6,7,8] to learn more about Cls in practice.
 
 
 
 
 Primitives
 -------------------
-Contributions for implementing new primitives are welcome. See open issues first. Existing primitives can be found in the _primitives_ folder : 
+Contributions for implementing new primitives or imperving existing ones are welcome. See open issues first. Existing primitives can be found in the _primitives_ folder : 
 
 1) **PoE**: Proof of exponantiation: The prover can efficiently convince a verifier that a large exponentiation was done correctly. Statement is `(x,u,w)`, verifier accept if `w = u^x`.
 
@@ -23,8 +23,13 @@ Contributions for implementing new primitives are welcome. See open issues first
     + `Eval_prover`: NI proof that `y = f(z)` for a committed polynomial `f()`
     + `Eval_verify`: NI verifier for eval_proof.
 
+3) **VDF**: Verifiable Delay Function. Based on Wesolowski protocol [4,5]. The following interface is implemented. The same setup can be used for multiple proofs. `time(Eval) >> time(Verify)`: 
+    + `Setup`: generate public key
+    + `Eval`: using the public key generate a vdf statement `(y,pi)`
+    + `Verify`: verify the statement using the public key
+    
 
-3) **Encryption scheme**:  Linearly homomorphic encryption scheme and a ZK proof. interface includes: `Keygen`, `Encrypt`, `Decrypt`, `Prove`, `Verify`. The encryption scheme is taken from [2] Theorem 2. The zero knowledge proof is a non interactive version of the proof given in [3] figure 8. The proof Statement includes a public elliptic curve point `Q = xG` and proves that a given ciphertext is encrypts `x`. The ZK proof has another, experimental variant. This construcction is in use in [2P-ECDSA](https://github.com/KZen-networks/multi-party-ecdsa/tree/master/src/protocols/two_party_ecdsa/cclst_2019). The relevant files are `dl_cl.rs` and `dl_cl_lcm.rs`. 
+4) **Encryption scheme**:  Linearly homomorphic encryption scheme and a ZK proof. interface includes: `Keygen`, `Encrypt`, `Decrypt`, `Prove`, `Verify`. The encryption scheme is taken from [2] Theorem 2. The zero knowledge proof is a non interactive version of the proof given in [3] figure 8. The proof Statement includes a public elliptic curve point `Q = xG` and proves that a given ciphertext is encrypts `x`. The ZK proof has another, experimental variant. This construcction is in use in [2P-ECDSA](https://github.com/KZen-networks/multi-party-ecdsa/tree/master/src/protocols/two_party_ecdsa/cclst_2019). To make to proof more efficient we use the LCM trick. see `dl_cl_lcm.rs`. 
 
 
 Build
@@ -64,8 +69,12 @@ References
 
 [3] <https://eprint.iacr.org/2019/503.pdf>
 
-[4] Book: Binary quadratic forms: An algorithmic approach
+[4] <https://eprint.iacr.org/2018/623.pdf>
 
-[5] <https://www.michaelstraka.com/posts/classgroups>
+[5] <https://eprint.iacr.org/2018/712.pdf>
 
-[6] <https://github.com/Chia-Network/vdf-competition/blob/master/classgroups.pdf>
+[6] Book: Binary quadratic forms: An algorithmic approach
+
+[7] <https://www.michaelstraka.com/posts/classgroups>
+
+[8] <https://github.com/Chia-Network/vdf-competition/blob/master/classgroups.pdf>
