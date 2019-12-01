@@ -2,14 +2,12 @@ use crate::curv::arithmetic::traits::Modulo;
 use crate::curv::arithmetic::traits::Samplable;
 use crate::pari_init;
 use crate::primitives::hash_to_prime;
+use crate::primitives::prng;
 use crate::primitives::ErrorReason;
 use crate::ABDeltaTriple;
 use crate::BinaryQF;
-use curv::cryptographic_primitives::hashing::hmac_sha512::HMacSha512;
-use curv::cryptographic_primitives::hashing::traits::KeyedHash;
 use curv::BigInt;
 use paillier::keygen;
-use std::ops::Shl;
 
 /// Wesolowski VDF, based on https://eprint.iacr.org/2018/712.pdf.
 /// Original paper: https://eprint.iacr.org/2018/623.pdf
@@ -144,20 +142,6 @@ fn h_g(disc: &BigInt, x: &BigInt) -> (BigInt, BigInt) {
     }
     let a = u.div_floor(&c);
     (a, b)
-}
-
-fn prng(seed: &BigInt, i: usize, bitlen: usize) -> BigInt {
-    let i_bn = BigInt::from(i as i32);
-    let mut res = HMacSha512::create_hmac(&i_bn, &vec![seed]);
-    let mut tmp: BigInt = res.clone();
-    let mut res_bit_len = res.bit_length();
-    while res_bit_len < bitlen {
-        tmp = HMacSha512::create_hmac(&i_bn, &vec![&tmp]);
-        res = &res.shl(res_bit_len.clone()) + &tmp;
-        res_bit_len = res.bit_length();
-    }
-    // prune to get |res| = bitlen
-    res >> (res_bit_len - &bitlen)
 }
 
 #[cfg(test)]

@@ -167,7 +167,8 @@ impl BinaryQF {
         let qf_exp = BinaryQF::pari_qf_to_qf(pari_qf_exp);
         qf_exp
     }
-
+    // gotoNonMax: outputs: f=phi_q^(-1)(F), a binary quadratic form of disc. delta*conductor^2
+    //      f is non normalized
     pub fn phi_q_to_the_minus_1(&self, conductor: &BigInt) -> BinaryQF {
         let two_a = &self.a * BigInt::from(2);
         let b_conductor: BigInt = &self.b * conductor;

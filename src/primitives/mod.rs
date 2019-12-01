@@ -6,10 +6,13 @@ pub mod vdf;
 use crate::curv::cryptographic_primitives::hashing::traits::Hash;
 use crate::BinaryQF;
 use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
+use curv::cryptographic_primitives::hashing::hmac_sha512::HMacSha512;
+use curv::cryptographic_primitives::hashing::traits::KeyedHash;
 use curv::BigInt;
 use paillier::keygen;
 use std::error::Error;
 use std::fmt;
+use std::ops::Shl;
 
 #[derive(Debug, Clone, Copy)]
 pub struct ProofError;
@@ -31,6 +34,8 @@ pub enum ErrorReason {
     OpenCommError,
     EvalError,
     VDFVerifyError,
+    SetupError,
+    PoEError,
 }
 
 //TODO: improve approximation
@@ -60,4 +65,18 @@ pub fn hash_to_prime(u: &BinaryQF, w: &BinaryQF) -> BigInt {
         candidate = candidate + BigInt::from(1);
     }
     candidate
+}
+
+fn prng(seed: &BigInt, i: usize, bitlen: usize) -> BigInt {
+    let i_bn = BigInt::from(i as i32);
+    let mut res = HMacSha512::create_hmac(&i_bn, &vec![seed]);
+    let mut tmp: BigInt = res.clone();
+    let mut res_bit_len = res.bit_length();
+    while res_bit_len < bitlen {
+        tmp = HMacSha512::create_hmac(&i_bn, &vec![&tmp]);
+        res = &res.shl(res_bit_len.clone()) + &tmp;
+        res_bit_len = res.bit_length();
+    }
+    // prune to get |res| = bitlen
+    res >> (res_bit_len - &bitlen)
 }

@@ -1,4 +1,4 @@
-use super::ProofError;
+use super::ErrorReason;
 use crate::pari_init;
 use crate::primitives::hash_to_prime;
 use crate::BinaryQF;
@@ -33,7 +33,7 @@ impl PoEProof {
         }
     }
 
-    pub fn verify(&self) -> Result<(), ProofError> {
+    pub fn verify(&self) -> Result<(), ErrorReason> {
         unsafe { pari_init(10000000, 2) };
         let l = hash_to_prime(&self.u, &self.w);
         let r = self.x.mod_floor(&l);
@@ -44,7 +44,7 @@ impl PoEProof {
         if left_side == self.w {
             Ok(())
         } else {
-            Err(ProofError)
+            Err(ErrorReason::PoEError)
         }
     }
 }
