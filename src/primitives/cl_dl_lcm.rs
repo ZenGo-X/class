@@ -190,7 +190,9 @@ impl HSMCL {
         let mut prime_forms_vec: Vec<BinaryQF> = Vec::new();
         let mut r = BigInt::from(3);
         let ln_delta_k = numerical_log(&(-&delta_k));
+
         let num_of_prime_forms = ln_delta_k.div_floor(&numerical_log(&ln_delta_k));
+
         let mut i = BigInt::zero();
         while i < num_of_prime_forms {
             while jacobi(&delta_k, &r).unwrap() != 1 {
@@ -250,7 +252,7 @@ impl HSMCL {
         let mut r = BigInt::from(3);
         let ln_delta_k = numerical_log(&(-&pk.delta_k));
         let num_of_prime_forms = ln_delta_k.div_floor(&numerical_log(&ln_delta_k));
-        println!("num_of_prime_forms : {:?}", num_of_prime_forms.clone());
+
         let mut i = BigInt::zero();
         while i < num_of_prime_forms {
             while jacobi(&pk.delta_k, &r).unwrap() != 1 {
@@ -763,24 +765,27 @@ mod tests {
     #[test]
     fn test_zk_cl_dl_public_setup() {
         // starts with hsm_cl encryption
-        let q = str::parse(
-            "115792089237316195423570985008687907852837564279074904382605163141518161494337",
-        )
-        .unwrap();
-        // digits of pi
-        let seed = str::parse(
+        for i in 0..20 {
+            let q = str::parse(
+                "115792089237316195423570985008687907852837564279074904382605163141518161494337",
+            )
+            .unwrap();
+            // digits of pi
+            let seed = str::parse(
             "314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460955058223172535940812848"
         ).unwrap();
-        let hsmcl = HSMCL::keygen_with_setup(&q, &1600, &seed);
-        let m = BigInt::from(1000);
-        let r = BigInt::sample_below(&(&hsmcl.pk.stilde * BigInt::from(2).pow(40)));
-        let ciphertext = HSMCL::encrypt_predefined_randomness(&hsmcl.pk, &m, &r);
-        let witness = Witness { x: m.clone(), r };
-        let m_fe: FE = ECScalar::from(&m);
-        let q = GE::generator() * m_fe;
-        let proof = CLDLProofPublicSetup::prove(witness, hsmcl.pk.clone(), ciphertext, q, seed);
-        //verify:
-        assert!(proof.verify().is_ok())
+
+            let hsmcl = HSMCL::keygen_with_setup(&q, &1600, &seed);
+            let m = BigInt::from(1000);
+            let r = BigInt::sample_below(&(&hsmcl.pk.stilde * BigInt::from(2).pow(40)));
+            let ciphertext = HSMCL::encrypt_predefined_randomness(&hsmcl.pk, &m, &r);
+            let witness = Witness { x: m.clone(), r };
+            let m_fe: FE = ECScalar::from(&m);
+            let q = GE::generator() * m_fe;
+            let proof = CLDLProofPublicSetup::prove(witness, hsmcl.pk.clone(), ciphertext, q, seed);
+            //verify:
+            assert!(proof.verify().is_ok())
+        }
     }
 
     #[test]
@@ -850,5 +855,22 @@ mod tests {
     #[test]
     fn test_log() {
         println!("TEST: {:?}", numerical_log(&BigInt::from(10)));
+    }
+
+    #[test]
+    fn test_setup() {
+        for i in 0..100 {
+            let q = str::parse(
+                "115792089237316195423570985008687907852837564279074904382605163141518161494337",
+            )
+            .unwrap();
+            // digits of pi
+            let seed = str::parse(
+                "314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460955058223172535940812848"
+            ).unwrap();
+
+            let hsmcl = HSMCL::keygen_with_setup(&q, &1600, &seed);
+            assert!(HSMCL::setup_verify(&hsmcl.pk, &seed).is_ok());
+        }
     }
 }
