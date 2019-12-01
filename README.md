@@ -47,7 +47,7 @@ Tests in rust are multi-thearded if possible. However, PARI configuration suppor
 
 **Usage**
 
-We use tests to demonstrate correctness of each primitive: At the end of each primitive `.rs` file there is a test to show the correct usage of the primitive. There is usually one test or more to show soundness of the implementation, i.e. not knowing a witness will fail a PoK. 
+We use tests to demonstrate correctness of each primitive: At the end of each primitive `.rs` file there is a test to show the correct usage of the primitive. There is usually one test or more to show soundness of the implementation, i.e. not knowing a witness will fail a PoK. For all tests we assume 128bit security (conservatively translates into 1600bit Discriminant).
 
 Security
 -------------------
