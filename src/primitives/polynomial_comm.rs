@@ -4,12 +4,14 @@ use crate::curv::cryptographic_primitives::hashing::traits::Hash;
 use crate::pari_init;
 use crate::primitives::numerical_log;
 use crate::primitives::poe::PoEProof;
+use crate::ABDeltaTriple;
 use crate::BinaryQF;
 use curv::arithmetic::traits::Samplable;
 use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
 use curv::elliptic::curves::traits::ECScalar;
 use curv::BigInt;
 use curv::FE;
+use paillier::keygen;
 
 /// Polynomial commitment as given in the paper: Transparent SNARKs from DARK Compilers
 /// (https://eprint.iacr.org/2019/1229.pdf), subsection 4.2 and 4.3
@@ -24,7 +26,7 @@ use curv::FE;
 ///
 ///
 pub struct PP {
-    pub group: BinaryQF,
+    pub disc: BigInt,
     pub g: BinaryQF,
     pub q: BigInt,
     pub p: BigInt,
@@ -48,23 +50,25 @@ pub struct NiEvalProof {
 impl PolyComm {
     // d is the rank of the polynomial,
     pub fn setup(d_max: &BigInt) -> PP {
-        // TODO: use standardize setup for sampling random element
         unsafe { pari_init(10000000, 2) };
+
+        // TODO: use standardize setup for sampling random element
         // choose determinant with 1600 bits, which is equivalent to 3072 bit RSA. That I believe is 120bit security now
-        let mut det: BigInt;
+        let mut disc: BigInt;
 
-        det = -BigInt::sample(1600);
+        disc = -BigInt::sample(1600);
 
-        while det.mod_floor(&BigInt::from(4)) != BigInt::one() {
-            det = -BigInt::sample(1600);
+        // based on "Survey on IQ cryptography" 3.2
+        while disc.mod_floor(&BigInt::from(4)) != BigInt::one() || !keygen::is_prime(&(-&disc)) {
+            disc = -BigInt::sample(1600);
         }
-
-        let group = BinaryQF::binary_quadratic_form_principal(&det);
+        //  let group = BinaryQF::binary_quadratic_form_principal(&det);
 
         // sample random number to get a random group element.
 
-        let random = BigInt::sample(256);
-        let g = group.exp(&random);
+        //  let random = BigInt::sample(256);
+        //  let g = group.exp(&random);
+        let g = pick_random_element(&disc);
 
         let bound: BigInt =
             BigInt::from(3) * numerical_log(&(d_max + BigInt::one())) + BigInt::one();
@@ -73,11 +77,12 @@ impl PolyComm {
 
         let p = FE::q();
         let q = p.pow(bound_u32);
-        PP { group, g, q, p }
+        PP { disc, g, q, p }
     }
 
     pub fn commit(pp: &PP, coef_vec: &[FE]) -> (PolyComm, BigInt) {
         unsafe { pari_init(10000000, 2) };
+
         let two = BigInt::from(2);
         let p_minus1_half = (&pp.p - &BigInt::one()).div_floor(&two);
         let coef_vec_int = (0..coef_vec.len())
@@ -100,7 +105,6 @@ impl PolyComm {
     }
 
     pub fn open(self, pp: &PP, coef_vec: &[FE]) -> Result<(), ErrorReason> {
-        unsafe { pari_init(10000000, 2) };
         let two = BigInt::from(2);
         let p_minus1_half = (&pp.p - &BigInt::one()).div_floor(&two);
         let coef_vec_int = (0..coef_vec.len())
@@ -204,6 +208,8 @@ impl PolyComm {
     }
 
     pub fn eval_prove(&self, pp: &PP, z: &FE, y: &FE, coef_vec: &[FE]) -> NiEvalProof {
+        unsafe { pari_init(10000000, 2) };
+
         let d = coef_vec.len() - 1; //TODO: make bigint, check d >=0
                                     //step 2:
         let two = BigInt::from(2);
@@ -317,13 +323,13 @@ impl PolyComm {
         let tail = f_r_coef_rev;
         let f_r_q = tail.fold(head.clone(), |acc, x| x + &acc * &pp.q);
 
-        let c_l = pp.g.exp(&f_l_q);
-        let c_r = pp.g.exp(&f_r_q);
+        let c_l = pp.g.exp(&f_l_q).reduce();
+        let c_r = pp.g.exp(&f_r_q).reduce();
 
         //step18
         let q_pow_d_prime_plus1 = pp.q.pow((d_prime.clone() + 1) as u32);
         let c_l_inverse = c_l.inverse();
-        let c_over_c_l = c_l_inverse.compose(&c);
+        let c_over_c_l = c_l_inverse.compose(&c).reduce();
         let poe_proof = PoEProof::prove(&q_pow_d_prime_plus1, &c_r, &c_over_c_l);
 
         //step 19
@@ -337,7 +343,7 @@ impl PolyComm {
         //step 20
         let y_prime: BigInt = &alpha * &y_l + &y_r;
         let y_prime_fe: FE = ECScalar::from(&y_prime);
-        let c_prime = c_l.exp(&alpha).compose(&c_r);
+        let c_prime = c_l.exp(&alpha).compose(&c_r).reduce();
         let b_prime = &b * ((&pp.p + BigInt::one()).div_floor(&BigInt::from(2)));
         //step 21
         let mut coef_vec_int_prime = (0..f_l_coef.len())
@@ -382,6 +388,8 @@ impl PolyComm {
 
 impl NiEvalProof {
     pub fn eval_verify(mut self, c: BinaryQF, pp: &PP, z: &FE, y: &FE) -> Result<(), ErrorReason> {
+        unsafe { pari_init(10000000, 2) };
+
         let mut flag = true;
         if self.d == 0 {
             //step3
@@ -403,7 +411,7 @@ impl NiEvalProof {
             }
 
             // step 6
-            if pp.g.exp(&self.f_const) != c {
+            if pp.g.exp(&self.f_const).reduce() != c {
                 flag = false;
             }
 
@@ -453,7 +461,7 @@ impl NiEvalProof {
         let q_pow_d_prime_plus1 = pp.q.pow((d_prime.clone() + 1) as u32);
 
         let c_l_inverse = c_l.inverse();
-        let c_over_c_l = c_l_inverse.compose(&c);
+        let c_over_c_l = c_l_inverse.compose(&c).reduce();
 
         let result = poe_proof.verify();
 
@@ -476,7 +484,7 @@ impl NiEvalProof {
         //step 20
         let y_prime: BigInt = &alpha * &y_l + &y_r;
         let y_prime_fe = ECScalar::from(&y_prime);
-        let c_prime = c_l.exp(&alpha).compose(&c_r);
+        let c_prime = c_l.exp(&alpha).compose(&c_r).reduce();
         let b_prime = &self.b * ((&pp.p + BigInt::one()).div_floor(&BigInt::from(2)));
 
         self.b = b_prime;
@@ -488,6 +496,35 @@ impl NiEvalProof {
             return Err(ErrorReason::EvalError);
         }
     }
+}
+
+// helper function: generate random group element from disc (used in setup)
+// see protocol description in vdf h_g function
+fn pick_random_element(disc: &BigInt) -> BinaryQF {
+    let mut i = 0;
+    let two = BigInt::from(2);
+    let max = BigInt::from(20);
+    let mut b = &two * BigInt::sample(disc.bit_length()) + BigInt::one();
+    let mut c = two.clone();
+    let mut b2_minus_disc: BigInt = b.pow(2) - disc;
+    let four = BigInt::from(4);
+    let mut u = b2_minus_disc.div_floor(&four);
+    while u.mod_floor(&c) != BigInt::zero() {
+        b = &two * BigInt::sample(disc.bit_length()) + BigInt::one();
+        b2_minus_disc = b.pow(2) - disc;
+        u = b2_minus_disc.div_floor(&four);
+        i = i + 1;
+        c = (&c.nextprime()).mod_floor(&max);
+    }
+    let a = u.div_floor(&c);
+    let a_b_delta = ABDeltaTriple {
+        a,
+        b,
+        delta: disc.clone(),
+    };
+
+    let g = BinaryQF::binary_quadratic_form_disc(&a_b_delta).reduce();
+    g
 }
 
 #[cfg(test)]

@@ -13,7 +13,15 @@ use paillier::keygen;
 const SECURITY_PARAMETER: usize = 128;
 const C: usize = 10;
 
-///Experimental code. uses the LCM trick to make dl_cl proof faster.
+/// Linearly homomorphic encryption scheme and a zkpok that a ciphertext encrypts a scalar x given
+/// public Q = x G. interface includes:
+/// keygen, encrypt, decrypt, prove, verify.
+///
+/// The encryption scheme is taken from https://eprint.iacr.org/2018/791.pdf Theorem 2
+/// The zero knowledge proof is a non interactive version of the proof
+/// given in  https://eprint.iacr.org/2019/503.pdf figure 8
+///
+/// In this implementation we use the LCM trick to make dl_cl proof faster. TODO: add reference
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct PK {
@@ -109,14 +117,12 @@ impl HSMCL {
 
         let rgoth = BinaryQF::primeform(&delta_k, &r);
 
-        let (rgoth_square, _) = rgoth.compose(&rgoth).reduce();
+        let rgoth_square = rgoth.compose(&rgoth).reduce();
 
-        let (gq_tmp, _) = rgoth_square.phi_q_to_the_minus_1(&q).reduce();
+        let gq_tmp = rgoth_square.phi_q_to_the_minus_1(&q).reduce();
 
-        let gq_hat = gq_tmp.exp(&q);
+        let gq = gq_tmp.exp(&q);
 
-        let t = BigInt::sample_below(&(&stilde * BigInt::from(2).pow(40)));
-        let gq = gq_hat.exp(&t);
         let x = BigInt::sample_below(&(&stilde * BigInt::from(2).pow(40)));
         let h = gq.exp(&x);
 
@@ -140,7 +146,7 @@ impl HSMCL {
 
         Ciphertext {
             c1: pk.gq.exp(&r),
-            c2: h_exp_r.compose(&exp_f).reduce().0,
+            c2: h_exp_r.compose(&exp_f).reduce(),
             // c2: s,
         }
     }
@@ -153,7 +159,7 @@ impl HSMCL {
 
         Ciphertext {
             c1: pk.gq.exp(r),
-            c2: h_exp_r.compose(&exp_f).reduce().0,
+            c2: h_exp_r.compose(&exp_f).reduce(),
             // c2: s,
         }
     }
@@ -162,7 +168,7 @@ impl HSMCL {
         unsafe { pari_init(10000000, 2) };
         let c1_x = c.c1.exp(&self.sk);
         let c1_x_inv = c1_x.inverse();
-        let tmp = c.c2.compose(&c1_x_inv).reduce().0;
+        let tmp = c.c2.compose(&c1_x_inv).reduce();
         BinaryQF::discrete_log_f(&self.pk.q, &self.pk.delta_q, &tmp)
     }
 
@@ -180,8 +186,8 @@ impl HSMCL {
     pub fn eval_sum(c1: &Ciphertext, c2: &Ciphertext) -> Ciphertext {
         unsafe { pari_init(10000000, 2) };
         let c_new = Ciphertext {
-            c1: c1.c1.compose(&c2.c1).reduce().0,
-            c2: c1.c2.compose(&c2.c2).reduce().0,
+            c1: c1.c1.compose(&c2.c1).reduce(),
+            c2: c1.c2.compose(&c2.c2).reduce(),
         };
         c_new
     }
@@ -200,7 +206,6 @@ pub fn next_probable_prime(r: &BigInt) -> BigInt {
 impl CLDLProof {
     pub fn prove(w: Witness, pk: PK, ciphertext: Ciphertext, q: GE) -> Self {
         unsafe { pari_init(10000000, 2) };
-
         let repeat = SECURITY_PARAMETER / C + 1;
         let triplets_and_fs_and_r_vec = (0..repeat)
             .map(|_| {
@@ -214,7 +219,7 @@ impl CLDLProof {
                 let r2 = r2_fe.to_big_int();
                 let fr2 = BinaryQF::expo_f(&pk.q, &pk.delta_q, &r2);
                 let pkr1 = pk.h.exp(&r1);
-                let t2 = fr2.compose(&pkr1).reduce().0;
+                let t2 = fr2.compose(&pkr1).reduce();
                 let T = GE::generator() * r2_fe;
                 let t1 = pk.gq.exp(&r1);
                 let fs = HSha256::create_hash(&[
@@ -292,7 +297,7 @@ impl CLDLProof {
                 flag = false;
             }
             let c1k = self.ciphertext.c1.exp(&k_slice_i);
-            let t1c1k = self.t_vec[i].t1.compose(&c1k).reduce().0;
+            let t1c1k = self.t_vec[i].t1.compose(&c1k).reduce();
             let gqu1 = self.pk.gq.exp(&&self.u_vec[i].u1);
             if t1c1k != gqu1 {
                 flag = false;
@@ -310,8 +315,8 @@ impl CLDLProof {
             let pku1 = self.pk.h.exp(&self.u_vec[i].u1);
             let fu2 = BinaryQF::expo_f(&self.pk.q, &self.pk.delta_q, &self.u_vec[i].u2);
             let c2k = self.ciphertext.c2.exp(&k_slice_i);
-            let t2c2k = self.t_vec[i].t2.compose(&c2k).reduce().0;
-            let pku1fu2 = pku1.compose(&fu2).reduce().0;
+            let t2c2k = self.t_vec[i].t2.compose(&c2k).reduce();
+            let pku1fu2 = pku1.compose(&fu2).reduce();
             if t2c2k != pku1fu2 {
                 flag = false;
             }
@@ -396,7 +401,7 @@ mod tests {
             "115792089210356248762697446949407573529996955224135760342422259061068512044369",
         )
         .unwrap();
-        let hsmcl = HSMCL::keygen(&q, &516);
+        let hsmcl = HSMCL::keygen(&q, &1600);
         let m = BigInt::from(1000);
         let ciphertext = HSMCL::encrypt(&hsmcl.pk, &m);
         let m_tag = hsmcl.decrypt(&ciphertext);
@@ -411,7 +416,7 @@ mod tests {
             "115792089237316195423570985008687907852837564279074904382605163141518161494337",
         )
         .unwrap();
-        let hsmcl = HSMCL::keygen(&q, &516);
+        let hsmcl = HSMCL::keygen(&q, &1600);
         let m = BigInt::from(1000);
         let ciphertext = HSMCL::encrypt(&hsmcl.pk, &m);
         let m_tag = hsmcl.decrypt(&ciphertext);
@@ -420,7 +425,7 @@ mod tests {
     }
 
     #[test]
-    fn test_encryption_secp256k1_lcm() {
+    fn test_encryption_mul_by_scalar_secp256k1_lcm() {
         // Taken from https://safecurves.cr.yp.to/base.html
         let q: BigInt = str::parse(
             "115792089237316195423570985008687907852837564279074904382605163141518161494337",
@@ -428,11 +433,10 @@ mod tests {
         .unwrap();
 
         let y_lcm_2_10 : BigInt =   str::parse(
-            "151618061813668907047555375196284282212828385012571422508243606396982990507765713824896817788256843814293140588909051016870220247446068005325317649527345823892013937528324863830431690594759494544180632484280566467236943419529914086373866776312054008314550085541437547949941261674011371522223796764922474715156912857025368346468053819956502062293544",
+            "15161806181366890704755537519628428221282838501257142250824360639698299050776571382489681778825684381429314058890905101687022024744606800532531764952734582389201393752832486383043169059475949454418063248428056646723694341952991408637386677631205400831455008554143754794994126167401137152222379676492247471515691285702536834646805381995650206229354446213284302569283840180834930263739794772017863585682362821412785936104792844891075228278568320000",
         ).unwrap();
-        println!("TEST :{:?}", y_lcm_2_10.to_str_radix(2).len());
         // let y_lcm_2_10 = (&q + BigInt::from(1)) * (&BigInt::from(2));
-        let hsmcl = HSMCL::keygen(&q, &516);
+        let hsmcl = HSMCL::keygen(&q, &1600);
         let m = BigInt::from(1000);
         let ciphertext = HSMCL::encrypt(&hsmcl.pk, &m);
         let c_y = HSMCL::eval_scal(&ciphertext, &y_lcm_2_10);
@@ -448,7 +452,7 @@ mod tests {
             "115792089237316195423570985008687907852837564279074904382605163141518161494337",
         )
         .unwrap();
-        let hsmcl = HSMCL::keygen(&q, &516);
+        let hsmcl = HSMCL::keygen(&q, &1600);
         let m = BigInt::from(1000);
         let r = BigInt::sample_below(&(&hsmcl.pk.stilde * BigInt::from(2).pow(40)));
         let ciphertext = HSMCL::encrypt_predefined_randomness(&hsmcl.pk, &m, &r);
@@ -467,7 +471,7 @@ mod tests {
             "115792089237316195423570985008687907852837564279074904382605163141518161494337",
         )
         .unwrap();
-        let hsmcl = HSMCL::keygen(&q, &516);
+        let hsmcl = HSMCL::keygen(&q, &1600);
         let m = BigInt::from(1000);
         let r = BigInt::sample_below(&(&hsmcl.pk.stilde * BigInt::from(2).pow(40)));
         let ciphertext = HSMCL::encrypt_predefined_randomness(&hsmcl.pk, &m, &r);
@@ -486,7 +490,7 @@ mod tests {
             "115792089237316195423570985008687907852837564279074904382605163141518161494337",
         )
         .unwrap();
-        let hsmcl = HSMCL::keygen(&q, &516);
+        let hsmcl = HSMCL::keygen(&q, &1600);
         let m = BigInt::from(1000);
         let r = BigInt::sample_below(&(&hsmcl.pk.stilde * BigInt::from(2).pow(40)));
         let ciphertext = HSMCL::encrypt_predefined_randomness(&hsmcl.pk, &m, &r);
@@ -506,7 +510,7 @@ mod tests {
             "115792089210356248762697446949407573529996955224135760342422259061068512044369",
         )
         .unwrap();
-        let hsmcl = HSMCL::keygen(&q, &516);
+        let hsmcl = HSMCL::keygen(&q, &1600);
         let m = BigInt::from(10000);
         let exp_f = BinaryQF::expo_f(&hsmcl.pk.q, &hsmcl.pk.delta_q, &m);
         let m_tag = BinaryQF::discrete_log_f(&hsmcl.pk.q, &hsmcl.pk.delta_q, &exp_f);

@@ -50,6 +50,8 @@ fn main() {
         .whitelist_function("primeform")
         .whitelist_function("pari_init")
         .whitelist_function("gneg")
+        .whitelist_function("gadd")
+        .whitelist_function("shifti")
         .parse_callbacks(Box::new(ignored_macros))
         // Finish the builder and generate the bindings.
         .generate()

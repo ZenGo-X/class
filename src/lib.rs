@@ -35,24 +35,6 @@ pub struct ABDeltaTriple {
     pub delta: BigInt,
 }
 
-pub struct Matrix22 {
-    pub a11: BigInt,
-    pub a12: BigInt,
-    pub a21: BigInt,
-    pub a22: BigInt,
-}
-
-impl Matrix22 {
-    pub fn mul(&self, another: &Self) -> Self {
-        Matrix22 {
-            a11: &self.a11 * &another.a11 + &self.a12 * &another.a21,
-            a12: &self.a11 * &another.a12 + &self.a12 * &another.a22,
-            a21: &self.a21 * &another.a11 + &self.a22 * &another.a21,
-            a22: &self.a21 * &another.a12 + &self.a22 * &another.a22,
-        }
-    }
-}
-
 impl BinaryQF {
     pub fn binary_quadratic_form_disc(abdelta_triple: &ABDeltaTriple) -> Self {
         let a = abdelta_triple.a.clone();
@@ -97,7 +79,7 @@ impl BinaryQF {
         }
     }
 
-    pub fn normalize(&self) -> (Self, Matrix22) {
+    pub fn normalize(&self) -> Self {
         // assume delta<0 and a>0
         let a_sub_b: BigInt = &self.a - &self.b;
         let s_f = a_sub_b.div_floor(&(BigInt::from(2) * &self.a));
@@ -106,18 +88,12 @@ impl BinaryQF {
             b: &self.b + BigInt::from(2) * &s_f * &self.a,
             c: &self.a * &s_f.pow(2) + &self.b * &s_f + &self.c,
         };
-        let matrix = Matrix22 {
-            a11: BigInt::one(),
-            a12: BigInt::zero(),
-            a21: s_f,
-            a22: BigInt::one(),
-        };
 
-        (binary_qf, matrix)
+        binary_qf
     }
 
     pub fn is_normal(&self) -> bool {
-        if self.b < self.a && self.b > -self.a.clone() {
+        if self.b <= self.a && self.b > -self.a.clone() {
             return true;
         } else {
             return false;
@@ -132,7 +108,7 @@ impl BinaryQF {
 
         let bqf = BinaryQF::pari_qf_to_qf(pf);
 
-        let (bqf_norm, _matrix) = bqf.normalize();
+        let bqf_norm = bqf.normalize();
         bqf_norm
     }
 
@@ -157,35 +133,29 @@ impl BinaryQF {
         }
     }
 
-    pub fn rho(&self) -> (Self, Matrix22) {
+    pub fn rho(&self) -> Self {
         let qf_new = BinaryQF {
             a: self.c.clone(),
             b: self.b.clone().neg(),
             c: self.a.clone(),
         };
-        let (h, N) = qf_new.normalize();
-        // [[0,-1] [1, 0]] * N
-        let N_new = Matrix22 {
-            a11: N.a21.clone(),
-            a12: N.a22.clone(),
-            a21: N.a11.clone().neg(),
-            a22: N.a21.clone().neg(),
-        };
-        (h, N_new)
+        let h = qf_new.normalize();
+
+        h
     }
 
-    pub fn reduce(&self) -> (Self, Matrix22) {
-        let mut M: Matrix22;
+    pub fn reduce(&self) -> Self {
         let mut h: BinaryQF;
-        let (h_new, M_new) = self.normalize();
+        let mut h_new = self.clone();
+        if !self.is_normal() {
+            h_new = self.normalize();
+        }
         h = h_new;
-        M = M_new;
         while !h.is_reduced() {
-            let (h_new, M_new) = h.rho();
-            M = M.mul(&M_new);
+            let h_new = h.rho();
             h = h_new;
         }
-        (h, M)
+        h
     }
 
     pub fn exp(&self, n: &BigInt) -> BinaryQF {
@@ -278,24 +248,28 @@ impl BinaryQF {
     }
 }
 // helper functions:
-// this function turns a 512bit bigint into GEN (native Pari type) //TODO: make the bn variable size
+// this function turns a bigint into GEN (native Pari type)
 pub fn bn_to_gen(bn: &BigInt) -> GEN {
-    // we do not test for bit length = 576 because there might be leading zeros.
-    // therefore we just pad with 0 bits to get bit-length - 576. or cut the first 576bits
-    let neg1: i64 = if bn < &BigInt::zero() { -1 } else { 1 };
+    let neg1 = if bn < &BigInt::zero() { -1 } else { 1 };
     let neg_bn: BigInt = if bn < &BigInt::zero() {
         -BigInt::one()
     } else {
         BigInt::one()
     };
-    let bn = bn * &neg_bn;
+    let bn: BigInt = bn * &neg_bn;
 
-    let num_ints = 36;
+    let bn_len = bn.bit_length();
+    let num_int_bound: usize;
+    if bn_len % 8 == 0 {
+        num_int_bound = bn_len / 8;
+    } else {
+        num_int_bound = bn_len / 8 + 1;
+    }
     let size_int = 32;
     let two_bn = BigInt::from(2);
-    let all_ones_32bits = two_bn.pow(32) - BigInt::one();
+    let all_ones_32bits = two_bn.pow(size_int as u32) - BigInt::one();
     let mut array = [0u8; 4];
-    let ints_vec = (0..num_ints)
+    let ints_vec = (0..num_int_bound)
         .map(|i| {
             let masked_valued_bn =
                 (bn.clone() & all_ones_32bits.clone() << (i * size_int)) >> (i * size_int);
@@ -312,46 +286,16 @@ pub fn bn_to_gen(bn: &BigInt) -> GEN {
         })
         .collect::<Vec<i64>>();
 
+    let mut i = 0;
+    let mut gen = unsafe { mkintn(1i64, 0i64) };
     unsafe {
-        let mut gen = mkintn(
-            num_ints as i64,
-            ints_vec[35],
-            ints_vec[34],
-            ints_vec[33],
-            ints_vec[32],
-            ints_vec[31],
-            ints_vec[30],
-            ints_vec[29],
-            ints_vec[28],
-            ints_vec[27],
-            ints_vec[26],
-            ints_vec[25],
-            ints_vec[24],
-            ints_vec[23],
-            ints_vec[22],
-            ints_vec[21],
-            ints_vec[20],
-            ints_vec[19],
-            ints_vec[18],
-            ints_vec[17],
-            ints_vec[16],
-            ints_vec[15],
-            ints_vec[14],
-            ints_vec[13],
-            ints_vec[12],
-            ints_vec[11],
-            ints_vec[10],
-            ints_vec[9],
-            ints_vec[8],
-            ints_vec[7],
-            ints_vec[6],
-            ints_vec[5],
-            ints_vec[4],
-            ints_vec[3],
-            ints_vec[2],
-            ints_vec[1],
-            ints_vec[0],
-        );
+        while i < num_int_bound {
+            let elem1 = mkintn(1i64, ints_vec[num_int_bound - i - 1]);
+            let elem2 = shifti(gen, (size_int) as i64);
+            gen = gadd(elem1, elem2);
+            i = i + 1
+        }
+
         if neg1 == -1 {
             gen = gneg(gen);
         }
@@ -382,6 +326,7 @@ extern "C" {
 mod tests {
     use super::*;
     extern crate libc;
+    use crate::curv::arithmetic::traits::Samplable;
     use std::str;
 
     #[test]
@@ -401,5 +346,61 @@ mod tests {
     }
 
     #[test]
-    fn test_bn_to_gen_to_bn() {}
+    fn test_bn_to_gen_to_bn() {
+        unsafe {
+            pari_init(10000000, 2);
+        }
+        let test: BigInt = BigInt::sample(1600);
+        let gen = bn_to_gen(&test);
+
+        let char_ptr = unsafe { GENtostr(gen) };
+        let c_buf: *const c_char = char_ptr;
+        let c_str: &CStr = unsafe { CStr::from_ptr(c_buf) };
+        let str_slice: &str = c_str.to_str().unwrap();
+        let string_slice = str_slice.to_string();
+        let test2: BigInt = str::parse(&string_slice).unwrap();
+
+        assert_eq!(test, test2);
+    }
+
+    #[test]
+    fn test_compose_exp() {
+        unsafe {
+            pari_init(10000000, 2);
+        }
+        let mut det: BigInt;
+
+        det = -BigInt::sample(1600);
+        while det.mod_floor(&BigInt::from(4)) != BigInt::one() {
+            det = -BigInt::sample(1600);
+        }
+        let a_b_delta = ABDeltaTriple {
+            a: BigInt::from(2),
+            b: BigInt::from(1),
+            delta: det,
+        };
+        let group = BinaryQF::binary_quadratic_form_disc(&a_b_delta);
+        let x = BigInt::sample(100);
+        let g = group.exp(&x).reduce();
+        let gg1 = g.compose(&g).reduce();
+        let gg2 = g.exp(&BigInt::from(2)).reduce();
+        assert_eq!(gg1, gg2);
+    }
+
+    #[test]
+    fn test_principal_exp() {
+        unsafe {
+            pari_init(10000000, 2);
+        }
+        let mut det: BigInt;
+
+        det = -BigInt::sample(1600);
+        while det.mod_floor(&BigInt::from(4)) != BigInt::one() {
+            det = -BigInt::sample(1600);
+        }
+        let f = BinaryQF::binary_quadratic_form_principal(&det);
+        let x = BigInt::sample(100);
+        let f_exp = f.exp(&x);
+        assert_eq!(f, f_exp);
+    }
 }

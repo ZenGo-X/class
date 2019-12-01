@@ -1,9 +1,13 @@
 pub mod cl_dl_lcm;
-pub mod dl_cl;
 pub mod poe;
 pub mod polynomial_comm;
+pub mod vdf;
 
+use crate::curv::cryptographic_primitives::hashing::traits::Hash;
+use crate::BinaryQF;
+use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
 use curv::BigInt;
+use paillier::keygen;
 use std::error::Error;
 use std::fmt;
 
@@ -26,6 +30,7 @@ impl Error for ProofError {
 pub enum ErrorReason {
     OpenCommError,
     EvalError,
+    VDFVerifyError,
 }
 
 //TODO: improve approximation
@@ -46,4 +51,13 @@ fn numerical_log(x: &BigInt) -> BigInt {
 
     let log = two * (x - &BigInt::one()).div_floor(&(ai + bi));
     log
+}
+
+pub fn hash_to_prime(u: &BinaryQF, w: &BinaryQF) -> BigInt {
+    let mut candidate = HSha256::create_hash(&[&u.a, &u.b, &u.c, &w.a, &w.b, &w.c]);
+
+    while !keygen::is_prime(&candidate) {
+        candidate = candidate + BigInt::from(1);
+    }
+    candidate
 }
