@@ -12,7 +12,7 @@ use curv::BigInt;
 use curv::{FE, GE};
 use paillier::keygen;
 
-const SECURITY_PARAMETER: usize = 128;
+const SECURITY_PARAMETER: usize = 112;
 const C: usize = 10;
 
 /// Linearly homomorphic encryption scheme and a zkpok that a ciphertext encrypts a scalar x given
