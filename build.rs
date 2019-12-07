@@ -52,6 +52,7 @@ fn main() {
         .whitelist_function("gneg")
         .whitelist_function("gadd")
         .whitelist_function("shifti")
+        .whitelist_function("isprime")
         .parse_callbacks(Box::new(ignored_macros))
         // Finish the builder and generate the bindings.
         .generate()

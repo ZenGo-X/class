@@ -315,14 +315,6 @@ pub fn pari_qf_comp_to_decimal_string(pari_qf: GEN, index: usize) -> String {
     comp_str_slice.to_string()
 }
 
-#[link(name = "pari")]
-extern "C" {
-    fn stoi(s: i64) -> GEN;
-    fn addii(x: GEN, y: GEN) -> GEN;
-    fn vecslice(A: GEN, j1: i64, j2: i64) -> GEN;
-    fn mpcmp(x: GEN, y: GEN) -> GEN;
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -404,4 +396,6 @@ mod tests {
         let f_exp = f.exp(&x);
         assert_eq!(f, f_exp);
     }
+
+
 }

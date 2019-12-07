@@ -1,6 +1,8 @@
 use super::ErrorReason;
+use crate::bn_to_gen;
 use crate::curv::arithmetic::traits::Modulo;
 use crate::curv::cryptographic_primitives::hashing::traits::Hash;
+use crate::isprime;
 use crate::pari_init;
 use crate::primitives::numerical_log;
 use crate::primitives::prng;
@@ -11,8 +13,9 @@ use curv::elliptic::curves::traits::{ECPoint, ECScalar};
 use curv::BigInt;
 use curv::{FE, GE};
 use paillier::keygen;
+use std::os::raw::c_int;
 
-const SECURITY_PARAMETER: usize = 112;
+const SECURITY_PARAMETER: usize = 128;
 const C: usize = 10;
 
 /// Linearly homomorphic encryption scheme and a zkpok that a ciphertext encrypts a scalar x given
@@ -196,12 +199,12 @@ impl HSMCL {
         let mut i = BigInt::zero();
         while i < num_of_prime_forms {
             while jacobi(&delta_k, &r).unwrap() != 1 {
-                r = next_probable_prime(&r)
+                r = next_probable_small_prime(&r)
             }
             prime_forms_vec.push(BinaryQF::primeform(&delta_k, &r));
+            r = next_probable_small_prime(&r);
             i = i + 1;
         }
-
         let mut rgoth = BinaryQF::binary_quadratic_form_principal(&delta_k);
 
         //pseudo random element of class group Cl(delta_k) : prod f_p^e_p, with pairwise coprime exponents
@@ -249,16 +252,17 @@ impl HSMCL {
         unsafe { pari_init(100000000, 2) };
 
         let mut prime_forms_vec: Vec<BinaryQF> = Vec::new();
-        let mut r = BigInt::from(3);
         let ln_delta_k = numerical_log(&(-&pk.delta_k));
         let num_of_prime_forms = ln_delta_k.div_floor(&numerical_log(&ln_delta_k));
 
+        let mut r = BigInt::from(3);
         let mut i = BigInt::zero();
         while i < num_of_prime_forms {
             while jacobi(&pk.delta_k, &r).unwrap() != 1 {
-                r = next_probable_prime(&r)
+                r = next_probable_small_prime(&r)
             }
             prime_forms_vec.push(BinaryQF::primeform(&pk.delta_k, &r));
+            r = next_probable_small_prime(&r);
             i = i + 1;
         }
 
@@ -356,6 +360,21 @@ pub fn next_probable_prime(r: &BigInt) -> BigInt {
     let mut qtilde = r + &one;
     while !keygen::is_prime(&qtilde) {
         qtilde = qtilde + &one;
+    }
+    qtilde
+}
+
+// used for testing small primes where our prime test fails. We use Pari isprime which provides
+// determinstic perfect primality checking.
+pub fn next_probable_small_prime(r: &BigInt) -> BigInt {
+    let one = BigInt::from(1);
+    let mut qtilde = r + &one;
+    let mut qtilde_gen = bn_to_gen(&(r + &one));
+    unsafe {
+        while isprime(qtilde_gen) as c_int != 1 {
+            qtilde = qtilde + &one;
+            qtilde_gen = bn_to_gen(&qtilde);
+        }
     }
     qtilde
 }
@@ -651,7 +670,6 @@ fn reciprocity(num: &BigInt, den: &BigInt) -> i8 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::primitives::numerical_log;
 
     #[test]
     fn test_encryption_p256() {
@@ -765,27 +783,25 @@ mod tests {
     #[test]
     fn test_zk_cl_dl_public_setup() {
         // starts with hsm_cl encryption
-        for i in 0..20 {
-            let q = str::parse(
-                "115792089237316195423570985008687907852837564279074904382605163141518161494337",
-            )
-            .unwrap();
-            // digits of pi
-            let seed = str::parse(
+        let q = str::parse(
+            "115792089237316195423570985008687907852837564279074904382605163141518161494337",
+        )
+        .unwrap();
+        // digits of pi
+        let seed = str::parse(
             "314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460955058223172535940812848"
         ).unwrap();
 
-            let hsmcl = HSMCL::keygen_with_setup(&q, &1600, &seed);
-            let m = BigInt::from(1000);
-            let r = BigInt::sample_below(&(&hsmcl.pk.stilde * BigInt::from(2).pow(40)));
-            let ciphertext = HSMCL::encrypt_predefined_randomness(&hsmcl.pk, &m, &r);
-            let witness = Witness { x: m.clone(), r };
-            let m_fe: FE = ECScalar::from(&m);
-            let q = GE::generator() * m_fe;
-            let proof = CLDLProofPublicSetup::prove(witness, hsmcl.pk.clone(), ciphertext, q, seed);
-            //verify:
-            assert!(proof.verify().is_ok())
-        }
+        let hsmcl = HSMCL::keygen_with_setup(&q, &1600, &seed);
+        let m = BigInt::from(1000);
+        let r = BigInt::sample_below(&(&hsmcl.pk.stilde * BigInt::from(2).pow(40)));
+        let ciphertext = HSMCL::encrypt_predefined_randomness(&hsmcl.pk, &m, &r);
+        let witness = Witness { x: m.clone(), r };
+        let m_fe: FE = ECScalar::from(&m);
+        let q = GE::generator() * m_fe;
+        let proof = CLDLProofPublicSetup::prove(witness, hsmcl.pk.clone(), ciphertext, q, seed);
+        //verify:
+        assert!(proof.verify().is_ok());
     }
 
     #[test]
@@ -852,25 +868,20 @@ mod tests {
         assert_eq!(m.clone(), m_tag);
     }
 
-    #[test]
-    fn test_log() {
-        println!("TEST: {:?}", numerical_log(&BigInt::from(10)));
-    }
+
 
     #[test]
     fn test_setup() {
-        for i in 0..100 {
-            let q = str::parse(
-                "115792089237316195423570985008687907852837564279074904382605163141518161494337",
-            )
-            .unwrap();
-            // digits of pi
-            let seed = str::parse(
+        let q = str::parse(
+            "115792089237316195423570985008687907852837564279074904382605163141518161494337",
+        )
+        .unwrap();
+        // digits of pi
+        let seed = str::parse(
                 "314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460955058223172535940812848"
             ).unwrap();
 
-            let hsmcl = HSMCL::keygen_with_setup(&q, &1600, &seed);
-            assert!(HSMCL::setup_verify(&hsmcl.pk, &seed).is_ok());
-        }
+        let hsmcl = HSMCL::keygen_with_setup(&q, &1600, &seed);
+        assert!(HSMCL::setup_verify(&hsmcl.pk, &seed).is_ok());
     }
 }
