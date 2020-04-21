@@ -9,7 +9,7 @@ use curv::BigInt;
 /// in a group of unknown order was done correctly.
 /// statement is (x,u,w), verifier accept if w = u^x.
 ///
-#[derive(Clone, PartialEq, Debug, Serialize, Deserialize)]
+#[derive(Clone, PartialEq, Eq, Debug, Serialize, Deserialize)]
 pub struct PoEProof {
     pub x: BigInt,
     pub u: BinaryQF,

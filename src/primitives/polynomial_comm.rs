@@ -25,6 +25,8 @@ use paillier::keygen;
 /// Eval_verify: NI verifier for eval_proof.
 ///
 ///
+
+#[derive( PartialEq, Eq, Clone, Debug)]
 pub struct PP {
     pub disc: BigInt,
     pub g: BinaryQF,
@@ -32,10 +34,12 @@ pub struct PP {
     pub p: BigInt,
 }
 
+#[derive( PartialEq, Eq, Clone, Debug)]
 pub struct PolyComm {
     pub c: BinaryQF,
 }
 
+#[derive( PartialEq, Eq, Clone, Debug)]
 pub struct NiEvalProof {
     c_l_vec: Vec<BinaryQF>,
     c_r_vec: Vec<BinaryQF>,
