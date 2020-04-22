@@ -4,6 +4,7 @@ use crate::curv::arithmetic::traits::Modulo;
 use crate::curv::cryptographic_primitives::hashing::traits::Hash;
 use crate::isprime;
 use crate::pari_init;
+use crate::primitives::is_prime;
 use crate::primitives::numerical_log;
 use crate::primitives::prng;
 use crate::BinaryQF;
@@ -12,7 +13,6 @@ use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
 use curv::elliptic::curves::traits::{ECPoint, ECScalar};
 use curv::BigInt;
 use curv::{FE, GE};
-use paillier::keygen;
 use std::os::raw::c_int;
 
 const SECURITY_PARAMETER: usize = 128;
@@ -358,7 +358,7 @@ impl HSMCL {
 pub fn next_probable_prime(r: &BigInt) -> BigInt {
     let one = BigInt::from(1);
     let mut qtilde = r + &one;
-    while !keygen::is_prime(&qtilde) {
+    while !is_prime(&qtilde) {
         qtilde = qtilde + &one;
     }
     qtilde
@@ -867,8 +867,6 @@ mod tests {
         let m_tag = BinaryQF::discrete_log_f(&hsmcl.pk.q, &hsmcl.pk.delta_q, &exp_f);
         assert_eq!(m.clone(), m_tag);
     }
-
-
 
     #[test]
     fn test_setup() {

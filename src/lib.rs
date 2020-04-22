@@ -9,7 +9,6 @@ extern crate libc;
 #[macro_use]
 extern crate serde_derive;
 extern crate curv;
-extern crate paillier;
 extern crate serde;
 extern crate serde_json;
 use crate::curv::arithmetic::traits::Converter;
@@ -396,6 +395,4 @@ mod tests {
         let f_exp = f.exp(&x);
         assert_eq!(f, f_exp);
     }
-
-
 }

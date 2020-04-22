@@ -2,6 +2,7 @@ use super::ErrorReason;
 use crate::curv::arithmetic::traits::Modulo;
 use crate::curv::cryptographic_primitives::hashing::traits::Hash;
 use crate::pari_init;
+use crate::primitives::is_prime;
 use crate::primitives::numerical_log;
 use crate::primitives::poe::PoEProof;
 use crate::ABDeltaTriple;
@@ -11,7 +12,6 @@ use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
 use curv::elliptic::curves::traits::ECScalar;
 use curv::BigInt;
 use curv::FE;
-use paillier::keygen;
 
 /// Polynomial commitment as given in the paper: Transparent SNARKs from DARK Compilers
 /// (https://eprint.iacr.org/2019/1229.pdf), subsection 4.2 and 4.3
@@ -26,7 +26,7 @@ use paillier::keygen;
 ///
 ///
 
-#[derive( PartialEq, Eq, Clone, Debug)]
+#[derive(PartialEq, Eq, Clone, Debug)]
 pub struct PP {
     pub disc: BigInt,
     pub g: BinaryQF,
@@ -34,12 +34,12 @@ pub struct PP {
     pub p: BigInt,
 }
 
-#[derive( PartialEq, Eq, Clone, Debug)]
+#[derive(PartialEq, Eq, Clone, Debug)]
 pub struct PolyComm {
     pub c: BinaryQF,
 }
 
-#[derive( PartialEq, Eq, Clone, Debug)]
+#[derive(PartialEq, Eq, Clone, Debug)]
 pub struct NiEvalProof {
     c_l_vec: Vec<BinaryQF>,
     c_r_vec: Vec<BinaryQF>,
@@ -63,7 +63,7 @@ impl PolyComm {
         disc = -BigInt::sample(1600);
 
         // based on "Survey on IQ cryptography" 3.2
-        while disc.mod_floor(&BigInt::from(4)) != BigInt::one() || !keygen::is_prime(&(-&disc)) {
+        while disc.mod_floor(&BigInt::from(4)) != BigInt::one() || !is_prime(&(-&disc)) {
             disc = -BigInt::sample(1600);
         }
         //  let group = BinaryQF::binary_quadratic_form_principal(&det);
@@ -227,6 +227,7 @@ impl PolyComm {
                 coef_i_bn
             })
             .collect::<Vec<BigInt>>();
+
         PolyComm::eval_bounded_prove(&self.c, pp, z, y, d, p_minus1_half, &mut coef_vec_int[..])
     }
 
@@ -542,18 +543,20 @@ mod tests {
     #[test]
     fn test_commit_open() {
         // sample coef vector
-        let mut coef_vec: Vec<FE> = Vec::new();
-        let mut i = 0;
-        while i < 3 {
-            // TODO: check that i < d_max
-            coef_vec.push(FE::new_random());
-            i = i + 1;
+        for _ in 1..15 {
+            let mut coef_vec: Vec<FE> = Vec::new();
+            let mut i = 0;
+            while i < 10 {
+                // TODO: check that i < d_max
+                coef_vec.push(FE::new_random());
+                i = i + 1;
+            }
+            let d_max = BigInt::from(11);
+            let pp = PolyComm::setup(&d_max);
+            let (c, _f_q) = PolyComm::commit(&pp, &coef_vec);
+            let res = c.open(&pp, &coef_vec);
+            assert!(res.is_ok());
         }
-        let d_max = BigInt::from(11);
-        let pp = PolyComm::setup(&d_max);
-        let (c, _f_q) = PolyComm::commit(&pp, &coef_vec);
-        let res = c.open(&pp, &coef_vec);
-        assert!(res.is_ok());
     }
 
     #[test]
@@ -613,20 +616,21 @@ mod tests {
         }
         let d_max = BigInt::from(11);
         let pp = PolyComm::setup(&d_max);
-        let (c, _f_q) = PolyComm::commit(&pp, &coef_vec);
-        // generate y,z
-        let z = FE::new_random();
+        for _ in 0..6 {
+            let (c, _f_q) = PolyComm::commit(&pp, &coef_vec);
+            // generate y,z
+            let z = FE::new_random();
 
-        let mut coef_vec_rev = coef_vec.iter().rev();
-        let head = coef_vec_rev.next().unwrap();
-        let tail = coef_vec_rev;
+            let mut coef_vec_rev = coef_vec.iter().rev();
+            let head = coef_vec_rev.next().unwrap();
+            let tail = coef_vec_rev;
 
-        let y: FE = tail.fold(head.clone(), |acc, x| x.add(&(acc * &z).get_element()));
-
-        //create proof:
-        let proof = c.eval_prove(&pp, &z, &y, &coef_vec[..]);
-        let result = proof.eval_verify(c.c, &pp, &z, &y);
-        assert!(result.is_ok());
+            let y: FE = tail.fold(head.clone(), |acc, x| x.add(&(acc * &z).get_element()));
+            //create proof:
+            let proof = c.eval_prove(&pp, &z, &y, &coef_vec[..]);
+            let result = proof.eval_verify(c.c, &pp, &z, &y);
+            assert!(result.is_ok());
+        }
     }
 
     #[test]

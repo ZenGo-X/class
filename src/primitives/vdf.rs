@@ -2,12 +2,12 @@ use crate::curv::arithmetic::traits::Modulo;
 use crate::curv::arithmetic::traits::Samplable;
 use crate::pari_init;
 use crate::primitives::hash_to_prime;
+use crate::primitives::is_prime;
 use crate::primitives::prng;
 use crate::primitives::ErrorReason;
 use crate::ABDeltaTriple;
 use crate::BinaryQF;
 use curv::BigInt;
-use paillier::keygen;
 
 /// Wesolowski VDF, based on https://eprint.iacr.org/2018/712.pdf.
 /// Original paper: https://eprint.iacr.org/2018/623.pdf
@@ -25,7 +25,7 @@ impl VDF {
 
         disc = -BigInt::sample(security_param.clone()); // TODO: double check 1600 bits determinant should provide 120 bit security
                                                         // based on "Survey on IQ cryptography" 3.2
-        while disc.mod_floor(&BigInt::from(4)) != BigInt::one() || !keygen::is_prime(&(-&disc)) {
+        while disc.mod_floor(&BigInt::from(4)) != BigInt::one() || !is_prime(&(-&disc)) {
             disc = -BigInt::sample(security_param);
         }
 

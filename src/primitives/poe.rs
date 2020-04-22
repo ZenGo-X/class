@@ -58,17 +58,19 @@ mod tests {
 
     #[test]
     fn test_poe_valid_proof() {
-        let q = str::parse(
-            "115792089210356248762697446949407573529996955224135760342422259061068512044369",
-        )
-        .unwrap();
-        let hsmcl = HSMCL::keygen(&q, &1600);
-        let u = hsmcl.pk.gq;
-        let x = BigInt::sample(512);
-        let w = u.exp(&x);
+        for _ in 1..200 {
+            let q = str::parse(
+                "115792089210356248762697446949407573529996955224135760342422259061068512044369",
+            )
+            .unwrap();
+            let hsmcl = HSMCL::keygen(&q, &1600);
+            let u = hsmcl.pk.gq;
+            let x = BigInt::sample(512);
+            let w = u.exp(&x);
 
-        let proof = PoEProof::prove(&x, &u, &w);
-        assert!(proof.verify().is_ok());
+            let proof = PoEProof::prove(&x, &u, &w);
+            assert!(proof.verify().is_ok());
+        }
     }
 
     #[test]
