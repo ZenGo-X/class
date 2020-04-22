@@ -3,7 +3,6 @@ use crate::curv::arithmetic::traits::Modulo;
 use crate::curv::cryptographic_primitives::hashing::traits::Hash;
 use crate::pari_init;
 use crate::primitives::is_prime;
-use crate::primitives::numerical_log;
 use crate::primitives::poe::PoEProof;
 use crate::ABDeltaTriple;
 use crate::BinaryQF;
@@ -74,13 +73,10 @@ impl PolyComm {
         //  let g = group.exp(&random);
         let g = pick_random_element(&disc);
 
-        let bound: BigInt =
-            BigInt::from(3) * numerical_log(&(d_max + BigInt::one())) + BigInt::one();
-        // not safe
-        let bound_u32 = u32::from_str_radix(&bound.to_str_radix(16), 16).unwrap();
+        let bound = 3 * (d_max.clone() + BigInt::one()).bit_length() as u32 + 1;
 
         let p = FE::q();
-        let q = p.pow(bound_u32);
+        let q = p.pow(bound);
         PP { disc, g, q, p }
     }
 
@@ -398,10 +394,11 @@ impl NiEvalProof {
         let mut flag = true;
         if self.d == 0 {
             //step3
-            let bound = numerical_log(&(&BigInt::from(self.d.clone() as u32) + BigInt::one()));
-            //unsafe
-            let bound_u32 = u32::from_str_radix(&bound.to_str_radix(16), 16).unwrap();
-            let sig_p_d = pp.p.pow(bound_u32);
+            let bound: u32 =
+                2 * (BigInt::from(self.d.clone() as i32) + BigInt::one()).bit_length() as u32;
+
+            let sig_p_d = pp.p.pow(bound);
+
             if &(sig_p_d * &self.b) > &pp.q {
                 flag = false;
             }
@@ -535,7 +532,6 @@ fn pick_random_element(disc: &BigInt) -> BinaryQF {
 #[cfg(test)]
 mod tests {
     use super::PolyComm;
-    use crate::primitives::numerical_log;
     use curv::elliptic::curves::traits::ECScalar;
     use curv::BigInt;
     use curv::FE;
@@ -583,11 +579,8 @@ mod tests {
         let p = BigInt::from(20); // apparently the p in the toy example from the paper is too small (problem with doing -p/2)
                                   // let q = BigInt::from(10);
         let d_max = 10;
-        let bound: BigInt =
-            BigInt::from(3) * numerical_log(&(d_max + BigInt::one())) + BigInt::one();
-        // not safe
-        let bound_u32 = u32::from_str_radix(&bound.to_str_radix(16), 16).unwrap();
-        let q = p.pow(bound_u32);
+        let bound = 3 * (d_max.clone() + BigInt::one()).bit_length() as u32 + 1;
+        let q = p.pow(bound);
 
         let mut coef_vec: Vec<FE> = Vec::new();
 

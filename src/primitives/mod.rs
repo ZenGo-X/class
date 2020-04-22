@@ -38,8 +38,8 @@ pub enum ErrorReason {
     SetupError,
     PoEError,
 }
-
-//TODO: improve approximation
+// base 10 numerical log
+//TODO: improve approximation, add source , add tests
 fn numerical_log(x: &BigInt) -> BigInt {
     let mut aip1: BigInt;
     let mut bip1: BigInt;
@@ -369,3 +369,16 @@ static SMALL_PRIMES: [u32; 2048] = [
     17609, 17623, 17627, 17657, 17659, 17669, 17681, 17683, 17707, 17713, 17729,
     17737, 17747, 17749, 17761, 17783, 17789, 17791, 17807, 17827, 17837, 17839,
     17851, 17863 ];
+
+#[cfg(test)]
+mod tests {
+    use self::super::*;
+
+    #[test]
+    fn test_numerical_log() {
+        let h2 = BigInt::from(10000);
+        let n2 = numerical_log(&h2);
+        println!("n2 {:?}", n2.clone());
+        assert!(false);
+    }
+}
