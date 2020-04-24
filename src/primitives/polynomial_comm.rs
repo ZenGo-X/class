@@ -81,7 +81,7 @@ impl PolyComm {
     }
 
     pub fn commit(pp: &PP, coef_vec: &[FE]) -> (PolyComm, BigInt) {
-        unsafe { pari_init(10000000, 2) };
+        unsafe { pari_init(100000000, 2) };
 
         let two = BigInt::from(2);
         let p_minus1_half = (&pp.p - &BigInt::one()).div_floor(&two);
@@ -105,6 +105,7 @@ impl PolyComm {
     }
 
     pub fn open(self, pp: &PP, coef_vec: &[FE]) -> Result<(), ErrorReason> {
+        unsafe { pari_init(100000000, 2) };
         let two = BigInt::from(2);
         let p_minus1_half = (&pp.p - &BigInt::one()).div_floor(&two);
         let coef_vec_int = (0..coef_vec.len())
@@ -208,7 +209,7 @@ impl PolyComm {
     }
 
     pub fn eval_prove(&self, pp: &PP, z: &FE, y: &FE, coef_vec: &[FE]) -> NiEvalProof {
-        unsafe { pari_init(10000000, 2) };
+        unsafe { pari_init(100000000, 2) };
 
         let d = coef_vec.len() - 1; //TODO: make bigint, check d >=0
                                     //step 2:
@@ -220,7 +221,6 @@ impl PolyComm {
                 if &coef_i_bn > &p_minus1_half {
                     coef_i_bn = coef_i_bn - &pp.p;
                 }
-
 
                 coef_i_bn
             })
@@ -391,7 +391,7 @@ impl PolyComm {
 
 impl NiEvalProof {
     pub fn eval_verify(mut self, c: BinaryQF, pp: &PP, z: &FE, y: &FE) -> Result<(), ErrorReason> {
-        unsafe { pari_init(10000000, 2) };
+        unsafe { pari_init(100000000, 2) };
 
         let mut flag = true;
         if self.d == 0 {
@@ -549,10 +549,14 @@ mod tests {
                 coef_vec.push(FE::new_random());
                 i = i + 1;
             }
-            let d_max = BigInt::from(11);
+            let d_max = BigInt::from(64);
+
             let pp = PolyComm::setup(&d_max);
+
             let (c, _f_q) = PolyComm::commit(&pp, &coef_vec);
+
             let res = c.open(&pp, &coef_vec);
+
             assert!(res.is_ok());
         }
     }
@@ -604,7 +608,7 @@ mod tests {
         // sample coef vector
         let mut coef_vec: Vec<FE> = Vec::new();
         let mut i = 0;
-        while i <8 {
+        while i < 8 {
             // TODO: check that i < d_max
             coef_vec.push(FE::new_random());
             i = i + 1;
