@@ -220,6 +220,8 @@ impl PolyComm {
                 if &coef_i_bn > &p_minus1_half {
                     coef_i_bn = coef_i_bn - &pp.p;
                 }
+
+
                 coef_i_bn
             })
             .collect::<Vec<BigInt>>();
@@ -602,7 +604,7 @@ mod tests {
         // sample coef vector
         let mut coef_vec: Vec<FE> = Vec::new();
         let mut i = 0;
-        while i < 10 {
+        while i <8 {
             // TODO: check that i < d_max
             coef_vec.push(FE::new_random());
             i = i + 1;

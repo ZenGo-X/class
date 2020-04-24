@@ -1,6 +1,6 @@
 [package]
 name = "class_group"
-version = "0.4.7"
+version = "0.4.8"
 authors = ["omershlo <omer.shlomovits@gmail.com>"]
 edition = "2018"
 links = "libpari"
@@ -17,6 +17,7 @@ serde_json = "1.0"
 
 [dependencies.curv]
 git = "https://github.com/KZen-networks/curv"
-features =  ["ec_secp256k1"]
-tag = "v0.2.3"
+tag = "v0.2.5"
+features =  ["ec_jubjub"]
+
 

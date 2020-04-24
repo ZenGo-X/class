@@ -379,6 +379,5 @@ mod tests {
         let h2 = BigInt::from(10000);
         let n2 = numerical_log(&h2);
         println!("n2 {:?}", n2.clone());
-        assert!(false);
     }
 }
