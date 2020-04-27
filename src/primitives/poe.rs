@@ -20,7 +20,7 @@ pub struct PoEProof {
 impl PoEProof {
     // u^x = w
     pub fn prove(x: &BigInt, u: &BinaryQF, w: &BinaryQF) -> PoEProof {
-        unsafe { pari_init(10000000, 2) };
+        unsafe { pari_init(100000000000, 2) };
         let l = hash_to_prime(u, w);
         let r = x.mod_floor(&l);
         let q = (x - r).div_floor(&l);
@@ -34,7 +34,7 @@ impl PoEProof {
     }
 
     pub fn verify(&self) -> Result<(), ErrorReason> {
-        unsafe { pari_init(10000000, 2) };
+        unsafe { pari_init(100000000000, 2) };
         let l = hash_to_prime(&self.u, &self.w);
         let r = self.x.mod_floor(&l);
         let Ql = self.Q.exp(&l);
