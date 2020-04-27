@@ -53,7 +53,7 @@ pub struct NiEvalProof {
 impl PolyComm {
     // d is the rank of the polynomial,
     pub fn setup(d_max: &BigInt) -> PP {
-        unsafe { pari_init(1000000000, 2) };
+        unsafe { pari_init(100000000000, 2) };
 
         // TODO: use standardize setup for sampling random element
         // choose determinant with 1600 bits, which is equivalent to 3072 bit RSA. That I believe is 120bit security now
@@ -81,7 +81,7 @@ impl PolyComm {
     }
 
     pub fn commit(pp: &PP, coef_vec: &[FE]) -> (PolyComm, BigInt) {
-        unsafe { pari_init(1000000000, 2) };
+        unsafe { pari_init(100000000000, 2) };
 
         let two = BigInt::from(2);
         let p_minus1_half = (&pp.p - &BigInt::one()).div_floor(&two);
@@ -105,7 +105,7 @@ impl PolyComm {
     }
 
     pub fn open(self, pp: &PP, coef_vec: &[FE]) -> Result<(), ErrorReason> {
-        unsafe { pari_init(1000000000, 2) };
+        unsafe { pari_init(100000000000, 2) };
         let two = BigInt::from(2);
         let p_minus1_half = (&pp.p - &BigInt::one()).div_floor(&two);
         let coef_vec_int = (0..coef_vec.len())
@@ -209,7 +209,7 @@ impl PolyComm {
     }
 
     pub fn eval_prove(&self, pp: &PP, z: &FE, y: &FE, coef_vec: &[FE]) -> NiEvalProof {
-        unsafe { pari_init(1000000000, 2) };
+        unsafe { pari_init(100000000000, 2) };
 
         let d = coef_vec.len() - 1; //TODO: make bigint, check d >=0
                                     //step 2:
@@ -391,7 +391,7 @@ impl PolyComm {
 
 impl NiEvalProof {
     pub fn eval_verify(mut self, c: BinaryQF, pp: &PP, z: &FE, y: &FE) -> Result<(), ErrorReason> {
-        unsafe { pari_init(1000000000, 2) };
+        unsafe { pari_init(100000000000, 2) };
 
         let mut flag = true;
         if self.d == 0 {
