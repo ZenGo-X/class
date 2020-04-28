@@ -59,11 +59,11 @@ impl PolyComm {
         // choose determinant with 1600 bits, which is equivalent to 3072 bit RSA. That I believe is 120bit security now
         let mut disc: BigInt;
 
-        disc = -BigInt::sample(1600);
-
+        disc = -BigInt::sample(400);
+    //    disc = -BigInt::sample(1600);
         // based on "Survey on IQ cryptography" 3.2
         while disc.mod_floor(&BigInt::from(4)) != BigInt::one() || !is_prime(&(-&disc)) {
-            disc = -BigInt::sample(1600);
+            disc = -BigInt::sample(400);
         }
         //  let group = BinaryQF::binary_quadratic_form_principal(&det);
 
@@ -402,20 +402,24 @@ impl NiEvalProof {
             let sig_p_d = pp.p.pow(bound);
 
             if &(sig_p_d * &self.b) > &pp.q {
+                println!("TEST1");
                 flag = false;
             }
             //step 4:
             if &self.f_const.abs() > &self.b {
+                println!("TEST2");
                 flag = false;
             }
             // step 5:
 
             if y != &ECScalar::from(&self.f_const.mod_floor(&pp.p)) {
+                println!("TEST3");
                 flag = false;
             }
 
             // step 6
             if pp.g.exp(&self.f_const).reduce() != c {
+                println!("TEST4");
                 flag = false;
             }
 
@@ -455,6 +459,7 @@ impl NiEvalProof {
         let y_r_z_pow_d_prime_p1 = BigInt::mod_mul(&z_pow_d_prime_p1, &y_r, &pp.p);
         let y_l_y_r_z_pow_d_prime_p1 = BigInt::mod_add(&y_r_z_pow_d_prime_p1, &y_l, &pp.p);
         if &y.to_big_int() != &y_l_y_r_z_pow_d_prime_p1 {
+            println!("TEST5");
             flag = false;
         }
 
@@ -474,6 +479,7 @@ impl NiEvalProof {
             || c_r != poe_proof.u
             || q_pow_d_prime_plus1 != poe_proof.x
         {
+            println!("TEST6");
             flag = false;
         }
 
@@ -608,7 +614,7 @@ mod tests {
         // sample coef vector
         let mut coef_vec: Vec<FE> = Vec::new();
         let mut i = 0;
-        while i < 8 {
+        while i < 9 {
             // TODO: check that i < d_max
             coef_vec.push(FE::new_random());
             i = i + 1;
