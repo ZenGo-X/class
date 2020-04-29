@@ -461,6 +461,8 @@ impl NiEvalProof {
         println!("checkpoint");
 
         if &y.to_big_int() != &y_l_y_r_z_pow_d_prime_p1 {
+            println!("y_r_z_pow_d_prime_p1 {:?}", y_r_z_pow_d_prime_p1.clone());
+            println!("y_l_y_r_z_pow_d_prime_p1 {:?}", y_l_y_r_z_pow_d_prime_p1.clone());
             println!("TEST5");
             flag = false;
         }
