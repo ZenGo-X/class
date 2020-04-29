@@ -483,12 +483,12 @@ impl NiEvalProof {
             || c_r != poe_proof.u
             || q_pow_d_prime_plus1 != poe_proof.x
         {
-            println!("c_over_c_l {:?}", c_over_c_l.clone().to_str_radix(16));
-            println!("poe_proof.w {:?}", poe_proof.w.clone().to_str_radix(16));
-            println!("c_r {:?}", c_r.clone().to_str_radix(16));
-            println!("poe_proof.u {:?}", poe_proof.u.clone().to_str_radix(16));
-            println!("q_pow_d_prime_plus1 {:?}", q_pow_d_prime_plus1.clone().to_str_radix(16));
-            println!("poe_proof.x {:?}", poe_proof.x.clone().to_str_radix(16));
+            println!("c_over_c_l {:?}", c_over_c_l.clone());
+            println!("poe_proof.w {:?}", poe_proof.w.clone());
+            println!("c_r {:?}", c_r.clone());
+            println!("poe_proof.u {:?}", poe_proof.u.clone());
+            println!("q_pow_d_prime_plus1 {:?}", q_pow_d_prime_plus1.clone());
+            println!("poe_proof.x {:?}", poe_proof.x.clone());
             println!("TEST6");
             flag = false;
         }
