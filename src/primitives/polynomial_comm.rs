@@ -483,6 +483,7 @@ impl NiEvalProof {
             || c_r != poe_proof.u
             || q_pow_d_prime_plus1 != poe_proof.x
         {
+            println!("result.is_err() {:?}", result.is_err());
             println!("c_over_c_l {:?}", c_over_c_l.clone());
             println!("poe_proof.w {:?}", poe_proof.w.clone());
             println!("c_r {:?}", c_r.clone());
