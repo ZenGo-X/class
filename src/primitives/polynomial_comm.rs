@@ -458,6 +458,8 @@ impl NiEvalProof {
         );
         let y_r_z_pow_d_prime_p1 = BigInt::mod_mul(&z_pow_d_prime_p1, &y_r, &pp.p);
         let y_l_y_r_z_pow_d_prime_p1 = BigInt::mod_add(&y_r_z_pow_d_prime_p1, &y_l, &pp.p);
+        println!("checkpoint");
+
         if &y.to_big_int() != &y_l_y_r_z_pow_d_prime_p1 {
             println!("TEST5");
             flag = false;
@@ -479,6 +481,12 @@ impl NiEvalProof {
             || c_r != poe_proof.u
             || q_pow_d_prime_plus1 != poe_proof.x
         {
+            println!("c_over_c_l {:?}", c_over_c_l.clone());
+            println!("poe_proof.w {:?}", poe_proof.w.clone());
+            println!("c_r {:?}", c_r.clone());
+            println!("poe_proof.u {:?}", poe_proof.u.clone());
+            println!("q_pow_d_prime_plus1 {:?}", q_pow_d_prime_plus1.clone());
+            println!("poe_proof.x {:?}", poe_proof.x.clone());
             println!("TEST6");
             flag = false;
         }
@@ -610,18 +618,19 @@ mod tests {
 
     #[test]
     fn test_eval() {
-        // create commitment:
+
+            // create commitment:
         // sample coef vector
         let mut coef_vec: Vec<FE> = Vec::new();
         let mut i = 0;
-        while i < 9 {
+        while i < 42 {
             // TODO: check that i < d_max
             coef_vec.push(FE::new_random());
             i = i + 1;
         }
-        let d_max = BigInt::from(11);
+        let d_max = BigInt::from(42);
         let pp = PolyComm::setup(&d_max);
-        for _ in 0..6 {
+        for _ in 0..20 {
             let (c, _f_q) = PolyComm::commit(&pp, &coef_vec);
             // generate y,z
             let z = FE::new_random();
