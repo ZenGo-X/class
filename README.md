@@ -60,6 +60,7 @@ Feel free to [reach out](mailto:github@kzencorp.com) or join the KZen Research [
 Hall of Fame
 -------------------
 We would like to thank Fabien Laguillaumie, Guilhem Castagnos, Ida Tucker, Claudio Orlandi and Ben Fisch for their support and on-going help.
+We thank CoBloX research lab: https://coblox.tech/ and Lloyd Fournier for contributing code, making this library more secure and fast.
 
 References
 -------------------
