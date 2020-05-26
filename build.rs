@@ -3,25 +3,51 @@ extern crate bindgen;
 
 use std::env;
 use std::fs;
+use std::io::Write;
 use std::path::PathBuf;
 use std::process::Command;
 fn main() {
-    let path = fs::canonicalize("./depend/pari-2.11.2/Configure").unwrap();
-    Command::new(path.to_str().unwrap())
-        .output()
-        .expect("failed to execute process");
+    let pari_dir = "./depend/pari";
+    let pari_install = format!("{}/pari", env::var("OUT_DIR").unwrap());
+    {
+        let path = fs::canonicalize(format!("{}/Configure", pari_dir)).unwrap();
+        let output = Command::new(path.to_str().unwrap())
+            .arg(format!("--prefix={}", &pari_install))
+            .current_dir(pari_dir)
+            .output()
+            .expect("failed to execute process");
 
-    Command::new("make")
-        .arg("install-nodata")
-        .current_dir("depend/pari-2.11.2")
-        .output()
-        .expect("failed to make");
+        if !output.status.success() {
+            std::io::stderr().write_all(&output.stderr).unwrap();
+            panic!("PARI: failed to configure");
+        }
+    }
 
-    Command::new("make")
-        .arg("install-lib-sta")
-        .current_dir("depend/pari-2.11.2")
-        .output()
-        .expect("failed to make");
+    {
+        let output = Command::new("make")
+            .arg("install-nodata")
+            .current_dir(pari_dir)
+            .output()
+            .expect("failed to make");
+
+        if !output.status.success() {
+            std::io::stderr().write_all(&output.stderr).unwrap();
+            panic!("PARI: failed to ‘make install-nodata’");
+        }
+    }
+
+    {
+        let output = Command::new("make")
+            .arg("install-lib-sta")
+            .current_dir(pari_dir)
+            .output()
+            .expect("failed to make");
+
+        if !output.status.success() {
+            std::io::stderr().write_all(&output.stderr).unwrap();
+            panic!("PARI: failed to ‘make install-lib-sta’");
+        }
+    }
 
     let ignored_macros = IgnoreMacros(
         vec![
@@ -40,6 +66,7 @@ fn main() {
         // The input header we would like to generate
         // bindings for.
         .header("wrapper.h")
+        .clang_arg(format!("-I{}/include", &pari_install))
         .whitelist_type("GEN")
         .whitelist_function("mkintn")
         .whitelist_function("GENtostr")
@@ -65,7 +92,9 @@ fn main() {
         .write_to_file(out_path.join("bindings.rs"))
         .expect("Couldn't write bindings!");
 
-    println!("cargo:rustc-link-lib=dylib=pari");
+    println!("cargo:rerun-if-changed={}/CHANGES", pari_dir);
+    println!("cargo:rustc-link-search=native={}/lib", pari_install);
+    println!("cargo:rustc-link-lib=static=pari");
 }
 
 #[derive(Debug)]
