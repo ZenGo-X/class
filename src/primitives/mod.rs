@@ -1,4 +1,5 @@
 pub mod cl_dl_lcm;
+pub mod cl_dl_public_setup;
 pub mod poe;
 pub mod polynomial_comm;
 pub mod vdf;

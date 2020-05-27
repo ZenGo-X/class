@@ -77,15 +77,6 @@ pub struct U1U2 {
     pub u2: BigInt,
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
-pub struct CLDLProofPublicSetup {
-    pub seed: BigInt,
-    pub pk: PK,
-    pub ciphertext: Ciphertext,
-    q: GE,
-    t_triple: TTriplets,
-    u1u2: U1U2,
-}
 #[derive(Debug)]
 pub struct ProofError;
 
@@ -505,106 +496,6 @@ impl CLDLProof {
     }
 }
 
-impl CLDLProofPublicSetup {
-    // prove with public setup: same as above with C = 1,
-    pub fn prove(w: Witness, pk: PK, ciphertext: Ciphertext, q: GE, seed: BigInt) -> Self {
-        unsafe { pari_init(10000000, 2) };
-
-        let r1 = BigInt::sample_below(
-            &(&pk.stilde
-                * BigInt::from(2).pow(40)
-                * BigInt::from(2).pow(SECURITY_PARAMETER as u32)
-                * BigInt::from(2).pow(40)),
-        );
-        let r2_fe: FE = FE::new_random();
-        let r2 = r2_fe.to_big_int();
-        let fr2 = BinaryQF::expo_f(&pk.q, &pk.delta_q, &r2);
-        let pkr1 = pk.h.exp(&r1);
-        let t2 = fr2.compose(&pkr1).reduce();
-        let T = GE::generator() * r2_fe;
-        let t1 = pk.gq.exp(&r1);
-        let fs = HSha256::create_hash(&[
-            &BigInt::from(&t1.to_bytes()[..]),
-            &BigInt::from(&t2.to_bytes()[..]),
-            &T.bytes_compressed_to_big_int(),
-        ]);
-        let t_triple = TTriplets { t1, t2, T };
-        // using Fiat Shamir transform. taking security-param bits //TODO: double check
-        let k = HSha256::create_hash(&[&fs]).mod_floor(&(BigInt::from(SECURITY_PARAMETER as u32)));
-
-        let u1 = r1 + &k * &w.r;
-        let u2 = BigInt::mod_add(&r2, &(&k * &w.x), &FE::q());
-        let u1u2 = U1U2 { u1, u2 };
-
-        CLDLProofPublicSetup {
-            seed,
-            pk,
-            ciphertext,
-            q,
-            t_triple,
-            u1u2,
-        }
-    }
-
-    pub fn verify(&self) -> Result<(), ProofError> {
-        unsafe { pari_init(10000000, 2) };
-
-        let mut flag = true;
-        if HSMCL::setup_verify(&self.pk, &self.seed).is_err() {
-            flag = false;
-        }
-        let fs = HSha256::create_hash(&[
-            &BigInt::from(&self.t_triple.t1.to_bytes()[..]),
-            &BigInt::from(&self.t_triple.t2.to_bytes()[..]),
-            &self.t_triple.T.bytes_compressed_to_big_int(),
-        ]);
-        // reconstruct k
-        let k = HSha256::create_hash(&[&fs]).mod_floor(&(BigInt::from(SECURITY_PARAMETER as u32)));
-
-        let sample_size = &self.pk.stilde
-            * (BigInt::from(2).pow(40))
-            * BigInt::from(2).pow(SECURITY_PARAMETER as u32)
-            * (BigInt::from(2).pow(40) + BigInt::one());
-
-        //length test u1:
-        if &self.u1u2.u1 > &sample_size || &self.u1u2.u1 < &BigInt::zero() {
-            flag = false;
-        }
-        // length test u2:
-        if &self.u1u2.u2 > &FE::q() || &self.u1u2.u2 < &BigInt::zero() {
-            flag = false;
-        }
-
-        let c1k = self.ciphertext.c1.exp(&k);
-        let t1c1k = self.t_triple.t1.compose(&c1k).reduce();
-        let gqu1 = self.pk.gq.exp(&&self.u1u2.u1);
-        if t1c1k != gqu1 {
-            flag = false;
-        };
-
-        let k_bias_fe: FE = ECScalar::from(&(k.clone() + BigInt::one()));
-        let g = GE::generator();
-        let t2kq = (self.t_triple.T + self.q.clone() * k_bias_fe).sub_point(&self.q.get_element());
-        let u2p = &g * &ECScalar::from(&self.u1u2.u2);
-        if t2kq != u2p {
-            flag = false;
-        }
-
-        let pku1 = self.pk.h.exp(&self.u1u2.u1);
-        let fu2 = BinaryQF::expo_f(&self.pk.q, &self.pk.delta_q, &self.u1u2.u2);
-        let c2k = self.ciphertext.c2.exp(&k);
-        let t2c2k = self.t_triple.t2.compose(&c2k).reduce();
-        let pku1fu2 = pku1.compose(&fu2).reduce();
-        if t2c2k != pku1fu2 {
-            flag = false;
-        }
-        match flag {
-            true => Ok(()),
-            false => Err(ProofError),
-        }
-    }
-}
-
 // copied from https://docs.rs/crate/quadratic/0.3.1/source/src/lib.rs
 // changed to support BigInt
 // TODO: put in utility module, expend to Kronecker
@@ -777,81 +668,6 @@ mod tests {
         let m_fe: FE = ECScalar::from(&(&m + &BigInt::one()));
         let q = GE::generator() * m_fe;
         let proof = CLDLProof::prove(witness, hsmcl.pk.clone(), ciphertext, q);
-        assert!(proof.verify().is_ok())
-    }
-
-    #[test]
-    fn test_zk_cl_dl_public_setup() {
-        // starts with hsm_cl encryption
-        let q = str::parse(
-            "115792089237316195423570985008687907852837564279074904382605163141518161494337",
-        )
-        .unwrap();
-        // digits of pi
-        let seed = str::parse(
-            "314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460955058223172535940812848"
-        ).unwrap();
-
-        let hsmcl = HSMCL::keygen_with_setup(&q, &1600, &seed);
-        let m = BigInt::from(1000);
-        let r = BigInt::sample_below(&(&hsmcl.pk.stilde * BigInt::from(2).pow(40)));
-        let ciphertext = HSMCL::encrypt_predefined_randomness(&hsmcl.pk, &m, &r);
-        let witness = Witness { x: m.clone(), r };
-        let m_fe: FE = ECScalar::from(&m);
-        let q = GE::generator() * m_fe;
-        let proof = CLDLProofPublicSetup::prove(witness, hsmcl.pk.clone(), ciphertext, q, seed);
-        //verify:
-        assert!(proof.verify().is_ok());
-    }
-
-    #[test]
-    #[should_panic]
-    fn test_bad_witness_zk_cl_dl_public_setup() {
-        // starts with hsm_cl encryption
-        let q = str::parse(
-            "115792089237316195423570985008687907852837564279074904382605163141518161494337",
-        )
-        .unwrap();
-        // digits of pi
-        let seed = str::parse(
-            "314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460955058223172535940812848"
-        ).unwrap();
-        let hsmcl = HSMCL::keygen_with_setup(&q, &1600, &seed);
-        let m = BigInt::from(1000);
-        let r = BigInt::sample_below(&(&hsmcl.pk.stilde * BigInt::from(2).pow(40)));
-        let ciphertext = HSMCL::encrypt_predefined_randomness(&hsmcl.pk, &m, &r);
-        let witness = Witness {
-            x: m.clone() + BigInt::one(),
-            r,
-        };
-        let m_fe: FE = ECScalar::from(&(&m + &BigInt::one()));
-        let q = GE::generator() * m_fe;
-        let proof = CLDLProofPublicSetup::prove(witness, hsmcl.pk.clone(), ciphertext, q, seed);
-        //verify:
-        assert!(proof.verify().is_ok())
-    }
-
-    #[test]
-    #[should_panic]
-    fn test_bad_q_zk_cl_dl_public_setup() {
-        // starts with hsm_cl encryption
-        let q = str::parse(
-            "115792089237316195423570985008687907852837564279074904382605163141518161494337",
-        )
-        .unwrap();
-        // digits of pi
-        let seed = str::parse(
-            "314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460955058223172535940812848"
-        ).unwrap();
-        let hsmcl = HSMCL::keygen_with_setup(&q, &1600, &seed);
-        let m = BigInt::from(1000);
-        let r = BigInt::sample_below(&(&hsmcl.pk.stilde * BigInt::from(2).pow(40)));
-        let ciphertext = HSMCL::encrypt_predefined_randomness(&hsmcl.pk, &m, &r);
-        let witness = Witness { x: m.clone(), r };
-        let m_fe: FE = ECScalar::from(&(&m + &BigInt::one()));
-        let q = GE::generator() * m_fe;
-        let proof = CLDLProofPublicSetup::prove(witness, hsmcl.pk.clone(), ciphertext, q, seed);
-        //verify:
         assert!(proof.verify().is_ok())
     }
 
