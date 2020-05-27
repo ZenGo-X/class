@@ -70,7 +70,7 @@ impl CLGroup {
         let q = &FE::q();
         unsafe { pari_init(100000000, 2) };
         let mu = q.bit_length();
-        debug_assert!(lam > &(mu + 2));
+        assert!(lam > &(mu + 2));
         let k = lam - mu;
         let two = BigInt::from(2);
         let mut r = BigInt::sample_range(
