@@ -303,7 +303,7 @@ fn next_probable_small_prime(r: &BigInt) -> BigInt {
     qtilde
 }
 
-/// ElGamal encrypts the message under the public key.
+/// CL encrypts the message under the public key.
 ///
 /// Returns the secret randomness used.
 pub fn encrypt(group: &CLGroup, public_key: &BinaryQF, m: &FE) -> (Ciphertext, BigInt) {
@@ -319,6 +319,22 @@ pub fn encrypt(group: &CLGroup, public_key: &BinaryQF, m: &FE) -> (Ciphertext, B
         },
         r,
     )
+}
+
+pub fn encrypt_predefined_randomness(
+    group: &CLGroup,
+    public_key: &BinaryQF,
+    m: &FE,
+    r: &BigInt,
+) -> Ciphertext {
+    unsafe { pari_init(10000000, 2) };
+    let exp_f = BinaryQF::expo_f(&FE::q(), &group.delta_q, &m.to_big_int());
+    let h_exp_r = public_key.exp(r);
+
+    Ciphertext {
+        c1: group.gq.exp(r),
+        c2: h_exp_r.compose(&exp_f).reduce(),
+    }
 }
 
 pub fn verifiably_encrypt(
