@@ -209,11 +209,34 @@ impl CLGroup {
         }
     }
 
-    /// randomly sample a scalar and compute its corresponding group element by multiplying g_q
-    pub fn sample_gq_pair(&self) -> (BigInt, BinaryQF) {
-        let scalar = BigInt::sample_below(&(&self.stilde * BigInt::from(2).pow(40)));
-        let group_element = self.gq.exp(&scalar);
-        (scalar, group_element)
+    /// randomly sample a scalar (secret key) and compute its corresponding group element (public key) by multiplying g_q
+    pub fn keygen(&self) -> (SK, PK) {
+        let sk = SK(BigInt::sample_below(
+            &(&self.stilde * BigInt::from(2).pow(40)),
+        ));
+        let pk = self.pk_for_sk(&sk);
+        (sk, pk)
+    }
+
+    /// Return the CL public key for a given secret key
+    pub fn pk_for_sk(&self, sk: &SK) -> PK {
+        let group_element = self.gq.exp(&sk.0);
+        PK(group_element)
+    }
+}
+
+pub struct PK(BinaryQF);
+pub struct SK(BigInt);
+
+impl From<SK> for BigInt {
+    fn from(sk: SK) -> Self {
+        sk.0
+    }
+}
+
+impl From<BigInt> for SK {
+    fn from(bi: BigInt) -> Self {
+        Self(bi)
     }
 }
 
@@ -306,15 +329,15 @@ fn next_probable_small_prime(r: &BigInt) -> BigInt {
 /// CL encrypts the message under the public key.
 ///
 /// Returns the secret randomness used.
-pub fn encrypt(group: &CLGroup, public_key: &BinaryQF, m: &FE) -> (Ciphertext, BigInt) {
+pub fn encrypt(group: &CLGroup, public_key: &PK, m: &FE) -> (Ciphertext, SK) {
     unsafe { pari_init(10000000, 2) };
-    let (r, R) = group.sample_gq_pair();
+    let (r, R) = group.keygen();
     let exp_f = BinaryQF::expo_f(&FE::q(), &group.delta_q, &m.to_big_int());
-    let h_exp_r = public_key.exp(&r);
+    let h_exp_r = public_key.0.exp(&r.0);
 
     (
         Ciphertext {
-            c1: R,
+            c1: R.0,
             c2: h_exp_r.compose(&exp_f).reduce(),
         },
         r,
@@ -323,29 +346,29 @@ pub fn encrypt(group: &CLGroup, public_key: &BinaryQF, m: &FE) -> (Ciphertext, B
 
 pub fn encrypt_predefined_randomness(
     group: &CLGroup,
-    public_key: &BinaryQF,
+    public_key: &PK,
     m: &FE,
-    r: &BigInt,
+    r: &SK,
 ) -> Ciphertext {
     unsafe { pari_init(10000000, 2) };
     let exp_f = BinaryQF::expo_f(&FE::q(), &group.delta_q, &m.to_big_int());
-    let h_exp_r = public_key.exp(r);
+    let h_exp_r = public_key.0.exp(&r.0);
 
     Ciphertext {
-        c1: group.gq.exp(r),
+        c1: group.gq.exp(&r.0),
         c2: h_exp_r.compose(&exp_f).reduce(),
     }
 }
 
 pub fn verifiably_encrypt(
     group: &CLGroup,
-    public_key: &BinaryQF,
+    public_key: &PK,
     DL_pair: (&FE, &GE),
 ) -> (Ciphertext, CLDLProof) {
     let (x, X) = DL_pair;
     let (ciphertext, r) = encrypt(group, public_key, x);
 
-    let proof = CLDLProof::prove(group, (x, r), (public_key, &ciphertext, X));
+    let proof = CLDLProof::prove(group, (x, &r), (public_key, &ciphertext, X));
     (ciphertext, proof)
 }
 
@@ -356,11 +379,7 @@ pub struct CLDLProof {
 }
 
 impl CLDLProof {
-    fn prove(
-        group: &CLGroup,
-        witness: (&FE, BigInt),
-        statement: (&BinaryQF, &Ciphertext, &GE),
-    ) -> Self {
+    fn prove(group: &CLGroup, witness: (&FE, &SK), statement: (&PK, &Ciphertext, &GE)) -> Self {
         unsafe { pari_init(10000000, 2) };
         let (x, r) = witness;
         let (public_key, ciphertext, X) = statement;
@@ -374,7 +393,7 @@ impl CLDLProof {
         let r2_fe: FE = FE::new_random();
         let r2 = r2_fe.to_big_int();
         let fr2 = BinaryQF::expo_f(&FE::q(), &group.delta_q, &r2);
-        let pkr1 = public_key.exp(&r1);
+        let pkr1 = public_key.0.exp(&r1);
         let t2 = fr2.compose(&pkr1).reduce();
         let T = GE::generator() * r2_fe;
         let t1 = group.gq.exp(&r1);
@@ -382,7 +401,7 @@ impl CLDLProof {
 
         let k = Self::challenge(public_key, &t_triple, ciphertext, X);
 
-        let u1 = r1 + &k * &r;
+        let u1 = r1 + &k * &r.0;
         let u2 = BigInt::mod_add(&r2, &(&k * x.to_big_int()), &FE::q());
         let u1u2 = U1U2 { u1, u2 };
 
@@ -390,14 +409,14 @@ impl CLDLProof {
     }
 
     /// Compute the Fiat-Shamir challenge for the proof.
-    fn challenge(public_key: &BinaryQF, t: &TTriplets, ciphertext: &Ciphertext, X: &GE) -> BigInt {
+    fn challenge(public_key: &PK, t: &TTriplets, ciphertext: &Ciphertext, X: &GE) -> BigInt {
         use crate::curv::arithmetic::traits::Converter;
         let hash256 = HSha256::create_hash(&[
             // hash the statement i.e. the discrete log of Q is encrypted in (c1,c2) under encryption key h.
             &X.bytes_compressed_to_big_int(),
             &BigInt::from(ciphertext.c1.to_bytes().as_ref()),
             &BigInt::from(ciphertext.c2.to_bytes().as_ref()),
-            &BigInt::from(public_key.to_bytes().as_ref()),
+            &BigInt::from(public_key.0.to_bytes().as_ref()),
             // hash Sigma protocol commitments
             &BigInt::from(t.t1.to_bytes().as_ref()),
             &BigInt::from(t.t2.to_bytes().as_ref()),
@@ -411,7 +430,7 @@ impl CLDLProof {
     pub fn verify(
         &self,
         group: &CLGroup,
-        public_key: &BinaryQF,
+        public_key: &PK,
         ciphertext: &Ciphertext,
         X: &GE,
     ) -> Result<(), ProofError> {
@@ -450,7 +469,7 @@ impl CLDLProof {
             flag = false;
         }
 
-        let pku1 = public_key.exp(&self.u1u2.u1);
+        let pku1 = public_key.0.exp(&self.u1u2.u1);
         let fu2 = BinaryQF::expo_f(&FE::q(), &group.delta_q, &self.u1u2.u2);
         let c2k = ciphertext.c2.exp(&k);
         let t2c2k = self.t_triple.t2.compose(&c2k).reduce();
@@ -465,9 +484,9 @@ impl CLDLProof {
     }
 }
 
-pub fn decrypt(group: &CLGroup, secret_key: &BigInt, c: &Ciphertext) -> FE {
+pub fn decrypt(group: &CLGroup, secret_key: &SK, c: &Ciphertext) -> FE {
     unsafe { pari_init(10000000, 2) };
-    let c1_x = c.c1.exp(&secret_key);
+    let c1_x = c.c1.exp(&secret_key.0);
     let c1_x_inv = c1_x.inverse();
     let tmp = c.c2.compose(&c1_x_inv).reduce();
     let plaintext = BinaryQF::discrete_log_f(&FE::q(), &group.delta_q, &tmp);
@@ -503,7 +522,7 @@ mod test {
     #[test]
     fn encrypt_and_decrypt() {
         let group = CLGroup::new_from_setup(&1600, &str::parse(seed).unwrap());
-        let (secret_key, public_key) = group.sample_gq_pair();
+        let (secret_key, public_key) = group.keygen();
         let message = FE::new_random();
         let (ciphertext, _) = encrypt(&group, &public_key, &message);
         let plaintext = decrypt(&group, &secret_key, &ciphertext);
@@ -522,7 +541,7 @@ mod test {
     #[test]
     fn verifiably_encrypt_verify_and_decrypt() {
         let group = CLGroup::new_from_setup(&1600, &str::parse(seed).unwrap());
-        let (secret_key, public_key) = group.sample_gq_pair();
+        let (secret_key, public_key) = group.keygen();
         let dl_keypair = {
             let sk = FE::new_random();
             let pk = GE::generator() * sk;
@@ -557,7 +576,7 @@ mod test {
     #[test]
     fn multiply_ciphertext_by_scalar() {
         let group = CLGroup::new_from_setup(&1600, &str::parse(seed).unwrap());
-        let (secret_key, public_key) = group.sample_gq_pair();
+        let (secret_key, public_key) = group.keygen();
         let scalar = FE::new_random();
 
         let (ciphertext, _) = encrypt(&group, &public_key, &scalar);
@@ -573,7 +592,7 @@ mod test {
     #[test]
     fn add_ciphertexts() {
         let group = CLGroup::new_from_setup(&1600, &str::parse(seed).unwrap());
-        let (secret_key, public_key) = group.sample_gq_pair();
+        let (secret_key, public_key) = group.keygen();
         let scalar1 = FE::new_random();
         let scalar2 = FE::new_random();
 
