@@ -224,8 +224,9 @@ impl CLGroup {
         PK(group_element)
     }
 }
-
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct PK(BinaryQF);
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct SK(BigInt);
 
 impl From<SK> for BigInt {

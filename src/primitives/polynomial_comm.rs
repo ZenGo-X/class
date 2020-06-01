@@ -541,7 +541,7 @@ mod tests {
     #[test]
     fn test_commit_open() {
         // sample coef vector
-        for _ in 1..15 {
+        for _ in 1..2 {
             let mut coef_vec: Vec<FE> = Vec::new();
             let mut i = 0;
             while i < 10 {
