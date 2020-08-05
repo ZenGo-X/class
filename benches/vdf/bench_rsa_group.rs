@@ -12,7 +12,7 @@ fn verify(modulus: &Integer, seed: &Integer, t: u64, y: &Integer, pi: &Integer) 
     // g <- H_G(x)
     let g = h_g(&modulus, &seed);
 
-    let l = hash_to_prime(&modulus, &g, &y);
+    let l = hash_to_prime(&modulus, &[&g, &y]);
 
     let r = Integer::from(2).pow_mod(&Integer::from(t), &l).unwrap();
     let pi_l = pi.clone().pow_mod(&l, &modulus).unwrap();
@@ -36,7 +36,7 @@ fn eval(modulus: &Integer, seed: &Integer, t: u64) -> (Integer, Integer) {
         y = y.div_rem_floor(modulus.clone()).1;
     }
 
-    let l = hash_to_prime(&modulus, &g, &y);
+    let l = hash_to_prime(&modulus, &[&g, &y]);
 
     // algo_4 from the paper, long division
     // TODO: consider algo_5 instead
@@ -72,12 +72,12 @@ fn h_g(modulus: &Integer, seed: &Integer) -> Integer {
     Integer::from(result_int.div_rem_floor(modulus.clone()).1)
 }
 
-// TODO: refactor to similar style in https://github.com/poanetwork/vdf/blob/master/vdf/src/proof_wesolowski.rs style
-fn hash_to_prime(modulus: &Integer, x: &Integer, y: &Integer) -> Integer {
-    // hashing
+fn hash_to_prime(modulus: &Integer, inputs: &[&Integer]) -> Integer {
     let mut hasher = Sha256::new();
-    let mut hash_input: String = x.clone().to_string_radix(16);
-    hash_input.push_str(&y.clone().to_string_radix(16));
+    let mut hash_input: String = String::from("");
+    for input in inputs {
+        hash_input.push_str(&input.clone().to_string_radix(16));
+    }
     hasher.update(hash_input.as_bytes());
     let hashed_hex = hasher.finalize();
     let hashed_hex_str = format!("{:#x}", hashed_hex);
@@ -86,9 +86,14 @@ fn hash_to_prime(modulus: &Integer, x: &Integer, y: &Integer) -> Integer {
 }
 
 fn benches_rsa(c: &mut Criterion) {
-    let bench_rsa = |c: &mut Criterion, difficulty: u64, modulus: &Integer, seed: &Integer| {
+    let bench_eval = |c: &mut Criterion, difficulty: u64, modulus: &Integer, seed: &Integer| {
         c.bench_function(&format!("eval with difficulty {}", difficulty), move |b| {
             b.iter(|| eval(&modulus, &seed, difficulty))
+        });
+    };
+    let bench_verify = |c: &mut Criterion, difficulty: u64, modulus: &Integer, seed: &Integer, y: &Integer, pi: &Integer| {
+        c.bench_function(&format!("verify with difficulty {}", difficulty), move |b| {
+            b.iter(|| verify(&modulus, &seed, difficulty, &y, &pi))
         });
     };
 
@@ -98,8 +103,15 @@ fn benches_rsa(c: &mut Criterion) {
     let seed_hash = Integer::from_str_radix(TEST_HASH, 16).unwrap();
     let seed = Integer::from(seed_hash.div_rem_floor(modulus.clone()).1);
 
-    for &i in &[1_000, 2_000, 5_000, 10_000, 100_000, 1_000_000] {
-        bench_rsa(c, i, &modulus, &seed)
+    // for &i in &[1_000, 2_000, 5_000, 10_000, 100_000, 1_000_000] {
+    for &i in &[1] {
+        // precompute for verification
+        let (y, pi) = eval(&modulus, &seed, i);
+        let result = verify(&modulus, &seed, i, &y, &pi);
+        assert!(result);
+
+        bench_eval(c, i, &modulus, &seed);
+        bench_verify(c, i, &modulus, &seed, &y, &pi)
     }
 }
 
