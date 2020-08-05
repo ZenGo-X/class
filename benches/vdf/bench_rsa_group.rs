@@ -74,11 +74,10 @@ fn h_g(modulus: &Integer, seed: &Integer) -> Integer {
 
 fn hash_to_prime(modulus: &Integer, inputs: &[&Integer]) -> Integer {
     let mut hasher = Sha256::new();
-    let mut hash_input: String = String::from("");
     for input in inputs {
-        hash_input.push_str(&input.clone().to_string_radix(16));
+        hasher.update(input.to_string_radix(16).as_bytes());
+        hasher.update("\n".as_bytes());
     }
-    hasher.update(hash_input.as_bytes());
     let hashed_hex = hasher.finalize();
     let hashed_hex_str = format!("{:#x}", hashed_hex);
     let hashed_int = Integer::from_str_radix(&hashed_hex_str, 16).unwrap();
