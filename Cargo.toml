@@ -20,4 +20,15 @@ git = "https://github.com/KZen-networks/curv"
 tag = "v0.2.6"
 features =  ["ec_secp256k1"]
 
+[dev-dependencies]
+criterion = ">=0.2"
 
+[[bench]]
+name = "bench-vdf-rsa"
+path = "benches/vdf/bench_rsa_group.rs"
+harness = false
+
+[[bench]]
+name = "bench-vdf-class"
+path = "benches/vdf/bench_class_group.rs"
+harness = false
