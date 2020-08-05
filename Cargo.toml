@@ -27,10 +27,10 @@ sha2 = "0.9.1"
 
 [[bench]]
 name = "bench-vdf-rsa"
-path = "benches/vdf/bench_rsa_group.rs"
+path = "benches/vdf/rsa_group.rs"
 harness = false
 
 [[bench]]
 name = "bench-vdf-class"
-path = "benches/vdf/bench_class_group.rs"
+path = "benches/vdf/class_group.rs"
 harness = false
