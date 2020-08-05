@@ -91,10 +91,16 @@ fn benches_rsa(c: &mut Criterion) {
             b.iter(|| eval(&modulus, &seed, difficulty))
         });
     };
-    let bench_verify = |c: &mut Criterion, difficulty: u64, modulus: &Integer, seed: &Integer, y: &Integer, pi: &Integer| {
-        c.bench_function(&format!("verify with difficulty {}", difficulty), move |b| {
-            b.iter(|| verify(&modulus, &seed, difficulty, &y, &pi))
-        });
+    let bench_verify = |c: &mut Criterion,
+                        difficulty: u64,
+                        modulus: &Integer,
+                        seed: &Integer,
+                        y: &Integer,
+                        pi: &Integer| {
+        c.bench_function(
+            &format!("verify with difficulty {}", difficulty),
+            move |b| b.iter(|| verify(&modulus, &seed, difficulty, &y, &pi)),
+        );
     };
 
     const MODULUS: &str = "6864797660130609714981900799081393217269435300143305409394463459185543183397656052122559640661454554977296311391480858037121987999716643812574028291115057151";
@@ -103,8 +109,7 @@ fn benches_rsa(c: &mut Criterion) {
     let seed_hash = Integer::from_str_radix(TEST_HASH, 16).unwrap();
     let seed = Integer::from(seed_hash.div_rem_floor(modulus.clone()).1);
 
-    // for &i in &[1_000, 2_000, 5_000, 10_000, 100_000, 1_000_000] {
-    for &i in &[1] {
+    for &i in &[1_000, 2_000, 5_000, 10_000, 100_000, 1_000_000] {
         // precompute for verification
         let (y, pi) = eval(&modulus, &seed, i);
         let result = verify(&modulus, &seed, i, &y, &pi);
