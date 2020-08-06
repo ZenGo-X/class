@@ -63,13 +63,17 @@ fn eval(modulus: &Integer, seed: &Integer, t: u64) -> (Integer, Integer) {
 fn h_g(modulus: &Integer, seed: &Integer) -> Integer {
     let modulus = modulus.clone();
     let mut hasher = Sha256::new();
-    let mut hash_input = String::from("residue");
-    hash_input.push_str(&seed.clone().to_string_radix(16));
-    hasher.update(hash_input.as_bytes());
+    hasher.update("residue".as_bytes());
+    hasher.update(&seed.clone().to_string_radix(16).as_bytes());
     let result_hex = hasher.finalize();
     let result_hex_str = format!("{:#x}", result_hex);
     let result_int = Integer::from_str_radix(&result_hex_str, 16).unwrap();
-    Integer::from(result_int.div_rem_floor(modulus.clone()).1)
+
+    // invert to get enough security bits
+    match result_int.invert(&modulus.clone()) {
+        Ok(inverse) => inverse,
+        Err(unchanged) => unchanged,
+    }
 }
 
 fn hash_to_prime(modulus: &Integer, inputs: &[&Integer]) -> Integer {
@@ -102,8 +106,10 @@ fn benches_rsa(c: &mut Criterion) {
         );
     };
 
+    // (M13 prime)
     const MODULUS: &str = "6864797660130609714981900799081393217269435300143305409394463459185543183397656052122559640661454554977296311391480858037121987999716643812574028291115057151"; // (M13 prime)
     let modulus = Integer::from_str_radix(MODULUS, 10).unwrap();
+    
     const TEST_HASH: &str = "1eeb30c7163271850b6d018e8282093ac6755a771da6267edf6c9b4fce9242ba";
     let seed_hash = Integer::from_str_radix(TEST_HASH, 16).unwrap();
     let seed = Integer::from(seed_hash.div_rem_floor(modulus.clone()).1);
