@@ -109,7 +109,7 @@ fn benches_rsa(c: &mut Criterion) {
     // (M13 prime)
     const MODULUS: &str = "6864797660130609714981900799081393217269435300143305409394463459185543183397656052122559640661454554977296311391480858037121987999716643812574028291115057151"; // (M13 prime)
     let modulus = Integer::from_str_radix(MODULUS, 10).unwrap();
-    
+
     const TEST_HASH: &str = "1eeb30c7163271850b6d018e8282093ac6755a771da6267edf6c9b4fce9242ba";
     let seed_hash = Integer::from_str_radix(TEST_HASH, 16).unwrap();
     let seed = Integer::from(seed_hash.div_rem_floor(modulus.clone()).1);
