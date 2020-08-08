@@ -85,7 +85,14 @@ fn hash_to_prime(modulus: &Integer, inputs: &[&Integer]) -> Integer {
     let hashed_hex = hasher.finalize();
     let hashed_hex_str = format!("{:#x}", hashed_hex);
     let hashed_int = Integer::from_str_radix(&hashed_hex_str, 16).unwrap();
-    Integer::from(hashed_int.next_prime().div_rem_floor(modulus.clone()).1)
+
+    // invert to get enough security bits
+    let inverse = match hashed_int.invert(&modulus.clone()) {
+        Ok(inverse) => inverse,
+        Err(unchanged) => unchanged,
+    };
+
+    Integer::from(inverse.next_prime().div_rem_floor(modulus.clone()).1)
 }
 
 fn benches_rsa(c: &mut Criterion) {
