@@ -155,12 +155,12 @@ mod tests {
         let sec = 1600;
         let t = BigInt::sample(10); // TODO: make sure T is not too big to avoid memory overflow
         let x = BigInt::from(10);
-        let disc = VDF::setup(sec, &x);
+        let a_b_delta = VDF::setup(sec, &x);
 
         let mut i = 0;
         while i < 10 {
             let start = Instant::now();
-            let vdf_out_proof = VDF::eval(&disc, &x, &t);
+            let vdf_out_proof = VDF::eval(&a_b_delta, &x, &t);
             let duration1 = start.elapsed();
             let start = Instant::now();
             let res = vdf_out_proof.verify();
@@ -182,9 +182,9 @@ mod tests {
         let sec = 1600;
         let t = BigInt::sample(10);
         let x = BigInt::from(10);
-        let disc = VDF::setup(sec, &x);
+        let a_b_delta = VDF::setup(sec, &x);
 
-        let mut vdf_out_proof = VDF::eval(&disc, &x, &t);
+        let mut vdf_out_proof = VDF::eval(&a_b_delta, &x, &t);
         println!("before: {:?}", vdf_out_proof.y.clone());
 
         vdf_out_proof.y = vdf_out_proof.y.exp(&BigInt::from(3));
