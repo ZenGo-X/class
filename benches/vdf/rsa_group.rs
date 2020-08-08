@@ -6,11 +6,8 @@ use rug::Integer;
 use sha2::{Digest, Sha256};
 
 /// algo_2 from the paper
-fn verify(modulus: &Integer, seed: &Integer, t: u64, y: &Integer, pi: &Integer) -> bool {
+fn verify(modulus: &Integer, g: &Integer, t: u64, y: &Integer, pi: &Integer) -> bool {
     let modulus = modulus.clone();
-
-    // g <- H_G(x)
-    let g = h_g(&modulus, &seed);
 
     let l = hash_to_prime(&modulus, &[&g, &y]);
 
@@ -23,11 +20,8 @@ fn verify(modulus: &Integer, seed: &Integer, t: u64, y: &Integer, pi: &Integer) 
 }
 
 /// algo_3 from the paper
-fn eval(modulus: &Integer, seed: &Integer, t: u64) -> (Integer, Integer) {
+fn eval(modulus: &Integer, g: &Integer, t: u64) -> (Integer, Integer) {
     let modulus = modulus.clone();
-
-    // g <- H_G(x)
-    let g = h_g(&modulus, &seed);
 
     // y <- (g^2)^t
     let mut y = g.clone();
@@ -114,10 +108,13 @@ fn benches_rsa(c: &mut Criterion) {
     let seed_hash = Integer::from_str_radix(TEST_HASH, 16).unwrap();
     let seed = Integer::from(seed_hash.div_rem_floor(modulus.clone()).1);
 
+    // g <- H_G(x)
+    let g = h_g(&modulus, &seed);
+
     for &i in &[1_000, 2_000, 5_000, 10_000, 100_000, 1_000_000] {
         // precompute for verification
-        let (y, pi) = eval(&modulus, &seed, i);
-        let result = verify(&modulus, &seed, i, &y, &pi);
+        let (y, pi) = eval(&modulus, &g, i);
+        let result = verify(&modulus, &g, i, &y, &pi);
         assert!(result);
 
         bench_eval(c, i, &modulus, &seed);
