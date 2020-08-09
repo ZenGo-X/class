@@ -44,12 +44,11 @@ fn eval(modulus: &Integer, g: &Integer, t: u64) -> (Integer, Integer) {
         r2 = r.clone() * two.clone();
         b = r2.clone().div_rem_floor(l.clone()).0;
         r = r2.clone().div_rem_floor(l.clone()).1;
-        let pi_2 = pi.clone().pow_mod(&Integer::from(2), &modulus).unwrap();
+        let pi_2 = pi.clone().pow_mod(&two, &modulus).unwrap();
         let g_b = g.clone().pow_mod(&b, &modulus).unwrap();
         pi = pi_2 * g_b;
-        pi = Integer::from(pi.div_rem_floor(modulus.clone()).1)
     }
-
+    pi = Integer::from(pi.div_rem_floor(modulus.clone()).1);
     (y, pi)
 }
 
