@@ -55,7 +55,7 @@ Security assumptions can differ between primitives and are discussed in the rele
 
 Contact
 -------------------
-Feel free to [reach out](mailto:github@kzencorp.com) or join the KZen Research [Telegram]( https://t.me/kzen_research) for discussions on code and research.
+Feel free to [reach out](mailto:github@kzencorp.com) or join ZenGo X [Telegram](https://t.me/zengo_x) for discussions on code and research.
 
 Hall of Fame
 -------------------
