@@ -25,7 +25,8 @@ fn benches_class(c: &mut Criterion) {
     let seed = BigInt::from_str_radix(TEST_HASH, 16).unwrap();
     let a_b_delta = VDF::setup(sec, &seed);
 
-    for &i in &[1_000, 2_000, 5_000, 10_000, 100_000, 1_000_000] {
+    // for &i in &[1_000, 2_000, 5_000, 10_000, 100_000, 1_000_000] {
+    for &i in &[1_0] {
         // precompute for verification
         let t = BigInt::from(i);
         let vdf_out_proof = VDF::eval(&a_b_delta, &seed, &t);
