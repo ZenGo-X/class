@@ -17,10 +17,11 @@ pub struct VDF {
     pub y: BinaryQF,
     pub pi: BinaryQF,
     pub t: BigInt,
+    a_b_delta: ABDeltaTriple,
 }
 
 impl VDF {
-    pub fn setup(security_param: usize) -> BigInt {
+    pub fn setup(security_param: usize, x: &BigInt) -> ABDeltaTriple {
         let mut disc: BigInt;
 
         disc = -BigInt::sample(security_param.clone()); // TODO: double check 1600 bits determinant should provide 120 bit security
@@ -29,22 +30,24 @@ impl VDF {
             disc = -BigInt::sample(security_param);
         }
 
-        disc
-    }
-
-    //algorithm 3 from https://eprint.iacr.org/2018/623.pdf
-    pub fn eval(disc: &BigInt, x: &BigInt, t: &BigInt) -> Self {
         unsafe {
             pari_init(1000000000, 2);
         }
         //first line: g <- H_G(x). We will use x to seed a prng and use the prng to choose random
         // a and b.
-        let (a, b) = h_g(disc, x);
-        let a_b_delta = ABDeltaTriple {
+        let (a, b) = h_g(&disc, x);
+        ABDeltaTriple {
             a,
             b,
             delta: disc.clone(),
-        };
+        }
+    }
+
+    //algorithm 3 from https://eprint.iacr.org/2018/623.pdf
+    pub fn eval(a_b_delta: &ABDeltaTriple, x: &BigInt, t: &BigInt) -> Self {
+        unsafe {
+            pari_init(1000000000, 2);
+        }
 
         let g = BinaryQF::binary_quadratic_form_disc(&a_b_delta).reduce();
         let mut y = g.clone();
@@ -55,7 +58,7 @@ impl VDF {
             i = i + BigInt::one();
         }
         let l = hash_to_prime(&g, &y);
-        println!("y: {:?}", y.clone());
+        // println!("y: {:?}", y.clone());
 
         //algorithm 4 from https://eprint.iacr.org/2018/623.pdf
         // long division TODO: consider alg 5 instead
@@ -64,7 +67,7 @@ impl VDF {
         let mut r = BigInt::one();
         let mut r2: BigInt;
         let two = BigInt::from(2);
-        let mut pi = BinaryQF::binary_quadratic_form_principal(&disc);
+        let mut pi = BinaryQF::binary_quadratic_form_principal(&a_b_delta.delta);
 
         while &i < t {
             r2 = &r * &two;
@@ -79,27 +82,23 @@ impl VDF {
             y,
             pi,
             t: t.clone(),
+            a_b_delta: a_b_delta.clone(),
         };
         vdf
     }
 
     //algorithm 2 from https://eprint.iacr.org/2018/623.pdf
-    pub fn verify(&self, disc: &BigInt) -> Result<(), ErrorReason> {
+    pub fn verify(&self) -> Result<(), ErrorReason> {
         unsafe {
             pari_init(1000000000, 2);
         }
-        let (a, b) = h_g(disc, &self.x);
-        let a_b_delta = ABDeltaTriple {
-            a,
-            b,
-            delta: disc.clone(),
-        };
-        let g = BinaryQF::binary_quadratic_form_disc(&a_b_delta).reduce();
+
+        let g = BinaryQF::binary_quadratic_form_disc(&self.a_b_delta).reduce();
 
         // test that g,y are elements of the class : https://eprint.iacr.org/2018/712.pdf 2.1 line 0
-        if &g.discriminant() != disc
-            || &self.y.discriminant() != disc
-            || &self.pi.discriminant() != disc
+        if &g.discriminant() != &self.a_b_delta.delta
+            || &self.y.discriminant() != &self.a_b_delta.delta
+            || &self.pi.discriminant() != &self.a_b_delta.delta
         {
             return Err(ErrorReason::VDFVerifyError);
         }
@@ -154,18 +153,17 @@ mod tests {
     #[test]
     fn test_vdf_valid_proof() {
         let sec = 1600;
-        let disc = VDF::setup(sec);
         let t = BigInt::sample(10); // TODO: make sure T is not too big to avoid memory overflow
-
         let x = BigInt::from(10);
+        let a_b_delta = VDF::setup(sec, &x);
 
         let mut i = 0;
         while i < 10 {
             let start = Instant::now();
-            let vdf_out_proof = VDF::eval(&disc, &x, &t);
+            let vdf_out_proof = VDF::eval(&a_b_delta, &x, &t);
             let duration1 = start.elapsed();
             let start = Instant::now();
-            let res = vdf_out_proof.verify(&disc);
+            let res = vdf_out_proof.verify();
             let duration2 = start.elapsed();
             i = i + 1;
 
@@ -182,16 +180,16 @@ mod tests {
     #[should_panic]
     fn test_vdf_wrong_proof() {
         let sec = 1600;
-        let disc = VDF::setup(sec);
         let t = BigInt::sample(10);
         let x = BigInt::from(10);
+        let a_b_delta = VDF::setup(sec, &x);
 
-        let mut vdf_out_proof = VDF::eval(&disc, &x, &t);
+        let mut vdf_out_proof = VDF::eval(&a_b_delta, &x, &t);
         println!("before: {:?}", vdf_out_proof.y.clone());
 
         vdf_out_proof.y = vdf_out_proof.y.exp(&BigInt::from(3));
         println!("after: {:?}", vdf_out_proof.y.clone());
-        let res = vdf_out_proof.verify(&disc);
+        let res = vdf_out_proof.verify();
 
         assert!(res.is_ok());
     }
