@@ -58,7 +58,6 @@ impl VDF {
             i = i + BigInt::one();
         }
         let l = hash_to_prime(&g, &y);
-        // println!("y: {:?}", y.clone());
 
         //algorithm 4 from https://eprint.iacr.org/2018/623.pdf
         // long division TODO: consider alg 5 instead
