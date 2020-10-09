@@ -1,6 +1,6 @@
 [package]
 name = "class_group"
-version = "0.4.17"
+version = "0.4.18"
 authors = ["omershlo <omer.shlomovits@gmail.com>"]
 edition = "2018"
 links = "libpari"
@@ -20,4 +20,12 @@ git = "https://github.com/KZen-networks/curv"
 tag = "v0.2.6"
 features =  ["ec_secp256k1"]
 
+[dev-dependencies]
+criterion = ">=0.2"
+rug = "1.2.1"
+sha2 = "0.9.1"
 
+[[bench]]
+name = "bench-vdf-class"
+path = "benches/vdf/class_group.rs"
+harness = false
