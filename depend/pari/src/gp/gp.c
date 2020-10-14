@@ -552,7 +552,9 @@ main(int argc, char **argv)
   cyg_environment(argc, argv);
 #endif
   stdin_isatty = pari_stdin_isatty();
-  pari_init_defaults();
+ /* pari_init_defaults();*/
+ /* pari_init(8000000, 500000);*/
+  /* paristack_setsize(8000000, 20000000);*/
   pari_library_path = DL_DFLT_NAME;
   pari_stack_init(&s_A,sizeof(*A),(void**)&A);
   pari_init_opts(1000000 * sizeof(long), 0, INIT_SIGm | INIT_noPRIMEm | INIT_noIMTm);

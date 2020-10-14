@@ -9,6 +9,11 @@ use std::process::Command;
 fn main() {
     let pari_dir = "./depend/pari";
     let pari_install = format!("{}/pari", env::var("OUT_DIR").unwrap());
+    // cd depend/pari
+    // ./Configure --prefix=/path/to/out
+   // ./depend/pari/Makefile
+   //     install:
+    //        copy everything to /path/to/out
     {
         let path = fs::canonicalize(format!("{}/Configure", pari_dir)).unwrap();
         let output = Command::new(path.to_str().unwrap())

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="CargoProjects">
+    <cargoProject FILE="$PROJECT_DIR$/Cargo.toml" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="8d589490-831d-47e9-b2ea-a33eb034763d" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/example.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.rs" beforeDir="false" afterPath="$PROJECT_DIR$/build.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/depend/pari/src/gp/gp.c" beforeDir="false" afterPath="$PROJECT_DIR$/depend/pari/src/gp/gp.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib.rs" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Rust File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="KonanWorkspace">
+    <executables />
+  </component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="nggsll7e" />
+  </component>
+  <component name="ProjectId" id="1hH2mAMBWd1dULeWLhuyOALGBlF" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="org.rust.cargo.project.model.PROJECT_DISCOVERY" value="true" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+    <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/src/lib.rs" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Cargo Command.run">
+    <configuration name="run" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="channel" value="DEFAULT" />
+      <option name="command" value="run" />
+      <option name="allFeatures" value="false" />
+      <option name="emulateTerminal" value="false" />
+      <option name="backtrace" value="SHORT" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="test" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+      <option name="channel" value="DEFAULT" />
+      <option name="command" value="test" />
+      <option name="allFeatures" value="false" />
+      <option name="emulateTerminal" value="false" />
+      <option name="backtrace" value="SHORT" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Cargo Command.run" />
+      <item itemvalue="Cargo Command.test" />
+    </list>
+  </component>
+  <component name="RustProjectSettings">
+    <option name="toolchainHomeDirectory" value="$USER_HOME$/.cargo/bin" />
+    <option name="version" value="2" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8d589490-831d-47e9-b2ea-a33eb034763d" name="Default Changelist" comment="" />
+      <created>1599653855418</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1599653855418</updated>
+      <workItem from="1602573953204" duration="902000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="183" y="92" width="1071" height="700" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1602573154792">
+      <screen x="0" y="23" width="1440" height="823" />
+    </state>
+    <state x="183" y="76" width="1071" height="700" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1440.900@0.0.1440.900" timestamp="1602430162823" />
+    <state x="183" y="92" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1440.823@0.23.1440.823" timestamp="1602573154792" />
+    <state x="183" y="93" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1440.828@0.23.1440.828" timestamp="1601920401939" />
+    <state x="448" y="240" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1600162839699">
+      <screen x="0" y="23" width="1440" height="821" />
+    </state>
+    <state x="448" y="240" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1440.821@0.23.1440.821" timestamp="1600162839699" />
+    <state x="119" y="143" width="1200" height="577" key="DiffContextDialog" timestamp="1600166144760">
+      <screen x="0" y="23" width="1440" height="821" />
+    </state>
+    <state x="119" y="143" width="1200" height="577" key="DiffContextDialog/0.23.1440.821@0.23.1440.821" timestamp="1600166144760" />
+    <state width="1398" height="132" key="GridCell.Tab.0.bottom" timestamp="1602663662094">
+      <screen x="0" y="23" width="1440" height="827" />
+    </state>
+    <state width="1398" height="304" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1602574121762" />
+    <state width="1398" height="198" key="GridCell.Tab.0.bottom/0.23.1440.821@0.23.1440.821" timestamp="1602423923097" />
+    <state width="1398" height="322" key="GridCell.Tab.0.bottom/0.23.1440.823@0.23.1440.823" timestamp="1602573158764" />
+    <state width="1398" height="132" key="GridCell.Tab.0.bottom/0.23.1440.827@0.23.1440.827" timestamp="1602663662094" />
+    <state width="1398" height="132" key="GridCell.Tab.0.center" timestamp="1602663662092">
+      <screen x="0" y="23" width="1440" height="827" />
+    </state>
+    <state width="1398" height="304" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1602574121760" />
+    <state width="1398" height="198" key="GridCell.Tab.0.center/0.23.1440.821@0.23.1440.821" timestamp="1602423923096" />
+    <state width="1398" height="322" key="GridCell.Tab.0.center/0.23.1440.823@0.23.1440.823" timestamp="1602573158757" />
+    <state width="1398" height="132" key="GridCell.Tab.0.center/0.23.1440.827@0.23.1440.827" timestamp="1602663662092" />
+    <state width="1398" height="132" key="GridCell.Tab.0.left" timestamp="1602663662091">
+      <screen x="0" y="23" width="1440" height="827" />
+    </state>
+    <state width="1398" height="304" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1602574121759" />
+    <state width="1398" height="198" key="GridCell.Tab.0.left/0.23.1440.821@0.23.1440.821" timestamp="1602423923095" />
+    <state width="1398" height="322" key="GridCell.Tab.0.left/0.23.1440.823@0.23.1440.823" timestamp="1602573158754" />
+    <state width="1398" height="132" key="GridCell.Tab.0.left/0.23.1440.827@0.23.1440.827" timestamp="1602663662091" />
+    <state width="1398" height="132" key="GridCell.Tab.0.right" timestamp="1602663662093">
+      <screen x="0" y="23" width="1440" height="827" />
+    </state>
+    <state width="1398" height="304" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1602574121761" />
+    <state width="1398" height="198" key="GridCell.Tab.0.right/0.23.1440.821@0.23.1440.821" timestamp="1602423923096" />
+    <state width="1398" height="322" key="GridCell.Tab.0.right/0.23.1440.823@0.23.1440.823" timestamp="1602573158760" />
+    <state width="1398" height="132" key="GridCell.Tab.0.right/0.23.1440.827@0.23.1440.827" timestamp="1602663662093" />
+    <state width="1398" height="304" key="GridCell.Tab.1.bottom" timestamp="1602663656082">
+      <screen x="0" y="23" width="1440" height="827" />
+    </state>
+    <state width="1398" height="304" key="GridCell.Tab.1.bottom/0.23.1440.827@0.23.1440.827" timestamp="1602663656082" />
+    <state width="1398" height="304" key="GridCell.Tab.1.center" timestamp="1602663656081">
+      <screen x="0" y="23" width="1440" height="827" />
+    </state>
+    <state width="1398" height="304" key="GridCell.Tab.1.center/0.23.1440.827@0.23.1440.827" timestamp="1602663656081" />
+    <state width="1398" height="304" key="GridCell.Tab.1.left" timestamp="1602663656080">
+      <screen x="0" y="23" width="1440" height="827" />
+    </state>
+    <state width="1398" height="304" key="GridCell.Tab.1.left/0.23.1440.827@0.23.1440.827" timestamp="1602663656080" />
+    <state width="1398" height="304" key="GridCell.Tab.1.right" timestamp="1602663656081">
+      <screen x="0" y="23" width="1440" height="827" />
+    </state>
+    <state width="1398" height="304" key="GridCell.Tab.1.right/0.23.1440.827@0.23.1440.827" timestamp="1602663656081" />
+    <state x="229" y="23" width="1024" height="823" key="SettingsEditor" timestamp="1602573571778">
+      <screen x="0" y="23" width="1440" height="823" />
+    </state>
+    <state x="229" y="89" key="SettingsEditor/0.0.1440.900@0.0.1440.900" timestamp="1602428281069" />
+    <state x="229" y="23" width="1024" height="823" key="SettingsEditor/0.23.1440.823@0.23.1440.823" timestamp="1602573571778" />
+    <state x="521" y="371" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1602425095115">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="521" y="371" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1440.900@0.0.1440.900" timestamp="1602425095115" />
+    <state x="114" y="72" key="new project wizard" timestamp="1602426282813">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="114" y="72" key="new project wizard/0.0.1440.900@0.0.1440.900" timestamp="1602426282813" />
+  </component>
+</project>
