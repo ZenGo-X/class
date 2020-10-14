@@ -73,14 +73,12 @@ pub fn discriminant(&self) -> BigInt {
         // for negative delta we compute 4ac - b^2
         let abs_delta = BigInt::from(4) * &self.a * &self.c - &self.b * &self.b;
         assert!(abs_delta > BigInt::zero());
-        //f::dump_stdout();
         -abs_delta
     }
 
 
 pub fn discriminant_sqrt(&self) -> BigInt {
         let disc = self.discriminant();
-        //f::dump_stdout();
         disc.sqrt()
     }
 
@@ -105,7 +103,6 @@ pub fn normalize(&self) -> Self {
             b: &self.b + BigInt::from(2) * &s_f * &self.a,
             c: &self.a * &s_f.pow(2) + &self.b * &s_f + &self.c,
         };
-        //f::dump_stdout();
         binary_qf
     }
 
@@ -266,7 +263,6 @@ pub fn qf_to_pari_qf(&self) -> GEN {
         let c = bn_to_gen(&self.c);
         let qf_pari = unsafe { qfi(a, b, c) };
         //  GEN qfi(GEN a, GEN b, GEN c) (assumes b^2 − 4ac < 0)
-        //f::dump_stdout();
         qf_pari
     }
 
@@ -280,7 +276,6 @@ pub fn qf_to_pari_qf(&self) -> GEN {
         let a: BigInt = str::parse(&a_string).unwrap();
         let b: BigInt = str::parse(&b_string).unwrap();
         let c: BigInt = str::parse(&c_string).unwrap();
-        //f::dump_stdout();
         BinaryQF { a, b, c }
     }
 
@@ -405,7 +400,7 @@ pub fn bench_exp_only(bits :usize){
         b: BigInt::from(1),
         delta: det,
     };
-    let x= BigInt::from(bits);
+    let x: BigInt = BigInt::sample(bits as usize);
     let group = BinaryQF::binary_quadratic_form_disc(&a_b_delta);
     let g = group.exp(&x).reduce();
 }
