@@ -19,17 +19,6 @@ use std::ffi::CStr;
 use std::ops::Neg;
 use std::str;
 use crate::curv::arithmetic::traits::Samplable;
-
-/*
-#[cfg(feature = "flame_it")]
-extern crate flame;
-#[cfg(feature = "flame_it")]
-#[macro_use] extern crate flamer;
-
-// as well as the following instead of `//#[flame]`
-#[cfg_attr(feature = "flame_it", flame)]
-// The item to apply `flame` to goes here.
-*/
 use std::fs::File;
 
 use flame as f;
@@ -53,7 +42,7 @@ pub struct ABDeltaTriple {
 }
 
 impl BinaryQF {
-    //#[flame]
+
     pub fn binary_quadratic_form_disc(abdelta_triple: &ABDeltaTriple) -> Self {
         let a = abdelta_triple.a.clone();
         let b = abdelta_triple.b.clone();
@@ -62,12 +51,12 @@ impl BinaryQF {
         assert_eq!(delta.mod_floor(&BigInt::from(4)), BigInt::one());
         assert!(delta < BigInt::zero()); // in general delta can be positive but we don't deal with that case
         let c = (&b.pow(2) - &delta) / (BigInt::from(4) * &a);
-        //f::dump_stdout();
+        
         BinaryQF { a, b, c }
     }
 
-    //#[flame]
-    pub fn binary_quadratic_form_principal(delta: &BigInt) -> Self {
+
+pub fn binary_quadratic_form_principal(delta: &BigInt) -> Self {
         let one = BigInt::one();
         assert_eq!(delta.mod_floor(&BigInt::from(4)), BigInt::one());
         assert!(delta < &BigInt::zero()); // in general delta can be positive but we don't deal with that case
@@ -76,12 +65,11 @@ impl BinaryQF {
             b: one,
             delta: delta.clone(),
         };
-        //f::dump_stdout();
         BinaryQF::binary_quadratic_form_disc(&a_b_delta)
     }
 
-    //#[flame]
-    pub fn discriminant(&self) -> BigInt {
+
+pub fn discriminant(&self) -> BigInt {
         // for negative delta we compute 4ac - b^2
         let abs_delta = BigInt::from(4) * &self.a * &self.c - &self.b * &self.b;
         assert!(abs_delta > BigInt::zero());
@@ -89,16 +77,16 @@ impl BinaryQF {
         -abs_delta
     }
 
-    //#[flame]
-    pub fn discriminant_sqrt(&self) -> BigInt {
+
+pub fn discriminant_sqrt(&self) -> BigInt {
         let disc = self.discriminant();
         //f::dump_stdout();
         disc.sqrt()
     }
 
 
-    //#[flame]
-    pub fn is_reduced(&self) -> bool {
+
+pub fn is_reduced(&self) -> bool {
         if self.is_normal() && self.a <= self.c && !(self.a == self.c && self.b < BigInt::zero()) {
             return true;
         } else {
@@ -107,8 +95,8 @@ impl BinaryQF {
     }
 
 
-    //#[flame]
-    pub fn normalize(&self) -> Self {
+
+pub fn normalize(&self) -> Self {
         // assume delta<0 and a>0
         let a_sub_b: BigInt = &self.a - &self.b;
         let s_f = a_sub_b.div_floor(&(BigInt::from(2) * &self.a));
@@ -121,8 +109,8 @@ impl BinaryQF {
         binary_qf
     }
 
-    //#[flame]
-    pub fn is_normal(&self) -> bool {
+
+pub fn is_normal(&self) -> bool {
         if self.b <= self.a && self.b > -self.a.clone() {
             return true;
         } else {
@@ -130,8 +118,8 @@ impl BinaryQF {
         }
     }
 
-    //#[flame]
-    pub fn primeform(quad_disc: &BigInt, q: &BigInt) -> Self {
+
+pub fn primeform(quad_disc: &BigInt, q: &BigInt) -> Self {
         let quad_disc_gen = bn_to_gen(&quad_disc);
 
         let q_gen = bn_to_gen(&q);
@@ -145,8 +133,8 @@ impl BinaryQF {
         bqf_norm
     }
 
-    //#[flame]
-    pub fn compose(&self, qf2: &BinaryQF) -> Self {
+
+pub fn compose(&self, qf2: &BinaryQF) -> Self {
         assert_eq!(self.discriminant(), qf2.discriminant());
         let qf_pari_a = self.qf_to_pari_qf();
 
@@ -156,12 +144,12 @@ impl BinaryQF {
         flame::end("compose");
 
         let qf_c = BinaryQF::pari_qf_to_qf(qf_pari_c);
-        //f::dump_stdout();
+        
         qf_c
     }
 
-    //#[flame]
-    pub fn inverse(&self) -> Self {
+
+pub fn inverse(&self) -> Self {
         BinaryQF {
             a: self.a.clone(),
             b: self.b.clone().neg(),
@@ -169,8 +157,8 @@ impl BinaryQF {
         }
     }
 
-    //#[flame]
-    pub fn rho(&self) -> Self {
+
+pub fn rho(&self) -> Self {
         let qf_new = BinaryQF {
             a: self.c.clone(),
             b: self.b.clone().neg(),
@@ -181,8 +169,8 @@ impl BinaryQF {
         h
     }
 
-    //#[flame]
-    pub fn reduce(&self) -> Self {
+
+pub fn reduce(&self) -> Self {
         let mut h: BinaryQF;
         let mut h_new = self.clone();
         if !self.is_normal() {
@@ -193,12 +181,12 @@ impl BinaryQF {
             let h_new = h.rho();
             h = h_new;
         }
-        //f::dump_stdout();
+        
         h
     }
 
-    //#[flame]
-    pub fn exp(&self, n: &BigInt) -> BinaryQF {
+
+pub fn exp(&self, n: &BigInt) -> BinaryQF {
         //flame::start("preparing_exp");
         let pari_qf = self.qf_to_pari_qf();
         let pari_n = bn_to_gen(n);
@@ -218,8 +206,8 @@ impl BinaryQF {
     }
     // gotoNonMax: outputs: f=phi_q^(-1)(F), a binary quadratic form of disc. delta*conductor^2
     //      f is non normalized
-    //#[flame]
-    pub fn phi_q_to_the_minus_1(&self, conductor: &BigInt) -> BinaryQF {
+
+pub fn phi_q_to_the_minus_1(&self, conductor: &BigInt) -> BinaryQF {
         let two_a = &self.a * BigInt::from(2);
         let b_conductor: BigInt = &self.b * conductor;
         let b_new = b_conductor.mod_floor(&two_a);
@@ -237,8 +225,8 @@ impl BinaryQF {
     }
 
     // compute (p^(2),p,-)^k in class group of disc. delta
-    //#[flame]
-    pub fn expo_f(p: &BigInt, delta: &BigInt, k: &BigInt) -> BinaryQF {
+
+pub fn expo_f(p: &BigInt, delta: &BigInt, k: &BigInt) -> BinaryQF {
         if k == &BigInt::zero() {
             return BinaryQF::binary_quadratic_form_principal(delta);
         }
@@ -257,8 +245,8 @@ impl BinaryQF {
         qf
     }
 
-    //#[flame]
-    pub fn discrete_log_f(p: &BigInt, delta: &BigInt, c: &BinaryQF) -> BigInt {
+
+pub fn discrete_log_f(p: &BigInt, delta: &BigInt, c: &BinaryQF) -> BigInt {
         let principal_qf = BinaryQF::binary_quadratic_form_principal(delta);
         if c == &principal_qf {
             return BigInt::zero();
@@ -271,8 +259,8 @@ impl BinaryQF {
     }
 
     //we construct a pari qf from qf
-    //#[flame]
-    pub fn qf_to_pari_qf(&self) -> GEN {
+
+pub fn qf_to_pari_qf(&self) -> GEN {
         let a = bn_to_gen(&self.a);
         let b = bn_to_gen(&self.b);
         let c = bn_to_gen(&self.c);
@@ -296,8 +284,8 @@ impl BinaryQF {
         BinaryQF { a, b, c }
     }
 
-    //#[flame]
-    pub fn to_bytes(&self) -> Vec<u8> {
+
+pub fn to_bytes(&self) -> Vec<u8> {
         let mut a_vec = BigInt::to_vec(&self.a);
         let b_vec = BigInt::to_vec(&self.b);
         let c_vec = BigInt::to_vec(&self.c);
@@ -364,7 +352,7 @@ pub fn bn_to_gen(bn: &BigInt) -> GEN {
     }
 }
 
-//#[flame]
+
 pub fn pari_qf_comp_to_decimal_string(pari_qf: GEN, index: usize) -> String {
     let comp = unsafe { compo(pari_qf, index as i64) };
 
@@ -518,8 +506,8 @@ mod tests {
     }
 
     #[test]
-    //#[flame]
-    fn test_principal_exp() {
+    //
+fn test_principal_exp() {
         unsafe {
             pari_init(10000000, 2);
         }
@@ -537,41 +525,28 @@ mod tests {
 
     #[test]
     fn test_times(){
-   //     flame::start_guard("time overall");
         let bits:usize  = 2048;
-    //    flame::start("init PARI");
         unsafe {
             pari_init(10000000, 2);
         }
-    //    flame::end("init PARI");
-   //    flame::start("finding valid discriminat");
         let mut det: BigInt;
         det = -BigInt::sample(bits);
         while det.mod_floor(&BigInt::from(4)) != BigInt::one() {
             det = -BigInt::sample(bits);
         }
-    //    flame::end("finding valid discriminat");
-    //    flame::start("create binary QF");
-
         let a_b_delta = ABDeltaTriple {
             a: BigInt::from(2),
             b: BigInt::from(1),
             delta: det,
         };
         let group = BinaryQF::binary_quadratic_form_disc(&a_b_delta);
-   //     flame::end("create binary QF");
         for exp_size in (1000..7000).step_by(1000) {
             let x: BigInt = BigInt::sample(exp_size);
             //let y = flame::span_of("exponentiation", || group.exp(&x).reduce());
             let y = group.exp(&x);
             let z = y.reduce();
         }
-        //    flame::spans();
-        //flame::dump_html(File::create("class_profiling.html").unwrap()).unwrap();
-        //let z = y.compose(&y);
         flame::dump_stdout();
-        //f::dump_stdout();
-     //   println!("{:?}",BigInt::sample(3));
     }
 
 }
