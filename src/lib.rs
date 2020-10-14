@@ -400,21 +400,24 @@ pub fn  bench_compose_exp(bits :usize) {
     //assert_eq!(gg1, gg2);
 }
 
+
 pub fn bench_exp_only(bits :usize){
     unsafe {
         pari_init(10000000, 2);
     }
-    let x: BigInt = BigInt::sample(6000);
+  //  let base: BigInt = BigInt::sample(2048);
+    let base= 2048;
     let mut det: BigInt;
-    det = -BigInt::sample(bits);
+    det = -BigInt::sample(base);
     while det.mod_floor(&BigInt::from(4)) != BigInt::one() {
-        det = -BigInt::sample(bits);
+        det = -BigInt::sample(base);
     }
     let a_b_delta = ABDeltaTriple {
         a: BigInt::from(2),
         b: BigInt::from(1),
         delta: det,
     };
+    let x= BigInt::from(bits);
     let group = BinaryQF::binary_quadratic_form_disc(&a_b_delta);
     let g = group.exp(&x).reduce();
 }
