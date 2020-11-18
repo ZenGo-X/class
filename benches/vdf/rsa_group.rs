@@ -57,13 +57,11 @@ fn h_g(modulus: &Integer, seed: &Integer) -> Integer {
     let modulus = modulus.clone();
     let mut hasher = Sha256::new();
     hasher.update("residue".as_bytes());
-    hasher.update(&seed.clone().to_string_radix(16).as_bytes());
-    let result_hex = hasher.finalize();
-    let result_hex_str = format!("{:#x}", result_hex);
-    let result_int = Integer::from_str_radix(&result_hex_str, 16).unwrap();
+    hasher.update(seed.to_digits::<u8>(Order::Lsf));
+    let hashed = Integer::from_digits(&hasher.finalize(), Order::Lsf);
 
     // inverse, to get enough security bits
-    match result_int.invert(&modulus.clone()) {
+    match hashed.invert(&modulus.clone()) {
         Ok(inverse) => inverse,
         Err(unchanged) => unchanged,
     }
@@ -72,15 +70,13 @@ fn h_g(modulus: &Integer, seed: &Integer) -> Integer {
 fn hash_to_prime(modulus: &Integer, inputs: &[&Integer]) -> Integer {
     let mut hasher = Sha256::new();
     for input in inputs {
-        hasher.update(input.to_string_radix(16).as_bytes());
+        hasher.update(input.to_digits::<u8>(Order::Lsf));
         hasher.update("\n".as_bytes());
     }
-    let hashed_hex = hasher.finalize();
-    let hashed_hex_str = format!("{:#x}", hashed_hex);
-    let hashed_int = Integer::from_str_radix(&hashed_hex_str, 16).unwrap();
+    let hashed = Integer::from_digits(&hasher.finalize(), Order::Lsf);
 
     // inverse, to get enough security bits
-    let inverse = match hashed_int.invert(&modulus.clone()) {
+    let inverse = match hashed.invert(&modulus.clone()) {
         Ok(inverse) => inverse,
         Err(unchanged) => unchanged,
     };
