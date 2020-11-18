@@ -2,7 +2,7 @@
 extern crate criterion;
 
 use criterion::Criterion;
-use rug::Integer;
+use rug::{integer::Order, Integer};
 use sha2::{Digest, Sha256};
 
 /// algo_2 from the paper
@@ -121,7 +121,7 @@ fn benches_rsa(c: &mut Criterion) {
     let g = h_g(&modulus, &seed);
 
     for &i in &[1_000, 2_000, 5_000, 10_000, 100_000, 1_000_000] {
-        // precompute for verification
+        // precompute for benchmarking verification
         let (y, pi) = eval(&modulus, &g, i);
         let result = verify(&modulus, &g, i, &y, &pi);
         assert!(result);

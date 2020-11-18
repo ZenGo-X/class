@@ -28,7 +28,7 @@ fn benches_class(c: &mut Criterion) {
     // change below to `for &i in &[1_000, 2_000, 5_000, 10_000, 100_000, 1_000_000] {` if needed to expand test cases,
     // may also need to increase pari_init size (first parameter in `pari_init`) in src/primitives/vdf.rs
     for &i in &[1_0] {
-        // precompute for verification
+        // precompute for benchmarking verification
         let t = BigInt::from(i);
         let vdf_out_proof = VDF::eval(&a_b_delta, &seed, &t);
         let res = vdf_out_proof.verify();
