@@ -75,12 +75,12 @@ fn hash_to_prime(modulus: &Integer, inputs: &[&Integer]) -> Integer {
     let hashed = Integer::from_digits(&hasher.finalize(), Order::Lsf);
 
     // inverse, to get enough security bits
-    let inverse = match hashed.invert(&modulus.clone()) {
+    let inverse = match hashed.invert(modulus) {
         Ok(inverse) => inverse,
         Err(unchanged) => unchanged,
     };
 
-    Integer::from(inverse.next_prime().div_rem_floor(modulus.clone()).1)
+    inverse.next_prime().div_rem_floor(modulus.clone()).1
 }
 
 fn benches_rsa(c: &mut Criterion) {
