@@ -114,7 +114,7 @@ fn benches_rsa(c: &mut Criterion) {
 
     const TEST_HASH: &str = "1eeb30c7163271850b6d018e8282093ac6755a771da6267edf6c9b4fce9242ba";
     let seed_hash = Integer::from_str_radix(TEST_HASH, 16).unwrap();
-    let seed = Integer::from(seed_hash.div_rem_floor(modulus.clone()).1);
+    let seed = seed_hash.div_rem_floor(modulus.clone()).1;
 
     // g <- H_G(x)
     let g = h_g(&modulus, &seed);
