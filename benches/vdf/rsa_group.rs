@@ -42,8 +42,9 @@ fn eval(modulus: &Integer, g: &Integer, t: u64) -> (Integer, Integer) {
 
     for _ in 0..t {
         r2 = r.clone() * two.clone();
-        b = r2.clone().div_rem_floor(l.clone()).0;
-        r = r2.clone().div_rem_floor(l.clone()).1;
+        let quo_rem = r2.clone().div_rem_floor(l.clone());
+        b = quo_rem.0;
+        r = quo_rem.1;
         let pi_2 = pi.clone().pow_mod(&two, &modulus).unwrap();
         let g_b = g.clone().pow_mod(&b, &modulus).unwrap();
         pi = pi_2 * g_b;
