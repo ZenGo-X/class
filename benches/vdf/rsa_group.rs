@@ -19,8 +19,6 @@ fn verify(modulus: &Integer, g: &Integer, t: u64, y: &Integer, pi: &Integer) -> 
 
 /// algo_3 from the paper
 fn eval(modulus: &Integer, g: &Integer, t: u64) -> (Integer, Integer) {
-    let modulus = modulus.clone();
-
     // y <- (g^2)^t
     let mut y = g.clone();
     for _ in 0..t {
@@ -28,7 +26,7 @@ fn eval(modulus: &Integer, g: &Integer, t: u64) -> (Integer, Integer) {
         y = y.div_rem_floor(modulus.clone()).1;
     }
 
-    let l = hash_to_prime(&modulus, &[&g, &y]);
+    let l = hash_to_prime(modulus, &[g, &y]);
 
     // algo_4 from the paper, long division
     // TODO: consider algo_5 instead
@@ -43,24 +41,23 @@ fn eval(modulus: &Integer, g: &Integer, t: u64) -> (Integer, Integer) {
         let quo_rem = r2.clone().div_rem_floor(l.clone());
         b = quo_rem.0;
         r = quo_rem.1;
-        let pi_2 = pi.clone().pow_mod(&two, &modulus).unwrap();
-        let g_b = g.clone().pow_mod(&b, &modulus).unwrap();
+        let pi_2 = pi.clone().pow_mod(&two, modulus).unwrap();
+        let g_b = g.clone().pow_mod(&b, modulus).unwrap();
         pi = pi_2 * g_b;
     }
-    pi = Integer::from(pi.div_rem_floor(modulus.clone()).1);
-    (y, pi)
+    
+    (y, pi.div_rem_floor(modulus.clone()).1)
 }
 
 /// int(H("residue"||x)) mod N
 fn h_g(modulus: &Integer, seed: &Integer) -> Integer {
-    let modulus = modulus.clone();
     let mut hasher = Sha256::new();
     hasher.update("residue".as_bytes());
     hasher.update(seed.to_digits::<u8>(Order::Lsf));
     let hashed = Integer::from_digits(&hasher.finalize(), Order::Lsf);
 
     // inverse, to get enough security bits
-    match hashed.invert(&modulus.clone()) {
+    match hashed.invert(modulus) {
         Ok(inverse) => inverse,
         Err(unchanged) => unchanged,
     }
