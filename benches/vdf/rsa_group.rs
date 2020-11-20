@@ -7,16 +7,14 @@ use sha2::{Digest, Sha256};
 
 /// algo_2 from the paper
 fn verify(modulus: &Integer, g: &Integer, t: u64, y: &Integer, pi: &Integer) -> bool {
-    let modulus = modulus.clone();
-
-    let l = hash_to_prime(&modulus, &[&g, &y]);
+    let l = hash_to_prime(modulus, &[g, y]);
 
     let r = Integer::from(2).pow_mod(&Integer::from(t), &l).unwrap();
-    let pi_l = pi.clone().pow_mod(&l, &modulus).unwrap();
-    let g_r = g.clone().pow_mod(&r, &modulus).unwrap();
+    let pi_l = pi.clone().pow_mod(&l, modulus).unwrap();
+    let g_r = g.clone().pow_mod(&r, modulus).unwrap();
     let pi_l_g_r = pi_l * g_r;
 
-    Integer::from(pi_l_g_r.div_rem_floor(modulus.clone()).1) == y.clone()
+    pi_l_g_r.div_rem_floor(modulus.clone()).1 == *y
 }
 
 /// algo_3 from the paper
