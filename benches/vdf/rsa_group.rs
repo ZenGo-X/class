@@ -61,17 +61,16 @@ fn h_g_inner(seed: &Integer) -> Integer {
 fn h_g(modulus: &Integer, seed: &Integer) -> Integer {
     const HASH_ENT: u64 = 256;
     const GROUP_ENT: u64 = 2048;
+
     let mut temp = h_g_inner(seed);
     let mut result = temp.clone();
     let mut ent = HASH_ENT;
-
     while ent < GROUP_ENT {
         let seed = temp.clone();
         temp = h_g_inner(&seed);
         result = (result << HASH_ENT) + temp.clone();
         ent += HASH_ENT;
     }
-
     result.div_rem_floor(modulus.clone()).1
 }
 
