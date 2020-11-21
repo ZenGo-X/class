@@ -59,8 +59,8 @@ fn h_g_inner(seed: &Integer) -> Integer {
 /// int(H("residue"||x)) mod N
 /// only run once, so don't need to worry about the perfomance
 fn h_g(modulus: &Integer, seed: &Integer) -> Integer {
-    const HASH_ENT: u64 = 256;
-    const GROUP_ENT: u64 = 2048;
+    const HASH_ENT: u32 = 256;
+    const GROUP_ENT: u32 = 2048;
 
     let mut temp = h_g_inner(seed);
     let mut result = temp.clone();
