@@ -45,22 +45,31 @@ fn eval(modulus: &Integer, g: &Integer, t: u64) -> (Integer, Integer) {
         let g_b = g.clone().pow_mod(&b, modulus).unwrap();
         pi = pi_2 * g_b;
     }
-    
+
     (y, pi.div_rem_floor(modulus.clone()).1)
+}
+
+fn h_g_inner(seed: &Integer) -> Integer {
+    let mut hasher = Sha256::new();
+    hasher.update("residue".as_bytes());
+    hasher.update(seed.to_digits::<u8>(Order::Lsf));
+    Integer::from_digits(&hasher.finalize(), Order::Lsf)
 }
 
 /// int(H("residue"||x)) mod N
 fn h_g(modulus: &Integer, seed: &Integer) -> Integer {
-    let mut hasher = Sha256::new();
-    hasher.update("residue".as_bytes());
-    hasher.update(seed.to_digits::<u8>(Order::Lsf));
-    let hashed = Integer::from_digits(&hasher.finalize(), Order::Lsf);
+    let mut temp = h_g_inner(seed);
+    let mut result = temp.clone();
+    let mut ent = 256;
 
-    // inverse, to get enough security bits
-    match hashed.invert(modulus) {
-        Ok(inverse) => inverse,
-        Err(unchanged) => unchanged,
+    while ent < 2048 {
+        let seed = temp.clone();
+        temp = h_g_inner(&seed);
+        result = (result << 256) + temp.clone();
+        ent += 256;
     }
+
+    result.div_rem_floor(modulus.clone()).1
 }
 
 fn hash_to_prime(modulus: &Integer, inputs: &[&Integer]) -> Integer {
@@ -70,14 +79,7 @@ fn hash_to_prime(modulus: &Integer, inputs: &[&Integer]) -> Integer {
         hasher.update("\n".as_bytes());
     }
     let hashed = Integer::from_digits(&hasher.finalize(), Order::Lsf);
-
-    // inverse, to get enough security bits
-    let inverse = match hashed.invert(modulus) {
-        Ok(inverse) => inverse,
-        Err(unchanged) => unchanged,
-    };
-
-    inverse.next_prime().div_rem_floor(modulus.clone()).1
+    hashed.next_prime().div_rem_floor(modulus.clone()).1
 }
 
 fn benches_rsa(c: &mut Criterion) {
