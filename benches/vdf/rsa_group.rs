@@ -50,7 +50,7 @@ fn eval(modulus: &Integer, g: &Integer, t: u64) -> (Integer, Integer) {
 }
 
 /// hashing an element onto the group
-/// only run once, so don't need to worry about the perfomance
+/// only run once, so won't downgrade the perfomance
 fn h_g(modulus: &Integer, seed: &Integer) -> Integer {
     const HASH_ENT: u32 = 256;
     const GROUP_ENT: u32 = 2048;
@@ -58,7 +58,7 @@ fn h_g(modulus: &Integer, seed: &Integer) -> Integer {
     let prefix = "residue_part_".as_bytes();
     let seed_bytes = seed.to_digits::<u8>(Order::Lsf);
 
-    // concat 8 sha256 to a sha2048
+    // concat 8 sha256 to a 2048-bit hash
     let all_2048: Vec<u8> = (0..((GROUP_ENT / HASH_ENT) as u8))
         .map(|index| {
             let mut hasher = Sha256::new();
