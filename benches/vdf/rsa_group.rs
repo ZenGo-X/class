@@ -49,27 +49,27 @@ fn eval(modulus: &Integer, g: &Integer, t: u64) -> (Integer, Integer) {
     (y, pi.div_rem_floor(modulus.clone()).1)
 }
 
-fn h_g_inner(seed: &Integer) -> Integer {
-    let mut hasher = Sha256::new();
-    hasher.update("residue".as_bytes());
-    hasher.update(seed.to_digits::<u8>(Order::Lsf));
-    Integer::from_digits(&hasher.finalize(), Order::Lsf)
-}
-
 /// hashing an element onto the group
 /// only run once, so don't need to worry about the perfomance
 fn h_g(modulus: &Integer, seed: &Integer) -> Integer {
     const HASH_ENT: u32 = 256;
     const GROUP_ENT: u32 = 2048;
 
-    let mut part = h_g_inner(seed);
-    let mut result = part.clone();
-    let mut ent = HASH_ENT;
-    while ent < GROUP_ENT {
-        part = h_g_inner(&part);
-        result = (result << HASH_ENT) + part.clone();
-        ent += HASH_ENT;
-    }
+    let prefix = "residue_part_".as_bytes();
+    let seed_bytes = seed.to_digits::<u8>(Order::Lsf);
+
+    // concat 8 sha256 to a sha2048
+    let all_2048: Vec<u8> = (0..((GROUP_ENT / HASH_ENT) as u8))
+        .map(|index| {
+            let mut hasher = Sha256::new();
+            hasher.update(prefix);
+            hasher.update(vec![index]);
+            hasher.update(seed_bytes.clone());
+            hasher.finalize()
+        })
+        .flatten()
+        .collect();
+    let result = Integer::from_digits(&all_2048, Order::Lsf);
     result.div_rem_floor(modulus.clone()).1
 }
 
