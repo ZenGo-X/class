@@ -14,3 +14,5 @@ depend/pari/doc/
 depend/pari/examples/
 depend/pari/misc/tex2mail
 depend/pari/src/desc/pari.desc
+
+.idea/
