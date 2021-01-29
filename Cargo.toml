@@ -24,6 +24,7 @@ features =  ["ec_secp256k1"]
 criterion = ">=0.2"
 rug = "1.2.1"
 sha2 = "0.9.1"
+proptest = "0.10.1"
 
 [[bench]]
 name = "bench-vdf-class"

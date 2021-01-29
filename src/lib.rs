@@ -15,6 +15,7 @@ use crate::curv::arithmetic::traits::Converter;
 use curv::BigInt;
 use libc::c_char;
 use std::ffi::CStr;
+use std::mem::swap;
 use std::ops::Neg;
 use std::str;
 
@@ -31,6 +32,14 @@ pub struct BinaryQF {
 pub struct ABDeltaTriple {
     pub a: BigInt,
     pub b: BigInt,
+    pub delta: BigInt,
+}
+
+#[derive(PartialEq, Eq, Clone, Debug)]
+pub struct BinaryQFCompressed {
+    pub a: BigInt,
+    pub b_positive: bool,
+    pub t: BigInt,
     pub delta: BigInt,
 }
 
@@ -247,6 +256,31 @@ impl BinaryQF {
         a_vec
     }
 }
+
+/// Takes a,b (a > b > 0), produces r,s,t such as `r = s * a + t * b` where `|r|,|t| < sqrt(a)`
+fn partial_xgcd(a: &BigInt, b: &BigInt) -> (BigInt, BigInt, BigInt) {
+    let mut r = (a.clone(), b.clone());
+    let mut s = (BigInt::one(), BigInt::zero());
+    let mut t = (BigInt::zero(), BigInt::one());
+
+    let a_sqrt = a.sqrt();
+    while r.1 > a_sqrt {
+        let q = &r.0 / &r.1;
+        let r1 = &r.0 - &q * &r.1;
+        let s1 = &s.0 - &q * &s.1;
+        let t1 = &t.0 - &q * &t.1;
+
+        swap(&mut r.0, &mut r.1);
+        r.1 = r1;
+        swap(&mut s.0, &mut s.1);
+        s.1 = s1;
+        swap(&mut t.0, &mut t.1);
+        t.1 = t1;
+    }
+
+    (r.1, s.1, t.1)
+}
+
 // helper functions:
 // this function turns a bigint into GEN (native Pari type)
 pub fn bn_to_gen(bn: &BigInt) -> GEN {
@@ -316,10 +350,12 @@ pub fn pari_qf_comp_to_decimal_string(pari_qf: GEN, index: usize) -> String {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    extern crate libc;
-    use crate::curv::arithmetic::traits::Samplable;
     use std::str;
+
+    use proptest::prelude::*;
+
+    use super::*;
+    use crate::curv::arithmetic::traits::Samplable;
 
     #[test]
     fn test_qf_to_pari_qf_to_qf() {
@@ -394,5 +430,34 @@ mod tests {
         let x = BigInt::sample(100);
         let f_exp = f.exp(&x);
         assert_eq!(f, f_exp);
+    }
+
+    proptest::proptest! {
+        #[test]
+        fn fuzz_partial_xgcd(a in any::<u32>(), b in any::<u32>()) {
+            proptest::prop_assume!(a > b && b > 0);
+            test_partial_xgcd(BigInt::from(a), BigInt::from(b))
+        }
+    }
+
+    fn test_partial_xgcd(a: BigInt, b: BigInt) {
+        let (r, s, t) = partial_xgcd(&a, &b);
+        println!("r={}, s={}, t={}", r, s, t);
+
+        // We expect that r = a * s + b * t
+        assert_eq!(r, &a * &s + &b * &t);
+
+        // We expect both |r| and |t| to be less than sqrt(a)
+        let a_sqrt = a.sqrt();
+        assert!(
+            r.abs() < a_sqrt,
+            "r is not less than sqrt(a), diff = {}",
+            &r - &a_sqrt
+        );
+        assert!(
+            t.abs() < a_sqrt,
+            "t is not less than sqrt(a), diff = {}",
+            &t - &a_sqrt
+        );
     }
 }
