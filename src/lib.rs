@@ -12,6 +12,7 @@ extern crate curv;
 extern crate serde;
 extern crate serde_json;
 use crate::curv::arithmetic::traits::Converter;
+use curv::arithmetic::traits::Modulo;
 use curv::BigInt;
 use libc::c_char;
 use std::ffi::CStr;
@@ -19,6 +20,7 @@ use std::mem::swap;
 use std::ops::Neg;
 use std::str;
 
+mod arithmetic;
 pub mod primitives;
 
 #[derive(PartialEq, Eq, Clone, Debug, Serialize, Deserialize)]
@@ -37,9 +39,11 @@ pub struct ABDeltaTriple {
 
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub struct BinaryQFCompressed {
-    pub a: BigInt,
-    pub b_positive: bool,
-    pub t: BigInt,
+    pub a1: BigInt,
+    pub t1: BigInt,
+    pub g: BigInt,
+    pub b0: BigInt,
+    pub e: bool,
     pub delta: BigInt,
 }
 
@@ -255,6 +259,107 @@ impl BinaryQF {
         a_vec.extend_from_slice(&c_vec[..]);
         a_vec
     }
+
+    /// Takes point in reduced form and returns its compressed
+    /// representation.
+    ///
+    /// Follows Algorithm 1 from [paper](https://eprint.iacr.org/2020/196.pdf).
+    ///
+    /// Returns `None` if Self is not in reduced form. Use
+    /// [is_reduced](Self::is_reduced) to determine if it can be comressed
+    /// and [reduce](Self::reduce) to find equivalent in reduced form
+    /// for any BinaryQF.
+    pub fn to_compressed(&self) -> Option<BinaryQFCompressed> {
+        if !self.is_reduced() {
+            return None;
+        }
+
+        // 1. (s, u, t) <- PartialXGCD(|a|, |b|, sqrt(|a|)
+        let (_s, _u, mut t) = partial_xgcd(&self.a.abs(), &self.b.abs());
+        // 2. if b < 0 then t <- -t
+        if self.b < BigInt::zero() {
+            t = -t
+        }
+
+        // 3. g <- gcd(a,t)
+        let (g, _, _) = xgcd(&self.a, &t);
+        // 4. a' <- a/g
+        let a1 = &self.a / &g;
+        // 5-8. if a = b then t' <- 0 else t' <- t/g
+        let t1 = if self.a == self.b {
+            BigInt::zero()
+        } else {
+            &t / &g
+        };
+        // 9. b0 <- b mod g
+        let b0 = self.b.modulus(&g);
+        // 10. ε <- [b >= 0]
+        let e = self.b >= BigInt::zero();
+
+        let delta = self.discriminant();
+        Some(BinaryQFCompressed {
+            a1,
+            t1,
+            g,
+            b0,
+            e,
+            delta,
+        })
+    }
+
+    pub fn from_compressed(compressed: BinaryQFCompressed) -> Option<Self> {
+        Some(Self::binary_quadratic_form_disc(
+            &ABDeltaTriple::from_compressed(compressed)?,
+        ))
+    }
+}
+
+impl ABDeltaTriple {
+    pub fn from_compressed(compressed: BinaryQFCompressed) -> Option<Self> {
+        use arithmetic::A;
+
+        let BinaryQFCompressed {
+            a1,
+            t1,
+            g,
+            b0,
+            e,
+            delta,
+        } = compressed;
+
+        // 1. a <- g * a'
+        let a = &g * &a1;
+        // 2. t <- g * t'
+        let t = &g * &t1;
+        // 3. if t = 0 then return (a,a)
+        if t.is_zero() {
+            return Some(Self {
+                a: a.clone(),
+                b: a,
+                delta,
+            });
+        }
+        // 4. x <- t^2 * ∆ (mod a)
+        let t2 = BigInt::mod_mul(&t, &t, &a);
+        let x = BigInt::mod_mul(&t2, &delta, &a);
+        // 5. s <- sqrt(x)
+        let s = x.sqrt();
+        // 6. s' <- s/g
+        let s1 = &s / &g;
+        // 7. b' <- s' * t^−1 (mod a')
+        let t_inv = t.invert(&a1)?;
+        let b1 = BigInt::mod_mul(&s1, &t_inv, &a1);
+        // 8. b <- CRT((b', a'), (b0, g))
+        let mut b: BigInt =
+            ring_algorithm::chinese_remainder_theorem(&[A(b1), A(b0)], &[A(a1), A(g)])?
+                .into_inner();
+        // 9. if ε = False then b <- −b (mod a)
+        if !e {
+            b = -b
+        }
+        // 10. return (a,b)
+        Some(Self { a, b, delta })
+    }
 }
 
 /// Takes a,b (a > b > 0), produces r,s,t such as `r = s * a + t * b` where `|r|,|t| < sqrt(a)`
@@ -279,6 +384,29 @@ fn partial_xgcd(a: &BigInt, b: &BigInt) -> (BigInt, BigInt, BigInt) {
     }
 
     (r.1, s.1, t.1)
+}
+
+/// Takes a, b, produces gcd(a,b), s, t such as `gcd(a,b) = s * a + t * b`
+fn xgcd(a: &BigInt, b: &BigInt) -> (BigInt, BigInt, BigInt) {
+    let mut r = (a.clone(), b.clone());
+    let mut s = (BigInt::one(), BigInt::zero());
+    let mut t = (BigInt::zero(), BigInt::one());
+
+    while r.1 != BigInt::zero() {
+        let q = &r.0 / &r.1;
+        let r1 = &r.0 - &q * &r.1;
+        let s1 = &s.0 - &q * &s.1;
+        let t1 = &t.0 - &q * &t.1;
+
+        swap(&mut r.0, &mut r.1);
+        r.1 = r1;
+        swap(&mut s.0, &mut s.1);
+        s.1 = s1;
+        swap(&mut t.0, &mut t.1);
+        t.1 = t1;
+    }
+
+    (r.0, s.0, t.0)
 }
 
 // helper functions:
@@ -438,6 +566,15 @@ mod tests {
             proptest::prop_assume!(a > b && b > 0);
             test_partial_xgcd(BigInt::from(a), BigInt::from(b))
         }
+        #[test]
+        fn fuzz_xgcd(a in any::<u32>(), b in any::<u32>()) {
+            test_partial_xgcd(BigInt::from(a), BigInt::from(b))
+        }
+        #[test]
+        fn fuzz_compression(d in 1u32..) {
+            let delta = BigInt::from(d) * BigInt::from(-4) + BigInt::one();
+            test_compression(delta)
+        }
     }
 
     fn test_partial_xgcd(a: BigInt, b: BigInt) {
@@ -459,5 +596,21 @@ mod tests {
             "t is not less than sqrt(a), diff = {}",
             &t - &a_sqrt
         );
+    }
+
+    fn test_xgcd(a: BigInt, b: BigInt) {
+        let (r, s, t) = xgcd(&a, &b);
+        assert_eq!(a.modulus(&r), BigInt::zero(), "gcd doesn't divide a");
+        assert_eq!(b.modulus(&r), BigInt::zero(), "gcd doesn't divide b");
+        // r = s * a + t * b
+        assert_eq!(r, &s * &a + &t * &b, "resulting coefficients are wrong")
+    }
+
+    fn test_compression(delta: BigInt) {
+        let uncompressed = BinaryQF::binary_quadratic_form_principal(&delta).reduce();
+        let compressed = uncompressed.to_compressed().expect("failed to compress");
+        let uncompressed2 = BinaryQF::from_compressed(compressed).expect("failed to decompress");
+
+        assert_eq!(uncompressed, uncompressed2);
     }
 }
