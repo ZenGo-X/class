@@ -11,8 +11,7 @@ extern crate serde_derive;
 extern crate curv;
 extern crate serde;
 extern crate serde_json;
-use crate::curv::arithmetic::traits::Converter;
-use curv::arithmetic::traits::Modulo;
+use curv::arithmetic::traits::{Converter, Modulo, EGCD};
 use curv::BigInt;
 use libc::c_char;
 use std::ffi::CStr;
@@ -282,7 +281,7 @@ impl BinaryQF {
         }
 
         // 3. g <- gcd(a,t)
-        let (g, _, _) = xgcd(&self.a, &t);
+        let (g, _, _) = BigInt::egcd(&self.a, &t);
         // 4. a' <- a/g
         let a1 = &self.a / &g;
         // 5-8. if a = b then t' <- 0 else t' <- t/g
@@ -384,29 +383,6 @@ fn partial_xgcd(a: &BigInt, b: &BigInt) -> (BigInt, BigInt, BigInt) {
     }
 
     (r.1, s.1, t.1)
-}
-
-/// Takes a, b, produces gcd(a,b), s, t such as `gcd(a,b) = s * a + t * b`
-fn xgcd(a: &BigInt, b: &BigInt) -> (BigInt, BigInt, BigInt) {
-    let mut r = (a.clone(), b.clone());
-    let mut s = (BigInt::one(), BigInt::zero());
-    let mut t = (BigInt::zero(), BigInt::one());
-
-    while r.1 != BigInt::zero() {
-        let q = &r.0 / &r.1;
-        let r1 = &r.0 - &q * &r.1;
-        let s1 = &s.0 - &q * &s.1;
-        let t1 = &t.0 - &q * &t.1;
-
-        swap(&mut r.0, &mut r.1);
-        r.1 = r1;
-        swap(&mut s.0, &mut s.1);
-        s.1 = s1;
-        swap(&mut t.0, &mut t.1);
-        t.1 = t1;
-    }
-
-    (r.0, s.0, t.0)
 }
 
 // helper functions:
@@ -567,10 +543,6 @@ mod tests {
             test_partial_xgcd(BigInt::from(a), BigInt::from(b))
         }
         #[test]
-        fn fuzz_xgcd(a in any::<u32>(), b in any::<u32>()) {
-            test_partial_xgcd(BigInt::from(a), BigInt::from(b))
-        }
-        #[test]
         fn fuzz_compression(d in 1u32..) {
             let delta = BigInt::from(d) * BigInt::from(-4) + BigInt::one();
             test_compression(delta)
@@ -596,14 +568,6 @@ mod tests {
             "t is not less than sqrt(a), diff = {}",
             &t - &a_sqrt
         );
-    }
-
-    fn test_xgcd(a: BigInt, b: BigInt) {
-        let (r, s, t) = xgcd(&a, &b);
-        assert_eq!(a.modulus(&r), BigInt::zero(), "gcd doesn't divide a");
-        assert_eq!(b.modulus(&r), BigInt::zero(), "gcd doesn't divide b");
-        // r = s * a + t * b
-        assert_eq!(r, &s * &a + &t * &b, "resulting coefficients are wrong")
     }
 
     fn test_compression(delta: BigInt) {

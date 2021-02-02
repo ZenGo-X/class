@@ -89,11 +89,16 @@ mod test {
     const PRIME: u32 = u32::MAX - 4;
 
     use super::*;
+    use curv::arithmetic::traits::EGCD;
 
     proptest::proptest! {
         #[test]
-        fn fuzz_inverse(n in 1u32..PRIME) {
+        fn fuzz_inverse(n in 1..PRIME) {
             test_inverse(BigInt::from(n))
+        }
+        #[test]
+        fn fuzz_xgcd(a in 1u32.., b in 1u32..) {
+            test_xgcd(BigInt::from(a), BigInt::from(b))
         }
     }
 
@@ -102,5 +107,12 @@ mod test {
         let n_inv_expected = n.invert(&prime).unwrap();
         let n_inv_actual = ring_algorithm::modulo_inverse(A(n), A(prime.clone())).unwrap();
         assert_eq!(n_inv_expected, n_inv_actual.into_inner().modulus(&prime));
+    }
+
+    fn test_xgcd(a: BigInt, b: BigInt) {
+        let (s1, p1, q1) = BigInt::egcd(&a, &b);
+        let (A(s2), A(p2), A(q2)) =
+            ring_algorithm::normalized_extended_euclidian_algorithm(A(a), A(b));
+        assert_eq!((s1, p1, q1), (s2, p2, q2));
     }
 }
