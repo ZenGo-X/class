@@ -10,9 +10,9 @@ use crate::primitives::prng;
 use crate::BinaryQF;
 use curv::arithmetic::traits::Samplable;
 use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
+use curv::elliptic::curves::secp256_k1::{FE, GE};
 use curv::elliptic::curves::traits::{ECPoint, ECScalar};
 use curv::BigInt;
-use curv::{FE, GE};
 use std::os::raw::c_int;
 
 const SECURITY_PARAMETER: usize = 128;
