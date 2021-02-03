@@ -8,9 +8,9 @@ use crate::ABDeltaTriple;
 use crate::BinaryQF;
 use curv::arithmetic::traits::Samplable;
 use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
+use curv::elliptic::curves::secp256_k1::FE;
 use curv::elliptic::curves::traits::ECScalar;
 use curv::BigInt;
-use curv::FE;
 
 /// Polynomial commitment as given in the paper: Transparent SNARKs from DARK Compilers
 /// (https://eprint.iacr.org/2019/1229.pdf), subsection 4.2 and 4.3
@@ -534,9 +534,9 @@ fn pick_random_element(disc: &BigInt) -> BinaryQF {
 #[cfg(test)]
 mod tests {
     use super::PolyComm;
+    use curv::elliptic::curves::secp256_k1::FE;
     use curv::elliptic::curves::traits::ECScalar;
     use curv::BigInt;
-    use curv::FE;
 
     #[test]
     fn test_commit_open() {

@@ -19,7 +19,6 @@ use std::mem::swap;
 use std::ops::Neg;
 use std::str;
 
-mod arithmetic;
 pub mod primitives;
 
 #[derive(PartialEq, Eq, Clone, Debug, Serialize, Deserialize)]
@@ -315,7 +314,7 @@ impl BinaryQF {
 
 impl ABDeltaTriple {
     pub fn from_compressed(compressed: BinaryQFCompressed) -> Option<Self> {
-        use arithmetic::A;
+        use curv::arithmetic::big_gmp::Arithmetic;
 
         let BinaryQFCompressed {
             a1,
@@ -349,9 +348,11 @@ impl ABDeltaTriple {
         let t_inv = t.invert(&a1)?;
         let b1 = BigInt::mod_mul(&s1, &t_inv, &a1);
         // 8. b <- CRT((b', a'), (b0, g))
-        let mut b: BigInt =
-            ring_algorithm::chinese_remainder_theorem(&[A(b1), A(b0)], &[A(a1), A(g)])?
-                .into_inner();
+        let mut b: BigInt = ring_algorithm::chinese_remainder_theorem(
+            &[Arithmetic::wrap(b1), Arithmetic::wrap(b0)],
+            &[Arithmetic::wrap(a1), Arithmetic::wrap(g)],
+        )?
+        .into_inner();
         // 9. if ε = False then b <- −b (mod a)
         if !e {
             b = -b
