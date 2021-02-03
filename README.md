@@ -6,11 +6,16 @@ Background
 Cls are easy to generate. Their most interesting and useful property is that finding the group order is considered hard. In recent years we see more and more cryptographic primitives instantiated using Cls. We recommend [6,7,8] to learn more about Cls in practice.
 
 
+Group Element Representation
+-------------------
+Group Element can be represented as (a,b,c) or (a,b,Δ) triple (correspond to BinaryQF and ABDeltaTriple structures
+respectively). We also support compression from the [paper][compression] (see BinaryQFCompressed structure).
 
+[compression]: https://eprint.iacr.org/2020/196.pdf
 
 Primitives
 -------------------
-Contributions for implementing new primitives or imperving existing ones are welcome. See open issues first. Existing primitives can be found in the _primitives_ folder : 
+Contributions for implementing new primitives or improving existing ones are welcome. See open issues first. Existing primitives can be found in the _primitives_ folder : 
 
 1) **PoE**: Proof of exponantiation: The prover can efficiently convince a verifier that a large exponentiation was done correctly. Statement is `(x,u,w)`, verifier accept if `w = u^x`.
 
