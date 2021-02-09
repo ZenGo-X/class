@@ -1,15 +1,14 @@
 use super::ErrorReason;
 use crate::bn_to_gen;
-use crate::curv::arithmetic::traits::Modulo;
-use crate::curv::cryptographic_primitives::hashing::traits::Hash;
 use crate::isprime;
 use crate::pari_init;
 use crate::primitives::is_prime;
 use crate::primitives::numerical_log;
 use crate::primitives::prng;
 use crate::BinaryQF;
-use curv::arithmetic::traits::Samplable;
+use curv::arithmetic::traits::*;
 use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
+use curv::cryptographic_primitives::hashing::traits::Hash;
 use curv::elliptic::curves::secp256_k1::{FE, GE};
 use curv::elliptic::curves::traits::{ECPoint, ECScalar};
 use curv::BigInt;
@@ -391,8 +390,8 @@ impl CLDLProof {
                 let T = GE::generator() * r2_fe;
                 let t1 = pk.gq.exp(&r1);
                 let fs = HSha256::create_hash(&[
-                    &BigInt::from(&t1.to_bytes()[..]),
-                    &BigInt::from(&t2.to_bytes()[..]),
+                    &BigInt::from_bytes(Sign::Positive, &t1.to_bytes()[..]),
+                    &BigInt::from_bytes(Sign::Positive, &t2.to_bytes()[..]),
                     &T.bytes_compressed_to_big_int(),
                 ]);
                 (TTriplets { t1, t2, T }, fs, r1, r2)
@@ -439,8 +438,8 @@ impl CLDLProof {
         let fs_vec = (0..repeat)
             .map(|i| {
                 HSha256::create_hash(&[
-                    &BigInt::from(&self.t_vec[i].t1.to_bytes()[..]),
-                    &BigInt::from(&self.t_vec[i].t2.to_bytes()[..]),
+                    &BigInt::from_bytes(Sign::Positive, &self.t_vec[i].t1.to_bytes()[..]),
+                    &BigInt::from_bytes(Sign::Positive, &self.t_vec[i].t2.to_bytes()[..]),
                     &self.t_vec[i].T.bytes_compressed_to_big_int(),
                 ])
             })

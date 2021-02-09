@@ -1,13 +1,12 @@
 use super::ErrorReason;
-use crate::curv::arithmetic::traits::Modulo;
-use crate::curv::cryptographic_primitives::hashing::traits::Hash;
 use crate::pari_init;
 use crate::primitives::is_prime;
 use crate::primitives::poe::PoEProof;
 use crate::ABDeltaTriple;
 use crate::BinaryQF;
-use curv::arithmetic::traits::Samplable;
+use curv::arithmetic::traits::*;
 use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
+use curv::cryptographic_primitives::hashing::traits::Hash;
 use curv::elliptic::curves::secp256_k1::FE;
 use curv::elliptic::curves::traits::ECScalar;
 use curv::BigInt;
@@ -147,8 +146,8 @@ impl PolyComm {
     pub fn decode(p: &BigInt, q: &BigInt, y: &BigInt) -> Vec<FE> {
         let one = BigInt::one();
         let p_half = p.div_floor(&BigInt::from(2));
-        let bits_in_y = BigInt::from(y.to_str_radix(2).len() as u32);
-        let bits_in_q = BigInt::from(q.to_str_radix(2).len() as u32);
+        let bits_in_y = BigInt::from(y.bit_length() as u32);
+        let bits_in_q = BigInt::from(q.bit_length() as u32);
         let mut d: BigInt = one.clone();
         while &(&d * &bits_in_q) < &bits_in_y {
             d = d + &one

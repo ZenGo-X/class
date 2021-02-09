@@ -11,7 +11,7 @@ extern crate serde_derive;
 extern crate curv;
 extern crate serde;
 extern crate serde_json;
-use curv::arithmetic::traits::{Converter, Modulo, EGCD};
+use curv::arithmetic::traits::*;
 use curv::BigInt;
 use libc::c_char;
 use std::ffi::CStr;
@@ -242,17 +242,17 @@ impl BinaryQF {
         let b_string = pari_qf_comp_to_decimal_string(pari_qf, 2);
         let c_string = pari_qf_comp_to_decimal_string(pari_qf, 3);
 
-        let a: BigInt = str::parse(&a_string).unwrap();
-        let b: BigInt = str::parse(&b_string).unwrap();
-        let c: BigInt = str::parse(&c_string).unwrap();
+        let a: BigInt = BigInt::from_hex(&a_string).unwrap();
+        let b: BigInt = BigInt::from_hex(&b_string).unwrap();
+        let c: BigInt = BigInt::from_hex(&c_string).unwrap();
 
         BinaryQF { a, b, c }
     }
 
     pub fn to_bytes(&self) -> Vec<u8> {
-        let mut a_vec = BigInt::to_vec(&self.a);
-        let b_vec = BigInt::to_vec(&self.b);
-        let c_vec = BigInt::to_vec(&self.c);
+        let (_sign, mut a_vec) = BigInt::to_bytes(&self.a);
+        let (_sign, b_vec) = BigInt::to_bytes(&self.b);
+        let (_sign, c_vec) = BigInt::to_bytes(&self.c);
         a_vec.extend_from_slice(&b_vec[..]);
         a_vec.extend_from_slice(&c_vec[..]);
         a_vec
@@ -314,8 +314,6 @@ impl BinaryQF {
 
 impl ABDeltaTriple {
     pub fn from_compressed(compressed: BinaryQFCompressed) -> Option<Self> {
-        use curv::arithmetic::big_gmp::Arithmetic;
-
         let BinaryQFCompressed {
             a1,
             t1,
@@ -345,14 +343,13 @@ impl ABDeltaTriple {
         // 6. s' <- s/g
         let s1 = &s / &g;
         // 7. b' <- s' * t^−1 (mod a')
-        let t_inv = t.invert(&a1)?;
+        let t_inv = BigInt::mod_inv(&t, &a1)?;
         let b1 = BigInt::mod_mul(&s1, &t_inv, &a1);
         // 8. b <- CRT((b', a'), (b0, g))
         let mut b: BigInt = ring_algorithm::chinese_remainder_theorem(
-            &[Arithmetic::wrap(b1), Arithmetic::wrap(b0)],
-            &[Arithmetic::wrap(a1), Arithmetic::wrap(g)],
-        )?
-        .into_inner();
+            &[b1, b0],
+            &[a1, g],
+        )?;
         // 9. if ε = False then b <- −b (mod a)
         if !e {
             b = -b
@@ -413,7 +410,7 @@ pub fn bn_to_gen(bn: &BigInt) -> GEN {
             let masked_valued_bn =
                 (bn.clone() & all_ones_32bits.clone() << (i * size_int)) >> (i * size_int);
 
-            let mut masked_value_bytes = BigInt::to_vec(&masked_valued_bn);
+            let (_sign, mut masked_value_bytes) = BigInt::to_bytes(&masked_valued_bn);
             // padding if int has leading zero bytes
             let mut template = vec![0; 4 - masked_value_bytes.len()];
             template.extend_from_slice(&masked_value_bytes);

@@ -1,5 +1,3 @@
-use crate::curv::arithmetic::traits::Modulo;
-use crate::curv::arithmetic::traits::Samplable;
 use crate::pari_init;
 use crate::primitives::hash_to_prime;
 use crate::primitives::is_prime;
@@ -7,6 +5,7 @@ use crate::primitives::prng;
 use crate::primitives::ErrorReason;
 use crate::ABDeltaTriple;
 use crate::BinaryQF;
+use curv::arithmetic::traits::*;
 use curv::BigInt;
 
 /// Wesolowski VDF, based on https://eprint.iacr.org/2018/712.pdf.

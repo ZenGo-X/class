@@ -17,16 +17,15 @@
 
 use super::ErrorReason;
 use crate::bn_to_gen;
-use crate::curv::arithmetic::traits::Modulo;
-use crate::curv::cryptographic_primitives::hashing::traits::Hash;
 use crate::isprime;
 use crate::pari_init;
 use crate::primitives::is_prime;
 use crate::primitives::numerical_log;
 use crate::primitives::prng;
 use crate::BinaryQF;
-use curv::arithmetic::traits::Samplable;
+use curv::arithmetic::traits::*;
 use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
+use curv::cryptographic_primitives::hashing::traits::Hash;
 use curv::elliptic::curves::secp256_k1::{FE, GE};
 use curv::elliptic::curves::traits::{ECPoint, ECScalar};
 use curv::BigInt;
@@ -411,21 +410,20 @@ impl CLDLProof {
 
     /// Compute the Fiat-Shamir challenge for the proof.
     fn challenge(public_key: &PK, t: &TTriplets, ciphertext: &Ciphertext, X: &GE) -> BigInt {
-        use crate::curv::arithmetic::traits::Converter;
         let hash256 = HSha256::create_hash(&[
             // hash the statement i.e. the discrete log of Q is encrypted in (c1,c2) under encryption key h.
             &X.bytes_compressed_to_big_int(),
-            &BigInt::from(ciphertext.c1.to_bytes().as_ref()),
-            &BigInt::from(ciphertext.c2.to_bytes().as_ref()),
-            &BigInt::from(public_key.0.to_bytes().as_ref()),
+            &BigInt::from_bytes(Sign::Positive, ciphertext.c1.to_bytes().as_ref()),
+            &BigInt::from_bytes(Sign::Positive, ciphertext.c2.to_bytes().as_ref()),
+            &BigInt::from_bytes(Sign::Positive, public_key.0.to_bytes().as_ref()),
             // hash Sigma protocol commitments
-            &BigInt::from(t.t1.to_bytes().as_ref()),
-            &BigInt::from(t.t2.to_bytes().as_ref()),
+            &BigInt::from_bytes(Sign::Positive, t.t1.to_bytes().as_ref()),
+            &BigInt::from_bytes(Sign::Positive, t.t2.to_bytes().as_ref()),
             &t.T.bytes_compressed_to_big_int(),
         ]);
 
-        let hash128 = &BigInt::to_vec(&hash256)[..SECURITY_PARAMETER / 8];
-        BigInt::from(hash128)
+        let hash128 = &BigInt::to_bytes(&hash256).1[..SECURITY_PARAMETER / 8];
+        BigInt::from_bytes(Sign::Positive, hash128)
     }
 
     pub fn verify(

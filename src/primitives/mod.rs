@@ -6,9 +6,7 @@ pub mod vdf;
 
 use crate::curv::cryptographic_primitives::hashing::traits::Hash;
 use crate::BinaryQF;
-use curv::arithmetic::traits::Modulo;
-use curv::arithmetic::traits::NumberTests;
-use curv::arithmetic::traits::Samplable;
+use curv::arithmetic::traits::*;
 use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
 use curv::cryptographic_primitives::hashing::hmac_sha512::HMacSha512;
 use curv::cryptographic_primitives::hashing::traits::KeyedHash;
@@ -56,7 +54,7 @@ fn numerical_log(x: &BigInt) -> BigInt {
         bi = bip1;
     }
 
-    let log = two * (x - &BigInt::one()).div_floor(&(ai + bi));
+    let log = two * (x - 1).div_floor(&(ai + bi));
     log
 }
 
