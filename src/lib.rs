@@ -242,9 +242,9 @@ impl BinaryQF {
         let b_string = pari_qf_comp_to_decimal_string(pari_qf, 2);
         let c_string = pari_qf_comp_to_decimal_string(pari_qf, 3);
 
-        let a: BigInt = BigInt::from_hex(&a_string).unwrap();
-        let b: BigInt = BigInt::from_hex(&b_string).unwrap();
-        let c: BigInt = BigInt::from_hex(&c_string).unwrap();
+        let a: BigInt = BigInt::from_str_radix(&a_string, 10).unwrap();
+        let b: BigInt = BigInt::from_str_radix(&b_string, 10).unwrap();
+        let c: BigInt = BigInt::from_str_radix(&c_string, 10).unwrap();
 
         BinaryQF { a, b, c }
     }
