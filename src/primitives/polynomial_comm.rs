@@ -517,7 +517,7 @@ fn pick_random_element(disc: &BigInt) -> BinaryQF {
         b2_minus_disc = b.pow(2) - disc;
         u = b2_minus_disc.div_floor(&four);
         i = i + 1;
-        c = (&c.nextprime()).mod_floor(&max);
+        c = (&c.next_prime()).mod_floor(&max);
     }
     let a = u.div_floor(&c);
     let a_b_delta = ABDeltaTriple {
@@ -533,6 +533,7 @@ fn pick_random_element(disc: &BigInt) -> BinaryQF {
 #[cfg(test)]
 mod tests {
     use super::PolyComm;
+    use curv::arithmetic::traits::*;
     use curv::elliptic::curves::secp256_k1::FE;
     use curv::elliptic::curves::traits::ECScalar;
     use curv::BigInt;
@@ -584,7 +585,7 @@ mod tests {
         let p = BigInt::from(20); // apparently the p in the toy example from the paper is too small (problem with doing -p/2)
                                   // let q = BigInt::from(10);
         let d_max = 10;
-        let bound = 3 * (d_max.clone() + BigInt::one()).bit_length() as u32 + 1;
+        let bound = 3 * (BigInt::one() + d_max.clone()).bit_length() as u32 + 1;
         let q = p.pow(bound);
 
         let mut coef_vec: Vec<FE> = Vec::new();

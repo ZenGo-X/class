@@ -2,6 +2,7 @@ use super::ErrorReason;
 use crate::pari_init;
 use crate::primitives::hash_to_prime;
 use crate::BinaryQF;
+use curv::arithmetic::traits::*;
 use curv::BigInt;
 
 /// This is a proof of exponentiation as given in https://eprint.iacr.org/2019/1229.pdf section 3.4
@@ -52,15 +53,16 @@ impl PoEProof {
 #[cfg(test)]
 mod tests {
     use super::PoEProof;
-    use crate::curv::arithmetic::traits::Samplable;
+    use crate::curv::arithmetic::traits::*;
     use crate::primitives::cl_dl_lcm::HSMCL;
     use curv::BigInt;
 
     #[test]
     fn test_poe_valid_proof() {
         for _ in 1..10 {
-            let q = str::parse(
+            let q = BigInt::from_str_radix(
                 "115792089210356248762697446949407573529996955224135760342422259061068512044369",
+                10,
             )
             .unwrap();
             let hsmcl = HSMCL::keygen(&q, &1600);
@@ -76,8 +78,9 @@ mod tests {
     #[test]
     #[should_panic]
     fn test_poe_invalid_proof() {
-        let q = str::parse(
+        let q = BigInt::from_str_radix(
             "115792089210356248762697446949407573529996955224135760342422259061068512044369",
+            10,
         )
         .unwrap();
         let hsmcl = HSMCL::keygen(&q, &1600);

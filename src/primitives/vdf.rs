@@ -135,7 +135,7 @@ fn h_g(disc: &BigInt, x: &BigInt) -> (BigInt, BigInt) {
         b2_minus_disc = b.pow(2) - disc;
         u = b2_minus_disc.div_floor(&four);
         i = i + 1;
-        c = (&c.nextprime()).mod_floor(&max);
+        c = (&c.next_prime()).mod_floor(&max);
     }
     let a = u.div_floor(&c);
     (a, b)
