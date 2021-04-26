@@ -17,16 +17,15 @@
 
 use super::ErrorReason;
 use crate::bn_to_gen;
-use crate::curv::arithmetic::traits::Modulo;
-use crate::curv::cryptographic_primitives::hashing::traits::Hash;
 use crate::isprime;
 use crate::pari_init;
 use crate::primitives::is_prime;
 use crate::primitives::numerical_log;
 use crate::primitives::prng;
 use crate::BinaryQF;
-use curv::arithmetic::traits::Samplable;
+use curv::arithmetic::traits::*;
 use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
+use curv::cryptographic_primitives::hashing::traits::Hash;
 use curv::elliptic::curves::secp256_k1::{FE, GE};
 use curv::elliptic::curves::traits::{ECPoint, ECScalar};
 use curv::BigInt;
@@ -411,21 +410,20 @@ impl CLDLProof {
 
     /// Compute the Fiat-Shamir challenge for the proof.
     fn challenge(public_key: &PK, t: &TTriplets, ciphertext: &Ciphertext, X: &GE) -> BigInt {
-        use crate::curv::arithmetic::traits::Converter;
         let hash256 = HSha256::create_hash(&[
             // hash the statement i.e. the discrete log of Q is encrypted in (c1,c2) under encryption key h.
             &X.bytes_compressed_to_big_int(),
-            &BigInt::from(ciphertext.c1.to_bytes().as_ref()),
-            &BigInt::from(ciphertext.c2.to_bytes().as_ref()),
-            &BigInt::from(public_key.0.to_bytes().as_ref()),
+            &BigInt::from_bytes(ciphertext.c1.to_bytes().as_ref()),
+            &BigInt::from_bytes(ciphertext.c2.to_bytes().as_ref()),
+            &BigInt::from_bytes(public_key.0.to_bytes().as_ref()),
             // hash Sigma protocol commitments
-            &BigInt::from(t.t1.to_bytes().as_ref()),
-            &BigInt::from(t.t2.to_bytes().as_ref()),
+            &BigInt::from_bytes(t.t1.to_bytes().as_ref()),
+            &BigInt::from_bytes(t.t2.to_bytes().as_ref()),
             &t.T.bytes_compressed_to_big_int(),
         ]);
 
-        let hash128 = &BigInt::to_vec(&hash256)[..SECURITY_PARAMETER / 8];
-        BigInt::from(hash128)
+        let hash128 = &BigInt::to_bytes(&hash256)[..SECURITY_PARAMETER / 8];
+        BigInt::from_bytes(hash128)
     }
 
     pub fn verify(
@@ -522,7 +520,7 @@ mod test {
     const seed: &'static str =  "314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460955058223172535940812848";
     #[test]
     fn encrypt_and_decrypt() {
-        let group = CLGroup::new_from_setup(&1600, &str::parse(seed).unwrap());
+        let group = CLGroup::new_from_setup(&1600, &BigInt::from_str_radix(seed, 10).unwrap());
         let (secret_key, public_key) = group.keygen();
         let message = FE::new_random();
         let (ciphertext, _) = encrypt(&group, &public_key, &message);
@@ -532,7 +530,7 @@ mod test {
 
     #[test]
     fn compute_discrete_log_in_DLEasy_subgroup() {
-        let group = CLGroup::new_from_setup(&1600, &str::parse(seed).unwrap());
+        let group = CLGroup::new_from_setup(&1600, &BigInt::from_str_radix(seed, 10).unwrap());
         let m = BigInt::from(10000);
         let exp_f = BinaryQF::expo_f(&FE::q(), &group.delta_q, &m);
         let m_tag = BinaryQF::discrete_log_f(&FE::q(), &group.delta_q, &exp_f);
@@ -541,7 +539,7 @@ mod test {
 
     #[test]
     fn verifiably_encrypt_verify_and_decrypt() {
-        let group = CLGroup::new_from_setup(&1600, &str::parse(seed).unwrap());
+        let group = CLGroup::new_from_setup(&1600, &BigInt::from_str_radix(seed, 10).unwrap());
         let (secret_key, public_key) = group.keygen();
         let dl_keypair = {
             let sk = FE::new_random();
@@ -576,7 +574,7 @@ mod test {
 
     #[test]
     fn multiply_ciphertext_by_scalar() {
-        let group = CLGroup::new_from_setup(&1600, &str::parse(seed).unwrap());
+        let group = CLGroup::new_from_setup(&1600, &BigInt::from_str_radix(seed, 10).unwrap());
         let (secret_key, public_key) = group.keygen();
         let scalar = FE::new_random();
 
@@ -592,7 +590,7 @@ mod test {
 
     #[test]
     fn add_ciphertexts() {
-        let group = CLGroup::new_from_setup(&1600, &str::parse(seed).unwrap());
+        let group = CLGroup::new_from_setup(&1600, &BigInt::from_str_radix(seed, 10).unwrap());
         let (secret_key, public_key) = group.keygen();
         let scalar1 = FE::new_random();
         let scalar2 = FE::new_random();
@@ -609,7 +607,7 @@ mod test {
 
     #[test]
     fn cl_dl_test_setup() {
-        let parsed_seed = str::parse(seed).unwrap();
+        let parsed_seed = BigInt::from_str_radix(seed, 10).unwrap();
         let group = CLGroup::new_from_setup(&1600, &parsed_seed);
         assert!(group.setup_verify(&parsed_seed).is_ok());
     }

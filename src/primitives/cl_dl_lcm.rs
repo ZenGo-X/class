@@ -1,15 +1,14 @@
 use super::ErrorReason;
 use crate::bn_to_gen;
-use crate::curv::arithmetic::traits::Modulo;
-use crate::curv::cryptographic_primitives::hashing::traits::Hash;
 use crate::isprime;
 use crate::pari_init;
 use crate::primitives::is_prime;
 use crate::primitives::numerical_log;
 use crate::primitives::prng;
 use crate::BinaryQF;
-use curv::arithmetic::traits::Samplable;
+use curv::arithmetic::traits::*;
 use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
+use curv::cryptographic_primitives::hashing::traits::Hash;
 use curv::elliptic::curves::secp256_k1::{FE, GE};
 use curv::elliptic::curves::traits::{ECPoint, ECScalar};
 use curv::BigInt;
@@ -391,8 +390,8 @@ impl CLDLProof {
                 let T = GE::generator() * r2_fe;
                 let t1 = pk.gq.exp(&r1);
                 let fs = HSha256::create_hash(&[
-                    &BigInt::from(&t1.to_bytes()[..]),
-                    &BigInt::from(&t2.to_bytes()[..]),
+                    &BigInt::from_bytes(&t1.to_bytes()[..]),
+                    &BigInt::from_bytes(&t2.to_bytes()[..]),
                     &T.bytes_compressed_to_big_int(),
                 ]);
                 (TTriplets { t1, t2, T }, fs, r1, r2)
@@ -439,8 +438,8 @@ impl CLDLProof {
         let fs_vec = (0..repeat)
             .map(|i| {
                 HSha256::create_hash(&[
-                    &BigInt::from(&self.t_vec[i].t1.to_bytes()[..]),
-                    &BigInt::from(&self.t_vec[i].t2.to_bytes()[..]),
+                    &BigInt::from_bytes(&self.t_vec[i].t1.to_bytes()[..]),
+                    &BigInt::from_bytes(&self.t_vec[i].t2.to_bytes()[..]),
                     &self.t_vec[i].T.bytes_compressed_to_big_int(),
                 ])
             })
@@ -564,8 +563,9 @@ mod tests {
 
     #[test]
     fn test_encryption_p256() {
-        let q = str::parse(
+        let q = BigInt::from_str_radix(
             "115792089210356248762697446949407573529996955224135760342422259061068512044369",
+            10,
         )
         .unwrap();
         let hsmcl = HSMCL::keygen(&q, &1600);
@@ -579,8 +579,9 @@ mod tests {
     #[test]
     fn test_encryption_secp256k1() {
         // Taken from https://safecurves.cr.yp.to/base.html
-        let q = str::parse(
+        let q = BigInt::from_str_radix(
             "115792089237316195423570985008687907852837564279074904382605163141518161494337",
+            10,
         )
         .unwrap();
         let hsmcl = HSMCL::keygen(&q, &1600);
@@ -594,13 +595,15 @@ mod tests {
     #[test]
     fn test_encryption_mul_by_scalar_secp256k1_lcm() {
         // Taken from https://safecurves.cr.yp.to/base.html
-        let q: BigInt = str::parse(
+        let q: BigInt = BigInt::from_str_radix(
             "115792089237316195423570985008687907852837564279074904382605163141518161494337",
+            10,
         )
         .unwrap();
 
-        let y_lcm_2_10 : BigInt =   str::parse(
-            "15161806181366890704755537519628428221282838501257142250824360639698299050776571382489681778825684381429314058890905101687022024744606800532531764952734582389201393752832486383043169059475949454418063248428056646723694341952991408637386677631205400831455008554143754794994126167401137152222379676492247471515691285702536834646805381995650206229354446213284302569283840180834930263739794772017863585682362821412785936104792844891075228278568320000",
+        let y_lcm_2_10 : BigInt =   BigInt::from_str_radix(
+            "15161806181366890704755537519628428221282838501257142250824360639698299050776571382489681778825684381429314058890905101687022024744606800532531764952734582389201393752832486383043169059475949454418063248428056646723694341952991408637386677631205400831455008554143754794994126167401137152222379676492247471515691285702536834646805381995650206229354446213284302569283840180834930263739794772017863585682362821412785936104792844891075228278568320000",  
+            10,
         ).unwrap();
         // let y_lcm_2_10 = (&q + BigInt::from(1)) * (&BigInt::from(2));
         let hsmcl = HSMCL::keygen(&q, &1600);
@@ -615,8 +618,9 @@ mod tests {
     #[test]
     fn test_zk_cl_dl() {
         // starts with hsm_cl encryption
-        let q = str::parse(
+        let q = BigInt::from_str_radix(
             "115792089237316195423570985008687907852837564279074904382605163141518161494337",
+            10,
         )
         .unwrap();
         let hsmcl = HSMCL::keygen(&q, &1600);
@@ -634,8 +638,9 @@ mod tests {
     #[should_panic]
     fn test_bad_q_zk_cl_dl() {
         // starts with hsm_cl encryption
-        let q = str::parse(
+        let q = BigInt::from_str_radix(
             "115792089237316195423570985008687907852837564279074904382605163141518161494337",
+            10,
         )
         .unwrap();
         let hsmcl = HSMCL::keygen(&q, &1600);
@@ -653,8 +658,9 @@ mod tests {
     #[should_panic]
     fn test_bad_witness_zk_cl_dl() {
         // starts with hsm_cl encryption
-        let q = str::parse(
+        let q = BigInt::from_str_radix(
             "115792089237316195423570985008687907852837564279074904382605163141518161494337",
+            10,
         )
         .unwrap();
         let hsmcl = HSMCL::keygen(&q, &1600);
@@ -673,8 +679,9 @@ mod tests {
 
     #[test]
     fn test_log_dlog() {
-        let q = str::parse(
+        let q = BigInt::from_str_radix(
             "115792089210356248762697446949407573529996955224135760342422259061068512044369",
+            10,
         )
         .unwrap();
         let hsmcl = HSMCL::keygen(&q, &1600);
@@ -686,14 +693,15 @@ mod tests {
 
     #[test]
     fn test_setup() {
-        let q = str::parse(
+        let q = BigInt::from_str_radix(
             "115792089237316195423570985008687907852837564279074904382605163141518161494337",
+            10,
         )
         .unwrap();
         // digits of pi
-        let seed = str::parse(
+        let seed = BigInt::from_str_radix(
                 "314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460955058223172535940812848"
-            ).unwrap();
+            , 10).unwrap();
 
         let hsmcl = HSMCL::keygen_with_setup(&q, &1600, &seed);
         assert!(HSMCL::setup_verify(&hsmcl.pk, &seed).is_ok());

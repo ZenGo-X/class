@@ -1,13 +1,12 @@
 use super::ErrorReason;
-use crate::curv::arithmetic::traits::Modulo;
-use crate::curv::cryptographic_primitives::hashing::traits::Hash;
 use crate::pari_init;
 use crate::primitives::is_prime;
 use crate::primitives::poe::PoEProof;
 use crate::ABDeltaTriple;
 use crate::BinaryQF;
-use curv::arithmetic::traits::Samplable;
+use curv::arithmetic::traits::*;
 use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
+use curv::cryptographic_primitives::hashing::traits::Hash;
 use curv::elliptic::curves::secp256_k1::FE;
 use curv::elliptic::curves::traits::ECScalar;
 use curv::BigInt;
@@ -147,8 +146,8 @@ impl PolyComm {
     pub fn decode(p: &BigInt, q: &BigInt, y: &BigInt) -> Vec<FE> {
         let one = BigInt::one();
         let p_half = p.div_floor(&BigInt::from(2));
-        let bits_in_y = BigInt::from(y.to_str_radix(2).len() as u32);
-        let bits_in_q = BigInt::from(q.to_str_radix(2).len() as u32);
+        let bits_in_y = BigInt::from(y.bit_length() as u32);
+        let bits_in_q = BigInt::from(q.bit_length() as u32);
         let mut d: BigInt = one.clone();
         while &(&d * &bits_in_q) < &bits_in_y {
             d = d + &one
@@ -518,7 +517,7 @@ fn pick_random_element(disc: &BigInt) -> BinaryQF {
         b2_minus_disc = b.pow(2) - disc;
         u = b2_minus_disc.div_floor(&four);
         i = i + 1;
-        c = (&c.nextprime()).mod_floor(&max);
+        c = (&c.next_prime()).mod_floor(&max);
     }
     let a = u.div_floor(&c);
     let a_b_delta = ABDeltaTriple {
@@ -534,6 +533,7 @@ fn pick_random_element(disc: &BigInt) -> BinaryQF {
 #[cfg(test)]
 mod tests {
     use super::PolyComm;
+    use curv::arithmetic::traits::*;
     use curv::elliptic::curves::secp256_k1::FE;
     use curv::elliptic::curves::traits::ECScalar;
     use curv::BigInt;
@@ -585,7 +585,7 @@ mod tests {
         let p = BigInt::from(20); // apparently the p in the toy example from the paper is too small (problem with doing -p/2)
                                   // let q = BigInt::from(10);
         let d_max = 10;
-        let bound = 3 * (d_max.clone() + BigInt::one()).bit_length() as u32 + 1;
+        let bound = 3 * (BigInt::one() + d_max.clone()).bit_length() as u32 + 1;
         let q = p.pow(bound);
 
         let mut coef_vec: Vec<FE> = Vec::new();

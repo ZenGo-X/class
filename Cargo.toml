@@ -19,7 +19,7 @@ num-traits = "0.2"
 
 [dependencies.curv]
 git = "https://github.com/KZen-networks/curv"
-tag = "v0.5.6"
+tag = "v0.6.2"
 
 [dev-dependencies]
 criterion = ">=0.2"
