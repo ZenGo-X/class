@@ -19,7 +19,7 @@ num-traits = "0.2"
 
 [dependencies.curv]
 git = "https://github.com/KZen-networks/curv"
-branch = "bigint"
+tag = "v0.6.2"
 
 [dev-dependencies]
 criterion = ">=0.2"
@@ -31,7 +31,3 @@ proptest = "0.10.1"
 name = "bench-vdf-class"
 path = "benches/vdf/class_group.rs"
 harness = false
-
-[patch.crates-io]
-zeroize = { git = "https://github.com/iqlusioninc/crates", tag="zeroize/v0.10.1" }
-
