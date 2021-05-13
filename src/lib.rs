@@ -17,7 +17,7 @@ use libc::c_char;
 use std::ffi::CStr;
 use std::mem::swap;
 use std::ops::Neg;
-use std::str;
+use std::{str, ptr};
 
 pub mod primitives;
 
@@ -172,8 +172,7 @@ impl BinaryQF {
         let pari_qf = self.qf_to_pari_qf();
         let pari_n = bn_to_gen(n);
 
-        let mut v = unsafe { std::mem::MaybeUninit::uninit().assume_init() };
-        let pari_qf_exp = unsafe { nupow(pari_qf, pari_n, &mut v) };
+        let pari_qf_exp = unsafe { nupow(pari_qf, pari_n, ptr::null_mut()) };
         let qf_exp = BinaryQF::pari_qf_to_qf(pari_qf_exp);
         qf_exp
     }
