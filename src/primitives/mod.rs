@@ -1,19 +1,22 @@
+use std::error::Error;
+use std::fmt;
+use std::ops::Shl;
+
+use curv::arithmetic::traits::*;
+use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
+use curv::cryptographic_primitives::hashing::hmac_sha512::HMacSha512;
+use curv::cryptographic_primitives::hashing::traits::KeyedHash;
+use curv::BigInt;
+
+use crate::curv::cryptographic_primitives::hashing::traits::Hash;
+use crate::BinaryQF;
+
 pub mod cl_dl_lcm;
 pub mod cl_dl_public_setup;
 pub mod poe;
 pub mod polynomial_comm;
 pub mod vdf;
 
-use crate::curv::cryptographic_primitives::hashing::traits::Hash;
-use crate::BinaryQF;
-use curv::arithmetic::traits::*;
-use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
-use curv::cryptographic_primitives::hashing::hmac_sha512::HMacSha512;
-use curv::cryptographic_primitives::hashing::traits::KeyedHash;
-use curv::BigInt;
-use std::error::Error;
-use std::fmt;
-use std::ops::Shl;
 #[derive(Debug, Clone, Copy)]
 pub struct ProofError;
 

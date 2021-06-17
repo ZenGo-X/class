@@ -11,13 +11,16 @@ extern crate serde_derive;
 extern crate curv;
 extern crate serde;
 extern crate serde_json;
-use curv::arithmetic::traits::*;
-use curv::BigInt;
+
 use libc::c_char;
+
 use std::ffi::CStr;
 use std::mem::swap;
 use std::ops::Neg;
-use std::{str, ptr};
+use std::{ptr, str};
+
+use curv::arithmetic::traits::*;
+use curv::BigInt;
 
 pub mod primitives;
 

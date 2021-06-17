@@ -1,15 +1,16 @@
-use super::ErrorReason;
-use crate::pari_init;
-use crate::primitives::is_prime;
-use crate::primitives::poe::PoEProof;
-use crate::ABDeltaTriple;
-use crate::BinaryQF;
 use curv::arithmetic::traits::*;
 use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
 use curv::cryptographic_primitives::hashing::traits::Hash;
 use curv::elliptic::curves::secp256_k1::FE;
 use curv::elliptic::curves::traits::ECScalar;
 use curv::BigInt;
+
+use super::ErrorReason;
+use crate::pari_init;
+use crate::primitives::is_prime;
+use crate::primitives::poe::PoEProof;
+use crate::ABDeltaTriple;
+use crate::BinaryQF;
 
 /// Polynomial commitment as given in the paper: Transparent SNARKs from DARK Compilers
 /// (https://eprint.iacr.org/2019/1229.pdf), subsection 4.2 and 4.3
@@ -532,11 +533,12 @@ fn pick_random_element(disc: &BigInt) -> BinaryQF {
 
 #[cfg(test)]
 mod tests {
-    use super::PolyComm;
     use curv::arithmetic::traits::*;
     use curv::elliptic::curves::secp256_k1::FE;
     use curv::elliptic::curves::traits::ECScalar;
     use curv::BigInt;
+
+    use super::PolyComm;
 
     #[test]
     fn test_commit_open() {

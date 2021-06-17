@@ -15,6 +15,15 @@
 //!    element and the plaintext of a CL ciphertext in a CL-group with a public
 //!    setup is given in https://eprint.iacr.org/2020/084.pdf (see section 5.2)
 
+use std::os::raw::c_int;
+
+use curv::arithmetic::traits::*;
+use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
+use curv::cryptographic_primitives::hashing::traits::Hash;
+use curv::elliptic::curves::secp256_k1::{FE, GE};
+use curv::elliptic::curves::traits::{ECPoint, ECScalar};
+use curv::BigInt;
+
 use super::ErrorReason;
 use crate::bn_to_gen;
 use crate::isprime;
@@ -23,13 +32,6 @@ use crate::primitives::is_prime;
 use crate::primitives::numerical_log;
 use crate::primitives::prng;
 use crate::BinaryQF;
-use curv::arithmetic::traits::*;
-use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
-use curv::cryptographic_primitives::hashing::traits::Hash;
-use curv::elliptic::curves::secp256_k1::{FE, GE};
-use curv::elliptic::curves::traits::{ECPoint, ECScalar};
-use curv::BigInt;
-use std::os::raw::c_int;
 
 const SECURITY_PARAMETER: usize = 128;
 const C: usize = 10;
@@ -518,6 +520,7 @@ mod test {
     use super::*;
 
     const seed: &'static str =  "314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460955058223172535940812848";
+
     #[test]
     fn encrypt_and_decrypt() {
         let group = CLGroup::new_from_setup(&1600, &BigInt::from_str_radix(seed, 10).unwrap());

@@ -1,9 +1,10 @@
+use curv::arithmetic::traits::*;
+use curv::BigInt;
+
 use super::ErrorReason;
 use crate::pari_init;
 use crate::primitives::hash_to_prime;
 use crate::BinaryQF;
-use curv::arithmetic::traits::*;
-use curv::BigInt;
 
 /// This is a proof of exponentiation as given in https://eprint.iacr.org/2019/1229.pdf section 3.4
 /// The prover can efficiently convince a verifier that a large exponentiation
@@ -52,10 +53,11 @@ impl PoEProof {
 
 #[cfg(test)]
 mod tests {
+    use curv::BigInt;
+
     use super::PoEProof;
     use crate::curv::arithmetic::traits::*;
     use crate::primitives::cl_dl_lcm::HSMCL;
-    use curv::BigInt;
 
     #[test]
     fn test_poe_valid_proof() {
