@@ -90,7 +90,7 @@ impl CLGroup {
             qtilde = next_probable_prime(&r);
         }
 
-        debug_assert!(&(BigInt::from(4) * q) < &qtilde);
+        debug_assert!((BigInt::from(4) * q) < qtilde);
 
         let delta_k = -q * &qtilde;
         let delta_q = &delta_k * q.pow(2);
@@ -119,7 +119,7 @@ impl CLGroup {
             }
             prime_forms_vec.push(BinaryQF::primeform(&delta_k, &r));
             r = next_probable_small_prime(&r);
-            i = i + 1;
+            i += 1;
         }
         let mut rgoth = BinaryQF::binary_quadratic_form_principal(&delta_k);
 
@@ -132,15 +132,15 @@ impl CLGroup {
         let mut prod_exponent = BigInt::one();
         while i < prime_forms_vec.len() {
             // extract 15bits
-            rand_bits_i = prng(seed, i.clone(), 15);
+            rand_bits_i = prng(seed, i, 15);
             while rand_bits_i.gcd(&prod_exponent) != BigInt::one() {
-                rand_bits_i = rand_bits_i + 1;
+                rand_bits_i += 1;
             }
             rgoth = rgoth
                 .compose(&prime_forms_vec[i].exp(&rand_bits_i))
                 .reduce();
-            prod_exponent = prod_exponent * &rand_bits_i;
-            i = i + 1;
+            prod_exponent *= &rand_bits_i;
+            i += 1;
         }
 
         let rgoth_square = rgoth.compose(&rgoth).reduce();
@@ -173,7 +173,7 @@ impl CLGroup {
             }
             prime_forms_vec.push(BinaryQF::primeform(&self.delta_k, &r));
             r = next_probable_small_prime(&r);
-            i = i + 1;
+            i += 1;
         }
 
         let mut rgoth = BinaryQF::binary_quadratic_form_principal(&self.delta_k);
@@ -187,15 +187,15 @@ impl CLGroup {
         let mut prod_exponent = BigInt::one();
         while i < prime_forms_vec.len() {
             // extract 15bits
-            rand_bits_i = prng(seed, i.clone(), 15);
+            rand_bits_i = prng(seed, i, 15);
             while rand_bits_i.gcd(&prod_exponent) != BigInt::one() {
-                rand_bits_i = rand_bits_i + 1;
+                rand_bits_i += 1;
             }
             rgoth = rgoth
                 .compose(&prime_forms_vec[i].exp(&rand_bits_i))
                 .reduce();
-            prod_exponent = prod_exponent * &rand_bits_i;
-            i = i + 1;
+            prod_exponent *= &rand_bits_i;
+            i += 1;
         }
 
         let rgoth_square = rgoth.compose(&rgoth).reduce();
@@ -307,7 +307,7 @@ fn next_probable_prime(r: &BigInt) -> BigInt {
     let one = BigInt::from(1);
     let mut qtilde = r + &one;
     while !is_prime(&qtilde) {
-        qtilde = qtilde + &one;
+        qtilde += &one;
     }
     qtilde
 }
@@ -320,7 +320,7 @@ fn next_probable_small_prime(r: &BigInt) -> BigInt {
     let mut qtilde_gen = bn_to_gen(&(r + &one));
     unsafe {
         while isprime(qtilde_gen) as c_int != 1 {
-            qtilde = qtilde + &one;
+            qtilde += &one;
             qtilde_gen = bn_to_gen(&qtilde);
         }
     }
@@ -446,11 +446,11 @@ impl CLDLProof {
             * (BigInt::from(2).pow(40) + BigInt::one());
 
         //length test u1:
-        if &self.u1u2.u1 > &sample_size || &self.u1u2.u1 < &BigInt::zero() {
+        if self.u1u2.u1 > sample_size || self.u1u2.u1 < BigInt::zero() {
             flag = false;
         }
         // length test u2:
-        if &self.u1u2.u2 > &FE::q() || &self.u1u2.u2 < &BigInt::zero() {
+        if self.u1u2.u2 > FE::q() || self.u1u2.u2 < BigInt::zero() {
             flag = false;
         }
 
@@ -464,7 +464,7 @@ impl CLDLProof {
         let k_bias_fe: FE = ECScalar::from(&(k.clone() + BigInt::one()));
         let g = GE::generator();
         let t2kq = (self.t_triple.T + X * &k_bias_fe).sub_point(&X.get_element());
-        let u2p = &g * &ECScalar::from(&self.u1u2.u2);
+        let u2p = g * <FE as ECScalar>::from(&self.u1u2.u2);
         if t2kq != u2p {
             flag = false;
         }
@@ -497,21 +497,19 @@ pub fn decrypt(group: &CLGroup, secret_key: &SK, c: &Ciphertext) -> FE {
 /// Multiplies the encrypted value by `val`.
 pub fn eval_scal(c: &Ciphertext, val: &BigInt) -> Ciphertext {
     unsafe { pari_init(10000000, 2) };
-    let c_new = Ciphertext {
+    Ciphertext {
         c1: c.c1.exp(&val),
         c2: c.c2.exp(&val),
-    };
-    c_new
+    }
 }
 
 /// Homomorphically adds two ciphertexts so that the resulting ciphertext is the sum of the two input ciphertexts
 pub fn eval_sum(c1: &Ciphertext, c2: &Ciphertext) -> Ciphertext {
     unsafe { pari_init(10000000, 2) };
-    let c_new = Ciphertext {
+    Ciphertext {
         c1: c1.c1.compose(&c2.c1).reduce(),
         c2: c1.c2.compose(&c2.c2).reduce(),
-    };
-    c_new
+    }
 }
 
 #[cfg(test)]
