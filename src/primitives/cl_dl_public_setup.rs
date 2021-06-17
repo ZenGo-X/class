@@ -34,7 +34,6 @@ use crate::primitives::prng;
 use crate::BinaryQF;
 
 const SECURITY_PARAMETER: usize = 128;
-const C: usize = 10;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct CLGroup {
