@@ -6,19 +6,14 @@
 
 include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 
-extern crate libc;
-#[macro_use]
-extern crate serde_derive;
-extern crate curv;
-extern crate serde;
-extern crate serde_json;
-
 use libc::c_char;
 
 use std::ffi::CStr;
 use std::mem::swap;
 use std::ops::Neg;
 use std::{ptr, str};
+
+use serde::{Deserialize, Serialize};
 
 use curv::arithmetic::traits::*;
 use curv::BigInt;
@@ -436,7 +431,7 @@ mod tests {
     use proptest::prelude::*;
 
     use super::*;
-    use crate::curv::arithmetic::traits::Samplable;
+    use curv::arithmetic::traits::Samplable;
 
     #[test]
     fn test_qf_to_pari_qf_to_qf() {

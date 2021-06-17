@@ -17,6 +17,8 @@
 
 use std::os::raw::c_int;
 
+use serde::{Deserialize, Serialize};
+
 use curv::arithmetic::traits::*;
 use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
 use curv::cryptographic_primitives::hashing::traits::Hash;

@@ -8,8 +8,8 @@ use curv::cryptographic_primitives::hashing::hmac_sha512::HMacSha512;
 use curv::cryptographic_primitives::hashing::traits::KeyedHash;
 use curv::BigInt;
 
-use crate::curv::cryptographic_primitives::hashing::traits::Hash;
 use crate::BinaryQF;
+use curv::cryptographic_primitives::hashing::traits::Hash;
 
 pub mod cl_dl_lcm;
 pub mod cl_dl_public_setup;

@@ -1,3 +1,5 @@
+use serde::{Deserialize, Serialize};
+
 use curv::arithmetic::traits::*;
 use curv::BigInt;
 
@@ -56,8 +58,8 @@ mod tests {
     use curv::BigInt;
 
     use super::PoEProof;
-    use crate::curv::arithmetic::traits::*;
     use crate::primitives::cl_dl_lcm::HSMCL;
+    use curv::arithmetic::traits::*;
 
     #[test]
     fn test_poe_valid_proof() {

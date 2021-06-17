@@ -145,7 +145,7 @@ mod tests {
     use curv::BigInt;
 
     use super::VDF;
-    use crate::curv::arithmetic::traits::Samplable;
+    use curv::arithmetic::traits::Samplable;
 
     #[test]
     fn test_vdf_valid_proof() {
