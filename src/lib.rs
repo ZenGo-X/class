@@ -135,6 +135,7 @@ impl BinaryQF {
             b: self.b.clone().neg(),
             c: self.a.clone(),
         }
+        .normalize()
     }
 
     pub fn reduce(&self) -> Self {
