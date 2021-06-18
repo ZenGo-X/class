@@ -1,3 +1,14 @@
+use std::os::raw::c_int;
+
+use serde::{Deserialize, Serialize};
+
+use curv::arithmetic::traits::*;
+use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
+use curv::cryptographic_primitives::hashing::traits::Hash;
+use curv::elliptic::curves::secp256_k1::{FE, GE};
+use curv::elliptic::curves::traits::{ECPoint, ECScalar};
+use curv::BigInt;
+
 use super::ErrorReason;
 use crate::bn_to_gen;
 use crate::isprime;
@@ -6,13 +17,6 @@ use crate::primitives::is_prime;
 use crate::primitives::numerical_log;
 use crate::primitives::prng;
 use crate::BinaryQF;
-use curv::arithmetic::traits::*;
-use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
-use curv::cryptographic_primitives::hashing::traits::Hash;
-use curv::elliptic::curves::secp256_k1::{FE, GE};
-use curv::elliptic::curves::traits::{ECPoint, ECScalar};
-use curv::BigInt;
-use std::os::raw::c_int;
 
 const SECURITY_PARAMETER: usize = 128;
 const C: usize = 10;
@@ -104,7 +108,7 @@ impl HSMCL {
             qtilde = next_probable_prime(&r);
         }
 
-        assert!(&(BigInt::from(4) * q) < &qtilde);
+        assert!((BigInt::from(4) * q) < qtilde);
 
         let delta_k = -q * &qtilde;
         let delta_q = &delta_k * q.pow(2);
@@ -164,7 +168,7 @@ impl HSMCL {
             qtilde = next_probable_prime(&r);
         }
 
-        assert!(&(BigInt::from(4) * q) < &qtilde);
+        assert!((BigInt::from(4) * q) < qtilde);
 
         let delta_k = -q * &qtilde;
         let delta_q = &delta_k * q.pow(2);
@@ -193,7 +197,7 @@ impl HSMCL {
             }
             prime_forms_vec.push(BinaryQF::primeform(&delta_k, &r));
             r = next_probable_small_prime(&r);
-            i = i + 1;
+            i += 1;
         }
         let mut rgoth = BinaryQF::binary_quadratic_form_principal(&delta_k);
 
@@ -206,15 +210,15 @@ impl HSMCL {
         let mut prod_exponent = BigInt::one();
         while i < prime_forms_vec.len() {
             // extract 15bits
-            rand_bits_i = prng(seed, i.clone(), 15);
+            rand_bits_i = prng(seed, i, 15);
             while rand_bits_i.gcd(&prod_exponent) != BigInt::one() {
-                rand_bits_i = rand_bits_i + 1;
+                rand_bits_i += 1;
             }
             rgoth = rgoth
                 .compose(&prime_forms_vec[i].exp(&rand_bits_i))
                 .reduce();
-            prod_exponent = prod_exponent * &rand_bits_i;
-            i = i + 1;
+            prod_exponent *= &rand_bits_i;
+            i += 1;
         }
 
         let rgoth_square = rgoth.compose(&rgoth).reduce();
@@ -253,7 +257,7 @@ impl HSMCL {
             }
             prime_forms_vec.push(BinaryQF::primeform(&pk.delta_k, &r));
             r = next_probable_small_prime(&r);
-            i = i + 1;
+            i += 1;
         }
 
         let mut rgoth = BinaryQF::binary_quadratic_form_principal(&pk.delta_k);
@@ -267,15 +271,15 @@ impl HSMCL {
         let mut prod_exponent = BigInt::one();
         while i < prime_forms_vec.len() {
             // extract 15bits
-            rand_bits_i = prng(seed, i.clone(), 15);
+            rand_bits_i = prng(seed, i, 15);
             while rand_bits_i.gcd(&prod_exponent) != BigInt::one() {
-                rand_bits_i = rand_bits_i + 1;
+                rand_bits_i += 1;
             }
             rgoth = rgoth
                 .compose(&prime_forms_vec[i].exp(&rand_bits_i))
                 .reduce();
-            prod_exponent = prod_exponent * &rand_bits_i;
-            i = i + 1;
+            prod_exponent *= &rand_bits_i;
+            i += 1;
         }
 
         let rgoth_square = rgoth.compose(&rgoth).reduce();
@@ -327,21 +331,19 @@ impl HSMCL {
     //TODO: add unit test
     pub fn eval_scal(c: &Ciphertext, val: &BigInt) -> Ciphertext {
         unsafe { pari_init(10000000, 2) };
-        let c_new = Ciphertext {
+        Ciphertext {
             c1: c.c1.exp(&val),
             c2: c.c2.exp(&val),
-        };
-        c_new
+        }
     }
 
     //TODO: add unit test
     pub fn eval_sum(c1: &Ciphertext, c2: &Ciphertext) -> Ciphertext {
         unsafe { pari_init(10000000, 2) };
-        let c_new = Ciphertext {
+        Ciphertext {
             c1: c1.c1.compose(&c2.c1).reduce(),
             c2: c1.c2.compose(&c2.c2).reduce(),
-        };
-        c_new
+        }
     }
 }
 
@@ -349,7 +351,7 @@ pub fn next_probable_prime(r: &BigInt) -> BigInt {
     let one = BigInt::from(1);
     let mut qtilde = r + &one;
     while !is_prime(&qtilde) {
-        qtilde = qtilde + &one;
+        qtilde += &one;
     }
     qtilde
 }
@@ -362,7 +364,7 @@ pub fn next_probable_small_prime(r: &BigInt) -> BigInt {
     let mut qtilde_gen = bn_to_gen(&(r + &one));
     unsafe {
         while isprime(qtilde_gen) as c_int != 1 {
-            qtilde = qtilde + &one;
+            qtilde += &one;
             qtilde_gen = bn_to_gen(&qtilde);
         }
     }
@@ -456,11 +458,11 @@ impl CLDLProof {
         for i in 0..repeat {
             let k_slice_i = (k.clone() >> (i * C)) & ten.clone();
             //length test u1:
-            if &self.u_vec[i].u1 > &sample_size || &self.u_vec[i].u1 < &BigInt::zero() {
+            if self.u_vec[i].u1 > sample_size || self.u_vec[i].u1 < BigInt::zero() {
                 flag = false;
             }
             // length test u2:
-            if &self.u_vec[i].u2 > &FE::q() || &self.u_vec[i].u2 < &BigInt::zero() {
+            if self.u_vec[i].u2 > FE::q() || self.u_vec[i].u2 < BigInt::zero() {
                 flag = false;
             }
             let c1k = self.ciphertext.c1.exp(&k_slice_i);
@@ -472,9 +474,9 @@ impl CLDLProof {
 
             let k_slice_i_bias_fe: FE = ECScalar::from(&(k_slice_i.clone() + BigInt::one()));
             let g = GE::generator();
-            let t2kq = (self.t_vec[i].T + self.q.clone() * k_slice_i_bias_fe)
-                .sub_point(&self.q.get_element());
-            let u2p = &g * &ECScalar::from(&self.u_vec[i].u2);
+            let t2kq =
+                (self.t_vec[i].T + self.q * k_slice_i_bias_fe).sub_point(&self.q.get_element());
+            let u2p = g * <FE as ECScalar>::from(&self.u_vec[i].u2);
             if t2kq != u2p {
                 flag = false;
             }

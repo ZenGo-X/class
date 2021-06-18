@@ -1,3 +1,6 @@
+use curv::arithmetic::traits::*;
+use curv::BigInt;
+
 use crate::pari_init;
 use crate::primitives::hash_to_prime;
 use crate::primitives::is_prime;
@@ -5,8 +8,6 @@ use crate::primitives::prng;
 use crate::primitives::ErrorReason;
 use crate::ABDeltaTriple;
 use crate::BinaryQF;
-use curv::arithmetic::traits::*;
-use curv::BigInt;
 
 /// Wesolowski VDF, based on https://eprint.iacr.org/2018/712.pdf.
 /// Original paper: https://eprint.iacr.org/2018/623.pdf
@@ -23,8 +24,8 @@ impl VDF {
     pub fn setup(security_param: usize, x: &BigInt) -> ABDeltaTriple {
         let mut disc: BigInt;
 
-        disc = -BigInt::sample(security_param.clone()); // TODO: double check 1600 bits determinant should provide 120 bit security
-                                                        // based on "Survey on IQ cryptography" 3.2
+        disc = -BigInt::sample(security_param); // TODO: double check 1600 bits determinant should provide 120 bit security
+                                                // based on "Survey on IQ cryptography" 3.2
         while disc.mod_floor(&BigInt::from(4)) != BigInt::one() || !is_prime(&(-&disc)) {
             disc = -BigInt::sample(security_param);
         }
@@ -35,11 +36,7 @@ impl VDF {
         //first line: g <- H_G(x). We will use x to seed a prng and use the prng to choose random
         // a and b.
         let (a, b) = h_g(&disc, x);
-        ABDeltaTriple {
-            a,
-            b,
-            delta: disc.clone(),
-        }
+        ABDeltaTriple { a, b, delta: disc }
     }
 
     //algorithm 3 from https://eprint.iacr.org/2018/623.pdf
@@ -54,7 +51,7 @@ impl VDF {
 
         while &i < t {
             y = y.compose(&y).reduce();
-            i = i + BigInt::one();
+            i += BigInt::one();
         }
         let l = hash_to_prime(&g, &y);
 
@@ -72,17 +69,16 @@ impl VDF {
             b = r2.div_floor(&l);
             r = r2.mod_floor(&l);
             pi = pi.exp(&two).compose(&g.exp(&b)).reduce();
-            i = i + BigInt::one();
+            i += BigInt::one();
         }
 
-        let vdf = VDF {
+        VDF {
             x: x.clone(),
             y,
             pi,
             t: t.clone(),
             a_b_delta: a_b_delta.clone(),
-        };
-        vdf
+        }
     }
 
     //algorithm 2 from https://eprint.iacr.org/2018/623.pdf
@@ -94,9 +90,9 @@ impl VDF {
         let g = BinaryQF::binary_quadratic_form_disc(&self.a_b_delta).reduce();
 
         // test that g,y are elements of the class : https://eprint.iacr.org/2018/712.pdf 2.1 line 0
-        if &g.discriminant() != &self.a_b_delta.delta
-            || &self.y.discriminant() != &self.a_b_delta.delta
-            || &self.pi.discriminant() != &self.a_b_delta.delta
+        if g.discriminant() != self.a_b_delta.delta
+            || self.y.discriminant() != self.a_b_delta.delta
+            || self.pi.discriminant() != self.a_b_delta.delta
         {
             return Err(ErrorReason::VDFVerifyError);
         }
@@ -105,9 +101,10 @@ impl VDF {
         let r = BigInt::mod_pow(&BigInt::from(2), &&self.t, &l);
         let pi_l_g_r = self.pi.exp(&l).compose(&g.exp(&r)).reduce();
 
-        match pi_l_g_r == self.y {
-            true => return Ok(()),
-            false => return Err(ErrorReason::VDFVerifyError),
+        if pi_l_g_r == self.y {
+            Ok(())
+        } else {
+            Err(ErrorReason::VDFVerifyError)
         }
     }
 }
@@ -125,16 +122,16 @@ fn h_g(disc: &BigInt, x: &BigInt) -> (BigInt, BigInt) {
     let mut i = 0;
     let two = BigInt::from(2);
     let max = BigInt::from(20);
-    let mut b = &two * prng(&x, i.clone(), disc.bit_length()) + BigInt::one();
+    let mut b = &two * prng(&x, i, disc.bit_length()) + BigInt::one();
     let mut c = two.clone();
     let mut b2_minus_disc: BigInt = b.pow(2) - disc;
     let four = BigInt::from(4);
     let mut u = b2_minus_disc.div_floor(&four);
     while u.mod_floor(&c) != BigInt::zero() {
-        b = &two * prng(&x, i.clone(), disc.bit_length()) + BigInt::one();
+        b = &two * prng(&x, i, disc.bit_length()) + BigInt::one();
         b2_minus_disc = b.pow(2) - disc;
         u = b2_minus_disc.div_floor(&four);
-        i = i + 1;
+        i += 1;
         c = (&c.next_prime()).mod_floor(&max);
     }
     let a = u.div_floor(&c);
@@ -143,10 +140,12 @@ fn h_g(disc: &BigInt, x: &BigInt) -> (BigInt, BigInt) {
 
 #[cfg(test)]
 mod tests {
-    use super::VDF;
-    use crate::curv::arithmetic::traits::Samplable;
-    use curv::BigInt;
     use std::time::Instant;
+
+    use curv::BigInt;
+
+    use super::VDF;
+    use curv::arithmetic::traits::Samplable;
 
     #[test]
     fn test_vdf_valid_proof() {

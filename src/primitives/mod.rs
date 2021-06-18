@@ -1,19 +1,22 @@
+use std::error::Error;
+use std::fmt;
+use std::ops::Shl;
+
+use curv::arithmetic::traits::*;
+use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
+use curv::cryptographic_primitives::hashing::hmac_sha512::HMacSha512;
+use curv::cryptographic_primitives::hashing::traits::KeyedHash;
+use curv::BigInt;
+
+use crate::BinaryQF;
+use curv::cryptographic_primitives::hashing::traits::Hash;
+
 pub mod cl_dl_lcm;
 pub mod cl_dl_public_setup;
 pub mod poe;
 pub mod polynomial_comm;
 pub mod vdf;
 
-use crate::curv::cryptographic_primitives::hashing::traits::Hash;
-use crate::BinaryQF;
-use curv::arithmetic::traits::*;
-use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
-use curv::cryptographic_primitives::hashing::hmac_sha512::HMacSha512;
-use curv::cryptographic_primitives::hashing::traits::KeyedHash;
-use curv::BigInt;
-use std::error::Error;
-use std::fmt;
-use std::ops::Shl;
 #[derive(Debug, Clone, Copy)]
 pub struct ProofError;
 
@@ -47,41 +50,40 @@ fn numerical_log(x: &BigInt) -> BigInt {
     let mut bi = x.sqrt();
     let mut k = 0;
     while k < 1000 {
-        k = k + 1;
+        k += 1;
         aip1 = (&ai + &bi).div_floor(&two);
         bip1 = (ai * bi).sqrt();
         ai = aip1;
         bi = bip1;
     }
 
-    let log = two * (x - 1).div_floor(&(ai + bi));
-    log
+    two * (x - 1).div_floor(&(ai + bi))
 }
 
 pub fn hash_to_prime(u: &BinaryQF, w: &BinaryQF) -> BigInt {
     let mut candidate = HSha256::create_hash(&[&u.a, &u.b, &u.c, &w.a, &w.b, &w.c]);
 
     if candidate.modulus(&BigInt::from(2)) == BigInt::zero() {
-        candidate = candidate + BigInt::one();
+        candidate += BigInt::one();
     }
     while !is_prime(&candidate) {
-        candidate = candidate + BigInt::from(2);
+        candidate += BigInt::from(2);
     }
     candidate
 }
 
 fn prng(seed: &BigInt, i: usize, bitlen: usize) -> BigInt {
     let i_bn = BigInt::from(i as i32);
-    let mut res = HMacSha512::create_hmac(&i_bn, &vec![seed]);
+    let mut res = HMacSha512::create_hmac(&i_bn, &[seed]);
     let mut tmp: BigInt = res.clone();
     let mut res_bit_len = res.bit_length();
     while res_bit_len < bitlen {
-        tmp = HMacSha512::create_hmac(&i_bn, &vec![&tmp]);
-        res = &res.shl(res_bit_len.clone()) + &tmp;
+        tmp = HMacSha512::create_hmac(&i_bn, &[&tmp]);
+        res = &res.shl(res_bit_len) + &tmp;
         res_bit_len = res.bit_length();
     }
     // prune to get |res| = bitlen
-    res >> (res_bit_len - &bitlen)
+    res >> (res_bit_len - bitlen)
 }
 
 // Runs the following three tests on a given `candidate` to determine

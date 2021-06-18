@@ -15,6 +15,17 @@
 //!    element and the plaintext of a CL ciphertext in a CL-group with a public
 //!    setup is given in https://eprint.iacr.org/2020/084.pdf (see section 5.2)
 
+use std::os::raw::c_int;
+
+use serde::{Deserialize, Serialize};
+
+use curv::arithmetic::traits::*;
+use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
+use curv::cryptographic_primitives::hashing::traits::Hash;
+use curv::elliptic::curves::secp256_k1::{FE, GE};
+use curv::elliptic::curves::traits::{ECPoint, ECScalar};
+use curv::BigInt;
+
 use super::ErrorReason;
 use crate::bn_to_gen;
 use crate::isprime;
@@ -23,16 +34,8 @@ use crate::primitives::is_prime;
 use crate::primitives::numerical_log;
 use crate::primitives::prng;
 use crate::BinaryQF;
-use curv::arithmetic::traits::*;
-use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
-use curv::cryptographic_primitives::hashing::traits::Hash;
-use curv::elliptic::curves::secp256_k1::{FE, GE};
-use curv::elliptic::curves::traits::{ECPoint, ECScalar};
-use curv::BigInt;
-use std::os::raw::c_int;
 
 const SECURITY_PARAMETER: usize = 128;
-const C: usize = 10;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct CLGroup {
@@ -89,7 +92,7 @@ impl CLGroup {
             qtilde = next_probable_prime(&r);
         }
 
-        debug_assert!(&(BigInt::from(4) * q) < &qtilde);
+        debug_assert!((BigInt::from(4) * q) < qtilde);
 
         let delta_k = -q * &qtilde;
         let delta_q = &delta_k * q.pow(2);
@@ -118,7 +121,7 @@ impl CLGroup {
             }
             prime_forms_vec.push(BinaryQF::primeform(&delta_k, &r));
             r = next_probable_small_prime(&r);
-            i = i + 1;
+            i += 1;
         }
         let mut rgoth = BinaryQF::binary_quadratic_form_principal(&delta_k);
 
@@ -131,15 +134,15 @@ impl CLGroup {
         let mut prod_exponent = BigInt::one();
         while i < prime_forms_vec.len() {
             // extract 15bits
-            rand_bits_i = prng(seed, i.clone(), 15);
+            rand_bits_i = prng(seed, i, 15);
             while rand_bits_i.gcd(&prod_exponent) != BigInt::one() {
-                rand_bits_i = rand_bits_i + 1;
+                rand_bits_i += 1;
             }
             rgoth = rgoth
                 .compose(&prime_forms_vec[i].exp(&rand_bits_i))
                 .reduce();
-            prod_exponent = prod_exponent * &rand_bits_i;
-            i = i + 1;
+            prod_exponent *= &rand_bits_i;
+            i += 1;
         }
 
         let rgoth_square = rgoth.compose(&rgoth).reduce();
@@ -172,7 +175,7 @@ impl CLGroup {
             }
             prime_forms_vec.push(BinaryQF::primeform(&self.delta_k, &r));
             r = next_probable_small_prime(&r);
-            i = i + 1;
+            i += 1;
         }
 
         let mut rgoth = BinaryQF::binary_quadratic_form_principal(&self.delta_k);
@@ -186,15 +189,15 @@ impl CLGroup {
         let mut prod_exponent = BigInt::one();
         while i < prime_forms_vec.len() {
             // extract 15bits
-            rand_bits_i = prng(seed, i.clone(), 15);
+            rand_bits_i = prng(seed, i, 15);
             while rand_bits_i.gcd(&prod_exponent) != BigInt::one() {
-                rand_bits_i = rand_bits_i + 1;
+                rand_bits_i += 1;
             }
             rgoth = rgoth
                 .compose(&prime_forms_vec[i].exp(&rand_bits_i))
                 .reduce();
-            prod_exponent = prod_exponent * &rand_bits_i;
-            i = i + 1;
+            prod_exponent *= &rand_bits_i;
+            i += 1;
         }
 
         let rgoth_square = rgoth.compose(&rgoth).reduce();
@@ -306,7 +309,7 @@ fn next_probable_prime(r: &BigInt) -> BigInt {
     let one = BigInt::from(1);
     let mut qtilde = r + &one;
     while !is_prime(&qtilde) {
-        qtilde = qtilde + &one;
+        qtilde += &one;
     }
     qtilde
 }
@@ -319,7 +322,7 @@ fn next_probable_small_prime(r: &BigInt) -> BigInt {
     let mut qtilde_gen = bn_to_gen(&(r + &one));
     unsafe {
         while isprime(qtilde_gen) as c_int != 1 {
-            qtilde = qtilde + &one;
+            qtilde += &one;
             qtilde_gen = bn_to_gen(&qtilde);
         }
     }
@@ -445,11 +448,11 @@ impl CLDLProof {
             * (BigInt::from(2).pow(40) + BigInt::one());
 
         //length test u1:
-        if &self.u1u2.u1 > &sample_size || &self.u1u2.u1 < &BigInt::zero() {
+        if self.u1u2.u1 > sample_size || self.u1u2.u1 < BigInt::zero() {
             flag = false;
         }
         // length test u2:
-        if &self.u1u2.u2 > &FE::q() || &self.u1u2.u2 < &BigInt::zero() {
+        if self.u1u2.u2 > FE::q() || self.u1u2.u2 < BigInt::zero() {
             flag = false;
         }
 
@@ -463,7 +466,7 @@ impl CLDLProof {
         let k_bias_fe: FE = ECScalar::from(&(k.clone() + BigInt::one()));
         let g = GE::generator();
         let t2kq = (self.t_triple.T + X * &k_bias_fe).sub_point(&X.get_element());
-        let u2p = &g * &ECScalar::from(&self.u1u2.u2);
+        let u2p = g * <FE as ECScalar>::from(&self.u1u2.u2);
         if t2kq != u2p {
             flag = false;
         }
@@ -496,21 +499,19 @@ pub fn decrypt(group: &CLGroup, secret_key: &SK, c: &Ciphertext) -> FE {
 /// Multiplies the encrypted value by `val`.
 pub fn eval_scal(c: &Ciphertext, val: &BigInt) -> Ciphertext {
     unsafe { pari_init(10000000, 2) };
-    let c_new = Ciphertext {
+    Ciphertext {
         c1: c.c1.exp(&val),
         c2: c.c2.exp(&val),
-    };
-    c_new
+    }
 }
 
 /// Homomorphically adds two ciphertexts so that the resulting ciphertext is the sum of the two input ciphertexts
 pub fn eval_sum(c1: &Ciphertext, c2: &Ciphertext) -> Ciphertext {
     unsafe { pari_init(10000000, 2) };
-    let c_new = Ciphertext {
+    Ciphertext {
         c1: c1.c1.compose(&c2.c1).reduce(),
         c2: c1.c2.compose(&c2.c2).reduce(),
-    };
-    c_new
+    }
 }
 
 #[cfg(test)]
@@ -518,6 +519,7 @@ mod test {
     use super::*;
 
     const seed: &'static str =  "314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460955058223172535940812848";
+
     #[test]
     fn encrypt_and_decrypt() {
         let group = CLGroup::new_from_setup(&1600, &BigInt::from_str_radix(seed, 10).unwrap());
