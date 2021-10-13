@@ -461,7 +461,7 @@ impl CLDLProof {
 
         let k_bias_fe: Scalar::<Secp256k1> = Scalar::<Secp256k1>::from(&(k.clone() + BigInt::one()));
         let g = Point::<Secp256k1>::generator();
-        let t2kq = (self.t_triple.T + X * &k_bias_fe).sub_point(&X.get_element());
+        let t2kq = (self.t_triple.T + X * &k_bias_fe) - &X;
         let u2p = &g * &Scalar::<Secp256k1>::from(&self.u1u2.u2);
         if t2kq != u2p {
             flag = false;
