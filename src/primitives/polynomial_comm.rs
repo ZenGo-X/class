@@ -5,10 +5,7 @@ use crate::primitives::poe::PoEProof;
 use crate::ABDeltaTriple;
 use crate::BinaryQF;
 use curv::arithmetic::traits::*;
-use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
-use curv::cryptographic_primitives::hashing::traits::Hash;
-use curv::elliptic::curves::secp256_k1::FE;
-use curv::elliptic::curves::traits::ECScalar;
+use curv::elliptic::curves::{secp256_k1::Secp256k1, Point, Scalar};
 use curv::BigInt;
 
 /// Polynomial commitment as given in the paper: Transparent SNARKs from DARK Compilers
@@ -74,19 +71,19 @@ impl PolyComm {
 
         let bound = 3 * (d_max.clone() + BigInt::one()).bit_length() as u32 + 1;
 
-        let p = FE::q();
+        let p = Scalar::<Secp256k1>::q();
         let q = p.pow(bound);
         PP { disc, g, q, p }
     }
 
-    pub fn commit(pp: &PP, coef_vec: &[FE]) -> (PolyComm, BigInt) {
+    pub fn commit(pp: &PP, coef_vec: &[Scalar::<Secp256k1>]) -> (PolyComm, BigInt) {
         unsafe { pari_init(100000000000, 2) };
 
         let two = BigInt::from(2);
         let p_minus1_half = (&pp.p - &BigInt::one()).div_floor(&two);
         let coef_vec_int = (0..coef_vec.len())
             .map(|i| {
-                let mut coef_i_bn = coef_vec[i].to_big_int();
+                let mut coef_i_bn = coef_vec[i].to_bigint();
                 if &coef_i_bn > &p_minus1_half {
                     coef_i_bn = coef_i_bn - &pp.p;
                 }
@@ -103,13 +100,13 @@ impl PolyComm {
         (PolyComm { c }, f_q)
     }
 
-    pub fn open(self, pp: &PP, coef_vec: &[FE]) -> Result<(), ErrorReason> {
+    pub fn open(self, pp: &PP, coef_vec: &[Scalar::<Secp256k1>]) -> Result<(), ErrorReason> {
         unsafe { pari_init(100000000000, 2) };
         let two = BigInt::from(2);
         let p_minus1_half = (&pp.p - &BigInt::one()).div_floor(&two);
         let coef_vec_int = (0..coef_vec.len())
             .map(|i| {
-                let mut coef_i_bn = coef_vec[i].to_big_int();
+                let mut coef_i_bn = coef_vec[i].to_bigint();
                 if &coef_i_bn > &p_minus1_half {
                     coef_i_bn = coef_i_bn - &pp.p;
                 }
@@ -128,11 +125,11 @@ impl PolyComm {
         }
     }
 
-    pub fn encode(p: &BigInt, q: &BigInt, coef_vec: &[FE]) -> BigInt {
+    pub fn encode(p: &BigInt, q: &BigInt, coef_vec: &[Scalar::<Secp256k1>]) -> BigInt {
         // notation change to fit the paper:
         // transform the coefficients to integer coefficients bounded [-p/2,p/2]
         let coef_vec_int = (0..coef_vec.len())
-            .map(|i| coef_vec[i].to_big_int() - &p.div_floor(&BigInt::from(2)))
+            .map(|i| coef_vec[i].to_bigint() - &p.div_floor(&BigInt::from(2)))
             .collect::<Vec<BigInt>>();
         // transform to Z :
 
@@ -143,7 +140,7 @@ impl PolyComm {
         z
     }
 
-    pub fn decode(p: &BigInt, q: &BigInt, y: &BigInt) -> Vec<FE> {
+    pub fn decode(p: &BigInt, q: &BigInt, y: &BigInt) -> Vec<Scalar::<Secp256k1>> {
         let one = BigInt::one();
         let p_half = p.div_floor(&BigInt::from(2));
         let bits_in_y = BigInt::from(y.bit_length() as u32);
@@ -153,7 +150,7 @@ impl PolyComm {
             d = d + &one
         }
 
-        let mut coef_vec: Vec<FE> = Vec::new();
+        let mut coef_vec: Vec<Scalar::<Secp256k1>> = Vec::new();
         let mut q_k = BigInt::one();
         let two = BigInt::from(2);
         let one = BigInt::from(1);
@@ -207,7 +204,7 @@ impl PolyComm {
         return coef_vec;
     }
 
-    pub fn eval_prove(&self, pp: &PP, z: &FE, y: &FE, coef_vec: &[FE]) -> NiEvalProof {
+    pub fn eval_prove(&self, pp: &PP, z: &Scalar::<Secp256k1>, y: &Scalar::<Secp256k1>, coef_vec: &[Scalar::<Secp256k1>]) -> NiEvalProof {
         unsafe { pari_init(100000000000, 2) };
 
         let d = coef_vec.len() - 1; //TODO: make bigint, check d >=0
@@ -216,7 +213,7 @@ impl PolyComm {
         let p_minus1_half = (&pp.p - &BigInt::one()).div_floor(&two);
         let mut coef_vec_int = (0..coef_vec.len())
             .map(|i| {
-                let mut coef_i_bn = coef_vec[i].to_big_int();
+                let mut coef_i_bn = coef_vec[i].to_bigint();
                 if &coef_i_bn > &p_minus1_half {
                     coef_i_bn = coef_i_bn - &pp.p;
                 }
@@ -231,8 +228,8 @@ impl PolyComm {
     pub fn eval_bounded_prove(
         c: &BinaryQF,
         pp: &PP,
-        z: &FE,
-        y: &FE,
+        z: &Scalar::<Secp256k1>,
+        y: &Scalar::<Secp256k1>,
         d: usize,
         b: BigInt,
         coef_vec: &mut [BigInt],
@@ -306,7 +303,7 @@ impl PolyComm {
         let mut f_l_coef_rev = f_l_coef.iter().rev();
         let head = f_l_coef_rev.next().unwrap();
         let tail = f_l_coef_rev;
-        let z_bn = z.to_big_int();
+        let z_bn = z.to_bigint();
         let y_l = tail.fold(head.clone(), |acc, x| x + &acc * &z_bn);
 
         let mut f_r_coef_rev = f_r_coef.iter().rev();
@@ -344,7 +341,7 @@ impl PolyComm {
 
         //step 20
         let y_prime: BigInt = &alpha * &y_l + &y_r;
-        let y_prime_fe: FE = ECScalar::from(&y_prime);
+        let y_prime_fe: Scalar::<Secp256k1> = ECScalar::from(&y_prime);
         let c_prime = c_l.exp(&alpha).compose(&c_r).reduce();
         let b_prime = &b * ((&pp.p + BigInt::one()).div_floor(&BigInt::from(2)));
         //step 21
@@ -389,7 +386,7 @@ impl PolyComm {
 }
 
 impl NiEvalProof {
-    pub fn eval_verify(mut self, c: BinaryQF, pp: &PP, z: &FE, y: &FE) -> Result<(), ErrorReason> {
+    pub fn eval_verify(mut self, c: BinaryQF, pp: &PP, z: &Scalar::<Secp256k1>, y: &Scalar::<Secp256k1>) -> Result<(), ErrorReason> {
         unsafe { pari_init(100000000000, 2) };
 
         let mut flag = true;
@@ -447,13 +444,13 @@ impl NiEvalProof {
 
         //step 17
         let z_pow_d_prime_p1 = BigInt::mod_pow(
-            &z.to_big_int(),
+            &z.to_bigint(),
             &BigInt::from((d_prime.clone() + 1) as u32),
             &pp.p,
         );
         let y_r_z_pow_d_prime_p1 = BigInt::mod_mul(&z_pow_d_prime_p1, &y_r, &pp.p);
         let y_l_y_r_z_pow_d_prime_p1 = BigInt::mod_add(&y_r_z_pow_d_prime_p1, &y_l, &pp.p);
-        if &y.to_big_int() != &y_l_y_r_z_pow_d_prime_p1 {
+        if &y.to_bigint() != &y_l_y_r_z_pow_d_prime_p1 {
             flag = false;
         }
 
@@ -534,19 +531,18 @@ fn pick_random_element(disc: &BigInt) -> BinaryQF {
 mod tests {
     use super::PolyComm;
     use curv::arithmetic::traits::*;
-    use curv::elliptic::curves::secp256_k1::FE;
-    use curv::elliptic::curves::traits::ECScalar;
+    use curv::elliptic::curves::{secp256_k1::Secp256k1, Point, Scalar};
     use curv::BigInt;
 
     #[test]
     fn test_commit_open() {
         // sample coef vector
         for _ in 1..2 {
-            let mut coef_vec: Vec<FE> = Vec::new();
+            let mut coef_vec: Vec<Scalar::<Secp256k1>> = Vec::new();
             let mut i = 0;
             while i < 10 {
                 // TODO: check that i < d_max
-                coef_vec.push(FE::new_random());
+                coef_vec.push(Scalar::<Secp256k1>::random());
                 i = i + 1;
             }
             let d_max = BigInt::from(64);
@@ -564,11 +560,11 @@ mod tests {
     #[test]
     fn test_encode_decode() {
         // sample coef vector
-        let mut coef_vec: Vec<FE> = Vec::new();
+        let mut coef_vec: Vec<Scalar::<Secp256k1>> = Vec::new();
         let mut i = 0;
         while i < 10 {
             // TODO: check that i < d_max
-            coef_vec.push(FE::new_random());
+            coef_vec.push(Scalar::<Secp256k1>::random());
             i = i + 1;
         }
         let d_max = BigInt::from(11);
@@ -588,7 +584,7 @@ mod tests {
         let bound = 3 * (BigInt::one() + d_max.clone()).bit_length() as u32 + 1;
         let q = p.pow(bound);
 
-        let mut coef_vec: Vec<FE> = Vec::new();
+        let mut coef_vec: Vec<Scalar::<Secp256k1>> = Vec::new();
 
         coef_vec.push(ECScalar::from(&BigInt::from(2)));
         coef_vec.push(ECScalar::from(&BigInt::from(3)));
@@ -606,11 +602,11 @@ mod tests {
     fn test_eval() {
         // create commitment:
         // sample coef vector
-        let mut coef_vec: Vec<FE> = Vec::new();
+        let mut coef_vec: Vec<Scalar::<Secp256k1>> = Vec::new();
         let mut i = 0;
         while i < 8 {
             // TODO: check that i < d_max
-            coef_vec.push(FE::new_random());
+            coef_vec.push(Scalar::<Secp256k1>::random());
             i = i + 1;
         }
         let d_max = BigInt::from(11);
@@ -618,13 +614,13 @@ mod tests {
         for _ in 0..6 {
             let (c, _f_q) = PolyComm::commit(&pp, &coef_vec);
             // generate y,z
-            let z = FE::new_random();
+            let z = Scalar::<Secp256k1>::random();
 
             let mut coef_vec_rev = coef_vec.iter().rev();
             let head = coef_vec_rev.next().unwrap();
             let tail = coef_vec_rev;
 
-            let y: FE = tail.fold(head.clone(), |acc, x| x.add(&(acc * &z).get_element()));
+            let y: Scalar::<Secp256k1> = tail.fold(head.clone(), |acc, x| x.add(&(acc * &z).get_element()));
             //create proof:
             let proof = c.eval_prove(&pp, &z, &y, &coef_vec[..]);
             let result = proof.eval_verify(c.c, &pp, &z, &y);
@@ -638,11 +634,11 @@ mod tests {
         // here y != f(z)
         // create commitment:
         // sample coef vector
-        let mut coef_vec: Vec<FE> = Vec::new();
+        let mut coef_vec: Vec<Scalar::<Secp256k1>> = Vec::new();
         let mut i = 0;
         while i < 9 {
             // TODO: check that i < d_max
-            coef_vec.push(FE::new_random());
+            coef_vec.push(Scalar::<Secp256k1>::random());
             i = i + 1;
         }
         let d_max = BigInt::from(11);
@@ -650,14 +646,14 @@ mod tests {
         let (c, _f_q) = PolyComm::commit(&pp, &coef_vec);
 
         // generate y,z
-        let z = FE::new_random();
+        let z = Scalar::<Secp256k1>::random();
 
         let mut coef_vec_rev = coef_vec.iter().rev();
         let head = coef_vec_rev.next().unwrap();
         let tail = coef_vec_rev;
 
-        let y: FE = tail.fold(head.clone(), |acc, x| x.add(&(acc * &z).get_element()));
-        let bias: FE = ECScalar::from(&BigInt::from(2));
+        let y: Scalar::<Secp256k1> = tail.fold(head.clone(), |acc, x| x.add(&(acc * &z).get_element()));
+        let bias: Scalar::<Secp256k1> = ECScalar::from(&BigInt::from(2));
         let y = y + bias;
         //create proof:
         let proof = c.eval_prove(&pp, &z, &y, &coef_vec[..]);
