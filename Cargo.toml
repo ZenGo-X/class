@@ -16,7 +16,7 @@ serde_derive = "1.0"
 serde_json = "1.0"
 ring-algorithm = "0.2.3"
 num-traits = "0.2"
-curv = { package = "curv-kzen", version = "0.7" }
+curv-kzen = "0.8"
 
 [dev-dependencies]
 criterion = ">=0.2"
