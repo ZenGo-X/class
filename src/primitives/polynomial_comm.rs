@@ -5,7 +5,7 @@ use crate::primitives::poe::PoEProof;
 use crate::ABDeltaTriple;
 use crate::BinaryQF;
 use curv::arithmetic::traits::*;
-use curv::cryptographic_primitives::hashing::{Digest, DigestExt};
+use curv::cryptographic_primitives::hashing::Digest;
 use curv::elliptic::curves::{secp256_k1::Secp256k1, Scalar};
 use sha2::Sha256;
 use curv::BigInt;

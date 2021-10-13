@@ -14,7 +14,6 @@ use curv::BigInt;
 use sha2::Sha256;
 use std::error::Error;
 use std::fmt;
-use std::ops::Shl;
 #[derive(Debug, Clone, Copy)]
 pub struct ProofError;
 
