@@ -5,7 +5,7 @@ use crate::primitives::poe::PoEProof;
 use crate::ABDeltaTriple;
 use crate::BinaryQF;
 use curv::arithmetic::traits::*;
-use curv::cryptographic_primitives::hashing::Digest;
+use curv::cryptographic_primitives::hashing::{Digest, DigestExt};
 use curv::elliptic::curves::{secp256_k1::Secp256k1, Scalar};
 use sha2::Sha256;
 use curv::BigInt;
@@ -73,7 +73,7 @@ impl PolyComm {
 
         let bound = 3 * (d_max.clone() + BigInt::one()).bit_length() as u32 + 1;
 
-        let p = Scalar::<Secp256k1>::q();
+        let p = Scalar::<Secp256k1>::group_order();
         let q = p.pow(bound);
         PP { disc, g, q, p }
     }
@@ -259,7 +259,7 @@ impl PolyComm {
         if (d + 1) % 2 == 1 {
             let d_prime = d + 1;
             let c_prime = c.exp(&pp.q);
-            let y_prime = y.mul(&z.get_element());
+            let y_prime = y * &z;
             let b_prime = &b * BigInt::from(d as u32);
 
             let mut coef_vec = coef_vec.to_vec();
@@ -335,7 +335,7 @@ impl PolyComm {
 
         //step 19
         // alpha = H(y_l ||y_r) for Fiat-Shamir
-        let alpha = Sha256::new().chain_big_int(&y_l).chain_bigint(&y_r).result_bigint();
+        let alpha = Sha256::new().chain_bigint(&y_l).chain_bigint(&y_r).result_bigint();
         let mut alpha = alpha.mod_floor(&pp.p);
         if alpha > (&pp.p - BigInt::one()).div_floor(&BigInt::from(2)) {
             alpha = alpha - &pp.p;
@@ -426,7 +426,7 @@ impl NiEvalProof {
         if (self.d.clone() + 1) % 2 == 1 {
             let d_prime = self.d.clone() + 1;
             let c_prime = c.exp(&pp.q);
-            let y_prime = y.mul(&z.get_element());
+            let y_prime = y * &z;
             let b_prime = &self.b * BigInt::from(self.d.clone() as u32);
 
             self.b = b_prime;
@@ -477,7 +477,7 @@ impl NiEvalProof {
 
         //step 19
         // alpha = H(y_l ||y_r) for Fiat-Shamir
-        let alpha = Sha256::new().chain_big_int(&y_l).chain_bigint(&y_r).result_bigint();
+        let alpha = Sha256::new().chain_bigint(&y_l).chain_bigint(&y_r).result_bigint();
         let mut alpha = alpha.mod_floor(&pp.p);
         if alpha > (&pp.p - BigInt::one()).div_floor(&BigInt::from(2)) {
             alpha = alpha - &pp.p;
