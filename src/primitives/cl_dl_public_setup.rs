@@ -24,8 +24,10 @@ use crate::primitives::numerical_log;
 use crate::primitives::prng;
 use crate::BinaryQF;
 use curv::arithmetic::traits::*;
+use curv::cryptographic_primitives::hashing::{Digest, DigestExt};
 use curv::elliptic::curves::{secp256_k1::Secp256k1, Point, Scalar};
 use curv::BigInt;
+use sha2::Sha256;
 use std::os::raw::c_int;
 
 const SECURITY_PARAMETER: usize = 128;
@@ -407,17 +409,17 @@ impl CLDLProof {
 
     /// Compute the Fiat-Shamir challenge for the proof.
     fn challenge(public_key: &PK, t: &TTriplets, ciphertext: &Ciphertext, X: &Point::<Secp256k1>) -> BigInt {
-        let hash256 = HSha256::create_hash(&[
+        let hash256 = Sha256::new()
             // hash the statement i.e. the discrete log of Q is encrypted in (c1,c2) under encryption key h.
-            &X.bytes_compressed_to_big_int(),
-            &BigInt::from_bytes(ciphertext.c1.to_bytes().as_ref()),
-            &BigInt::from_bytes(ciphertext.c2.to_bytes().as_ref()),
-            &BigInt::from_bytes(public_key.0.to_bytes().as_ref()),
+            .chain_bigint(&X.bytes_compressed_to_big_int())
+            .chain_bigint(&BigInt::from_bytes(ciphertext.c1.to_bytes().as_ref()))
+            .chain_bigint(&BigInt::from_bytes(ciphertext.c2.to_bytes().as_ref()))
+            .chain_bigint(&BigInt::from_bytes(public_key.0.to_bytes().as_ref()))
             // hash Sigma protocol commitments
-            &BigInt::from_bytes(t.t1.to_bytes().as_ref()),
-            &BigInt::from_bytes(t.t2.to_bytes().as_ref()),
-            &t.T.bytes_compressed_to_big_int(),
-        ]);
+            .chain_bigint(&BigInt::from_bytes(t.t1.to_bytes().as_ref()))
+            .chain_bigint(&BigInt::from_bytes(t.t2.to_bytes().as_ref()))
+            .chain_bigint(&t.T.bytes_compressed_to_big_int())
+            .result_bigint();
 
         let hash128 = &BigInt::to_bytes(&hash256)[..SECURITY_PARAMETER / 8];
         BigInt::from_bytes(hash128)
@@ -457,10 +459,10 @@ impl CLDLProof {
             flag = false;
         };
 
-        let k_bias_fe: Scalar::<Secp256k1> = ECScalar::from(&(k.clone() + BigInt::one()));
+        let k_bias_fe: Scalar::<Secp256k1> = Scalar::<Secp256k1>::from(&(k.clone() + BigInt::one()));
         let g = Point::<Secp256k1>::generator();
         let t2kq = (self.t_triple.T + X * &k_bias_fe).sub_point(&X.get_element());
-        let u2p = &g * &ECScalar::from(&self.u1u2.u2);
+        let u2p = &g * &Scalar::<Secp256k1>::from(&self.u1u2.u2);
         if t2kq != u2p {
             flag = false;
         }
@@ -487,7 +489,7 @@ pub fn decrypt(group: &CLGroup, secret_key: &SK, c: &Ciphertext) -> Scalar::<Sec
     let tmp = c.c2.compose(&c1_x_inv).reduce();
     let plaintext = BinaryQF::discrete_log_f(&Scalar::<Secp256k1>::group_order(), &group.delta_q, &tmp);
     debug_assert!(plaintext < Scalar::<Secp256k1>::group_order());
-    ECScalar::from(&plaintext)
+    Scalar::<Secp256k1>::from(&plaintext)
 }
 
 /// Multiplies the encrypted value by `val`.

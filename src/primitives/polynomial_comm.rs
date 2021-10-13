@@ -5,7 +5,9 @@ use crate::primitives::poe::PoEProof;
 use crate::ABDeltaTriple;
 use crate::BinaryQF;
 use curv::arithmetic::traits::*;
-use curv::elliptic::curves::{secp256_k1::Secp256k1, Point, Scalar};
+use curv::cryptographic_primitives::hashing::{Digest, DigestExt};
+use curv::elliptic::curves::{secp256_k1::Secp256k1, Scalar};
+use sha2::Sha256;
 use curv::BigInt;
 
 /// Polynomial commitment as given in the paper: Transparent SNARKs from DARK Compilers
@@ -166,7 +168,7 @@ impl PolyComm {
 
         let f_0: BigInt = s_0 - s_minus_1;
 
-        coef_vec.push(ECScalar::from(&f_0));
+        coef_vec.push(Scalar::<Secp256k1>::from(&f_0));
         if d == one {
             return coef_vec;
         }
@@ -197,7 +199,7 @@ impl PolyComm {
                 _ => println!("error"), // TODO: return an error
             };
 
-            coef_vec.push(ECScalar::from(&f_k));
+            coef_vec.push(Scalar::<Secp256k1>::from(&f_k));
             q_k = q_k_plus_1;
             d = d - &one;
         }
@@ -333,7 +335,7 @@ impl PolyComm {
 
         //step 19
         // alpha = H(y_l ||y_r) for Fiat-Shamir
-        let alpha = HSha256::create_hash(&[&y_l, &y_r]);
+        let alpha = Sha256::new().chain_big_int(&y_l).chain_bigint(&y_r).result_bigint();
         let mut alpha = alpha.mod_floor(&pp.p);
         if alpha > (&pp.p - BigInt::one()).div_floor(&BigInt::from(2)) {
             alpha = alpha - &pp.p;
@@ -341,7 +343,7 @@ impl PolyComm {
 
         //step 20
         let y_prime: BigInt = &alpha * &y_l + &y_r;
-        let y_prime_fe: Scalar::<Secp256k1> = ECScalar::from(&y_prime);
+        let y_prime_fe: Scalar::<Secp256k1> = Scalar::<Secp256k1>::from(&y_prime);
         let c_prime = c_l.exp(&alpha).compose(&c_r).reduce();
         let b_prime = &b * ((&pp.p + BigInt::one()).div_floor(&BigInt::from(2)));
         //step 21
@@ -406,7 +408,7 @@ impl NiEvalProof {
             }
             // step 5:
 
-            if y != &ECScalar::from(&self.f_const.mod_floor(&pp.p)) {
+            if y != &Scalar::<Secp256k1>::from(&self.f_const.mod_floor(&pp.p)) {
                 flag = false;
             }
 
@@ -475,7 +477,7 @@ impl NiEvalProof {
 
         //step 19
         // alpha = H(y_l ||y_r) for Fiat-Shamir
-        let alpha = HSha256::create_hash(&[&y_l, &y_r]);
+        let alpha = Sha256::new().chain_big_int(&y_l).chain_bigint(&y_r).result_bigint();
         let mut alpha = alpha.mod_floor(&pp.p);
         if alpha > (&pp.p - BigInt::one()).div_floor(&BigInt::from(2)) {
             alpha = alpha - &pp.p;
@@ -483,7 +485,7 @@ impl NiEvalProof {
 
         //step 20
         let y_prime: BigInt = &alpha * &y_l + &y_r;
-        let y_prime_fe = ECScalar::from(&y_prime);
+        let y_prime_fe = Scalar::<Secp256k1>::from(&y_prime);
         let c_prime = c_l.exp(&alpha).compose(&c_r).reduce();
         let b_prime = &self.b * ((&pp.p + BigInt::one()).div_floor(&BigInt::from(2)));
 
@@ -586,10 +588,10 @@ mod tests {
 
         let mut coef_vec: Vec<Scalar::<Secp256k1>> = Vec::new();
 
-        coef_vec.push(ECScalar::from(&BigInt::from(2)));
-        coef_vec.push(ECScalar::from(&BigInt::from(3)));
-        coef_vec.push(ECScalar::from(&BigInt::from(4)));
-        coef_vec.push(ECScalar::from(&BigInt::from(1)));
+        coef_vec.push(Scalar::<Secp256k1>::from(&BigInt::from(2)));
+        coef_vec.push(Scalar::<Secp256k1>::from(&BigInt::from(3)));
+        coef_vec.push(Scalar::<Secp256k1>::from(&BigInt::from(4)));
+        coef_vec.push(Scalar::<Secp256k1>::from(&BigInt::from(1)));
 
         let z = PolyComm::encode(&p, &q, &coef_vec[..]);
 
@@ -653,7 +655,7 @@ mod tests {
         let tail = coef_vec_rev;
 
         let y: Scalar::<Secp256k1> = tail.fold(head.clone(), |acc, x| x.add(&(acc * &z).get_element()));
-        let bias: Scalar::<Secp256k1> = ECScalar::from(&BigInt::from(2));
+        let bias: Scalar::<Secp256k1> = Scalar::<Secp256k1>::from(&BigInt::from(2));
         let y = y + bias;
         //create proof:
         let proof = c.eval_prove(&pp, &z, &y, &coef_vec[..]);

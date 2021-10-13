@@ -6,10 +6,12 @@ pub mod vdf;
 
 use crate::BinaryQF;
 use curv::arithmetic::traits::*;
+use curv::cryptographic_primitives::hashing::{Digest, DigestExt};
 // TODO: tmpfs: what are the replacements for these types???
 //use curv::cryptographic_primitives::hashing::hmac_sha512::HMacSha512;
 //use curv::cryptographic_primitives::hashing::traits::KeyedHash;
 use curv::BigInt;
+use sha2::Sha256;
 use std::error::Error;
 use std::fmt;
 use std::ops::Shl;
@@ -58,7 +60,14 @@ fn numerical_log(x: &BigInt) -> BigInt {
 }
 
 pub fn hash_to_prime(u: &BinaryQF, w: &BinaryQF) -> BigInt {
-    let mut candidate = HSha256::create_hash(&[&u.a, &u.b, &u.c, &w.a, &w.b, &w.c]);
+    let mut candidate = Sha256::new()
+        .chain_bigint(&u.a)
+        .chain_bigint(&u.b)
+        .chain_bigint(&u.c)
+        .chain_bigint(&w.a)
+        .chain_bigint(&w.b)
+        .chain_bigint(&w.c)
+        .result_bigint();
 
     if candidate.modulus(&BigInt::from(2)) == BigInt::zero() {
         candidate = candidate + BigInt::one();

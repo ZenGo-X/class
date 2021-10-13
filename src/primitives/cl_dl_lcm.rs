@@ -7,6 +7,7 @@ use crate::primitives::numerical_log;
 use crate::primitives::prng;
 use crate::BinaryQF;
 use curv::arithmetic::traits::*;
+use curv::cryptographic_primitives::hashing::{Digest, DigestExt};
 use curv::elliptic::curves::{secp256_k1::Secp256k1, Point, Scalar};
 use curv::BigInt;
 use sha2::Sha256;
@@ -381,7 +382,7 @@ impl CLDLProof {
                         * BigInt::from(2).pow(40)),
                 );
                 let r2_fe: Scalar::<Secp256k1> = Scalar::<Secp256k1>::random();
-                let r2 = r2_fe.to_big_int();
+                let r2 = r2_fe.to_bigint();
                 let fr2 = BinaryQF::expo_f(&pk.q, &pk.delta_q, &r2);
                 let pkr1 = pk.h.exp(&r1);
                 let t2 = fr2.compose(&pkr1).reduce();
