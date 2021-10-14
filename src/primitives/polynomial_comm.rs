@@ -75,7 +75,7 @@ impl PolyComm {
 
         let p = Scalar::<Secp256k1>::group_order();
         let q = p.pow(bound);
-        PP { disc, g, q, p }
+        PP { disc, g, q, p: p.clone() }
     }
 
     pub fn commit(pp: &PP, coef_vec: &[Scalar::<Secp256k1>]) -> (PolyComm, BigInt) {
@@ -259,7 +259,7 @@ impl PolyComm {
         if (d + 1) % 2 == 1 {
             let d_prime = d + 1;
             let c_prime = c.exp(&pp.q);
-            let y_prime = y * &z;
+            let y_prime = y * z;
             let b_prime = &b * BigInt::from(d as u32);
 
             let mut coef_vec = coef_vec.to_vec();
@@ -426,7 +426,7 @@ impl NiEvalProof {
         if (self.d.clone() + 1) % 2 == 1 {
             let d_prime = self.d.clone() + 1;
             let c_prime = c.exp(&pp.q);
-            let y_prime = y * &z;
+            let y_prime = y * z;
             let b_prime = &self.b * BigInt::from(self.d.clone() as u32);
 
             self.b = b_prime;

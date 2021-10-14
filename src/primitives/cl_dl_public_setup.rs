@@ -78,7 +78,7 @@ impl CLGroup {
 
         let mut qtilde = next_probable_prime(&r);
 
-        while (q * &qtilde).mod_floor(&BigInt::from(4)) != BigInt::from(3)
+        while (&**q * &qtilde).mod_floor(&BigInt::from(4)) != BigInt::from(3)
             || jacobi(q, &qtilde).unwrap() != -1
         {
             r = BigInt::sample_range(
@@ -88,9 +88,9 @@ impl CLGroup {
             qtilde = next_probable_prime(&r);
         }
 
-        debug_assert!(&(BigInt::from(4) * q) < &qtilde);
+        debug_assert!(&(BigInt::from(4) * &**q) < &qtilde);
 
-        let delta_k = -q * &qtilde;
+        let delta_k = -&**q * &qtilde;
         let delta_q = &delta_k * q.pow(2);
 
         let delta_k_abs: BigInt = -delta_k.clone();
@@ -461,8 +461,8 @@ impl CLDLProof {
 
         let k_bias_fe: Scalar::<Secp256k1> = Scalar::<Secp256k1>::from(&(k.clone() + BigInt::one()));
         let g = Point::<Secp256k1>::generator();
-        let t2kq = (self.t_triple.T + X * &k_bias_fe) - &X;
-        let u2p = &g * &Scalar::<Secp256k1>::from(&self.u1u2.u2);
+        let t2kq = (self.t_triple.T + X * &k_bias_fe) - X;
+        let u2p = &*g * &Scalar::<Secp256k1>::from(&self.u1u2.u2);
         if t2kq != u2p {
             flag = false;
         }
@@ -488,7 +488,7 @@ pub fn decrypt(group: &CLGroup, secret_key: &SK, c: &Ciphertext) -> Scalar::<Sec
     let c1_x_inv = c1_x.inverse();
     let tmp = c.c2.compose(&c1_x_inv).reduce();
     let plaintext = BinaryQF::discrete_log_f(&Scalar::<Secp256k1>::group_order(), &group.delta_q, &tmp);
-    debug_assert!(plaintext < Scalar::<Secp256k1>::group_order());
+    debug_assert!(&plaintext < Scalar::<Secp256k1>::group_order());
     Scalar::<Secp256k1>::from(&plaintext)
 }
 

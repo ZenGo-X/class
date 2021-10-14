@@ -409,7 +409,7 @@ impl CLDLProof {
             .map(|i| triplets_and_fs_and_r_vec[i].3.clone())
             .collect::<Vec<BigInt>>();
         // using Fiat Shamir transform
-        let k = Sha256::new().chain_bigint(&fiat_shamir_vec).result_bigint();
+        let k = fiat_shamir_vec.iter().fold(Sha256::new(), |hash, i| hash.chain_bigint(i)).result_bigint();
 
         let ten = BigInt::from(C as u32);
         let u1u2_vec = (0..repeat)
@@ -445,8 +445,7 @@ impl CLDLProof {
             .collect::<Vec<BigInt>>();
         let fs_t_vec = (0..repeat).map(|i| &fs_vec[i]).collect::<Vec<&BigInt>>();
         let mut flag = true;
-        let k = HSha256::create_hash(&fs_t_vec[..]);
-        //let k = Sha256::new().chain_bigint(&fs_t_vec[..]).result_bigint();
+        let k = fs_t_vec.iter().fold(Sha256::new(), |hash, i| hash.chain_bigint(i)).result_bigint();
         let ten = BigInt::from(C as u32);
 
         let sample_size = &self.pk.stilde
@@ -473,7 +472,7 @@ impl CLDLProof {
             let k_slice_i_bias_fe: Scalar::<Secp256k1> = Scalar::<Secp256k1>::from(&(k_slice_i.clone() + BigInt::one()));
             let g = Point::<Secp256k1>::generator();
             let t2kq = (self.t_vec[i].T + self.q.clone() * k_slice_i_bias_fe) - &self.q;
-            let u2p = &g * &Scalar::<Secp256k1>::from(&self.u_vec[i].u2);
+            let u2p = &*g * &Scalar::<Secp256k1>::from(&self.u_vec[i].u2);
             if t2kq != u2p {
                 flag = false;
             }
