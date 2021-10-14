@@ -12,6 +12,7 @@ extern crate curv;
 extern crate serde;
 extern crate serde_json;
 extern crate sha2;
+extern crate hmac;
 use curv::arithmetic::traits::*;
 use curv::BigInt;
 use libc::c_char;
