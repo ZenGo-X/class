@@ -9,7 +9,7 @@ use curv::arithmetic::traits::*;
 use curv::cryptographic_primitives::hashing::{Digest, DigestExt, HmacExt};
 use curv::BigInt;
 use sha2::{Sha256, Sha512};
-use hmac::{Hmac, Mac, NewMac};
+use hmac::{Hmac, NewMac};
 
 use std::ops::Shl;
 use std::error::Error;

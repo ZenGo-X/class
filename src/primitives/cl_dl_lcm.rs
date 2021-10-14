@@ -391,7 +391,7 @@ impl CLDLProof {
                 let fs = Sha256::new()
                     .chain_bigint(&BigInt::from_bytes(&t1.to_bytes()[..]))
                     .chain_bigint(&BigInt::from_bytes(&t2.to_bytes()[..]))
-                    .chain_bigint(&T.bytes_compressed_to_big_int())
+                    .chain_bigint(&BigInt::from_bytes(&T.to_bytes(true).as_ref()))
                     .result_bigint();
                 (TTriplets { t1, t2, T }, fs, r1, r2)
             })
@@ -439,7 +439,7 @@ impl CLDLProof {
                 Sha256::new()
                     .chain_bigint(&BigInt::from_bytes(&self.t_vec[i].t1.to_bytes()[..]))
                     .chain_bigint(&BigInt::from_bytes(&self.t_vec[i].t2.to_bytes()[..]))
-                    .chain_bigint(&self.t_vec[i].T.bytes_compressed_to_big_int())
+                    .chain_bigint(&BigInt::from_bytes(&self.t_vec[i].T.to_bytes(true).as_ref()))
                     .result_bigint()
             })
             .collect::<Vec<BigInt>>();

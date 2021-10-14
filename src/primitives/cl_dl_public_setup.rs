@@ -411,14 +411,14 @@ impl CLDLProof {
     fn challenge(public_key: &PK, t: &TTriplets, ciphertext: &Ciphertext, X: &Point::<Secp256k1>) -> BigInt {
         let hash256 = Sha256::new()
             // hash the statement i.e. the discrete log of Q is encrypted in (c1,c2) under encryption key h.
-            .chain_bigint(&X.bytes_compressed_to_big_int())
+            .chain_bigint(&BigInt::from_bytes(&X.to_bytes(true).as_ref()))
             .chain_bigint(&BigInt::from_bytes(ciphertext.c1.to_bytes().as_ref()))
             .chain_bigint(&BigInt::from_bytes(ciphertext.c2.to_bytes().as_ref()))
             .chain_bigint(&BigInt::from_bytes(public_key.0.to_bytes().as_ref()))
             // hash Sigma protocol commitments
             .chain_bigint(&BigInt::from_bytes(t.t1.to_bytes().as_ref()))
             .chain_bigint(&BigInt::from_bytes(t.t2.to_bytes().as_ref()))
-            .chain_bigint(&t.T.bytes_compressed_to_big_int())
+            .chain_bigint(&BigInt::from_bytes(&t.T.to_bytes(true).as_ref()))
             .result_bigint();
 
         let hash128 = &BigInt::to_bytes(&hash256)[..SECURITY_PARAMETER / 8];
