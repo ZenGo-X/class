@@ -556,7 +556,7 @@ fn pick_random_element(disc: &BigInt) -> BinaryQF {
 mod tests {
     use super::PolyComm;
     use curv::arithmetic::traits::*;
-    use curv::elliptic::curves::{secp256_k1::Secp256k1, Point, Scalar};
+    use curv::elliptic::curves::{secp256_k1::Secp256k1, Scalar};
     use curv::BigInt;
 
     #[test]
@@ -645,8 +645,7 @@ mod tests {
             let head = coef_vec_rev.next().unwrap();
             let tail = coef_vec_rev;
 
-            let y: Scalar<Secp256k1> =
-                tail.fold(head.clone(), |acc, x| x.add(&(acc * &z).get_element()));
+            let y: Scalar<Secp256k1> = tail.fold(head.clone(), |acc, x| x + &(acc * &z));
             //create proof:
             let proof = c.eval_prove(&pp, &z, &y, &coef_vec[..]);
             let result = proof.eval_verify(c.c, &pp, &z, &y);
@@ -678,8 +677,7 @@ mod tests {
         let head = coef_vec_rev.next().unwrap();
         let tail = coef_vec_rev;
 
-        let y: Scalar<Secp256k1> =
-            tail.fold(head.clone(), |acc, x| x.add(&(acc * &z).get_element()));
+        let y: Scalar<Secp256k1> = tail.fold(head.clone(), |acc, x| x + &(acc * &z));
         let bias: Scalar<Secp256k1> = Scalar::<Secp256k1>::from(&BigInt::from(2));
         let y = y + bias;
         //create proof:

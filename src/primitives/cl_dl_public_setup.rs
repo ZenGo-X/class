@@ -571,13 +571,13 @@ mod test {
         let (secret_key, public_key) = group.keygen();
         let dl_keypair = {
             let sk = Scalar::<Secp256k1>::random();
-            let pk = Point::<Secp256k1>::generator() * sk;
+            let pk = Point::<Secp256k1>::generator() * &sk;
             (sk, pk)
         };
         let (ciphertext, proof) =
             verifiably_encrypt(&group, &public_key, (&dl_keypair.0, &dl_keypair.1));
 
-        let wrong_dl_pk = dl_keypair.1 + &Point::<Secp256k1>::generator();
+        let wrong_dl_pk = &dl_keypair.1 + Point::<Secp256k1>::generator();
 
         assert!(
             proof
