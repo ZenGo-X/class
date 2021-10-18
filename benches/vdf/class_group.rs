@@ -4,7 +4,7 @@ extern crate criterion;
 use class_group::primitives::vdf::VDF;
 use class_group::ABDeltaTriple;
 use criterion::Criterion;
-use curv::BigInt;
+use curv::{arithmetic::Converter, BigInt};
 
 fn benches_class(c: &mut Criterion) {
     let bench_eval =
