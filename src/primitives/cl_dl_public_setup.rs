@@ -51,7 +51,7 @@ pub struct Ciphertext {
 pub struct TTriplets {
     pub t1: BinaryQF,
     pub t2: BinaryQF,
-    pub T: Point::<Secp256k1>,
+    pub T: Point<Secp256k1>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -198,7 +198,9 @@ impl CLGroup {
 
         let rgoth_square = rgoth.compose(&rgoth).reduce();
 
-        let gq_tmp = rgoth_square.phi_q_to_the_minus_1(&Scalar::<Secp256k1>::group_order()).reduce();
+        let gq_tmp = rgoth_square
+            .phi_q_to_the_minus_1(&Scalar::<Secp256k1>::group_order())
+            .reduce();
 
         let gq = gq_tmp.exp(&Scalar::<Secp256k1>::group_order());
         match gq == self.gq {
@@ -328,10 +330,14 @@ fn next_probable_small_prime(r: &BigInt) -> BigInt {
 /// CL encrypts the message under the public key.
 ///
 /// Returns the secret randomness used.
-pub fn encrypt(group: &CLGroup, public_key: &PK, m: &Scalar::<Secp256k1>) -> (Ciphertext, SK) {
+pub fn encrypt(group: &CLGroup, public_key: &PK, m: &Scalar<Secp256k1>) -> (Ciphertext, SK) {
     unsafe { pari_init(10000000, 2) };
     let (r, R) = group.keygen();
-    let exp_f = BinaryQF::expo_f(&Scalar::<Secp256k1>::group_order(), &group.delta_q, &m.to_bigint());
+    let exp_f = BinaryQF::expo_f(
+        &Scalar::<Secp256k1>::group_order(),
+        &group.delta_q,
+        &m.to_bigint(),
+    );
     let h_exp_r = public_key.0.exp(&r.0);
 
     (
@@ -346,11 +352,15 @@ pub fn encrypt(group: &CLGroup, public_key: &PK, m: &Scalar::<Secp256k1>) -> (Ci
 pub fn encrypt_predefined_randomness(
     group: &CLGroup,
     public_key: &PK,
-    m: &Scalar::<Secp256k1>,
+    m: &Scalar<Secp256k1>,
     r: &SK,
 ) -> Ciphertext {
     unsafe { pari_init(10000000, 2) };
-    let exp_f = BinaryQF::expo_f(&Scalar::<Secp256k1>::group_order(), &group.delta_q, &m.to_bigint());
+    let exp_f = BinaryQF::expo_f(
+        &Scalar::<Secp256k1>::group_order(),
+        &group.delta_q,
+        &m.to_bigint(),
+    );
     let h_exp_r = public_key.0.exp(&r.0);
 
     Ciphertext {
@@ -362,7 +372,7 @@ pub fn encrypt_predefined_randomness(
 pub fn verifiably_encrypt(
     group: &CLGroup,
     public_key: &PK,
-    DL_pair: (&Scalar::<Secp256k1>, &Point::<Secp256k1>),
+    DL_pair: (&Scalar<Secp256k1>, &Point<Secp256k1>),
 ) -> (Ciphertext, CLDLProof) {
     let (x, X) = DL_pair;
     let (ciphertext, r) = encrypt(group, public_key, x);
@@ -378,7 +388,11 @@ pub struct CLDLProof {
 }
 
 impl CLDLProof {
-    fn prove(group: &CLGroup, witness: (&Scalar::<Secp256k1>, &SK), statement: (&PK, &Ciphertext, &Point::<Secp256k1>)) -> Self {
+    fn prove(
+        group: &CLGroup,
+        witness: (&Scalar<Secp256k1>, &SK),
+        statement: (&PK, &Ciphertext, &Point<Secp256k1>),
+    ) -> Self {
         unsafe { pari_init(10000000, 2) };
         let (x, r) = witness;
         let (public_key, ciphertext, X) = statement;
@@ -389,7 +403,7 @@ impl CLDLProof {
                 * BigInt::from(2).pow(SECURITY_PARAMETER as u32)
                 * BigInt::from(2).pow(40)),
         );
-        let r2_fe: Scalar::<Secp256k1> = Scalar::<Secp256k1>::random();
+        let r2_fe: Scalar<Secp256k1> = Scalar::<Secp256k1>::random();
         let r2 = r2_fe.to_bigint();
         let fr2 = BinaryQF::expo_f(&Scalar::<Secp256k1>::group_order(), &group.delta_q, &r2);
         let pkr1 = public_key.0.exp(&r1);
@@ -401,14 +415,23 @@ impl CLDLProof {
         let k = Self::challenge(public_key, &t_triple, ciphertext, X);
 
         let u1 = r1 + &k * &r.0;
-        let u2 = BigInt::mod_add(&r2, &(&k * x.to_bigint()), &Scalar::<Secp256k1>::group_order());
+        let u2 = BigInt::mod_add(
+            &r2,
+            &(&k * x.to_bigint()),
+            &Scalar::<Secp256k1>::group_order(),
+        );
         let u1u2 = U1U2 { u1, u2 };
 
         Self { t_triple, u1u2 }
     }
 
     /// Compute the Fiat-Shamir challenge for the proof.
-    fn challenge(public_key: &PK, t: &TTriplets, ciphertext: &Ciphertext, X: &Point::<Secp256k1>) -> BigInt {
+    fn challenge(
+        public_key: &PK,
+        t: &TTriplets,
+        ciphertext: &Ciphertext,
+        X: &Point<Secp256k1>,
+    ) -> BigInt {
         let hash256 = Sha256::new()
             // hash the statement i.e. the discrete log of Q is encrypted in (c1,c2) under encryption key h.
             .chain_bigint(&BigInt::from_bytes(&X.to_bytes(true).as_ref()))
@@ -430,7 +453,7 @@ impl CLDLProof {
         group: &CLGroup,
         public_key: &PK,
         ciphertext: &Ciphertext,
-        X: &Point::<Secp256k1>,
+        X: &Point<Secp256k1>,
     ) -> Result<(), ProofError> {
         unsafe { pari_init(10000000, 2) };
         let mut flag = true;
@@ -459,7 +482,7 @@ impl CLDLProof {
             flag = false;
         };
 
-        let k_bias_fe: Scalar::<Secp256k1> = Scalar::<Secp256k1>::from(&(k.clone() + BigInt::one()));
+        let k_bias_fe: Scalar<Secp256k1> = Scalar::<Secp256k1>::from(&(k.clone() + BigInt::one()));
         let g = Point::<Secp256k1>::generator();
         let t2kq = (self.t_triple.T.clone() + X * &k_bias_fe) - X;
         let u2p = &*g * &Scalar::<Secp256k1>::from(&self.u1u2.u2);
@@ -468,7 +491,11 @@ impl CLDLProof {
         }
 
         let pku1 = public_key.0.exp(&self.u1u2.u1);
-        let fu2 = BinaryQF::expo_f(&Scalar::<Secp256k1>::group_order(), &group.delta_q, &self.u1u2.u2);
+        let fu2 = BinaryQF::expo_f(
+            &Scalar::<Secp256k1>::group_order(),
+            &group.delta_q,
+            &self.u1u2.u2,
+        );
         let c2k = ciphertext.c2.exp(&k);
         let t2c2k = self.t_triple.t2.compose(&c2k).reduce();
         let pku1fu2 = pku1.compose(&fu2).reduce();
@@ -482,12 +509,13 @@ impl CLDLProof {
     }
 }
 
-pub fn decrypt(group: &CLGroup, secret_key: &SK, c: &Ciphertext) -> Scalar::<Secp256k1> {
+pub fn decrypt(group: &CLGroup, secret_key: &SK, c: &Ciphertext) -> Scalar<Secp256k1> {
     unsafe { pari_init(10000000, 2) };
     let c1_x = c.c1.exp(&secret_key.0);
     let c1_x_inv = c1_x.inverse();
     let tmp = c.c2.compose(&c1_x_inv).reduce();
-    let plaintext = BinaryQF::discrete_log_f(&Scalar::<Secp256k1>::group_order(), &group.delta_q, &tmp);
+    let plaintext =
+        BinaryQF::discrete_log_f(&Scalar::<Secp256k1>::group_order(), &group.delta_q, &tmp);
     debug_assert!(&plaintext < Scalar::<Secp256k1>::group_order());
     Scalar::<Secp256k1>::from(&plaintext)
 }
@@ -532,7 +560,8 @@ mod test {
         let group = CLGroup::new_from_setup(&1600, &BigInt::from_str_radix(seed, 10).unwrap());
         let m = BigInt::from(10000);
         let exp_f = BinaryQF::expo_f(&Scalar::<Secp256k1>::group_order(), &group.delta_q, &m);
-        let m_tag = BinaryQF::discrete_log_f(&Scalar::<Secp256k1>::group_order(), &group.delta_q, &exp_f);
+        let m_tag =
+            BinaryQF::discrete_log_f(&Scalar::<Secp256k1>::group_order(), &group.delta_q, &exp_f);
         assert_eq!(m, m_tag);
     }
 

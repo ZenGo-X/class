@@ -52,7 +52,7 @@ pub struct HSMCL {
 pub struct CLDLProof {
     pub pk: PK,
     pub ciphertext: Ciphertext,
-    q: Point::<Secp256k1>,
+    q: Point<Secp256k1>,
     t_vec: Vec<TTriplets>,
     u_vec: Vec<U1U2>,
 }
@@ -66,7 +66,7 @@ pub struct Witness {
 pub struct TTriplets {
     pub t1: BinaryQF,
     pub t2: BinaryQF,
-    pub T: Point::<Secp256k1>,
+    pub T: Point<Secp256k1>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -370,7 +370,7 @@ pub fn next_probable_small_prime(r: &BigInt) -> BigInt {
 
 // Automatically using q of the curve.
 impl CLDLProof {
-    pub fn prove(w: Witness, pk: PK, ciphertext: Ciphertext, q: Point::<Secp256k1>) -> Self {
+    pub fn prove(w: Witness, pk: PK, ciphertext: Ciphertext, q: Point<Secp256k1>) -> Self {
         unsafe { pari_init(10000000, 2) };
         let repeat = SECURITY_PARAMETER / C + 1;
         let triplets_and_fs_and_r_vec = (0..repeat)
@@ -381,7 +381,7 @@ impl CLDLProof {
                         * BigInt::from(2).pow(C as u32)
                         * BigInt::from(2).pow(40)),
                 );
-                let r2_fe: Scalar::<Secp256k1> = Scalar::<Secp256k1>::random();
+                let r2_fe: Scalar<Secp256k1> = Scalar::<Secp256k1>::random();
                 let r2 = r2_fe.to_bigint();
                 let fr2 = BinaryQF::expo_f(&pk.q, &pk.delta_q, &r2);
                 let pkr1 = pk.h.exp(&r1);
@@ -409,7 +409,10 @@ impl CLDLProof {
             .map(|i| triplets_and_fs_and_r_vec[i].3.clone())
             .collect::<Vec<BigInt>>();
         // using Fiat Shamir transform
-        let k = fiat_shamir_vec.iter().fold(Sha256::new(), |hash, i| hash.chain_bigint(i)).result_bigint();
+        let k = fiat_shamir_vec
+            .iter()
+            .fold(Sha256::new(), |hash, i| hash.chain_bigint(i))
+            .result_bigint();
 
         let ten = BigInt::from(C as u32);
         let u1u2_vec = (0..repeat)
@@ -417,7 +420,11 @@ impl CLDLProof {
                 let k_slice_i = (k.clone() >> (i * C)) & ten.clone();
 
                 let u1 = r1_vec[i].clone() + &k_slice_i * &w.r;
-                let u2 = BigInt::mod_add(&r2_vec[i], &(&k_slice_i * &w.x), &Scalar::<Secp256k1>::group_order());
+                let u2 = BigInt::mod_add(
+                    &r2_vec[i],
+                    &(&k_slice_i * &w.x),
+                    &Scalar::<Secp256k1>::group_order(),
+                );
                 U1U2 { u1, u2 }
             })
             .collect::<Vec<U1U2>>();
@@ -439,13 +446,18 @@ impl CLDLProof {
                 Sha256::new()
                     .chain_bigint(&BigInt::from_bytes(&self.t_vec[i].t1.to_bytes()[..]))
                     .chain_bigint(&BigInt::from_bytes(&self.t_vec[i].t2.to_bytes()[..]))
-                    .chain_bigint(&BigInt::from_bytes(&self.t_vec[i].T.to_bytes(true).as_ref()))
+                    .chain_bigint(&BigInt::from_bytes(
+                        &self.t_vec[i].T.to_bytes(true).as_ref(),
+                    ))
                     .result_bigint()
             })
             .collect::<Vec<BigInt>>();
         let fs_t_vec = (0..repeat).map(|i| &fs_vec[i]).collect::<Vec<&BigInt>>();
         let mut flag = true;
-        let k = fs_t_vec.iter().fold(Sha256::new(), |hash, i| hash.chain_bigint(i)).result_bigint();
+        let k = fs_t_vec
+            .iter()
+            .fold(Sha256::new(), |hash, i| hash.chain_bigint(i))
+            .result_bigint();
         let ten = BigInt::from(C as u32);
 
         let sample_size = &self.pk.stilde
@@ -459,7 +471,9 @@ impl CLDLProof {
                 flag = false;
             }
             // length test u2:
-            if &self.u_vec[i].u2 > &Scalar::<Secp256k1>::group_order() || &self.u_vec[i].u2 < &BigInt::zero() {
+            if &self.u_vec[i].u2 > &Scalar::<Secp256k1>::group_order()
+                || &self.u_vec[i].u2 < &BigInt::zero()
+            {
                 flag = false;
             }
             let c1k = self.ciphertext.c1.exp(&k_slice_i);
@@ -469,7 +483,8 @@ impl CLDLProof {
                 flag = false;
             };
 
-            let k_slice_i_bias_fe: Scalar::<Secp256k1> = Scalar::<Secp256k1>::from(&(k_slice_i.clone() + BigInt::one()));
+            let k_slice_i_bias_fe: Scalar<Secp256k1> =
+                Scalar::<Secp256k1>::from(&(k_slice_i.clone() + BigInt::one()));
             let g = Point::<Secp256k1>::generator();
             let t2kq = (self.t_vec[i].T.clone() + self.q.clone() * k_slice_i_bias_fe) - &self.q;
             let u2p = &*g * &Scalar::<Secp256k1>::from(&self.u_vec[i].u2);
@@ -626,7 +641,7 @@ mod tests {
         let r = BigInt::sample_below(&(&hsmcl.pk.stilde * BigInt::from(2).pow(40)));
         let ciphertext = HSMCL::encrypt_predefined_randomness(&hsmcl.pk, &m, &r);
         let witness = Witness { x: m.clone(), r };
-        let m_fe: Scalar::<Secp256k1> = Scalar::<Secp256k1>::from(&m);
+        let m_fe: Scalar<Secp256k1> = Scalar::<Secp256k1>::from(&m);
         let q = Point::<Secp256k1>::generator() * m_fe;
         let proof = CLDLProof::prove(witness, hsmcl.pk.clone(), ciphertext, q);
         assert!(proof.verify().is_ok())
@@ -646,7 +661,7 @@ mod tests {
         let r = BigInt::sample_below(&(&hsmcl.pk.stilde * BigInt::from(2).pow(40)));
         let ciphertext = HSMCL::encrypt_predefined_randomness(&hsmcl.pk, &m, &r);
         let witness = Witness { x: m.clone(), r };
-        let m_fe: Scalar::<Secp256k1> = Scalar::<Secp256k1>::from(&(&m + &BigInt::one()));
+        let m_fe: Scalar<Secp256k1> = Scalar::<Secp256k1>::from(&(&m + &BigInt::one()));
         let q = Point::<Secp256k1>::generator() * m_fe;
         let proof = CLDLProof::prove(witness, hsmcl.pk.clone(), ciphertext, q);
         assert!(proof.verify().is_ok())
@@ -669,7 +684,7 @@ mod tests {
             x: m.clone() + BigInt::one(),
             r,
         };
-        let m_fe: Scalar::<Secp256k1> = Scalar::<Secp256k1>::from(&(&m + &BigInt::one()));
+        let m_fe: Scalar<Secp256k1> = Scalar::<Secp256k1>::from(&(&m + &BigInt::one()));
         let q = Point::<Secp256k1>::generator() * m_fe;
         let proof = CLDLProof::prove(witness, hsmcl.pk.clone(), ciphertext, q);
         assert!(proof.verify().is_ok())

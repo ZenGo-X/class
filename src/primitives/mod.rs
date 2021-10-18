@@ -8,12 +8,12 @@ use crate::BinaryQF;
 use curv::arithmetic::traits::*;
 use curv::cryptographic_primitives::hashing::{Digest, DigestExt, HmacExt};
 use curv::BigInt;
-use sha2::{Sha256, Sha512};
 use hmac::Hmac;
+use sha2::{Sha256, Sha512};
 
-use std::ops::Shl;
 use std::error::Error;
 use std::fmt;
+use std::ops::Shl;
 
 type HmacSha512 = Hmac<Sha512>;
 
@@ -82,11 +82,15 @@ pub fn hash_to_prime(u: &BinaryQF, w: &BinaryQF) -> BigInt {
 
 fn prng(seed: &BigInt, i: usize, bitlen: usize) -> BigInt {
     let i_bn = BigInt::from(i as i32);
-    let mut res = HmacSha512::new_bigint(&i_bn).chain_bigint(seed).result_bigint();
+    let mut res = HmacSha512::new_bigint(&i_bn)
+        .chain_bigint(seed)
+        .result_bigint();
     let mut tmp: BigInt = res.clone();
     let mut res_bit_len = res.bit_length();
     while res_bit_len < bitlen {
-        tmp = HmacSha512::new_bigint(&i_bn).chain_bigint(&tmp).result_bigint();
+        tmp = HmacSha512::new_bigint(&i_bn)
+            .chain_bigint(&tmp)
+            .result_bigint();
         res = &res.shl(res_bit_len.clone()) + &tmp;
         res_bit_len = res.bit_length();
     }
