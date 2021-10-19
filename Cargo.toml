@@ -14,22 +14,19 @@ libc = "0.2.0"
 serde = "1.0"
 serde_derive = "1.0"
 serde_json = "1.0"
-ring-algorithm = "0.4"
 num-traits = "0.2"
-#curv-kzen = "0.8"
+curv-kzen = { version = "0.8", default-features = false }
 sha2 = "0.9"
 hmac = "0.11"
-
-[dependencies.curv-kzen]
-version = "0.8"
-git = "https://github.com/tmpfs/curv"
-branch = "ring-normalize"
 
 [dev-dependencies]
 criterion = ">=0.2"
 rug = "1.2.1"
 sha2 = "0.9.1"
 proptest = "0.10.1"
+
+[features]
+default = ["curv-kzen/rust-gmp-kzen"]
 
 [[bench]]
 name = "bench-vdf-class"

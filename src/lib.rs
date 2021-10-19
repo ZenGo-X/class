@@ -13,14 +13,18 @@ extern crate hmac;
 extern crate serde;
 extern crate serde_json;
 extern crate sha2;
-use curv::arithmetic::traits::*;
-use curv::BigInt;
-use libc::c_char;
+
 use std::ffi::CStr;
 use std::mem::swap;
 use std::ops::Neg;
 use std::{ptr, str};
 
+use libc::c_char;
+
+use curv::arithmetic::traits::*;
+use curv::BigInt;
+
+mod chinese_reminder_theorem;
 pub mod primitives;
 
 #[derive(PartialEq, Eq, Clone, Debug, Serialize, Deserialize)]
@@ -347,7 +351,8 @@ impl ABDeltaTriple {
         let t_inv = BigInt::mod_inv(&t, &a1)?;
         let b1 = BigInt::mod_mul(&s1, &t_inv, &a1);
         // 8. b <- CRT((b', a'), (b0, g))
-        let mut b: BigInt = ring_algorithm::chinese_remainder_theorem(&[b1, b0], &[a1, g])?;
+        let mut b: BigInt =
+            chinese_reminder_theorem::chinese_remainder_theorem(&[b1, b0], &[a1, g])?;
         // 9. if ε = False then b <- −b (mod a)
         if !e {
             b = -b
