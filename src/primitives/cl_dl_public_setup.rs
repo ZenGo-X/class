@@ -65,7 +65,7 @@ pub struct ProofError;
 
 impl CLGroup {
     pub fn new_from_setup(lam: &usize, seed: &BigInt) -> Self {
-        let q = &Scalar::<Secp256k1>::group_order();
+        let q = Scalar::<Secp256k1>::group_order();
         unsafe { pari_init(100000000, 2) };
         let mu = q.bit_length();
         assert!(lam > &(mu + 2));
@@ -78,7 +78,7 @@ impl CLGroup {
 
         let mut qtilde = next_probable_prime(&r);
 
-        while (&**q * &qtilde).mod_floor(&BigInt::from(4)) != BigInt::from(3)
+        while (q * &qtilde).mod_floor(&BigInt::from(4)) != BigInt::from(3)
             || jacobi(q, &qtilde).unwrap() != -1
         {
             r = BigInt::sample_range(
@@ -88,9 +88,9 @@ impl CLGroup {
             qtilde = next_probable_prime(&r);
         }
 
-        debug_assert!(BigInt::from(4) * &**q < qtilde);
+        debug_assert!(BigInt::from(4) * q < qtilde);
 
-        let delta_k = -&**q * &qtilde;
+        let delta_k = -q * &qtilde;
         let delta_q = &delta_k * q.pow(2);
 
         let delta_k_abs: BigInt = -delta_k.clone();
@@ -485,7 +485,7 @@ impl CLDLProof {
         let k_bias_fe: Scalar<Secp256k1> = Scalar::<Secp256k1>::from(&(k.clone() + BigInt::one()));
         let g = Point::<Secp256k1>::generator();
         let t2kq = (self.t_triple.T.clone() + X * &k_bias_fe) - X;
-        let u2p = &*g * &Scalar::<Secp256k1>::from(&self.u1u2.u2);
+        let u2p = g * Scalar::<Secp256k1>::from(&self.u1u2.u2);
         if t2kq != u2p {
             flag = false;
         }
