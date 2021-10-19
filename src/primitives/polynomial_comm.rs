@@ -91,8 +91,8 @@ impl PolyComm {
         let coef_vec_int = (0..coef_vec.len())
             .map(|i| {
                 let mut coef_i_bn = coef_vec[i].to_bigint();
-                if &coef_i_bn > &p_minus1_half {
-                    coef_i_bn = coef_i_bn - &pp.p;
+                if coef_i_bn > p_minus1_half {
+                    coef_i_bn -= &pp.p;
                 }
                 coef_i_bn
             })
@@ -114,8 +114,8 @@ impl PolyComm {
         let coef_vec_int = (0..coef_vec.len())
             .map(|i| {
                 let mut coef_i_bn = coef_vec[i].to_bigint();
-                if &coef_i_bn > &p_minus1_half {
-                    coef_i_bn = coef_i_bn - &pp.p;
+                if coef_i_bn > p_minus1_half {
+                    coef_i_bn -= &pp.p;
                 }
                 coef_i_bn
             })
@@ -143,8 +143,8 @@ impl PolyComm {
         let mut coef_vec_rev = coef_vec_int.iter().rev();
         let head = coef_vec_rev.next().unwrap();
         let tail = coef_vec_rev;
-        let z = tail.fold(head.clone(), |acc, x| x + acc * q);
-        z
+
+        tail.fold(head.clone(), |acc, x| x + acc * q)
     }
 
     pub fn decode(p: &BigInt, q: &BigInt, y: &BigInt) -> Vec<Scalar<Secp256k1>> {
@@ -153,8 +153,8 @@ impl PolyComm {
         let bits_in_y = BigInt::from(y.bit_length() as u32);
         let bits_in_q = BigInt::from(q.bit_length() as u32);
         let mut d: BigInt = one.clone();
-        while &(&d * &bits_in_q) < &bits_in_y {
-            d = d + &one
+        while &d * &bits_in_q < bits_in_y {
+            d += &one
         }
 
         let mut coef_vec: Vec<Scalar<Secp256k1>> = Vec::new();
@@ -169,7 +169,7 @@ impl PolyComm {
         } else {
             s_0 = &s_0 + &p_half;
         }
-        q_k = q_k * q;
+        q_k *= q;
 
         let f_0: BigInt = s_0 - s_minus_1;
 
@@ -182,17 +182,17 @@ impl PolyComm {
             let mut s_k_minus_1 = y.mod_floor(&q_k);
             if s_k_minus_1 > q_k.div_floor(&two) {
                 s_k_minus_1 = &q_k - &s_k_minus_1;
-                case = case + 1;
+                case += 1;
             } else {
-                case = case + 10;
+                case += 10;
             }
             let q_k_plus_1 = &q_k * q;
             let mut s_k = y.mod_floor(&q_k_plus_1);
-            if &s_k > &(q_k_plus_1.div_floor(&two)) {
+            if s_k > q_k_plus_1.div_floor(&two) {
                 s_k = &q_k_plus_1 - &s_k;
-                case = case + 100;
+                case += 100;
             } else {
-                case = case + 1000;
+                case += 1000;
             }
             let mut f_k: BigInt = (s_k - s_k_minus_1).div_floor(&q_k);
 
@@ -206,9 +206,9 @@ impl PolyComm {
 
             coef_vec.push(Scalar::<Secp256k1>::from(&f_k));
             q_k = q_k_plus_1;
-            d = d - &one;
+            d -= &one;
         }
-        return coef_vec;
+        coef_vec
     }
 
     pub fn eval_prove(
@@ -227,8 +227,8 @@ impl PolyComm {
         let mut coef_vec_int = (0..coef_vec.len())
             .map(|i| {
                 let mut coef_i_bn = coef_vec[i].to_bigint();
-                if &coef_i_bn > &p_minus1_half {
-                    coef_i_bn = coef_i_bn - &pp.p;
+                if coef_i_bn > p_minus1_half {
+                    coef_i_bn -= &pp.p;
                 }
 
                 coef_i_bn
@@ -280,7 +280,7 @@ impl PolyComm {
 
             let eval_proof = Self::eval_bounded_prove(
                 &c_prime,
-                &pp,
+                pp,
                 z,
                 &y_prime,
                 d_prime,
@@ -309,8 +309,8 @@ impl PolyComm {
         //step 12
         let d_prime = (d + 1) / 2 - 1;
         //step 13
-        let f_l_coef = &mut coef_vec[0..d_prime + 1].to_vec().clone();
-        let f_r_coef = &mut coef_vec[d_prime + 1..].to_vec().clone();
+        let f_l_coef = &mut coef_vec[0..d_prime + 1].to_vec();
+        let f_r_coef = &mut coef_vec[d_prime + 1..].to_vec();
         //step 14
 
         let mut f_l_coef_rev = f_l_coef.iter().rev();
@@ -339,9 +339,9 @@ impl PolyComm {
         let c_r = pp.g.exp(&f_r_q).reduce();
 
         //step18
-        let q_pow_d_prime_plus1 = pp.q.pow((d_prime.clone() + 1) as u32);
+        let q_pow_d_prime_plus1 = pp.q.pow((d_prime + 1) as u32);
         let c_l_inverse = c_l.inverse();
-        let c_over_c_l = c_l_inverse.compose(&c).reduce();
+        let c_over_c_l = c_l_inverse.compose(c).reduce();
         let poe_proof = PoEProof::prove(&q_pow_d_prime_plus1, &c_r, &c_over_c_l);
 
         //step 19
@@ -352,7 +352,7 @@ impl PolyComm {
             .result_bigint();
         let mut alpha = alpha.mod_floor(&pp.p);
         if alpha > (&pp.p - BigInt::one()).div_floor(&BigInt::from(2)) {
-            alpha = alpha - &pp.p;
+            alpha -= &pp.p;
         }
 
         //step 20
@@ -374,7 +374,7 @@ impl PolyComm {
         //step 22
         let eval_proof = Self::eval_bounded_prove(
             &c_prime,
-            &pp,
+            pp,
             z,
             &y_prime_fe,
             d_prime,
@@ -387,7 +387,7 @@ impl PolyComm {
         c_r_vec.extend_from_slice(&eval_proof.c_r_vec[..]);
         poe_proof_vec.extend_from_slice(&eval_proof.poe_proof_vec[..]);
 
-        let proof = NiEvalProof {
+        NiEvalProof {
             y_l_vec,
             y_r_vec,
             c_l_vec,
@@ -396,8 +396,7 @@ impl PolyComm {
             f_const: eval_proof.f_const.clone(),
             d,
             b,
-        };
-        return proof;
+        }
     }
 }
 
@@ -414,16 +413,15 @@ impl NiEvalProof {
         let mut flag = true;
         if self.d == 0 {
             //step3
-            let bound: u32 =
-                2 * (BigInt::from(self.d.clone() as i32) + BigInt::one()).bit_length() as u32;
+            let bound: u32 = 2 * (BigInt::from(self.d as i32) + BigInt::one()).bit_length() as u32;
 
             let sig_p_d = pp.p.pow(bound);
 
-            if &(sig_p_d * &self.b) > &pp.q {
+            if sig_p_d * &self.b > pp.q {
                 flag = false;
             }
             //step 4:
-            if &self.f_const.abs() > &self.b {
+            if self.f_const.abs() > self.b {
                 flag = false;
             }
             // step 5:
@@ -443,36 +441,33 @@ impl NiEvalProof {
             }
         }
 
-        if (self.d.clone() + 1) % 2 == 1 {
-            let d_prime = self.d.clone() + 1;
+        if (self.d + 1) % 2 == 1 {
+            let d_prime = self.d + 1;
             let c_prime = c.exp(&pp.q);
             let y_prime = y * z;
-            let b_prime = &self.b * BigInt::from(self.d.clone() as u32);
+            let b_prime = &self.b * BigInt::from(self.d as u32);
 
             self.b = b_prime;
             self.d = d_prime;
 
-            let result = self.eval_verify(c_prime, &pp, z, &y_prime);
+            let result = self.eval_verify(c_prime, pp, z, &y_prime);
             match result {
                 Ok(()) => return Ok(()),
                 Err(_) => return Err(ErrorReason::EvalError),
             }
         }
         //step 12
-        let d_prime = (self.d.clone() + 1) / 2 - 1;
+        let d_prime = (self.d + 1) / 2 - 1;
         // pop out y_l, y_r.
         let y_l = self.y_l_vec.remove(0);
         let y_r = self.y_r_vec.remove(0);
 
         //step 17
-        let z_pow_d_prime_p1 = BigInt::mod_pow(
-            &z.to_bigint(),
-            &BigInt::from((d_prime.clone() + 1) as u32),
-            &pp.p,
-        );
+        let z_pow_d_prime_p1 =
+            BigInt::mod_pow(&z.to_bigint(), &BigInt::from((d_prime + 1) as u32), &pp.p);
         let y_r_z_pow_d_prime_p1 = BigInt::mod_mul(&z_pow_d_prime_p1, &y_r, &pp.p);
         let y_l_y_r_z_pow_d_prime_p1 = BigInt::mod_add(&y_r_z_pow_d_prime_p1, &y_l, &pp.p);
-        if &y.to_bigint() != &y_l_y_r_z_pow_d_prime_p1 {
+        if y.to_bigint() != y_l_y_r_z_pow_d_prime_p1 {
             flag = false;
         }
 
@@ -480,7 +475,7 @@ impl NiEvalProof {
         let poe_proof = self.poe_proof_vec.remove(0);
         let c_l = self.c_l_vec.remove(0);
         let c_r = self.c_r_vec.remove(0);
-        let q_pow_d_prime_plus1 = pp.q.pow((d_prime.clone() + 1) as u32);
+        let q_pow_d_prime_plus1 = pp.q.pow((d_prime + 1) as u32);
 
         let c_l_inverse = c_l.inverse();
         let c_over_c_l = c_l_inverse.compose(&c).reduce();
@@ -503,7 +498,7 @@ impl NiEvalProof {
             .result_bigint();
         let mut alpha = alpha.mod_floor(&pp.p);
         if alpha > (&pp.p - BigInt::one()).div_floor(&BigInt::from(2)) {
-            alpha = alpha - &pp.p;
+            alpha -= &pp.p;
         }
 
         //step 20
@@ -515,10 +510,10 @@ impl NiEvalProof {
         self.b = b_prime;
         self.d = d_prime;
         let res = self.eval_verify(c_prime, pp, z, &y_prime_fe);
-        if flag == true && res.is_ok() {
-            return Ok(());
+        if flag && res.is_ok() {
+            Ok(())
         } else {
-            return Err(ErrorReason::EvalError);
+            Err(ErrorReason::EvalError)
         }
     }
 }
@@ -526,7 +521,6 @@ impl NiEvalProof {
 // helper function: generate random group element from disc (used in setup)
 // see protocol description in vdf h_g function
 fn pick_random_element(disc: &BigInt) -> BinaryQF {
-    let mut i = 0;
     let two = BigInt::from(2);
     let max = BigInt::from(20);
     let mut b = &two * BigInt::sample(disc.bit_length()) + BigInt::one();
@@ -538,7 +532,6 @@ fn pick_random_element(disc: &BigInt) -> BinaryQF {
         b = &two * BigInt::sample(disc.bit_length()) + BigInt::one();
         b2_minus_disc = b.pow(2) - disc;
         u = b2_minus_disc.div_floor(&four);
-        i = i + 1;
         c = (&c.next_prime()).mod_floor(&max);
     }
     let a = u.div_floor(&c);
@@ -548,8 +541,7 @@ fn pick_random_element(disc: &BigInt) -> BinaryQF {
         delta: disc.clone(),
     };
 
-    let g = BinaryQF::binary_quadratic_form_disc(&a_b_delta).reduce();
-    g
+    BinaryQF::binary_quadratic_form_disc(&a_b_delta).reduce()
 }
 
 #[cfg(test)]
@@ -568,7 +560,7 @@ mod tests {
             while i < 10 {
                 // TODO: check that i < d_max
                 coef_vec.push(Scalar::<Secp256k1>::random());
-                i = i + 1;
+                i += 1;
             }
             let d_max = BigInt::from(64);
 
@@ -590,7 +582,7 @@ mod tests {
         while i < 10 {
             // TODO: check that i < d_max
             coef_vec.push(Scalar::<Secp256k1>::random());
-            i = i + 1;
+            i += 1;
         }
         let d_max = BigInt::from(11);
         let pp = PolyComm::setup(&d_max);
@@ -606,7 +598,7 @@ mod tests {
         let p = BigInt::from(20); // apparently the p in the toy example from the paper is too small (problem with doing -p/2)
                                   // let q = BigInt::from(10);
         let d_max = 10;
-        let bound = 3 * (BigInt::one() + d_max.clone()).bit_length() as u32 + 1;
+        let bound = 3 * (BigInt::one() + d_max).bit_length() as u32 + 1;
         let q = p.pow(bound);
 
         let mut coef_vec: Vec<Scalar<Secp256k1>> = Vec::new();
@@ -632,7 +624,7 @@ mod tests {
         while i < 8 {
             // TODO: check that i < d_max
             coef_vec.push(Scalar::<Secp256k1>::random());
-            i = i + 1;
+            i += 1;
         }
         let d_max = BigInt::from(11);
         let pp = PolyComm::setup(&d_max);
@@ -664,7 +656,7 @@ mod tests {
         while i < 9 {
             // TODO: check that i < d_max
             coef_vec.push(Scalar::<Secp256k1>::random());
-            i = i + 1;
+            i += 1;
         }
         let d_max = BigInt::from(11);
         let pp = PolyComm::setup(&d_max);

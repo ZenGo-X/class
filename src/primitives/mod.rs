@@ -48,15 +48,14 @@ fn numerical_log(x: &BigInt) -> BigInt {
     let mut bi = x.sqrt();
     let mut k = 0;
     while k < 1000 {
-        k = k + 1;
+        k += 1;
         aip1 = (&ai + &bi).div_floor(&two);
         bip1 = (ai * bi).sqrt();
         ai = aip1;
         bi = bip1;
     }
 
-    let log = two * (x - 1).div_floor(&(ai + bi));
-    log
+    two * (x - 1).div_floor(&(ai + bi))
 }
 
 pub fn hash_to_prime(u: &BinaryQF, w: &BinaryQF) -> BigInt {
@@ -70,10 +69,10 @@ pub fn hash_to_prime(u: &BinaryQF, w: &BinaryQF) -> BigInt {
         .result_bigint();
 
     if candidate.modulus(&BigInt::from(2)) == BigInt::zero() {
-        candidate = candidate + BigInt::one();
+        candidate += BigInt::one();
     }
     while !is_prime(&candidate) {
-        candidate = candidate + BigInt::from(2);
+        candidate += BigInt::from(2);
     }
     candidate
 }
@@ -89,11 +88,11 @@ fn prng(seed: &BigInt, i: usize, bitlen: usize) -> BigInt {
         tmp = Hmac::<Sha512>::new_bigint(&i_bn)
             .chain_bigint(&tmp)
             .result_bigint();
-        res = &res.shl(res_bit_len.clone()) + &tmp;
+        res = &res.shl(res_bit_len) + &tmp;
         res_bit_len = res.bit_length();
     }
     // prune to get |res| = bitlen
-    res >> (res_bit_len - &bitlen)
+    res >> (res_bit_len - bitlen)
 }
 
 // Runs the following three tests on a given `candidate` to determine
@@ -389,6 +388,6 @@ mod tests {
     fn test_numerical_log() {
         let h2 = BigInt::from(10000);
         let n2 = numerical_log(&h2);
-        println!("n2 {:?}", n2.clone());
+        println!("n2 {:?}", n2);
     }
 }

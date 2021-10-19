@@ -10,7 +10,7 @@ fn benches_class(c: &mut Criterion) {
     let bench_eval =
         |c: &mut Criterion, difficulty: &BigInt, a_b_delta: &ABDeltaTriple, seed: &BigInt| {
             c.bench_function(&format!("eval with difficulty {}", difficulty), move |b| {
-                b.iter(|| VDF::eval(&a_b_delta, &seed, &difficulty))
+                b.iter(|| VDF::eval(a_b_delta, seed, difficulty))
             });
         };
     let bench_verify = |c: &mut Criterion, difficulty: &BigInt, vdf_out_proof: &VDF| {
