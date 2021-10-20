@@ -7,8 +7,8 @@ before_install:
   - rustup component add rustfmt clippy
 
 script:
-  - cargo build --benches --verbose
-  - cargo test --verbose -- --test-threads=1
+  - cargo build --release --benches --verbose
+  - cargo test --release --verbose -- --test-threads=1
   - cargo fmt --all -- --check
   - cargo clippy -- -D clippy::all
 

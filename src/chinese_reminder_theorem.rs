@@ -11,7 +11,7 @@ pub fn chinese_remainder_theorem(u: &[BigInt], m: &[BigInt]) -> Option<BigInt> {
     for (i, (u_i, m_i)) in u.iter().zip(m.iter()).enumerate() {
         let coef_i = BigInt::mod_inv(
             &m[0..i].iter().fold(BigInt::one(), |p, v| &(&p * v) % m_i),
-            &m_i,
+            m_i,
         )?;
         let t = v
             .iter()
