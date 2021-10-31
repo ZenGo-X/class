@@ -403,7 +403,7 @@ impl CLDLProof {
                 * BigInt::from(2).pow(SECURITY_PARAMETER as u32)
                 * BigInt::from(2).pow(40)),
         );
-        let r2_fe: Scalar<Secp256k1> = Scalar::<Secp256k1>::random();
+        let r2_fe = Scalar::<Secp256k1>::random();
         let r2 = r2_fe.to_bigint();
         let fr2 = BinaryQF::expo_f(Scalar::<Secp256k1>::group_order(), &group.delta_q, &r2);
         let pkr1 = public_key.0.exp(&r1);

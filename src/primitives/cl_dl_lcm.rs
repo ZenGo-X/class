@@ -381,7 +381,7 @@ impl CLDLProof {
                         * BigInt::from(2).pow(C as u32)
                         * BigInt::from(2).pow(40)),
                 );
-                let r2_fe: Scalar<Secp256k1> = Scalar::<Secp256k1>::random();
+                let r2_fe = Scalar::<Secp256k1>::random();
                 let r2 = r2_fe.to_bigint();
                 let fr2 = BinaryQF::expo_f(&pk.q, &pk.delta_q, &r2);
                 let pkr1 = pk.h.exp(&r1);
@@ -639,7 +639,7 @@ mod tests {
         let r = BigInt::sample_below(&(&hsmcl.pk.stilde * BigInt::from(2).pow(40)));
         let ciphertext = HSMCL::encrypt_predefined_randomness(&hsmcl.pk, &m, &r);
         let witness = Witness { x: m.clone(), r };
-        let m_fe: Scalar<Secp256k1> = Scalar::<Secp256k1>::from(&m);
+        let m_fe = Scalar::<Secp256k1>::from(&m);
         let q = Point::<Secp256k1>::generator() * m_fe;
         let proof = CLDLProof::prove(witness, hsmcl.pk, ciphertext, q);
         assert!(proof.verify().is_ok())
@@ -682,7 +682,7 @@ mod tests {
             x: m.clone() + BigInt::one(),
             r,
         };
-        let m_fe: Scalar<Secp256k1> = Scalar::<Secp256k1>::from(&(&m + &BigInt::one()));
+        let m_fe = Scalar::<Secp256k1>::from(&(&m + &BigInt::one()));
         let q = Point::<Secp256k1>::generator() * m_fe;
         let proof = CLDLProof::prove(witness, hsmcl.pk, ciphertext, q);
         assert!(proof.verify().is_ok())

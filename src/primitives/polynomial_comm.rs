@@ -357,7 +357,7 @@ impl PolyComm {
 
         //step 20
         let y_prime: BigInt = &alpha * &y_l + &y_r;
-        let y_prime_fe: Scalar<Secp256k1> = Scalar::<Secp256k1>::from(&y_prime);
+        let y_prime_fe = Scalar::<Secp256k1>::from(&y_prime);
         let c_prime = c_l.exp(&alpha).compose(&c_r).reduce();
         let b_prime = &b * ((&pp.p + BigInt::one()).div_floor(&BigInt::from(2)));
         //step 21
@@ -669,8 +669,8 @@ mod tests {
         let head = coef_vec_rev.next().unwrap();
         let tail = coef_vec_rev;
 
-        let y: Scalar<Secp256k1> = tail.fold(head.clone(), |acc, x| x + &(acc * &z));
-        let bias: Scalar<Secp256k1> = Scalar::<Secp256k1>::from(&BigInt::from(2));
+        let y = tail.fold(head.clone(), |acc, x| x + &(acc * &z));
+        let bias = Scalar::<Secp256k1>::from(&BigInt::from(2));
         let y = y + bias;
         //create proof:
         let proof = c.eval_prove(&pp, &z, &y, &coef_vec[..]);
