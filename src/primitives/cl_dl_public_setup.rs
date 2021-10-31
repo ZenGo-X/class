@@ -434,18 +434,17 @@ impl CLDLProof {
     ) -> BigInt {
         let hash256 = Sha256::new()
             // hash the statement i.e. the discrete log of Q is encrypted in (c1,c2) under encryption key h.
-            .chain_bigint(&BigInt::from_bytes(X.to_bytes(true).as_ref()))
-            .chain_bigint(&BigInt::from_bytes(ciphertext.c1.to_bytes().as_ref()))
-            .chain_bigint(&BigInt::from_bytes(ciphertext.c2.to_bytes().as_ref()))
-            .chain_bigint(&BigInt::from_bytes(public_key.0.to_bytes().as_ref()))
+            .chain_point(X)
+            .chain(ciphertext.c1.to_bytes())
+            .chain(ciphertext.c2.to_bytes())
+            .chain(public_key.0.to_bytes())
             // hash Sigma protocol commitments
-            .chain_bigint(&BigInt::from_bytes(t.t1.to_bytes().as_ref()))
-            .chain_bigint(&BigInt::from_bytes(t.t2.to_bytes().as_ref()))
-            .chain_bigint(&BigInt::from_bytes(t.T.to_bytes(true).as_ref()))
-            .result_bigint();
+            .chain(t.t1.to_bytes())
+            .chain(t.t2.to_bytes())
+            .chain_point(&t.T)
+            .finalize();
 
-        let hash128 = &BigInt::to_bytes(&hash256)[..SECURITY_PARAMETER / 8];
-        BigInt::from_bytes(hash128)
+        BigInt::from_bytes(&hash256[..SECURITY_PARAMETER / 8])
     }
 
     pub fn verify(

@@ -389,9 +389,9 @@ impl CLDLProof {
                 let T = Point::<Secp256k1>::generator() * r2_fe;
                 let t1 = pk.gq.exp(&r1);
                 let fs = Sha256::new()
-                    .chain_bigint(&BigInt::from_bytes(&t1.to_bytes()[..]))
-                    .chain_bigint(&BigInt::from_bytes(&t2.to_bytes()[..]))
-                    .chain_bigint(&BigInt::from_bytes(T.to_bytes(true).as_ref()))
+                    .chain(t1.to_bytes())
+                    .chain(t2.to_bytes())
+                    .chain_point(&T)
                     .result_bigint();
                 (TTriplets { t1, t2, T }, fs, r1, r2)
             })
@@ -444,9 +444,9 @@ impl CLDLProof {
         let fs_vec = (0..repeat)
             .map(|i| {
                 Sha256::new()
-                    .chain_bigint(&BigInt::from_bytes(&self.t_vec[i].t1.to_bytes()[..]))
-                    .chain_bigint(&BigInt::from_bytes(&self.t_vec[i].t2.to_bytes()[..]))
-                    .chain_bigint(&BigInt::from_bytes(self.t_vec[i].T.to_bytes(true).as_ref()))
+                    .chain(self.t_vec[i].t1.to_bytes())
+                    .chain(self.t_vec[i].t2.to_bytes())
+                    .chain_point(&self.t_vec[i].T)
                     .result_bigint()
             })
             .collect::<Vec<BigInt>>();
