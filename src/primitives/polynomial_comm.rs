@@ -71,7 +71,7 @@ impl PolyComm {
         //  let g = group.exp(&random);
         let g = pick_random_element(&disc);
 
-        let bound = 3 * (d_max.clone() + BigInt::one()).bit_length() as u32 + 1;
+        let bound = 3 * (d_max + BigInt::one()).bit_length() as u32 + 1;
 
         let p = Scalar::<Secp256k1>::group_order();
         let q = p.pow(bound);

@@ -108,7 +108,7 @@ impl HSMCL {
         let delta_k = -q * &qtilde;
         let delta_q = &delta_k * q.pow(2);
 
-        let delta_k_abs: BigInt = -delta_k.clone();
+        let delta_k_abs: BigInt = -(&delta_k);
         let log_delta_k_abs = numerical_log(&delta_k_abs);
         let delta_k_abs_sqrt = delta_k_abs.sqrt();
         let stilde = log_delta_k_abs * delta_k_abs_sqrt;
@@ -168,7 +168,7 @@ impl HSMCL {
         let delta_k = -q * &qtilde;
         let delta_q = &delta_k * q.pow(2);
 
-        let delta_k_abs: BigInt = -delta_k.clone();
+        let delta_k_abs: BigInt = -(&delta_k);
         let log_delta_k_abs = numerical_log(&delta_k_abs);
         let delta_k_abs_sqrt = delta_k_abs.sqrt();
         let stilde = log_delta_k_abs * delta_k_abs_sqrt;
@@ -417,9 +417,9 @@ impl CLDLProof {
         let ten = BigInt::from(C as u32);
         let u1u2_vec = (0..repeat)
             .map(|i| {
-                let k_slice_i = (k.clone() >> (i * C)) & ten.clone();
+                let k_slice_i = (&k >> (i * C)) & &ten;
 
-                let u1 = r1_vec[i].clone() + &k_slice_i * &w.r;
+                let u1 = &r1_vec[i] + &k_slice_i * &w.r;
                 let u2 = BigInt::mod_add(
                     &r2_vec[i],
                     &(&k_slice_i * &w.x),
@@ -463,7 +463,7 @@ impl CLDLProof {
             * BigInt::from(2).pow(C as u32)
             * (BigInt::from(2).pow(40) + BigInt::one());
         for i in 0..repeat {
-            let k_slice_i = (k.clone() >> (i * C)) & ten.clone();
+            let k_slice_i = (&k >> (i * C)) & &ten;
             //length test u1:
             if self.u_vec[i].u1 > sample_size || self.u_vec[i].u1 < BigInt::zero() {
                 flag = false;
@@ -482,7 +482,7 @@ impl CLDLProof {
             };
 
             let k_slice_i_bias_fe: Scalar<Secp256k1> =
-                Scalar::<Secp256k1>::from(&(k_slice_i.clone() + BigInt::one()));
+                Scalar::<Secp256k1>::from(&(&k_slice_i + BigInt::one()));
             let g = Point::<Secp256k1>::generator();
             let t2kq = (&self.t_vec[i].T + &self.q * k_slice_i_bias_fe) - &self.q;
             let u2p = g * Scalar::<Secp256k1>::from(&self.u_vec[i].u2);
@@ -679,7 +679,7 @@ mod tests {
         let r = BigInt::sample_below(&(&hsmcl.pk.stilde * BigInt::from(2).pow(40)));
         let ciphertext = HSMCL::encrypt_predefined_randomness(&hsmcl.pk, &m, &r);
         let witness = Witness {
-            x: m.clone() + BigInt::one(),
+            x: &m + BigInt::one(),
             r,
         };
         let m_fe = Scalar::<Secp256k1>::from(&(&m + &BigInt::one()));

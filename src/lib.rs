@@ -105,7 +105,7 @@ impl BinaryQF {
     }
 
     pub fn is_normal(&self) -> bool {
-        self.b <= self.a && self.b > -self.a.clone()
+        self.b <= self.a && self.b > -(&self.a)
     }
     pub fn primeform(quad_disc: &BigInt, q: &BigInt) -> Self {
         let quad_disc_gen = bn_to_gen(quad_disc);
@@ -398,8 +398,7 @@ pub fn bn_to_gen(bn: &BigInt) -> GEN {
     let mut array = [0u8; 4];
     let ints_vec = (0..num_int_bound)
         .map(|i| {
-            let masked_valued_bn =
-                (bn.clone() & all_ones_32bits.clone() << (i * size_int)) >> (i * size_int);
+            let masked_valued_bn = (&bn & &all_ones_32bits << (i * size_int)) >> (i * size_int);
 
             let mut masked_value_bytes = BigInt::to_bytes(&masked_valued_bn);
             // padding if int has leading zero bytes
