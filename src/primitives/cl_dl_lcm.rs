@@ -7,11 +7,10 @@ use crate::primitives::numerical_log;
 use crate::primitives::prng;
 use crate::BinaryQF;
 use curv::arithmetic::traits::*;
-use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
-use curv::cryptographic_primitives::hashing::traits::Hash;
-use curv::elliptic::curves::secp256_k1::{FE, GE};
-use curv::elliptic::curves::traits::{ECPoint, ECScalar};
+use curv::cryptographic_primitives::hashing::{Digest, DigestExt};
+use curv::elliptic::curves::{secp256_k1::Secp256k1, Point, Scalar};
 use curv::BigInt;
+use sha2::Sha256;
 use std::os::raw::c_int;
 
 const SECURITY_PARAMETER: usize = 128;
@@ -53,7 +52,7 @@ pub struct HSMCL {
 pub struct CLDLProof {
     pub pk: PK,
     pub ciphertext: Ciphertext,
-    q: GE,
+    q: Point<Secp256k1>,
     t_vec: Vec<TTriplets>,
     u_vec: Vec<U1U2>,
 }
@@ -67,7 +66,7 @@ pub struct Witness {
 pub struct TTriplets {
     pub t1: BinaryQF,
     pub t2: BinaryQF,
-    pub T: GE,
+    pub T: Point<Secp256k1>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -104,12 +103,12 @@ impl HSMCL {
             qtilde = next_probable_prime(&r);
         }
 
-        assert!(&(BigInt::from(4) * q) < &qtilde);
+        assert!(BigInt::from(4) * q < qtilde);
 
         let delta_k = -q * &qtilde;
         let delta_q = &delta_k * q.pow(2);
 
-        let delta_k_abs: BigInt = -delta_k.clone();
+        let delta_k_abs: BigInt = -(&delta_k);
         let log_delta_k_abs = numerical_log(&delta_k_abs);
         let delta_k_abs_sqrt = delta_k_abs.sqrt();
         let stilde = log_delta_k_abs * delta_k_abs_sqrt;
@@ -123,9 +122,9 @@ impl HSMCL {
 
         let rgoth_square = rgoth.compose(&rgoth).reduce();
 
-        let gq_tmp = rgoth_square.phi_q_to_the_minus_1(&q).reduce();
+        let gq_tmp = rgoth_square.phi_q_to_the_minus_1(q).reduce();
 
-        let gq = gq_tmp.exp(&q);
+        let gq = gq_tmp.exp(q);
 
         let x = BigInt::sample_below(&(&stilde * BigInt::from(2).pow(40)));
         let h = gq.exp(&x);
@@ -164,12 +163,12 @@ impl HSMCL {
             qtilde = next_probable_prime(&r);
         }
 
-        assert!(&(BigInt::from(4) * q) < &qtilde);
+        assert!(BigInt::from(4) * q < qtilde);
 
         let delta_k = -q * &qtilde;
         let delta_q = &delta_k * q.pow(2);
 
-        let delta_k_abs: BigInt = -delta_k.clone();
+        let delta_k_abs: BigInt = -(&delta_k);
         let log_delta_k_abs = numerical_log(&delta_k_abs);
         let delta_k_abs_sqrt = delta_k_abs.sqrt();
         let stilde = log_delta_k_abs * delta_k_abs_sqrt;
@@ -193,7 +192,7 @@ impl HSMCL {
             }
             prime_forms_vec.push(BinaryQF::primeform(&delta_k, &r));
             r = next_probable_small_prime(&r);
-            i = i + 1;
+            i += 1;
         }
         let mut rgoth = BinaryQF::binary_quadratic_form_principal(&delta_k);
 
@@ -206,22 +205,22 @@ impl HSMCL {
         let mut prod_exponent = BigInt::one();
         while i < prime_forms_vec.len() {
             // extract 15bits
-            rand_bits_i = prng(seed, i.clone(), 15);
+            rand_bits_i = prng(seed, i, 15);
             while rand_bits_i.gcd(&prod_exponent) != BigInt::one() {
-                rand_bits_i = rand_bits_i + 1;
+                rand_bits_i += 1;
             }
             rgoth = rgoth
                 .compose(&prime_forms_vec[i].exp(&rand_bits_i))
                 .reduce();
-            prod_exponent = prod_exponent * &rand_bits_i;
-            i = i + 1;
+            prod_exponent *= &rand_bits_i;
+            i += 1;
         }
 
         let rgoth_square = rgoth.compose(&rgoth).reduce();
 
-        let gq_tmp = rgoth_square.phi_q_to_the_minus_1(&q).reduce();
+        let gq_tmp = rgoth_square.phi_q_to_the_minus_1(q).reduce();
 
-        let gq = gq_tmp.exp(&q);
+        let gq = gq_tmp.exp(q);
 
         let x = BigInt::sample_below(&(&stilde * BigInt::from(2).pow(40)));
         let h = gq.exp(&x);
@@ -253,7 +252,7 @@ impl HSMCL {
             }
             prime_forms_vec.push(BinaryQF::primeform(&pk.delta_k, &r));
             r = next_probable_small_prime(&r);
-            i = i + 1;
+            i += 1;
         }
 
         let mut rgoth = BinaryQF::binary_quadratic_form_principal(&pk.delta_k);
@@ -267,15 +266,15 @@ impl HSMCL {
         let mut prod_exponent = BigInt::one();
         while i < prime_forms_vec.len() {
             // extract 15bits
-            rand_bits_i = prng(seed, i.clone(), 15);
+            rand_bits_i = prng(seed, i, 15);
             while rand_bits_i.gcd(&prod_exponent) != BigInt::one() {
-                rand_bits_i = rand_bits_i + 1;
+                rand_bits_i += 1;
             }
             rgoth = rgoth
                 .compose(&prime_forms_vec[i].exp(&rand_bits_i))
                 .reduce();
-            prod_exponent = prod_exponent * &rand_bits_i;
-            i = i + 1;
+            prod_exponent *= &rand_bits_i;
+            i += 1;
         }
 
         let rgoth_square = rgoth.compose(&rgoth).reduce();
@@ -293,7 +292,7 @@ impl HSMCL {
         unsafe { pari_init(10000000, 2) };
         assert!(m < &pk.q);
         let r = BigInt::sample_below(&(&pk.stilde * BigInt::from(2).pow(40)));
-        let exp_f = BinaryQF::expo_f(&pk.q, &pk.delta_q, &m);
+        let exp_f = BinaryQF::expo_f(&pk.q, &pk.delta_q, m);
         let h_exp_r = pk.h.exp(&r);
 
         Ciphertext {
@@ -306,7 +305,7 @@ impl HSMCL {
     pub fn encrypt_predefined_randomness(pk: &PK, m: &BigInt, r: &BigInt) -> Ciphertext {
         unsafe { pari_init(10000000, 2) };
         assert!(m < &pk.q);
-        let exp_f = BinaryQF::expo_f(&pk.q, &pk.delta_q, &m);
+        let exp_f = BinaryQF::expo_f(&pk.q, &pk.delta_q, m);
         let h_exp_r = pk.h.exp(r);
 
         Ciphertext {
@@ -327,21 +326,21 @@ impl HSMCL {
     //TODO: add unit test
     pub fn eval_scal(c: &Ciphertext, val: &BigInt) -> Ciphertext {
         unsafe { pari_init(10000000, 2) };
-        let c_new = Ciphertext {
-            c1: c.c1.exp(&val),
-            c2: c.c2.exp(&val),
-        };
-        c_new
+
+        Ciphertext {
+            c1: c.c1.exp(val),
+            c2: c.c2.exp(val),
+        }
     }
 
     //TODO: add unit test
     pub fn eval_sum(c1: &Ciphertext, c2: &Ciphertext) -> Ciphertext {
         unsafe { pari_init(10000000, 2) };
-        let c_new = Ciphertext {
+
+        Ciphertext {
             c1: c1.c1.compose(&c2.c1).reduce(),
             c2: c1.c2.compose(&c2.c2).reduce(),
-        };
-        c_new
+        }
     }
 }
 
@@ -349,7 +348,7 @@ pub fn next_probable_prime(r: &BigInt) -> BigInt {
     let one = BigInt::from(1);
     let mut qtilde = r + &one;
     while !is_prime(&qtilde) {
-        qtilde = qtilde + &one;
+        qtilde += &one;
     }
     qtilde
 }
@@ -362,7 +361,7 @@ pub fn next_probable_small_prime(r: &BigInt) -> BigInt {
     let mut qtilde_gen = bn_to_gen(&(r + &one));
     unsafe {
         while isprime(qtilde_gen) as c_int != 1 {
-            qtilde = qtilde + &one;
+            qtilde += &one;
             qtilde_gen = bn_to_gen(&qtilde);
         }
     }
@@ -371,7 +370,7 @@ pub fn next_probable_small_prime(r: &BigInt) -> BigInt {
 
 // Automatically using q of the curve.
 impl CLDLProof {
-    pub fn prove(w: Witness, pk: PK, ciphertext: Ciphertext, q: GE) -> Self {
+    pub fn prove(w: Witness, pk: PK, ciphertext: Ciphertext, q: Point<Secp256k1>) -> Self {
         unsafe { pari_init(10000000, 2) };
         let repeat = SECURITY_PARAMETER / C + 1;
         let triplets_and_fs_and_r_vec = (0..repeat)
@@ -382,18 +381,18 @@ impl CLDLProof {
                         * BigInt::from(2).pow(C as u32)
                         * BigInt::from(2).pow(40)),
                 );
-                let r2_fe: FE = FE::new_random();
-                let r2 = r2_fe.to_big_int();
+                let r2_fe = Scalar::<Secp256k1>::random();
+                let r2 = r2_fe.to_bigint();
                 let fr2 = BinaryQF::expo_f(&pk.q, &pk.delta_q, &r2);
                 let pkr1 = pk.h.exp(&r1);
                 let t2 = fr2.compose(&pkr1).reduce();
-                let T = GE::generator() * r2_fe;
+                let T = Point::<Secp256k1>::generator() * r2_fe;
                 let t1 = pk.gq.exp(&r1);
-                let fs = HSha256::create_hash(&[
-                    &BigInt::from_bytes(&t1.to_bytes()[..]),
-                    &BigInt::from_bytes(&t2.to_bytes()[..]),
-                    &T.bytes_compressed_to_big_int(),
-                ]);
+                let fs = Sha256::new()
+                    .chain(t1.to_bytes())
+                    .chain(t2.to_bytes())
+                    .chain_point(&T)
+                    .result_bigint();
                 (TTriplets { t1, t2, T }, fs, r1, r2)
             })
             .collect::<Vec<(TTriplets, BigInt, BigInt, BigInt)>>();
@@ -410,15 +409,22 @@ impl CLDLProof {
             .map(|i| triplets_and_fs_and_r_vec[i].3.clone())
             .collect::<Vec<BigInt>>();
         // using Fiat Shamir transform
-        let k = HSha256::create_hash(&fiat_shamir_vec);
+        let k = fiat_shamir_vec
+            .iter()
+            .fold(Sha256::new(), |hash, i| hash.chain_bigint(i))
+            .result_bigint();
 
         let ten = BigInt::from(C as u32);
         let u1u2_vec = (0..repeat)
             .map(|i| {
-                let k_slice_i = (k.clone() >> (i * C)) & ten.clone();
+                let k_slice_i = (&k >> (i * C)) & &ten;
 
-                let u1 = r1_vec[i].clone() + &k_slice_i * &w.r;
-                let u2 = BigInt::mod_add(&r2_vec[i], &(&k_slice_i * &w.x), &FE::q());
+                let u1 = &r1_vec[i] + &k_slice_i * &w.r;
+                let u2 = BigInt::mod_add(
+                    &r2_vec[i],
+                    &(&k_slice_i * &w.x),
+                    Scalar::<Secp256k1>::group_order(),
+                );
                 U1U2 { u1, u2 }
             })
             .collect::<Vec<U1U2>>();
@@ -437,16 +443,19 @@ impl CLDLProof {
         let repeat = SECURITY_PARAMETER / C + 1;
         let fs_vec = (0..repeat)
             .map(|i| {
-                HSha256::create_hash(&[
-                    &BigInt::from_bytes(&self.t_vec[i].t1.to_bytes()[..]),
-                    &BigInt::from_bytes(&self.t_vec[i].t2.to_bytes()[..]),
-                    &self.t_vec[i].T.bytes_compressed_to_big_int(),
-                ])
+                Sha256::new()
+                    .chain(self.t_vec[i].t1.to_bytes())
+                    .chain(self.t_vec[i].t2.to_bytes())
+                    .chain_point(&self.t_vec[i].T)
+                    .result_bigint()
             })
             .collect::<Vec<BigInt>>();
         let fs_t_vec = (0..repeat).map(|i| &fs_vec[i]).collect::<Vec<&BigInt>>();
         let mut flag = true;
-        let k = HSha256::create_hash(&fs_t_vec[..]);
+        let k = fs_t_vec
+            .iter()
+            .fold(Sha256::new(), |hash, i| hash.chain_bigint(i))
+            .result_bigint();
         let ten = BigInt::from(C as u32);
 
         let sample_size = &self.pk.stilde
@@ -454,27 +463,29 @@ impl CLDLProof {
             * BigInt::from(2).pow(C as u32)
             * (BigInt::from(2).pow(40) + BigInt::one());
         for i in 0..repeat {
-            let k_slice_i = (k.clone() >> (i * C)) & ten.clone();
+            let k_slice_i = (&k >> (i * C)) & &ten;
             //length test u1:
-            if &self.u_vec[i].u1 > &sample_size || &self.u_vec[i].u1 < &BigInt::zero() {
+            if self.u_vec[i].u1 > sample_size || self.u_vec[i].u1 < BigInt::zero() {
                 flag = false;
             }
             // length test u2:
-            if &self.u_vec[i].u2 > &FE::q() || &self.u_vec[i].u2 < &BigInt::zero() {
+            if &self.u_vec[i].u2 > Scalar::<Secp256k1>::group_order()
+                || self.u_vec[i].u2 < BigInt::zero()
+            {
                 flag = false;
             }
             let c1k = self.ciphertext.c1.exp(&k_slice_i);
             let t1c1k = self.t_vec[i].t1.compose(&c1k).reduce();
-            let gqu1 = self.pk.gq.exp(&&self.u_vec[i].u1);
+            let gqu1 = self.pk.gq.exp(&self.u_vec[i].u1);
             if t1c1k != gqu1 {
                 flag = false;
             };
 
-            let k_slice_i_bias_fe: FE = ECScalar::from(&(k_slice_i.clone() + BigInt::one()));
-            let g = GE::generator();
-            let t2kq = (self.t_vec[i].T + self.q.clone() * k_slice_i_bias_fe)
-                .sub_point(&self.q.get_element());
-            let u2p = &g * &ECScalar::from(&self.u_vec[i].u2);
+            let k_slice_i_bias_fe: Scalar<Secp256k1> =
+                Scalar::<Secp256k1>::from(&(&k_slice_i + BigInt::one()));
+            let g = Point::<Secp256k1>::generator();
+            let t2kq = (&self.t_vec[i].T + &self.q * k_slice_i_bias_fe) - &self.q;
+            let u2p = g * Scalar::<Secp256k1>::from(&self.u_vec[i].u2);
             if t2kq != u2p {
                 flag = false;
             }
@@ -507,7 +518,7 @@ pub fn jacobi(a: &BigInt, n: &BigInt) -> Option<i8> {
 
     // Raise a mod n, then start the unsigned algorithm
     let mut acc = 1;
-    let mut num = a.mod_floor(&n);
+    let mut num = a.mod_floor(n);
     let mut den = n.clone();
     loop {
         // reduce numerator
@@ -628,9 +639,9 @@ mod tests {
         let r = BigInt::sample_below(&(&hsmcl.pk.stilde * BigInt::from(2).pow(40)));
         let ciphertext = HSMCL::encrypt_predefined_randomness(&hsmcl.pk, &m, &r);
         let witness = Witness { x: m.clone(), r };
-        let m_fe: FE = ECScalar::from(&m);
-        let q = GE::generator() * m_fe;
-        let proof = CLDLProof::prove(witness, hsmcl.pk.clone(), ciphertext, q);
+        let m_fe = Scalar::<Secp256k1>::from(&m);
+        let q = Point::<Secp256k1>::generator() * m_fe;
+        let proof = CLDLProof::prove(witness, hsmcl.pk, ciphertext, q);
         assert!(proof.verify().is_ok())
     }
 
@@ -648,9 +659,9 @@ mod tests {
         let r = BigInt::sample_below(&(&hsmcl.pk.stilde * BigInt::from(2).pow(40)));
         let ciphertext = HSMCL::encrypt_predefined_randomness(&hsmcl.pk, &m, &r);
         let witness = Witness { x: m.clone(), r };
-        let m_fe: FE = ECScalar::from(&(&m + &BigInt::one()));
-        let q = GE::generator() * m_fe;
-        let proof = CLDLProof::prove(witness, hsmcl.pk.clone(), ciphertext, q);
+        let m_fe: Scalar<Secp256k1> = Scalar::<Secp256k1>::from(&(&m + &BigInt::one()));
+        let q = Point::<Secp256k1>::generator() * m_fe;
+        let proof = CLDLProof::prove(witness, hsmcl.pk, ciphertext, q);
         assert!(proof.verify().is_ok())
     }
 
@@ -668,12 +679,12 @@ mod tests {
         let r = BigInt::sample_below(&(&hsmcl.pk.stilde * BigInt::from(2).pow(40)));
         let ciphertext = HSMCL::encrypt_predefined_randomness(&hsmcl.pk, &m, &r);
         let witness = Witness {
-            x: m.clone() + BigInt::one(),
+            x: &m + BigInt::one(),
             r,
         };
-        let m_fe: FE = ECScalar::from(&(&m + &BigInt::one()));
-        let q = GE::generator() * m_fe;
-        let proof = CLDLProof::prove(witness, hsmcl.pk.clone(), ciphertext, q);
+        let m_fe = Scalar::<Secp256k1>::from(&(&m + &BigInt::one()));
+        let q = Point::<Secp256k1>::generator() * m_fe;
+        let proof = CLDLProof::prove(witness, hsmcl.pk, ciphertext, q);
         assert!(proof.verify().is_ok())
     }
 
@@ -688,7 +699,7 @@ mod tests {
         let m = BigInt::from(10000);
         let exp_f = BinaryQF::expo_f(&hsmcl.pk.q, &hsmcl.pk.delta_q, &m);
         let m_tag = BinaryQF::discrete_log_f(&hsmcl.pk.q, &hsmcl.pk.delta_q, &exp_f);
-        assert_eq!(m.clone(), m_tag);
+        assert_eq!(m, m_tag);
     }
 
     #[test]

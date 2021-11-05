@@ -4,16 +4,17 @@ pub mod poe;
 pub mod polynomial_comm;
 pub mod vdf;
 
-use crate::curv::cryptographic_primitives::hashing::traits::Hash;
 use crate::BinaryQF;
 use curv::arithmetic::traits::*;
-use curv::cryptographic_primitives::hashing::hash_sha256::HSha256;
-use curv::cryptographic_primitives::hashing::hmac_sha512::HMacSha512;
-use curv::cryptographic_primitives::hashing::traits::KeyedHash;
+use curv::cryptographic_primitives::hashing::{Digest, DigestExt, HmacExt};
 use curv::BigInt;
+use hmac::Hmac;
+use sha2::{Sha256, Sha512};
+
 use std::error::Error;
 use std::fmt;
 use std::ops::Shl;
+
 #[derive(Debug, Clone, Copy)]
 pub struct ProofError;
 
@@ -47,41 +48,51 @@ fn numerical_log(x: &BigInt) -> BigInt {
     let mut bi = x.sqrt();
     let mut k = 0;
     while k < 1000 {
-        k = k + 1;
+        k += 1;
         aip1 = (&ai + &bi).div_floor(&two);
         bip1 = (ai * bi).sqrt();
         ai = aip1;
         bi = bip1;
     }
 
-    let log = two * (x - 1).div_floor(&(ai + bi));
-    log
+    two * (x - 1).div_floor(&(ai + bi))
 }
 
 pub fn hash_to_prime(u: &BinaryQF, w: &BinaryQF) -> BigInt {
-    let mut candidate = HSha256::create_hash(&[&u.a, &u.b, &u.c, &w.a, &w.b, &w.c]);
+    let mut candidate = Sha256::new()
+        .chain_bigint(&u.a)
+        .chain_bigint(&u.b)
+        .chain_bigint(&u.c)
+        .chain_bigint(&w.a)
+        .chain_bigint(&w.b)
+        .chain_bigint(&w.c)
+        .result_bigint();
 
     if candidate.modulus(&BigInt::from(2)) == BigInt::zero() {
-        candidate = candidate + BigInt::one();
+        candidate += BigInt::one();
     }
     while !is_prime(&candidate) {
-        candidate = candidate + BigInt::from(2);
+        candidate += BigInt::from(2);
     }
     candidate
 }
 
 fn prng(seed: &BigInt, i: usize, bitlen: usize) -> BigInt {
     let i_bn = BigInt::from(i as i32);
-    let mut res = HMacSha512::create_hmac(&i_bn, &vec![seed]);
+    let mut res = Hmac::<Sha512>::new_bigint(&i_bn)
+        .chain_bigint(seed)
+        .result_bigint();
     let mut tmp: BigInt = res.clone();
     let mut res_bit_len = res.bit_length();
     while res_bit_len < bitlen {
-        tmp = HMacSha512::create_hmac(&i_bn, &vec![&tmp]);
-        res = &res.shl(res_bit_len.clone()) + &tmp;
+        tmp = Hmac::<Sha512>::new_bigint(&i_bn)
+            .chain_bigint(&tmp)
+            .result_bigint();
+        res = &res.shl(res_bit_len) + &tmp;
         res_bit_len = res.bit_length();
     }
     // prune to get |res| = bitlen
-    res >> (res_bit_len - &bitlen)
+    res >> (res_bit_len - bitlen)
 }
 
 // Runs the following three tests on a given `candidate` to determine
@@ -377,6 +388,6 @@ mod tests {
     fn test_numerical_log() {
         let h2 = BigInt::from(10000);
         let n2 = numerical_log(&h2);
-        println!("n2 {:?}", n2.clone());
+        println!("n2 {:?}", n2);
     }
 }

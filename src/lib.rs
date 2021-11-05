@@ -2,6 +2,7 @@
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 #![allow(dead_code)]
+#![allow(clippy::many_single_char_names)]
 
 include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 
@@ -9,16 +10,22 @@ extern crate libc;
 #[macro_use]
 extern crate serde_derive;
 extern crate curv;
+extern crate hmac;
 extern crate serde;
 extern crate serde_json;
-use curv::arithmetic::traits::*;
-use curv::BigInt;
-use libc::c_char;
+extern crate sha2;
+
 use std::ffi::CStr;
 use std::mem::swap;
 use std::ops::Neg;
-use std::{str, ptr};
+use std::{ptr, str};
 
+use libc::c_char;
+
+use curv::arithmetic::traits::*;
+use curv::BigInt;
+
+mod chinese_reminder_theorem;
 pub mod primitives;
 
 #[derive(PartialEq, Eq, Clone, Debug, Serialize, Deserialize)]
@@ -82,44 +89,34 @@ impl BinaryQF {
     }
 
     pub fn is_reduced(&self) -> bool {
-        if self.is_normal() && self.a <= self.c && !(self.a == self.c && self.b < BigInt::zero()) {
-            return true;
-        } else {
-            return false;
-        }
+        self.is_normal() && self.a <= self.c && !(self.a == self.c && self.b < BigInt::zero())
     }
 
     pub fn normalize(&self) -> Self {
         // assume delta<0 and a>0
         let a_sub_b: BigInt = &self.a - &self.b;
         let s_f = a_sub_b.div_floor(&(BigInt::from(2) * &self.a));
-        let binary_qf = BinaryQF {
+
+        BinaryQF {
             a: self.a.clone(),
             b: &self.b + BigInt::from(2) * &s_f * &self.a,
             c: &self.a * &s_f.pow(2) + &self.b * &s_f + &self.c,
-        };
-
-        binary_qf
+        }
     }
 
     pub fn is_normal(&self) -> bool {
-        if self.b <= self.a && self.b > -self.a.clone() {
-            return true;
-        } else {
-            return false;
-        }
+        self.b <= self.a && self.b > -(&self.a)
     }
     pub fn primeform(quad_disc: &BigInt, q: &BigInt) -> Self {
-        let quad_disc_gen = bn_to_gen(&quad_disc);
+        let quad_disc_gen = bn_to_gen(quad_disc);
 
-        let q_gen = bn_to_gen(&q);
+        let q_gen = bn_to_gen(q);
 
         let pf = unsafe { primeform(quad_disc_gen, q_gen, 3i64) };
 
         let bqf = BinaryQF::pari_qf_to_qf(pf);
 
-        let bqf_norm = bqf.normalize();
-        bqf_norm
+        bqf.normalize()
     }
 
     pub fn compose(&self, qf2: &BinaryQF) -> Self {
@@ -130,9 +127,7 @@ impl BinaryQF {
 
         let qf_pari_c = unsafe { qfbcompraw(qf_pari_a, qf_pari_b) };
 
-        let qf_c = BinaryQF::pari_qf_to_qf(qf_pari_c);
-
-        qf_c
+        BinaryQF::pari_qf_to_qf(qf_pari_c)
     }
 
     pub fn inverse(&self) -> Self {
@@ -149,9 +144,8 @@ impl BinaryQF {
             b: self.b.clone().neg(),
             c: self.a.clone(),
         };
-        let h = qf_new.normalize();
 
-        h
+        qf_new.normalize()
     }
 
     pub fn reduce(&self) -> Self {
@@ -173,8 +167,8 @@ impl BinaryQF {
         let pari_n = bn_to_gen(n);
 
         let pari_qf_exp = unsafe { nupow(pari_qf, pari_n, ptr::null_mut()) };
-        let qf_exp = BinaryQF::pari_qf_to_qf(pari_qf_exp);
-        qf_exp
+
+        BinaryQF::pari_qf_to_qf(pari_qf_exp)
     }
     // gotoNonMax: outputs: f=phi_q^(-1)(F), a binary quadratic form of disc. delta*conductor^2
     //      f is non normalized
@@ -190,8 +184,8 @@ impl BinaryQF {
             b: b_new,
             delta,
         };
-        let qf = BinaryQF::binary_quadratic_form_disc(&abdelta);
-        qf
+
+        BinaryQF::binary_quadratic_form_disc(&abdelta)
     }
 
     // compute (p^(2),p,-)^k in class group of disc. delta
@@ -201,7 +195,7 @@ impl BinaryQF {
         }
         let mut k_inv = BigInt::mod_inv(k, p).unwrap();
         if k_inv.mod_floor(&BigInt::from(2)) == BigInt::zero() {
-            k_inv = k_inv - p;
+            k_inv -= p;
         };
         let k_inv_p = k_inv * p;
         let abdelta = ABDeltaTriple {
@@ -209,18 +203,18 @@ impl BinaryQF {
             b: k_inv_p,
             delta: delta.clone(),
         };
-        let qf = BinaryQF::binary_quadratic_form_disc(&abdelta);
-        qf
+
+        BinaryQF::binary_quadratic_form_disc(&abdelta)
     }
 
     pub fn discrete_log_f(p: &BigInt, delta: &BigInt, c: &BinaryQF) -> BigInt {
         let principal_qf = BinaryQF::binary_quadratic_form_principal(delta);
         if c == &principal_qf {
-            return BigInt::zero();
+            BigInt::zero()
         } else {
             let Lk = c.b.div_floor(p);
-            let Lk_inv = BigInt::mod_inv(&Lk, p).unwrap();
-            return Lk_inv;
+
+            BigInt::mod_inv(&Lk, p).unwrap()
         }
     }
 
@@ -229,9 +223,9 @@ impl BinaryQF {
         let a = bn_to_gen(&self.a);
         let b = bn_to_gen(&self.b);
         let c = bn_to_gen(&self.c);
-        let qf_pari = unsafe { qfi(a, b, c) };
+
         //  GEN qfi(GEN a, GEN b, GEN c) (assumes b^2 − 4ac < 0)
-        qf_pari
+        unsafe { qfi(a, b, c) }
     }
 
     // construct BinaryQF from pari GEN encoded qfb
@@ -345,7 +339,8 @@ impl ABDeltaTriple {
         let t_inv = BigInt::mod_inv(&t, &a1)?;
         let b1 = BigInt::mod_mul(&s1, &t_inv, &a1);
         // 8. b <- CRT((b', a'), (b0, g))
-        let mut b: BigInt = ring_algorithm::chinese_remainder_theorem(&[b1, b0], &[a1, g])?;
+        let mut b: BigInt =
+            chinese_reminder_theorem::chinese_remainder_theorem(&[b1, b0], &[a1, g])?;
         // 9. if ε = False then b <- −b (mod a)
         if !e {
             b = -b
@@ -403,8 +398,7 @@ pub fn bn_to_gen(bn: &BigInt) -> GEN {
     let mut array = [0u8; 4];
     let ints_vec = (0..num_int_bound)
         .map(|i| {
-            let masked_valued_bn =
-                (bn.clone() & all_ones_32bits.clone() << (i * size_int)) >> (i * size_int);
+            let masked_valued_bn = (&bn & &all_ones_32bits << (i * size_int)) >> (i * size_int);
 
             let mut masked_value_bytes = BigInt::to_bytes(&masked_valued_bn);
             // padding if int has leading zero bytes
@@ -425,14 +419,14 @@ pub fn bn_to_gen(bn: &BigInt) -> GEN {
             let elem1 = mkintn(1i64, ints_vec[num_int_bound - i - 1]);
             let elem2 = shifti(gen, (size_int) as i64);
             gen = gadd(elem1, elem2);
-            i = i + 1
+            i += 1
         }
 
         if neg1 == -1 {
             gen = gneg(gen);
         }
 
-        return gen;
+        gen
     }
 }
 
