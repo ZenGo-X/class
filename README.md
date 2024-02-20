@@ -46,13 +46,31 @@ Use `Cargo build`.
 The library uses bindings to PARI c library. Running `Cargo build` for the first time will take PARI from the _depend_ folder and install it on the machine. It was tested on MacOS and Linux. If you encounter a problem with installation of PARI, please open an issue and try to install it [manually](https://pari.math.u-bordeaux.fr/download.html). Bindings are generated automatically on the fly which might slow down the build procces by a few seconds.
 
 
-Test
+Unit-test
 -------------------
 Tests in rust are multi-thearded if possible. However, PARI configuration supports a single thread. Therefore to make sure all tests run with defined behaviour please use `cargo test  -- --test-threads=1`. 
 
 **Usage**
 
 We use tests to demonstrate correctness of each primitive: At the end of each primitive `.rs` file there is a test to show the correct usage of the primitive. There is usually one test or more to show soundness of the implementation, i.e. not knowing a witness will fail a PoK. For all tests we assume 128bit security (conservatively translates into 1600bit Discriminant).
+
+Bench-test
+-------------------
+Currenly this library supports benchmarking Wesolowski VDF in class_group vs in rsa_group. As aforementioned, PARI configuration only supports a single thread. To benchtest using PARI we need to use `--jobs 1` flag.
+
+You can change and expand the test cases in `benches/vdf/class_group.rs`. You may also need to increase pari_init size (first parameter in `pari_init`) in src/primitives/vdf.rs if testing a larger `t`. We recommend testing each case respectively (i.e., `for &i in &[1_000] {`, `for &i in &[2_000] {` ..., instead of `for &i in &[1_000, 2_000, 5_000] {`) if the memory is limited.
+
+**Usage**
+
+benchmarking class_group VDF:
+```
+cargo bench --bench bench-vdf-class  --jobs 1
+```
+
+benchmarking rsa_group VDF:
+```
+cargo bench --bench bench-vdf-rsa  --jobs 1
+```
 
 Security
 -------------------

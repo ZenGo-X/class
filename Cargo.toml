@@ -41,3 +41,8 @@ default = ["curv-kzen/rust-gmp-kzen"]
 name = "bench-vdf-class"
 path = "benches/vdf/class_group.rs"
 harness = false
+
+[[bench]]
+name = "bench-vdf-rsa"
+path = "benches/vdf/rsa_group.rs"
+harness = false
